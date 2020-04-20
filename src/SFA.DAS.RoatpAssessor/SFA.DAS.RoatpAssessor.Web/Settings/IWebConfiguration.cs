@@ -4,6 +4,8 @@
     {
         string SessionRedisConnectionString { get; set; }
 
+        AuthSettings StaffAuthentication { get; set; }
+
         ClientApiAuthentication RoatpApplicationApiAuthentication { get; set; }
     }
 }

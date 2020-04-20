@@ -8,6 +8,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Settings
         public string SessionRedisConnectionString { get; set; }
 
         [JsonRequired]
+        public AuthSettings StaffAuthentication { get; set; }
+
+        [JsonRequired]
         public ClientApiAuthentication RoatpApplicationApiAuthentication { get; set; }
     }
 }

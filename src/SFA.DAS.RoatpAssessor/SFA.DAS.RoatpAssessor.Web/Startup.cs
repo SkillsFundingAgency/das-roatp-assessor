@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -51,6 +53,8 @@ namespace SFA.DAS.RoatpAssessor.Web
                 options.CheckConsentNeeded = context => false; // Default is true, make it false
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            AddAuthentication(services);
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -101,6 +105,23 @@ namespace SFA.DAS.RoatpAssessor.Web
                 _logger.LogError("Unable to retrieve Application Configuration", ex);
                 throw;
             }
+        }
+
+        private void AddAuthentication(IServiceCollection services)
+        {
+            // TODO: Need to request DevOps to setup - "WtRealm": "https://localhost:44350",
+            services.AddAuthentication(sharedOptions =>
+            {
+                sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
+                sharedOptions.DefaultSignOutScheme = WsFederationDefaults.AuthenticationScheme;
+            }).AddWsFederation(options =>
+            {
+                options.Wtrealm = ApplicationConfiguration.StaffAuthentication.WtRealm;
+                options.MetadataAddress = ApplicationConfiguration.StaffAuthentication.MetadataAddress;
+                options.TokenValidationParameters.RoleClaimType = Roles.RoleClaimType;
+            }).AddCookie();
         }
 
         private void ConfigureAntiforgery(IServiceCollection services)
