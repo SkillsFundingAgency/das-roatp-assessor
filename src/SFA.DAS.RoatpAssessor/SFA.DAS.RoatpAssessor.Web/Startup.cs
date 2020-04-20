@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
+using System.Net.Http;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,30 +11,40 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Polly;
+using Polly.Extensions.Http;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Extensions;
+using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.Settings;
 
 namespace SFA.DAS.RoatpAssessor.Web
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _env;
-        private readonly ILogger<Startup> _logger;
         private const string ServiceName = "SFA.DAS.RoatpAssessor";
         private const string Version = "1.0";
-        public IConfiguration Configuration { get; }
+        private const string Culture = "en-GB";
+
+        private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _env;
+        private readonly ILogger<Startup> _logger;
+
         public IWebConfiguration ApplicationConfiguration { get; set; }
 
         public Startup(IConfiguration configuration, IHostingEnvironment env, ILogger<Startup> logger)
         {
             _env = env;
             _logger = logger;
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigureApplicationConfiguration();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -39,12 +52,10 @@ namespace SFA.DAS.RoatpAssessor.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            ApplicationConfiguration = ConfigurationService.GetConfig(Configuration["EnvironmentName"], Configuration["ConfigurationStorageConnectionString"], Version, ServiceName).Result;
-
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-GB");
-                options.SupportedCultures = new List<CultureInfo> {new CultureInfo("en-GB")};
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(Culture);
+                options.SupportedCultures = new List<CultureInfo> {new CultureInfo(Culture) };
                 options.RequestCultureProviders.Clear();
             });
 
@@ -53,6 +64,7 @@ namespace SFA.DAS.RoatpAssessor.Web
                     //options.Filters.Add<CheckSessionFilter>();
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 })
+                // NOTE: Can we move this to 2.2 to match the version of .NET Core we're coding against?
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -74,7 +86,36 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddApplicationInsightsTelemetry();
 
+            ConfigHttpClients(services);
             ConfigureDependencyInjection(services);
+        }
+
+        private void ConfigureApplicationConfiguration()
+        {
+            try
+            {
+                ApplicationConfiguration = ConfigurationService.GetConfig(_configuration["EnvironmentName"], _configuration["ConfigurationStorageConnectionString"], Version, ServiceName).GetAwaiter().GetResult();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError("Unable to retrieve Application Configuration", ex);
+                throw;
+            }
+        }
+
+        private void ConfigHttpClients(IServiceCollection services)
+        {
+            var acceptHeaderName = "Accept";
+            var acceptHeaderValue = "application/json";
+            var handlerLifeTime = TimeSpan.FromMinutes(5);
+
+            services.AddHttpClient<IRoatpApplicationApiClient, RoatpApplicationApiClient>(config =>
+            {
+                config.BaseAddress = new Uri(ApplicationConfiguration.RoatpApplicationApiAuthentication.ApiBaseAddress);
+                config.DefaultRequestHeaders.Add(acceptHeaderName, acceptHeaderValue);
+            })
+            .SetHandlerLifetime(handlerLifeTime)
+            .AddPolicyHandler(GetRetryPolicy());
         }
 
         private void ConfigureDependencyInjection(IServiceCollection services)
@@ -85,8 +126,15 @@ namespace SFA.DAS.RoatpAssessor.Web
                 .AddClasses()
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
+
+            services.AddTransient(x => ApplicationConfiguration);
+
+            services.AddTransient<IRoatpApplicationTokenService, RoatpApplicationTokenService>();
+
+
+            UserExtensions.Logger = services.BuildServiceProvider().GetService<ILogger<ClaimsPrincipal>>();
         }
-        
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -115,6 +163,15 @@ namespace SFA.DAS.RoatpAssessor.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2,
+                    retryAttempt)));
         }
     }
 }

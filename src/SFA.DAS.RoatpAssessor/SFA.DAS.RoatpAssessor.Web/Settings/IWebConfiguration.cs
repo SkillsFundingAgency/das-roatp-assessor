@@ -3,5 +3,7 @@
     public interface IWebConfiguration
     {
         string SessionRedisConnectionString { get; set; }
+
+        ClientApiAuthentication RoatpApplicationApiAuthentication { get; set; }
     }
 }
