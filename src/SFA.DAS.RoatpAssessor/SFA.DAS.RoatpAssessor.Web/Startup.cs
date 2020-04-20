@@ -80,8 +80,8 @@ namespace SFA.DAS.RoatpAssessor.Web
                 });
             }
 
-            services.AddAntiforgery(options => options.Cookie = new CookieBuilder()
-                {Name = ".RoatpAssessor.Staff.AntiForgery", HttpOnly = false});
+            ConfigureAntiforgery(services);
+
             services.AddHealthChecks();
 
             services.AddApplicationInsightsTelemetry();
@@ -101,6 +101,13 @@ namespace SFA.DAS.RoatpAssessor.Web
                 _logger.LogError("Unable to retrieve Application Configuration", ex);
                 throw;
             }
+        }
+
+        private void ConfigureAntiforgery(IServiceCollection services)
+        {
+            services.AddSingleton<Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator, CacheOverrideHtmlGenerator>();
+
+            services.AddAntiforgery(options => options.Cookie = new CookieBuilder() { Name = ".RoatpAssessor.Staff.AntiForgery", HttpOnly = false });
         }
 
         private void ConfigHttpClients(IServiceCollection services)
