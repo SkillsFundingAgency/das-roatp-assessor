@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.PingControllerTests
+namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Ping
 {
     [TestFixture]
     public class PingControllerTests

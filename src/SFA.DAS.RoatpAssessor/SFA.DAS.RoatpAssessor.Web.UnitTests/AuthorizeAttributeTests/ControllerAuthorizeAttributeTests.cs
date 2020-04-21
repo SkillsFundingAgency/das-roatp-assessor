@@ -15,6 +15,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.AuthorizeAttributeTests
         private readonly List<string> _controllersThatDoNotRequireAuthorize = new List<string>()
         {
             "PingController",
+            "ErrorPageController",
+            "HomeController"
         };
 
         [Test]
