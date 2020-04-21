@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +21,8 @@ namespace SFA.DAS.RoatpAssessor.Web
         private readonly ILogger<Startup> _logger;
         private const string ServiceName = "SFA.DAS.RoatpAssessor";
         private const string Version = "1.0";
+        private const string RoleClaimType = "http://service/service";
+
         public IConfiguration Configuration { get; }
         public IWebConfiguration ApplicationConfiguration { get; set; }
 
@@ -74,6 +78,7 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddApplicationInsightsTelemetry();
 
+            AddAuthentication(services);
             ConfigureDependencyInjection(services);
         }
 
@@ -115,6 +120,22 @@ namespace SFA.DAS.RoatpAssessor.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void AddAuthentication(IServiceCollection services)
+        {
+            services.AddAuthentication(sharedOptions =>
+            {
+                sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
+                sharedOptions.DefaultSignOutScheme = WsFederationDefaults.AuthenticationScheme;
+            }).AddWsFederation(options =>
+            {
+                options.Wtrealm = ApplicationConfiguration.StaffAuthentication.WtRealm;
+                options.MetadataAddress = ApplicationConfiguration.StaffAuthentication.MetadataAddress;
+                options.TokenValidationParameters.RoleClaimType = RoleClaimType;
+            }).AddCookie();
         }
     }
 }
