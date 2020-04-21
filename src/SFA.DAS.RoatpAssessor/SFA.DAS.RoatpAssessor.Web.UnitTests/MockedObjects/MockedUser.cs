@@ -21,10 +21,13 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects
                 new Claim(ClaimTypes.Upn, Email)
             };
 
-            foreach(var role in roles)
+            if (roles != null)
             {
-                var rolesClaim = new Claim(Roles.RoleClaimType, role);
-                claims.Add(rolesClaim);
+                foreach (var role in roles)
+                {
+                    var rolesClaim = new Claim(Roles.RoleClaimType, role);
+                    claims.Add(rolesClaim);
+                }
             }
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "mock", ClaimTypes.Name, Roles.RoleClaimType));
