@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.RoatpAssessor.Web", "SFA.DAS.RoatpAssessor.Web\SFA.DAS.RoatpAssessor.Web.csproj", "{52BBCF9C-F292-413A-99A8-2DB8FC1935E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.RoatpAssessor.Web", "SFA.DAS.RoatpAssessor.Web\SFA.DAS.RoatpAssessor.Web.csproj", "{52BBCF9C-F292-413A-99A8-2DB8FC1935E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FCE12C71-0B23-4457-9119-801A45EE2A01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.RoatpAssessor.Web.UnitTests", "SFA.DAS.RoatpAssessor.Web.UnitTests\SFA.DAS.RoatpAssessor.Web.UnitTests.csproj", "{402285D3-9DB6-46D7-85E4-F920381F22C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{52BBCF9C-F292-413A-99A8-2DB8FC1935E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52BBCF9C-F292-413A-99A8-2DB8FC1935E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52BBCF9C-F292-413A-99A8-2DB8FC1935E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{402285D3-9DB6-46D7-85E4-F920381F22C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{402285D3-9DB6-46D7-85E4-F920381F22C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{402285D3-9DB6-46D7-85E4-F920381F22C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{402285D3-9DB6-46D7-85E4-F920381F22C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{402285D3-9DB6-46D7-85E4-F920381F22C8} = {FCE12C71-0B23-4457-9119-801A45EE2A01}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {294AFF1C-21CF-40AB-9ADF-E69D134AE134}
