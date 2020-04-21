@@ -18,8 +18,4 @@
     <ProjectReference Include="..\SFA.DAS.RoatpAssessor.Web\SFA.DAS.RoatpAssessor.Web.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
