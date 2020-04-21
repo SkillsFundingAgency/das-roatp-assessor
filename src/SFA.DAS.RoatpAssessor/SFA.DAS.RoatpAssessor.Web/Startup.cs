@@ -126,8 +126,6 @@ namespace SFA.DAS.RoatpAssessor.Web
 
         private void ConfigureAntiforgery(IServiceCollection services)
         {
-            services.AddSingleton<Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator, CacheOverrideHtmlGenerator>();
-
             services.AddAntiforgery(options => options.Cookie = new CookieBuilder() { Name = ".RoatpAssessor.Staff.AntiForgery", HttpOnly = false });
         }
 
