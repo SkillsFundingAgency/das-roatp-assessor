@@ -84,13 +84,13 @@ namespace SFA.DAS.RoatpAssessor.Web
                 });
             }
 
-            ConfigureAntiforgery(services);
+            AddAntiforgery(services);
 
             services.AddHealthChecks();
 
             services.AddApplicationInsightsTelemetry();
 
-            ConfigHttpClients(services);
+            ConfigureHttpClients(services);
             ConfigureDependencyInjection(services);
         }
 
@@ -124,12 +124,12 @@ namespace SFA.DAS.RoatpAssessor.Web
             }).AddCookie();
         }
 
-        private void ConfigureAntiforgery(IServiceCollection services)
+        private void AddAntiforgery(IServiceCollection services)
         {
             services.AddAntiforgery(options => options.Cookie = new CookieBuilder() { Name = ".RoatpAssessor.Staff.AntiForgery", HttpOnly = false });
         }
 
-        private void ConfigHttpClients(IServiceCollection services)
+        private void ConfigureHttpClients(IServiceCollection services)
         {
             var acceptHeaderName = "Accept";
             var acceptHeaderValue = "application/json";
