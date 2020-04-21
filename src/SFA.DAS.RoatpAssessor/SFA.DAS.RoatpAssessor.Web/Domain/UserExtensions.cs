@@ -19,7 +19,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Domain
         public static string GivenName(this ClaimsPrincipal user)
         {
             var identity = user.Identities.FirstOrDefault();
-            var givenNameClaim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname";
+            var givenNameClaim = ClaimTypes.GivenName;
             var givenName = identity?.Claims.FirstOrDefault(x => x.Type == givenNameClaim);
 
             if (givenName == null)
@@ -33,7 +33,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Domain
         public static string Surname(this ClaimsPrincipal user)
         {
             var identity = user.Identities.FirstOrDefault();
-            var surnameClaim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname";
+            var surnameClaim = ClaimTypes.Surname;
             var surname = identity?.Claims.FirstOrDefault(x => x.Type == surnameClaim);
             if (surname == null)
             {
