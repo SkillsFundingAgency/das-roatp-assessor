@@ -10,7 +10,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Domain
     {
         private const string GivenName = "Test";
         private const string Surname = "User";
-        private const string Email = "Test.User@example.com";
 
         private ClaimsPrincipal _user;
 
