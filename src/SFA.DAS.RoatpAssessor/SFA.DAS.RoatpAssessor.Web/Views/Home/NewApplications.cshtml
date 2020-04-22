@@ -1,0 +1,72 @@
+﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.NewApplicationsViewModel
+@{
+    ViewBag.Title = "Applications - Assessor";
+    Layout = "_Layout";
+}
+
+@{ await Html.RenderPartialAsync("DashboardNavigation.cshtml"); }
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds das-no-wrap">
+            <h1 class="govuk-heading-xl">
+                New
+            </h1>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @if (@Model.Applications.Any())
+            {
+                <table class="govuk-table govuk-table--s das-table--responsive">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Organisation name</th>
+                            <th class="govuk-table__header" scope="col">UKPRN</th>
+                            <th class="govuk-table__header" scope="col">Application reference number</th>
+                            <th class="govuk-table__header" scope="col">Provider route</th>
+                            <th class="govuk-table__header" scope="col">Application submitted</th>
+                            <th class="govuk-table__header" scope="col">Assessor 1</th>
+                            <th class="govuk-table__header" scope="col">Assessor 2</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        @foreach (var item in Model.Applications)
+                        {
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell das-no-wrap" data-label="Organisation name">
+                                    @item.OrganisationName
+                                </td>
+                                <td class="govuk-table__cell" data-label="UKPRN">
+                                    @item.Ukprn
+                                </td>
+                                <td class="govuk-table__cell" data-label="Application reference number">
+                                    @item.ApplicationReferenceNumber
+                                </td>
+                                <td class="govuk-table__cell" data-label="Provider route">
+                                    @item.ProviderRoute
+                                </td>
+                                <td class="govuk-table__cell" data-label="Application submitted">
+                                    @item.SubmittedDate.ToSfaShortDateString()
+                                </td>
+                                <td class="govuk-table__cell" data-label="Assessor 1">
+                                    @item.Assessor1
+                                </td>
+                                <td class="govuk-table__cell" data-label="Assessor 2">
+                                    @item.Assessor2
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="govuk-body-l">No applications to assess.</p>
+            }
+        </div>
+    </div>
+
+</main>
