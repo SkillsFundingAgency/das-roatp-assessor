@@ -32,6 +32,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
             Assert.That(result, Is.Not.Null);
             Assert.That(actualViewModel, Is.Not.Null);           
             Assert.That(actualViewModel.RequestId, Is.EqualTo(expectedViewModel.RequestId));
+            Assert.That(actualViewModel.ShowRequestId, Is.EqualTo(!string.IsNullOrEmpty(expectedViewModel.RequestId)));
         }
     }
 }
