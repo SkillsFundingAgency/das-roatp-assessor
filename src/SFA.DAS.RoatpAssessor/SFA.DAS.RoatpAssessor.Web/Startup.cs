@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
@@ -23,6 +24,7 @@ using SFA.DAS.RoatpAssessor.Web.Settings;
 
 namespace SFA.DAS.RoatpAssessor.Web
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         private const string ServiceName = "SFA.DAS.RoatpAssessor";
