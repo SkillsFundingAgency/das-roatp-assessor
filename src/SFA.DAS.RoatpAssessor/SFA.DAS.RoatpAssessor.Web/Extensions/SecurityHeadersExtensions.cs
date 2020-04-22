@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.RoatpAssessor.Web.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class SecurityHeadersExtensions
     {
         public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app)
