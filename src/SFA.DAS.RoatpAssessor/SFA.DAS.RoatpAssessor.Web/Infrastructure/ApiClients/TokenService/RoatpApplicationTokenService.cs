@@ -1,22 +1,21 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
+﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using SFA.DAS.RoatpAssessor.Web.Settings;
+using System;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService
 {
     public class RoatpApplicationTokenService : IRoatpApplicationTokenService
     {
         private readonly IWebConfiguration _configuration;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        public RoatpApplicationTokenService(IWebConfiguration configuration, IHostingEnvironment hostingEnvironment)
+
+        public RoatpApplicationTokenService(IWebConfiguration configuration)
         {
             _configuration = configuration;
-            _hostingEnvironment = hostingEnvironment;
         }
 
-        public string GetToken()
+        public string GetToken(Uri baseUri)
         {
-            if (_hostingEnvironment.IsDevelopment())
+            if (baseUri != null && baseUri.IsLoopback)
                 return string.Empty;
 
             var tenantId = _configuration.RoatpApplicationApiAuthentication.TenantId;
