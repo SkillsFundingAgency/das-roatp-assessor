@@ -4,12 +4,12 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
     public class ApplicationViewModel
     {
-        public string OrganisationName { get; }
-        public string Ukprn { get; }
-        public string ApplicationReferenceNumber { get; }
-        public string ProviderRoute { get; }
-        public DateTime SubmittedDate { get; }
-        public string Assessor1 { get; }
-        public string Assessor2 { get; }
+        public string OrganisationName { get; set; }
+        public string Ukprn { get; set; }
+        public string ApplicationReferenceNumber { get; set; }
+        public string ProviderRoute { get; set; }
+        public DateTime SubmittedDate { get; set; }
+        public string Assessor1 { get; set; } 
+        public string Assessor2 { get; set; }
     }
 }
