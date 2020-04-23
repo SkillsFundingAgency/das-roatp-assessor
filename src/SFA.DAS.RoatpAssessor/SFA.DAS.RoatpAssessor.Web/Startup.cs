@@ -150,11 +150,6 @@ namespace SFA.DAS.RoatpAssessor.Web
         {
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.Scan(x => x.FromCallingAssembly()
-                .AddClasses()
-                .AsImplementedInterfaces()
-                .WithTransientLifetime());
-
             services.AddTransient(x => ApplicationConfiguration);
 
             services.AddTransient<IRoatpApplicationTokenService, RoatpApplicationTokenService>();
