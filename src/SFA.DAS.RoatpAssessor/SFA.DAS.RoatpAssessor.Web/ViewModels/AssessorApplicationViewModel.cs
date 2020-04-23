@@ -17,7 +17,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public bool IsAssessorApproved { get; set; }
 
         public List<AssessorSequence> Sequences { get; set; }
-        public bool ReadyToConfirm { get; set; }
+        public bool IsReadyForModeration { get; set; }
 
         public AssessorApplicationViewModel(Apply application)
         {
