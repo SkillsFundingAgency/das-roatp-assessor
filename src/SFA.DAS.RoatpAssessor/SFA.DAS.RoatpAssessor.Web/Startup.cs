@@ -20,6 +20,7 @@ using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
+using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Settings;
 
 namespace SFA.DAS.RoatpAssessor.Web
@@ -153,6 +154,8 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.AddTransient(x => ApplicationConfiguration);
 
             services.AddTransient<IRoatpApplicationTokenService, RoatpApplicationTokenService>();
+
+            services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
 
 
             UserExtensions.Logger = services.BuildServiceProvider().GetService<ILogger<ClaimsPrincipal>>();
