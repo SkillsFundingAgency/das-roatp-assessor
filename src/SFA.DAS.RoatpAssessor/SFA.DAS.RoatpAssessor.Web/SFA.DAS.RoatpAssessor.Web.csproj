@@ -24,4 +24,8 @@
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.RoatpAssessor.Web.Extensions\SFA.DAS.RoatpAssessor.Web.Extensions.csproj" />
+  </ItemGroup>
+
 </Project>
