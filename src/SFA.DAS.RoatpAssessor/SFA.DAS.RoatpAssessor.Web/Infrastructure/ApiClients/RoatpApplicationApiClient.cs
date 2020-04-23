@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
@@ -12,6 +15,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenService.GetToken(_httpClient.BaseAddress));
         }
 
-        // Add end points below
+        public async Task<Apply> GetApplication(Guid applicationId)
+        {
+            return await Get<Apply>($"/Application/{applicationId}");
+        }
     }
 }
