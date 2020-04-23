@@ -13,5 +13,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Extensions
         {
             return time == null ? string.Empty : time.Value.ToString("dd MMMM yyyy");
         }
+
+        public static string ToSfaShortestDateString(this DateTime time)
+        {
+            return time.ToString("dd MMM yy");
+        }
+
+        public static string ToSfaShortestDateString(this DateTime? time)
+        {
+            return time == null ? string.Empty : time.Value.ToString("dd MMM yy");
+        }
     }
 }
