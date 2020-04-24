@@ -48,7 +48,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     if(section != null)
                     {
                         section.Status = currentStatus.Status;
-                        section.StatusDescription = currentStatus.StatusDescription ?? currentStatus.Status;
                     }
                 }
 
@@ -65,75 +64,70 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 new AssessorSequence
                 {
                     SequenceNumber = 4,
-                    DisplaySequenceNumber = 1,
                     SequenceTitle = "Protecting your apprentices checks",
                     Sections = new List<AssessorSection>
                     {
-                        new AssessorSection { SectionNumber = 2, DisplaySectionNumber = 1, LinkTitle = "Continuity plan for apprenticeship training", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 3, DisplaySectionNumber = 2, LinkTitle = "Equality and diversity policy", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 4, DisplaySectionNumber = 3, LinkTitle = "Safeguarding and Prevent duty policy", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 5, DisplaySectionNumber = 4, LinkTitle = "Health and safety policy", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 6, DisplaySectionNumber = 5, LinkTitle = "Acting as a subcontractor", Status = "", StatusDescription = "" }
+                        new AssessorSection { SectionNumber = 2, LinkTitle = "Continuity plan for apprenticeship training", Status = "" },
+                        new AssessorSection { SectionNumber = 3, LinkTitle = "Equality and diversity policy", Status = "" },
+                        new AssessorSection { SectionNumber = 4, LinkTitle = "Safeguarding and Prevent duty policy", Status = "" },
+                        new AssessorSection { SectionNumber = 5, LinkTitle = "Health and safety policy", Status = "" },
+                        new AssessorSection { SectionNumber = 6, LinkTitle = "Acting as a subcontractor", Status = "" }
                     }
                 },
 
                 new AssessorSequence
                 {
                     SequenceNumber = 5,
-                    DisplaySequenceNumber = 2,
                     SequenceTitle = "Readiness to engage checks",
                     Sections = new List<AssessorSection>
                     {
-                        new AssessorSection { SectionNumber = 2, DisplaySectionNumber = 1, LinkTitle = "Engaging with employers", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 3, DisplaySectionNumber = 2, LinkTitle = "Complaints policy", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 4, DisplaySectionNumber = 3, LinkTitle = "Contract for services template with employers", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 5, DisplaySectionNumber = 4, LinkTitle = "Commitment statement template", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 6, DisplaySectionNumber = 5, LinkTitle = "Prior learning of apprentices", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 7, DisplaySectionNumber = 6, LinkTitle = "Working with subcontractors", Status = "", StatusDescription = "" }
+                        new AssessorSection { SectionNumber = 2, LinkTitle = "Engaging with employers", Status = "" },
+                        new AssessorSection { SectionNumber = 3, LinkTitle = "Complaints policy", Status = "" },
+                        new AssessorSection { SectionNumber = 4, LinkTitle = "Contract for services template with employers", Status = "" },
+                        new AssessorSection { SectionNumber = 5, LinkTitle = "Commitment statement template", Status = "" },
+                        new AssessorSection { SectionNumber = 6, LinkTitle = "Prior learning of apprentices", Status = "" },
+                        new AssessorSection { SectionNumber = 7, LinkTitle = "Working with subcontractors", Status = "" }
                     }
                 },
 
                 new AssessorSequence
                 {
                     SequenceNumber = 6,
-                    DisplaySequenceNumber = 3,
                     SequenceTitle = "Planning apprenticeship training checks",
                     Sections = new List<AssessorSection>
                     {
-                        new AssessorSection { SectionNumber = 2, DisplaySectionNumber = 1, LinkTitle = "Type of apprenticeship training", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 3, DisplaySectionNumber = 2, LinkTitle = "Supporting apprentices", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 4, DisplaySectionNumber = 3, LinkTitle = "Forecasting starts", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 5, DisplaySectionNumber = 4, LinkTitle = "Off the job training", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 6, DisplaySectionNumber = 5, LinkTitle = "Where apprentices will be trained", Status = "", StatusDescription = "" }
+                        new AssessorSection { SectionNumber = 2, LinkTitle = "Type of apprenticeship training", Status = "" },
+                        new AssessorSection { SectionNumber = 3, LinkTitle = "Supporting apprentices", Status = "" },
+                        new AssessorSection { SectionNumber = 4, LinkTitle = "Forecasting starts", Status = "" },
+                        new AssessorSection { SectionNumber = 5, LinkTitle = "Off the job training", Status = "" },
+                        new AssessorSection { SectionNumber = 6, LinkTitle = "Where apprentices will be trained", Status = "" }
                     }
                 },
 
                 new AssessorSequence
                 {
                     SequenceNumber = 7,
-                    DisplaySequenceNumber = 4,
                     SequenceTitle = "Delivering apprenticeship training checks",
                     Sections = new List<AssessorSection>
                     {
-                        new AssessorSection { SectionNumber = 2, DisplaySectionNumber = 1, LinkTitle = "Overall accountability for apprenticeships", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 3, DisplaySectionNumber = 2, LinkTitle = "Management hierarchy for apprenticeships", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 4, DisplaySectionNumber = 3, LinkTitle = "Quality and high standards in apprenticeship training", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 5, DisplaySectionNumber = 4, LinkTitle = "Developing and delivering training", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 6, DisplaySectionNumber = 5, LinkTitle = "Sectors and employee experience", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 7, DisplaySectionNumber = 6, LinkTitle = "Policy for professional development of employees", Status = "", StatusDescription = "" }
+                        new AssessorSection { SectionNumber = 2, LinkTitle = "Overall accountability for apprenticeships", Status = "" },
+                        new AssessorSection { SectionNumber = 3, LinkTitle = "Management hierarchy for apprenticeships", Status = "" },
+                        new AssessorSection { SectionNumber = 4, LinkTitle = "Quality and high standards in apprenticeship training", Status = "" },
+                        new AssessorSection { SectionNumber = 5, LinkTitle = "Developing and delivering training", Status = "" },
+                        new AssessorSection { SectionNumber = 6, LinkTitle = "Sectors and employee experience", Status = "" },
+                        new AssessorSection { SectionNumber = 7, LinkTitle = "Policy for professional development of employees", Status = "" }
                     }
                 },
 
                 new AssessorSequence
                 {
                     SequenceNumber = 8,
-                    DisplaySequenceNumber = 5,
                     SequenceTitle = "Evaluating apprenticeship training checks",
                     Sections = new List<AssessorSection>
                     {
-                        new AssessorSection { SectionNumber = 2, DisplaySectionNumber = 1, LinkTitle = "Process for evaluating the quality of training delivered", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 3, DisplaySectionNumber = 2, LinkTitle = "Evaluating the quality of apprenticeship training", Status = "", StatusDescription = "" },
-                        new AssessorSection { SectionNumber = 4, DisplaySectionNumber = 3, LinkTitle = "Systems and processes to collect apprenticeship data", Status = "", StatusDescription = "" }
+                        new AssessorSection { SectionNumber = 2, LinkTitle = "Process for evaluating the quality of training delivered", Status = "" },
+                        new AssessorSection { SectionNumber = 3, LinkTitle = "Evaluating the quality of apprenticeship training", Status = "" },
+                        new AssessorSection { SectionNumber = 4, LinkTitle = "Systems and processes to collect apprenticeship data", Status = "" }
                     }
                 },
             };

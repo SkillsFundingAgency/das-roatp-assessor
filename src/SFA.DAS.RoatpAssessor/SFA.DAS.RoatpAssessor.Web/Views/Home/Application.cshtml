@@ -110,11 +110,13 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <ol class="app-task-list">
+                    @{ var index = 0; }
                     @foreach (var sequence in Model.Sequences)
                     {
+                        index++;
                         <li>
                             <h2 class="app-task-list__section">
-                                <span class="app-task-list__section-number">@sequence.DisplaySequenceNumber. </span>@sequence.SequenceTitle
+                                <span class="app-task-list__section-number">@index. </span>@sequence.SequenceTitle
                             </h2>
                             <ul class="app-task-list__items">
                                 @foreach (var currentSection in sequence.Sections)
@@ -136,7 +138,7 @@
                                             @if (!currentSection.Status.Equals(SectionReviewStatus.New))
                                             {
                                                 var cssModifierClassName = currentSection.Status.ToLower().Replace(" ", "");
-                                                <strong class="govuk-tag app-task-list__task-@cssModifierClassName das-no-wrap">@currentSection.StatusDescription</strong>
+                                                <strong class="govuk-tag app-task-list__task-@cssModifierClassName das-no-wrap">@currentSection.Status</strong>
                                             }
                                         }
                                     </li>
