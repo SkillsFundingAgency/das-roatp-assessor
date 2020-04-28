@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.RoatpAssessor.Web",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FCE12C71-0B23-4457-9119-801A45EE2A01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.RoatpAssessor.Web.UnitTests", "SFA.DAS.RoatpAssessor.Web.UnitTests\SFA.DAS.RoatpAssessor.Web.UnitTests.csproj", "{402285D3-9DB6-46D7-85E4-F920381F22C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.RoatpAssessor.Web.UnitTests", "SFA.DAS.RoatpAssessor.Web.UnitTests\SFA.DAS.RoatpAssessor.Web.UnitTests.csproj", "{402285D3-9DB6-46D7-85E4-F920381F22C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.RoatpAssessor.Web.Extensions", "SFA.DAS.RoatpAssessor.Web.Extensions\SFA.DAS.RoatpAssessor.Web.Extensions.csproj", "{CAC71140-9267-4243-9334-20E00886826C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{402285D3-9DB6-46D7-85E4-F920381F22C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{402285D3-9DB6-46D7-85E4-F920381F22C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{402285D3-9DB6-46D7-85E4-F920381F22C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAC71140-9267-4243-9334-20E00886826C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAC71140-9267-4243-9334-20E00886826C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAC71140-9267-4243-9334-20E00886826C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAC71140-9267-4243-9334-20E00886826C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
