@@ -1,14 +1,17 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly AssessorDashboardOrchestrator _orchestrator;
+
+        public HomeController(AssessorDashboardOrchestrator orchestrator)
         {
-            return View();
+            _orchestrator = orchestrator;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -24,9 +27,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
         public IActionResult NewApplications()
         {
-            var vm = new NewApplicationsViewModel(3, 1, 1, 1);
-            vm.AddApplication(new ApplicationViewModel { ApplicationReferenceNumber = "ABC123", OrganisationName  = "Org 1", ProviderRoute = "Main", SubmittedDate = DateTime.Now.AddDays(-1), Ukprn = "32497863456" });
-            vm.AddApplication(new ApplicationViewModel { ApplicationReferenceNumber = "3465456", OrganisationName = "Org 3", ProviderRoute = "Main", SubmittedDate = DateTime.Now.AddDays(-3), Ukprn = "34658745654", Assessor1 = "Not Me" });
+            var vm = _orchestrator.GetNewApplicationsViewModel("todo");
             return View(vm);
         }
     }
