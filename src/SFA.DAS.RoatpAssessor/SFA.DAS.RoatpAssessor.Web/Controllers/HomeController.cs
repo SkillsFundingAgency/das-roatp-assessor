@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
@@ -7,9 +8,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AssessorDashboardOrchestrator _orchestrator;
+        private readonly IAssessorDashboardOrchestrator _orchestrator;
 
-        public HomeController(AssessorDashboardOrchestrator orchestrator)
+        public HomeController(IAssessorDashboardOrchestrator orchestrator)
         {
             _orchestrator = orchestrator;
         }
@@ -25,9 +26,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             return RedirectToAction("NewApplications");
         }
 
-        public IActionResult NewApplications()
+        public async Task<IActionResult> NewApplications()
         {
-            var vm = _orchestrator.GetNewApplicationsViewModel("todo");
+            var vm = await _orchestrator.GetNewApplicationsViewModel("todo");
             return View(vm);
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -10,7 +11,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
     public class RoatpAssessorApiClient : ApiClientBase<RoatpAssessorApiClient>, IRoatpAssessorApiClient
     {
-        public RoatpAssessorApiClient(HttpClient httpClient, ILogger<RoatpAssessorApiClient> logger, IRoatpApplicationTokenService tokenService) : base(httpClient, logger)
+        private HttpClient _client;
+
+        public RoatpAssessorApiClient(string baseUri, ILogger<RoatpAssessorApiClient> logger, IRoatpApplicationTokenService tokenService) : base(new HttpClient { BaseAddress = new Uri(baseUri) }, logger)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenService.GetToken(_httpClient.BaseAddress));
         }

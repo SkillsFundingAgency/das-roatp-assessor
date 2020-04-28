@@ -20,6 +20,7 @@ using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
+using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Settings;
 
 namespace SFA.DAS.RoatpAssessor.Web
@@ -61,7 +62,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(Culture);
-                options.SupportedCultures = new List<CultureInfo> {new CultureInfo(Culture) };
+                options.SupportedCultures = new List<CultureInfo> { new CultureInfo(Culture) };
                 options.RequestCultureProviders.Clear();
             });
 
@@ -102,7 +103,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             {
                 ApplicationConfiguration = ConfigurationService.GetConfig(_configuration["EnvironmentName"], _configuration["ConfigurationStorageConnectionString"], Version, ServiceName).GetAwaiter().GetResult();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError("Unable to retrieve Application Configuration", ex);
                 throw;
@@ -157,8 +158,10 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddTransient(x => ApplicationConfiguration);
 
-            services.AddTransient<IRoatpApplicationTokenService, RoatpApplicationTokenService>();
-
+            services.AddTransient<IRoatpAssessorApiClient>(x => new RoatpAssessorApiClient(
+                ApplicationConfiguration.RoatpApplicationApiAuthentication.ApiBaseAddress,
+                x.GetService<ILogger<RoatpAssessorApiClient>>(),
+                x.GetService<IRoatpApplicationTokenService>()));
 
             UserExtensions.Logger = services.BuildServiceProvider().GetService<ILogger<ClaimsPrincipal>>();
         }
