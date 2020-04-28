@@ -46,5 +46,24 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn;
             }
         }
+
+        public string GetStatusCss(string status)
+        {
+            switch (status)
+            {
+                case null: 
+                    return string.Empty;
+                case string a when a.Equals("pass", StringComparison.InvariantCultureIgnoreCase): 
+                    return "app-task-list__task-name--pass";
+                case string b when b.Contains("fail", StringComparison.InvariantCultureIgnoreCase): 
+                    return "app-task-list__task-name--fail";
+                case string c when c.Equals("in progress", StringComparison.InvariantCultureIgnoreCase):
+                    return "app-task-list__task-name--inprogress";
+                case string d when d.Equals("not required", StringComparison.InvariantCultureIgnoreCase):
+                    return "app-task-list__task-name--inactive";
+                default: 
+                    return string.Empty;
+            }
+        }
     }
 }
