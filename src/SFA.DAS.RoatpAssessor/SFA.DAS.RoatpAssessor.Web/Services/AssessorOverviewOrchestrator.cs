@@ -3,8 +3,6 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,7 +55,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public bool IsReadyForModeration(AssessorApplicationViewModel viewmodel)
+        private static bool IsReadyForModeration(AssessorApplicationViewModel viewmodel)
         {
             var isReadyForModeration = true;
 
