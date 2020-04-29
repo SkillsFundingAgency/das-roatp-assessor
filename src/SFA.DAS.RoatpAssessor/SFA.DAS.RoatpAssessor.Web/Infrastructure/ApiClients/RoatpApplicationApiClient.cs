@@ -24,14 +24,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         public async Task<List<AssessorSequence>> GetAssessorSequences(Guid applicationId)
         {
-            try
+            var assessorSequences = await Get<List<AssessorSequence>>($"/Assessor/{applicationId}/Overview");
+
+            // NOTE: TO BE REMOVED once we are happy with integrating with RoATP Apply API
+            if (assessorSequences is null)
             {
-                return await Get<List<AssessorSequence>>($"/Assessor/{applicationId}/Overview");
-            }
-            catch
-            {
-                // NOTE: TO BE REMOVED once we are happy with integrating with RoATP Apply API
-                return new List<AssessorSequence>
+                assessorSequences = new List<AssessorSequence>
                 {
                     new AssessorSequence
                     {
@@ -100,6 +98,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
                     },
                 };
             }
+
+            return assessorSequences;
         }
 
         public async Task<List<dynamic>> GetAssessorSectionAnswers(Guid applicationId)
