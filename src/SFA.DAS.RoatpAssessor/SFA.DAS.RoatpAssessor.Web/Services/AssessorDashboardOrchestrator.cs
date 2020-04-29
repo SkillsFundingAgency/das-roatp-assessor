@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -22,6 +23,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var viewModel = new NewApplicationsViewModel(0, 0, 0, 0);
             AddApplicationsToViewModel(viewModel, applications);
             return viewModel;
+        }
+
+        public async Task AssignApplicationToAssessor(Guid applicationId, int assessorNumber, string assessorUserId, string assessorName)
+        {
+            await _apiClient.AssignAssessor(applicationId, new AssignAssessorApplicationRequest(assessorNumber, assessorUserId, assessorName));
         }
 
         private void AddApplicationsToViewModel(NewApplicationsViewModel viewModel, List<RoatpAssessorApplicationSummary> applications)

@@ -34,11 +34,11 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
 
             _apiClient.Setup(x => x.GetNewApplications(userId)).ReturnsAsync(applications);
 
-            var response = _orchestrator.GetNewApplicationsViewModel(userId);
+            var response = await _orchestrator.GetNewApplicationsViewModel(userId);
 
-            Assert.AreEqual(applications.Count, response.Result.Applications.Count);
-            AssertApplicationsMatch(applications.First(), response.Result.Applications.First());
-            AssertApplicationsMatch(applications.Last(), response.Result.Applications.Last());
+            Assert.AreEqual(applications.Count, response.Applications.Count);
+            AssertApplicationsMatch(applications.First(), response.Applications.First());
+            AssertApplicationsMatch(applications.Last(), response.Applications.Last());
         }
 
         private void AssertApplicationsMatch(RoatpAssessorApplicationSummary expected, ApplicationViewModel actual)
