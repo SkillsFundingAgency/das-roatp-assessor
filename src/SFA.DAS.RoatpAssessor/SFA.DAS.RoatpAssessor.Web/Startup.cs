@@ -157,6 +157,8 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
 
+            services.AddTransient<ISectionReviewOrchestrator, SectionReviewOrchestrator>();
+
 
             UserExtensions.Logger = services.BuildServiceProvider().GetService<ILogger<ClaimsPrincipal>>();
         }

@@ -1,0 +1,65 @@
+﻿@using SFA.DAS.RoatpAssessor.Web.Extensions
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes
+
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
+
+@{
+    ViewBag.Title = "Assessor evaluation";
+    Layout = "_Layout";
+}
+
+<div class="govuk-breadcrumbs">
+    <ol class="govuk-breadcrumbs__list">
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="/Home">RoATP applications</a>
+        </li>
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="/Home/NewApplications">New applications</a>
+        </li>
+        <li class="govuk-breadcrumbs__list-item" aria-current="page">Application assessment overview</li>
+    </ol>
+</div>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+
+
+            <h1 class="govuk-heading-xl">Test Answers Review</h1>
+
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        ApplicationId
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ApplicationId
+                    </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        SequenceNumber
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.SequenceNumber
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        SectionNumber
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.SectionNumber
+                    </dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+    <p class="govuk-body">
+        <a asp-controller="Home" asp-action="ViewApplication" asp-route-applicationId="@Model.ApplicationId" class="govuk-link">Back to application assessment overview</a>
+    </p>
+
+</main>
