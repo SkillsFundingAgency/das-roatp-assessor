@@ -30,6 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             }
             catch
             {
+                // NOTE: TO BE REMOVED once we are happy with integrating with RoATP Apply API
                 return new List<AssessorSequence>
                 {
                     new AssessorSequence
@@ -103,6 +104,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         public async Task<List<dynamic>> GetAssessorSectionAnswers(Guid applicationId)
         {
+            // TODO: Needs completing once we know how we're going to store and retrieve answers
             var answers = new List<dynamic>
             {
                 new { SequenceNumber = 4, SectionNumber = 2, Status = "Fail" },
