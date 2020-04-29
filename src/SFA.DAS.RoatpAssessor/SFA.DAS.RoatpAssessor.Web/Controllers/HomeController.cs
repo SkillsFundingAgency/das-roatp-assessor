@@ -32,10 +32,23 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
         public async Task<IActionResult> NewApplications()
         {
-            var userName = _contextAccessor.HttpContext.User.Username();
-            userName = "temp"; //Can't access the user until staff idams is enabled
-            var vm = await _orchestrator.GetNewApplicationsViewModel(userName);
+            var userId = _contextAccessor.HttpContext.User.UserId();
+            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
+            var vm = await _orchestrator.GetNewApplicationsViewModel(userId);
             return View(vm);
+        }
+
+        public async Task<IActionResult> AssignToAssessor(Guid applicationId, int assessorNumber)
+        {
+            var userId = _contextAccessor.HttpContext.User.UserId();
+            var userName = _contextAccessor.HttpContext.User.UserDisplayName();
+
+            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
+            userName = "Joe Bloggs"; //TODO: Can't access the user until staff idams is enabled
+
+            await _orchestrator.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName);
+
+            return RedirectToAction("NewApplications");
         }
     }
 }

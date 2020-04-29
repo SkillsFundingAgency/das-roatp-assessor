@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
@@ -28,8 +29,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
             var userId = "sdjfhnsrfdg";
             var applications = new List<RoatpAssessorApplicationSummary>
             {
-                new RoatpAssessorApplicationSummary { ApplicationReferenceNumber = "sdjfs", Assessor1Name = "sdjfghdfgd", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565" },
-                new RoatpAssessorApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568" }
+                new RoatpAssessorApplicationSummary { ApplicationReferenceNumber = "sdjfs", Assessor1Name = "sdjfghdfgd", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid() },
+                new RoatpAssessorApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid() }
             };
 
             _apiClient.Setup(x => x.GetNewApplications(userId)).ReturnsAsync(applications);
@@ -43,6 +44,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
 
         private void AssertApplicationsMatch(RoatpAssessorApplicationSummary expected, ApplicationViewModel actual)
         {
+            Assert.AreEqual(expected.ApplicationId, actual.ApplicationId);
             Assert.AreEqual(expected.OrganisationName, actual.OrganisationName);
             Assert.AreEqual(expected.ApplicationReferenceNumber, actual.ApplicationReferenceNumber);
             Assert.AreEqual(expected.Assessor1Name, actual.Assessor1);

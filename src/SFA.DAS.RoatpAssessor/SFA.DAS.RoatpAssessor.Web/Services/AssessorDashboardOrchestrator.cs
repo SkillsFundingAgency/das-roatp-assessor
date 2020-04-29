@@ -36,6 +36,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 var applicationVm = new ApplicationViewModel
                 {
+                    ApplicationId = application.ApplicationId
                     ApplicationReferenceNumber = application.ApplicationReferenceNumber,
                     Assessor1 = application.Assessor1Name,
                     Assessor2 = application.Assessor2Name,

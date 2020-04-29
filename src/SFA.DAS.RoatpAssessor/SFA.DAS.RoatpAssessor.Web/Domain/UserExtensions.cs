@@ -43,7 +43,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Domain
             return surname?.Value ?? "User";
         }
 
-        public static string Username(this ClaimsPrincipal user)
+        public static string UserId(this ClaimsPrincipal user)
         {
             return user.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn")?.Value;
         }
