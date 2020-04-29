@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 using Moq;
 using NUnit.Framework;
@@ -17,7 +18,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
         [SetUp]
         public void SetUp()
         {
-            _controller = new HomeController(Mock.Of<IAssessorDashboardOrchestrator>())
+            _controller = new HomeController(Mock.Of<IAssessorDashboardOrchestrator>(), Mock.Of<IHttpContextAccessor>())
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
