@@ -12,7 +12,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public string GatewayReviewStatus { get; set; }
         public string FinancialReviewStatus { get; set; }
         public ApplyData ApplyData { get; set; }
-        public FinancialReviewDetails FinancialGrade { get; set; }
 
         public Guid Id { get; set; }
         public string Status { get; set; }
@@ -60,20 +59,5 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public int SectionNo { get; set; }
         public string Status { get; set; }
         public bool NotRequired { get; set; }
-    }
-
-    public class FinancialReviewDetails
-    {
-        public string SelectedGrade { get; set; }
-        public DateTime? FinancialDueDate { get; set; }
-        public string GradedBy { get; set; }
-        public DateTime? GradedDateTime { get; set; }
-        public string Comments { get; set; }
-        public List<FinancialEvidence> FinancialEvidences { get; set; }
-    }
-
-    public class FinancialEvidence
-    {
-        public string Filename { get; set; }
     }
 }
