@@ -32,5 +32,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         {
             await Post($"Assessor/Applications/{applicationId}/Assign", request);
         }
+
+        public async Task<List<RoatpAssessorApplicationSummary>> GetInProgressApplications(string userId)
+        {
+            return await Get<List<RoatpAssessorApplicationSummary>>($"Assessor/Applications/{userId}/InProgress");
+        }
     }
 }
