@@ -87,16 +87,16 @@
     </div>*@
 
     @* Show application guidance if present *@
-    @*@if (page.Details != null)
+    @*@if (page.Questions[0].QuestionBodyText != null)
     {
         <details class="govuk-details">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">
-                    @page.Details.Title
+                    View application guidance
                 </span>
             </summary>
             <div class="govuk-details__text">
-                @Html.Raw(page.Details.Body)
+                @Html.Raw(page.Questions[0].QuestionBodyText)
             </div>
         </details>
     }*@
