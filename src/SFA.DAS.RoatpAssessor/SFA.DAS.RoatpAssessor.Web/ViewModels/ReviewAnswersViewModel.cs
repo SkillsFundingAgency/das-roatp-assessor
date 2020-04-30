@@ -9,8 +9,14 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
     {
         public Guid ApplicationId { get; set; }
 
+        public string Status { get; set; }
+
         public string Heading { get; set; }
         public string Caption { get; set; }
+
+        public string OptionPassText { get; set; }
+        public string OptionFailText { get; set; }
+        public string OptionInProgressText { get; set; }
         public List<ValidationErrorDetail> ErrorMessages { get; set; }
 
         // Will not need them. Just for testing

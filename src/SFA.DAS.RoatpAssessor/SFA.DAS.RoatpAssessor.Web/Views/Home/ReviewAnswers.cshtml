@@ -56,6 +56,8 @@
         </div>
     </div>
 
+    <partial name="~/Views/Home/Pages/_ApprovalSection.cshtml" for="@Model" />
+
     <p class="govuk-body">
         <a asp-controller="Home" asp-action="ViewApplication" asp-route-applicationId="@Model.ApplicationId" class="govuk-link">Back to application assessment overview</a>
     </p>
