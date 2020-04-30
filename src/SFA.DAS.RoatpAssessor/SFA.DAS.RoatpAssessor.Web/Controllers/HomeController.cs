@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
@@ -18,15 +17,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             _overviewOrchestrator = overviewOrchestrator;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Index()
+        {
+            return RedirectToAction("NewApplications", "Dashboard");
         }
 
         [HttpGet("Home/{applicationId}")]
@@ -41,18 +41,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            switch (viewModel.AssessorReviewStatus)
-            {
-                case AssessorReviewStatus.New:
-                case AssessorReviewStatus.InProgress:
-                    return View("~/Views/Home/Application.cshtml", viewModel);
-                case AssessorReviewStatus.Approved:
-                case AssessorReviewStatus.Declined:
-                    return View("~/Views/Home/Application_ReadOnly.cshtml", viewModel);
-                default:
-                    return RedirectToAction(nameof(Index));
-            }
+            return View("~/Views/Home/Application.cshtml", viewModel);
 
+            //TODO: We will need to redirect to read only when approve/declined is implemented
+            return View("~/Views/Home/Application_ReadOnly.cshtml", viewModel);
         }
     }
 }
