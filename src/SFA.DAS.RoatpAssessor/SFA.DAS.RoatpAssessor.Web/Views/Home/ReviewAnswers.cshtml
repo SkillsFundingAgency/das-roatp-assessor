@@ -56,7 +56,22 @@
         </div>
     </div>
 
-    <partial name="~/Views/Home/Pages/_ApprovalSection.cshtml" for="@Model" />
+
+    @if (Model.ApplicationId != Guid.Empty)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <form class="js-disable-on-submit" asp-action="" asp-controller="">
+                    <input type="hidden" asp-for="ApplicationId" />
+                    @* Plus any others... *@
+
+                    <partial name="~/Views/Home/Pages/_ApprovalSection.cshtml" for="@Model" />
+
+                    <button class="govuk-button" type="submit">Save and continue</button>
+                </form>
+            </div>
+        </div>
+    }
 
     <p class="govuk-body">
         <a asp-controller="Home" asp-action="ViewApplication" asp-route-applicationId="@Model.ApplicationId" class="govuk-link">Back to application assessment overview</a>
