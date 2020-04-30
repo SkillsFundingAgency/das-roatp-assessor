@@ -4,49 +4,23 @@
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
 
 @{
-    ViewBag.Title = "Assessor - Model.Heading";
+    ViewBag.Title = $"Assessor - {@Model.Heading}";
     Layout = "_Layout";
 }
 
-<div class="govuk-breadcrumbs">
-    <ol class="govuk-breadcrumbs__list">
-        <li class="govuk-breadcrumbs__list-item">
-            <a class="govuk-breadcrumbs__link" href="/Home/NewApplications">RoATP applications</a>
-        </li>
-        <li class="govuk-breadcrumbs__list-item">
-            <a class="govuk-breadcrumbs__link" href="/Home/@Model.ApplicationId">Application assessment overview</a>
-        </li>
-        <li class="govuk-breadcrumbs__list-item" aria-current="page">Model.Caption</li>
-    </ol>
-</div>
+<partial name="~/Views/Home/Pages/_Breadcrumb.cshtml" for="@Model" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-
-            @if (Model.ErrorMessages != null && Model.ErrorMessages.Any())
-            {
-                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-                    <h2 class="govuk-error-summary__title" id="error-summary-title">
-                        There is a problem
-                    </h2>
-                    <div class="govuk-error-summary__body">
-                        <ul class="govuk-list govuk-error-summary__list">
-                            @foreach (var error in Model.ErrorMessages)
-                            {
-                                <li><a href="#@error.Field">@error.ErrorMessage</a></li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-            }
+            <partial name="~/Views/Home/Pages/_ValidationSummary.cshtml" for="@Model" />
 
             <span class="govuk-caption-xl">
-                Model.Caption
+                @Model.Caption
             </span>
 
-            <h1 class="govuk-heading-xl">Model.Heading</h1>
+            <h1 class="govuk-heading-xl">@Model.Heading</h1>
 
             <dl class="govuk-summary-list govuk-!-margin-bottom-9">
                 <div class="govuk-summary-list__row">
