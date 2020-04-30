@@ -21,6 +21,25 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
         {
             _apiClient = new Mock<IRoatpAssessorApiClient>();
             _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_apiClient.Object);
+
+            _apiClient.Setup(x => x.GetNewApplications(It.IsAny<string>())).ReturnsAsync(new List<RoatpAssessorApplicationSummary>());
+            _apiClient.Setup(x => x.GetAssessorSummary(It.IsAny<string>())).ReturnsAsync(new RoatpAssessorSummary());
+        }
+
+        [Test]
+        public async Task When_getting_new_applications_then_the_application_summary_is_returned()
+        {
+            var userId = "sdjfhnsrfdg";
+            var summary = new RoatpAssessorSummary { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6 };
+            
+            _apiClient.Setup(x => x.GetAssessorSummary(userId)).ReturnsAsync(summary);
+
+            var response = await _orchestrator.GetNewApplicationsViewModel(userId);
+
+            Assert.AreEqual(summary.NewApplications, response.NewApplications);
+            Assert.AreEqual(summary.ModerationApplications, response.ModerationApplications);
+            Assert.AreEqual(summary.ClarificationApplications, response.ClarificationApplications);
+            Assert.AreEqual(summary.InProgressApplications, response.InProgressApplications);
         }
 
         [Test]

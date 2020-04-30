@@ -7,6 +7,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
     public interface IRoatpAssessorApiClient
     {
+        Task<RoatpAssessorSummary> GetAssessorSummary(string userId);
         Task<List<RoatpAssessorApplicationSummary>> GetNewApplications(string userId);
         Task AssignAssessor(Guid applicationId, AssignAssessorApplicationRequest request);
     }
