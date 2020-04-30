@@ -161,6 +161,8 @@ namespace SFA.DAS.RoatpAssessor.Web
                 x.GetService<ILogger<RoatpAssessorApiClient>>(),
                 x.GetService<IRoatpApplicationTokenService>()));
 
+            services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
+
             UserExtensions.Logger = services.BuildServiceProvider().GetService<ILogger<ClaimsPrincipal>>();
         }
 
