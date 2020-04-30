@@ -22,6 +22,7 @@ using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Settings;
+using SFA.DAS.RoatpAssessor.Web.Validators;
 
 namespace SFA.DAS.RoatpAssessor.Web
 {
@@ -164,7 +165,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
 
             services.AddTransient<ISectionReviewOrchestrator, SectionReviewOrchestrator>();
-
+            services.AddTransient<IRoatpAssessorPageValidator, RoatpAssessorPageValidator>();
 
             UserExtensions.Logger = services.BuildServiceProvider().GetService<ILogger<ClaimsPrincipal>>();
         }

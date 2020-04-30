@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,10 +26,10 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string OptionInProgressText { get; set; }
         public List<ValidationErrorDetail> ErrorMessages { get; set; }
 
-        // Will not need them. Just for testing
+        // It seems that we will need them for grouping statuses
         public int SequenceNumber { get; set; }
         public int SectionNumber { get; set; }
-
+        public string PageId { get; set; }
 
         public string ApplicationRouteShortText
         {
@@ -49,24 +50,24 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
     }
 
 
-    public class ValidationErrorDetail
-    {
-        public ValidationErrorDetail()
-        {
-        }
+    //public class ValidationErrorDetail
+    //{
+    //    public ValidationErrorDetail()
+    //    {
+    //    }
 
-        public ValidationErrorDetail(string field, string errorMessage)
-        {
-            Field = field;
-            ErrorMessage = errorMessage;
-        }
+    //    public ValidationErrorDetail(string field, string errorMessage)
+    //    {
+    //        Field = field;
+    //        ErrorMessage = errorMessage;
+    //    }
 
-        public ValidationErrorDetail(string errorMessage)
-        {
-            ErrorMessage = errorMessage;
-        }
+    //    public ValidationErrorDetail(string errorMessage)
+    //    {
+    //        ErrorMessage = errorMessage;
+    //    }
 
-        public string Field { get; set; }
-        public string ErrorMessage { get; set; }
-    }
+    //    public string Field { get; set; }
+    //    public string ErrorMessage { get; set; }
+    //}
 }

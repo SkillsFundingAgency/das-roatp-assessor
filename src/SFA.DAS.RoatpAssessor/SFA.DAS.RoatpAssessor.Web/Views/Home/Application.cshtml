@@ -131,7 +131,7 @@
                                             {
                                                 // TODO: Integrate with 'Section Review' action
                                                 @*<a class="govuk-link" href="#">@currentSection.LinkTitle</a>*@
-                                                <a asp-controller="SectionReview" asp-action="ReviewAnswers"asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@sequence.SequenceNumber" asp-route-sectionNumber="@currentSection.SectionNumber" class="govuk-link">@currentSection.LinkTitle</a>
+                                                <a asp-controller="SectionReview" asp-action="ReviewPageAnswers"asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@sequence.SequenceNumber" asp-route-sectionNumber="@currentSection.SectionNumber" class="govuk-link">@currentSection.LinkTitle</a>
                                             }
                                         </span>
                                         @if (!string.IsNullOrWhiteSpace(currentSection.Status))
