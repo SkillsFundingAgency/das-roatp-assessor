@@ -8,5 +8,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Extensions
         {
             return time.ToString("dd MMMM yyyy");
         }
+
+        public static string ToSfaShortDateString(this DateTime? time)
+        {
+            return time?.ToString("dd MMMM yyyy");
+        }
     }
 }

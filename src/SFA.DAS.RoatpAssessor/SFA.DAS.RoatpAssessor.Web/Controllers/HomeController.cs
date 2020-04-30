@@ -1,28 +1,21 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IAssessorDashboardOrchestrator _orchestrator;
-        private readonly IHttpContextAccessor _contextAccessor;
-		private readonly IAssessorOverviewOrchestrator _overviewOrchestrator;
+        private readonly IAssessorOverviewOrchestrator _overviewOrchestrator;
 
-        public HomeController(IAssessorOverviewOrchestrator overviewOrchestrator, IAssessorDashboardOrchestrator orchestrator, IHttpContextAccessor contextAccessor)
+        public HomeController(IAssessorOverviewOrchestrator overviewOrchestrator)
         {
             _overviewOrchestrator = overviewOrchestrator;
-			_orchestrator = orchestrator;
-            _contextAccessor = contextAccessor;
         }
 
 
@@ -34,29 +27,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("NewApplications");
+            return RedirectToAction("NewApplications", "Dashboard");
         }
-
-        public async Task<IActionResult> NewApplications()
-        {
-            var userId = _contextAccessor.HttpContext.User.UserId();
-            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
-            var vm = await _orchestrator.GetNewApplicationsViewModel(userId);
-            return View(vm);
-        }
-
-        public async Task<IActionResult> AssignToAssessor(Guid applicationId, int assessorNumber)
-        {
-            var userId = _contextAccessor.HttpContext.User.UserId();
-            var userName = _contextAccessor.HttpContext.User.UserDisplayName();
-
-            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
-            userName = "Joe Bloggs"; //TODO: Can't access the user until staff idams is enabled
-
-            await _orchestrator.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName);
-
-            return RedirectToAction("NewApplications");
-		}
 
         [HttpGet("Home/{applicationId}")]
         public async Task<IActionResult> ViewApplication(Guid applicationId)

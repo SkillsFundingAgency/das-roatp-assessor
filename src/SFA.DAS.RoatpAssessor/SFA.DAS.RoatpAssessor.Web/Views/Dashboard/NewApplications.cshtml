@@ -55,7 +55,7 @@
                                 <td class="govuk-table__cell" data-label="Assessor 1">
                                     @if (string.IsNullOrEmpty(item.Assessor1))
                                     {
-                                        <a class="govuk-link" asp-action="AssignToAssessor" asp-controller="Home" asp-route-applicationId="@item.ApplicationId" asp-route-assessorNumber="1">Assign to me</a>
+                                        <a class="govuk-link" asp-action="AssignToAssessor" asp-controller="Dashboard" asp-route-applicationId="@item.ApplicationId" asp-route-assessorNumber="1">Assign to me</a>
                                     }
                                     else
                                     {
@@ -65,7 +65,7 @@
                                 <td class="govuk-table__cell" data-label="Assessor 2">
                                     @if (string.IsNullOrEmpty(item.Assessor2))
                                     {
-                                        <a class="govuk-link" asp-action="AssignToAssessor" asp-controller="Home" asp-route-applicationId="@item.ApplicationId" asp-route-assessorNumber="2">Assign to me</a>
+                                        <a class="govuk-link" asp-action="AssignToAssessor" asp-controller="Dashboard" asp-route-applicationId="@item.ApplicationId" asp-route-assessorNumber="2">Assign to me</a>
                                     }
                                     else
                                     {

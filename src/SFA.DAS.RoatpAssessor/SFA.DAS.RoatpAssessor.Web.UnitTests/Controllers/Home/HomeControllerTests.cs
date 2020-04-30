@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
@@ -19,15 +17,15 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
     {
         private readonly Guid _applicationId = Guid.NewGuid();
 
-        private Mock<Services.IAssessorOverviewOrchestrator> _assessorOverviewOrchestrator;
+        private Mock<IAssessorOverviewOrchestrator> _assessorOverviewOrchestrator;
         private HomeController _controller;
 
         [SetUp]
         public void SetUp()
         {
-            _assessorOverviewOrchestrator = new Mock<Services.IAssessorOverviewOrchestrator>();
+            _assessorOverviewOrchestrator = new Mock<IAssessorOverviewOrchestrator>();
 
-            _controller = new HomeController(_assessorOverviewOrchestrator.Object, Mock.Of<IHttpContextAccessor>())
+            _controller = new HomeController(_assessorOverviewOrchestrator.Object)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
