@@ -9,5 +9,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         Task<NewApplicationsViewModel> GetNewApplicationsViewModel(string userId);
 
         Task AssignApplicationToAssessor(Guid applicationId, int assessorNumber, string assessorUserId, string assessorName);
+
+        Task<NewApplicationsViewModel> GetInProgressApplicationsViewModel(string userId);
     }
 }
