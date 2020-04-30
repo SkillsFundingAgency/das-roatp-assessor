@@ -1,0 +1,36 @@
+﻿@model SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply.TabularData
+
+@if (Model != null && Model.HeadingTitles != null && Model.DataRows != null)
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <table class="govuk-table govuk-!-margin-bottom-9">
+                @if (Model.Caption != null)
+                {
+                    <caption class="govuk-table__caption">
+                        @Model.Caption
+                    </caption>
+                }
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        @foreach (var title in Model.HeadingTitles)
+                        {
+                            <th class="govuk-table__header" scope="col">@Html.Raw(title)</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var dataRow in Model.DataRows)
+                    {
+                        <tr class="govuk-table__row">
+                            @foreach (var column in dataRow.Columns)
+                            {
+                                <td class="govuk-table__cell">@column</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
