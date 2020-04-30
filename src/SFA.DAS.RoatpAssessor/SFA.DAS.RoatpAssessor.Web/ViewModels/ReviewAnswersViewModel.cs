@@ -11,6 +11,12 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 
         public string Status { get; set; }
 
+        public string Ukprn { get; set; }
+        public string ApplyLegalName { get; set; }
+        public string ApplicationReference { get; set; }
+        public string ApplicationRoute { get; set; }
+        public DateTime? SubmittedDate { get; set; }
+
         public string Heading { get; set; }
         public string Caption { get; set; }
 
@@ -22,6 +28,24 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         // Will not need them. Just for testing
         public int SequenceNumber { get; set; }
         public int SectionNumber { get; set; }
+
+
+        public string ApplicationRouteShortText
+        {
+            get
+            {
+                if (String.IsNullOrWhiteSpace(ApplicationRoute))
+                {
+                    return string.Empty;
+                }
+                var index = ApplicationRoute.IndexOf(' ');
+                if (index < 0)
+                {
+                    return ApplicationRoute;
+                }
+                return ApplicationRoute.Substring(0, index + 1);
+            }
+        }
     }
 
 
