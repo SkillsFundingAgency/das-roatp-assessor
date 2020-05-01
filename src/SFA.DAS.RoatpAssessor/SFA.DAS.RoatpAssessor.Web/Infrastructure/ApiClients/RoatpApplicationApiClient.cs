@@ -140,6 +140,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
                     SectionNumber = sectionNumber,
                     PageId = "PageId",
 
+                    SequenceTitle = "SequenceTitle",
                     SectionTitle = "SectionTitle",
                     Title = "PageTitle",
                     BodyText = null,

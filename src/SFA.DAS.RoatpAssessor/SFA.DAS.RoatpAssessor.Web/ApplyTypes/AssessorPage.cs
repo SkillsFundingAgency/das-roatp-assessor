@@ -15,9 +15,10 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
 
         public string NextPageId { get; set; }
 
+        public string SequenceTitle { get; set; }
         public string SectionTitle { get; set; }
-
         public string Title { get; set; }
+
         public string BodyText { get; set; }
 
         public List<AssessorQuestion> Questions { get; set; }
