@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
@@ -24,6 +25,46 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<ReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request)
         {
             var viewModel = new ReviewAnswersViewModel { ApplicationId = request.ApplicationId, SequenceNumber = request.SequenceNumber, SectionNumber = request.SectionNumber, PageId = request.PageId };
+
+
+            var application = await _applyApiClient.GetApplication(request.ApplicationId);
+            var assessorPage = await _applyApiClient.GetAssessorPage(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.PageId);
+
+            viewModel = new ReviewAnswersViewModel
+            {
+                ApplicationId = application.ApplicationId,
+
+                Ukprn = application.ApplyData.ApplyDetails.UKPRN,
+                ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
+                ApplicationReference = application.ApplyData.ApplyDetails.ReferenceNumber,
+                ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
+                SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
+
+                SequenceNumber = assessorPage.SequenceNumber,
+                SectionNumber = assessorPage.SectionNumber,
+                PageId = assessorPage.PageId,
+                NextPageId = assessorPage.NextPageId,
+
+                Heading = assessorPage.Title,
+                Caption = assessorPage.SectionTitle,
+                GuidanceText = assessorPage.BodyText ?? assessorPage.Questions[0].QuestionBodyText,
+
+                Questions = new List<ApplyTypes.AssessorQuestion>(assessorPage.Questions),
+                Answers = new List<ApplyTypes.AssessorAnswer>(assessorPage.Answers),
+                TabularData = new List<TabularData>(),        
+            };
+
+            foreach(var tabularQuestion in viewModel.Questions.Where(q => "TabularData".Equals(q.InputType, StringComparison.OrdinalIgnoreCase)))
+            {
+                var jsonAnswer = viewModel.Answers.FirstOrDefault(a => a.QuestionId == tabularQuestion.QuestionId)?.Value;
+
+                if(jsonAnswer != null)
+                {
+                    viewModel.TabularData.Add(JsonConvert.DeserializeObject<TabularData>(jsonAnswer));
+                }
+            }
+
+
             return viewModel;
         }
     }
