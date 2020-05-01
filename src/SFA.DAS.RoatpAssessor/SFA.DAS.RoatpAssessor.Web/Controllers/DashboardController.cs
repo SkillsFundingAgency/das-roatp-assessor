@@ -43,5 +43,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
             return RedirectToAction("ViewApplication", "Home", new { applicationId });
         }
+
+        public async Task<IActionResult> InProgressApplications()
+        {
+            var userId = _contextAccessor.HttpContext.User.UserId();
+            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
+            var vm = await _orchestrator.GetInProgressApplicationsViewModel(userId);
+            return View(vm);
+        }
     }
 }

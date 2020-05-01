@@ -31,17 +31,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             await _apiClient.AssignAssessor(applicationId, new AssignAssessorApplicationRequest(assessorNumber, assessorUserId, assessorName));
         }
 
-        public async Task<NewApplicationsViewModel> GetInProgressApplicationsViewModel(string userId)
+        public async Task<InProgressApplicationsViewModel> GetInProgressApplicationsViewModel(string userId)
         {
             var applicationSummary = await _apiClient.GetAssessorSummary(userId);
             var applications = await _apiClient.GetInProgressApplications(userId);
 
-            var viewModel = new NewApplicationsViewModel(applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
+            var viewModel = new InProgressApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
             AddApplicationsToViewModel(viewModel, applications);
             return viewModel;
         }
 
-        private void AddApplicationsToViewModel(NewApplicationsViewModel viewModel, List<RoatpAssessorApplicationSummary> applications)
+        private void AddApplicationsToViewModel(DashboardViewModel viewModel, List<RoatpAssessorApplicationSummary> applications)
         {
             foreach (var application in applications)
             {
