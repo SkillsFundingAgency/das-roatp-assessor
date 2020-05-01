@@ -1,7 +1,4 @@
-﻿@using SFA.DAS.RoatpAssessor.Web.Extensions
-@using SFA.DAS.RoatpAssessor.Web.ApplyTypes
-
-@model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
+﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
 
 @{
     ViewBag.Title = $"Assessor - {@Model.Heading}";
@@ -56,38 +53,57 @@
         </div>
     </div>
 
-    @* if page is tabular data  *@
-    @*<partial name="~/Views/Home/Pages/_TabularData.cshtml" for="@page.Answers.TabularData" />*@
-
-    @* else *@
-    @*<div class="govuk-grid-column-full">
-        <table class="govuk-table govuk-!-margin-bottom-9">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Application question</th>
-                    <th class="govuk-table__header govuk-table__header--numeric das-no-wrap" scope="col">Applicant's answer</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                @foreach (var question in page.Questions)
-                {
+    @if (Model.TabularData != null && Model.TabularData.Any())
+    {
+        foreach (var item in Model.TabularData)
+        {
+            <partial name="~/Views/Home/Pages/_TabularData.cshtml" for="@item" />
+        }
+    }
+    else
+    {
+        <div class="govuk-grid-column-full">
+            <table class="govuk-table govuk-!-margin-bottom-9">
+                <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">@Html.Raw(question.Label)</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            @if (!string.IsNullOrWhiteSpace(question.Input.InputPrefix))
-                            {
-                                <span>@Html.Raw(question.Input.InputPrefix)</span>
-                            }
-                            @Html.Raw(page.Answers).SingleOrDefault(pg => pg.QuestionId == question.QuestionId)?.Value)
-                        </td>
+                        <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Application question</th>
+                        <th class="govuk-table__header govuk-table__header--numeric das-no-wrap" scope="col">Applicant's answer</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>*@
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var question in Model.Questions)
+                    {
+                        var answer = Model.Answers.SingleOrDefault(pg => pg.QuestionId == question.QuestionId)?.Value;
 
-    @* Show application guidance if present *@
-    @*@if (page.Questions[0].QuestionBodyText != null)
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@Html.Raw(question.Label)</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                @switch (question.InputType)
+                                {
+                                    case "FileUpload":
+                                        <a href="#">@*TODO: DOWNLOAD FILE*@ TODO -- @answer</a>
+                                        break;
+                                    default:
+                                        @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
+                                        {
+                                            <span>@Html.Raw(question.InputPrefix)</span>
+                                        }
+                                        @Html.Raw(answer)
+                                        @if (!string.IsNullOrWhiteSpace(question.InputSuffix))
+                                        {
+                                            <span>@Html.Raw(question.InputSuffix)</span>
+                                        }
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.GuidanceText))
     {
         <details class="govuk-details">
             <summary class="govuk-details__summary">
@@ -96,10 +112,10 @@
                 </span>
             </summary>
             <div class="govuk-details__text">
-                @Html.Raw(page.Questions[0].QuestionBodyText)
+                @Html.Raw(Model.GuidanceText)
             </div>
         </details>
-    }*@
+    }
 
 
     @if (Model.ApplicationId != Guid.Empty)
