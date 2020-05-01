@@ -116,5 +116,55 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
             return await Task.FromResult(answers);
         }
+
+        public async Task<AssessorPage> GetAssessorPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
+        {
+            AssessorPage assessorPage;
+
+            if(string.IsNullOrEmpty(pageId))
+            {
+                assessorPage = await Get<AssessorPage>($"/Assessor/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page");
+            }
+            else
+            {
+                assessorPage = await Get<AssessorPage>($"/Assessor/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}");
+            }
+
+            // NOTE: TO BE REMOVED once we are happy with integrating with RoATP Apply API
+            if(assessorPage is null)
+            {
+                assessorPage = new AssessorPage
+                {
+                    ApplicationId = applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
+                    PageId = "PageId",
+
+                    SectionTitle = "SectionTitle",
+                    Title = "PageTitle",
+                    BodyText = null,
+
+                    Questions = new List<AssessorQuestion>
+                    {
+                        new AssessorQuestion
+                        {
+                            QuestionId = "QuestionId",
+                            Label = null,
+                            QuestionBodyText = "QuestionBodyText",
+                            InputType = "TextArea",
+                            InputPrefix = null,
+                            InputSuffix = null
+                        }
+                    },
+
+                    Answers = new List<AssessorAnswer>
+                    {
+                        new AssessorAnswer { QuestionId = "QuestionId", Value = "Value" }
+                    }
+                };
+            }
+
+            return assessorPage;
+        }
     }
 }
