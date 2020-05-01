@@ -28,12 +28,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber)
+        public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
             var userName = User.UserDisplayName();
             var userId = "";
 
-            var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userName, sequenceNumber, sectionNumber));
+            var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userName, sequenceNumber, sectionNumber, pageId));
             viewModel.PageId = "TestPageId";
 
             if (viewModel is null)
@@ -49,7 +49,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         {
             var userName = User.UserDisplayName();
             var userId = "";
-            Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userName, command.SequenceNumber, command.SectionNumber));
+            Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userName, command.SequenceNumber, command.SectionNumber, command.PageId));
             return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/Home/ReviewAnswers.cshtml");
         }
     }
