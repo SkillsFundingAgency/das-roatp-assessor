@@ -45,10 +45,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 PageId = assessorPage.PageId,
                 NextPageId = assessorPage.NextPageId,
 
-                Caption = assessorPage.SequenceTitle,
-                Heading = assessorPage.Title,
+                Caption = assessorPage.Caption,
+                Heading = assessorPage.Heading,
                 
-                GuidanceText = assessorPage.BodyText ?? assessorPage.Questions[0].QuestionBodyText,
+                GuidanceText = assessorPage.BodyText ?? assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
 
                 Questions = new List<ApplyTypes.AssessorQuestion>(assessorPage.Questions),
                 Answers = new List<ApplyTypes.AssessorAnswer>(assessorPage.Answers),
