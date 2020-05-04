@@ -87,7 +87,7 @@ steps:
     command: publish
     publishWebProjects: false
     projects: 'src\SFA.DAS.RoatpAssessor\SFA.DAS.RoatpAssessor.Web\SFA.DAS.RoatpAssessor.Web.csproj'
-    arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore'
+    arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --nobuild'
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
