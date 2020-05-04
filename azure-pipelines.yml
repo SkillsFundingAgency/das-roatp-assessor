@@ -11,6 +11,7 @@ variables:
   - group: "ESFA - SonarCloud"
   - name: sonarCloudProjectKey
     value: "SkillsFundingAgency_das-roatp-assessor"
+  - group: 'Prod Management Resources'    
   - name: buildConfiguration
     value: 'release'
   - name: buildPlatform
