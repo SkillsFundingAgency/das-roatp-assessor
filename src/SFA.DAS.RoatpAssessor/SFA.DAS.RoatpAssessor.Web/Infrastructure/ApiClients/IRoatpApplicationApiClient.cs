@@ -15,5 +15,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<List<dynamic>> GetAssessorSectionAnswers(Guid applicationId);
 
         Task<AssessorPage> GetAssessorPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
+
+        Task SubmitAssessorPageOutcome(Guid applicationId,
+                                       int sequenceNumber,
+                                       int sectionNumber,
+                                       string pageId,
+                                       int assessorType,
+                                       string userId,
+                                       string status,
+                                       string comment);
     }
 }

@@ -167,5 +167,40 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
             return assessorPage;
         }
+
+        public async Task SubmitAssessorPageOutcome(Guid applicationId, 
+                                                    int sequenceNumber, 
+                                                    int sectionNumber, 
+                                                    string pageId, 
+                                                    int assessorType,  
+                                                    string userId, 
+                                                    string status,
+                                                    string comment)
+        {
+            _logger.LogInformation($"RoatpApplicationApiClient-SubmitAssessorPageOutcome - ApplicationId '{applicationId}' - " +
+                                                    $"SequenceNumber '{sequenceNumber}' - SectionNumber '{sectionNumber}' - PageId '{pageId}' - " +
+                                                    $"AssessorType '{assessorType}' - UserId '{userId}' - " +
+                                                    $"Status '{status}' - Comment '{comment}'");
+
+            try
+            {
+                await Post($"/Assessor/SubmitPageOutcome", new 
+                {
+                    applicationId,
+                    sequenceNumber,
+                    sectionNumber,
+                    pageId,
+                    assessorType,
+                    userId,
+                    status,
+                    comment
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "RoatpApplicationApiClient-SubmitAssessorPageOutcome - Error: '" + ex.Message + "'");
+            }
+
+        }
     }
 }
