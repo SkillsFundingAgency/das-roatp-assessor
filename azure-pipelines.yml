@@ -1,0 +1,91 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - "*"
+
+workspace:
+    clean: all
+
+variables:
+  - group: "ESFA - SonarCloud"
+  - name: sonarCloudProjectKey
+    value: "SkillsFundingAgency_das-roatp-assessor"
+  - name: buildConfiguration
+    value: 'release'
+  - name: buildPlatform
+    value: 'anycpu'
+
+pool:
+  name: 'DAS - Continuous Integration'
+  demands: 
+  - msbuild
+  - visualstudio
+
+steps:
+- task: gittools.gitversion.gitversion-task.GitVersion@3
+  displayName: GitVersion
+  inputs:
+    updateAssemblyInfo: true
+
+- task: SonarCloudPrepare@1
+  displayName: 'Prepare Sonarcloud analysis configuration'
+  inputs:
+    SonarCloud: "$(SonarCloudConnectionId)"
+    organization: "$(SonarCloudOrganisationKey)"
+    scannerMode: 'MSBuild'
+    projectName: "$(Build.DefinitionName)"
+    projectKey: "$(sonarCloudProjectKey)"
+    extraProperties: |
+      sonar.pullrequest.provider=GitHub
+      sonar.pullrequest.github.repository=$(Build.Repository.Name)
+
+- task: DotNetCoreCLI@2
+  displayName: dot restore
+  inputs:
+    command: restore
+    projects: 'src/**/*.csproj'
+    noCache: true
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet build
+  inputs:
+    projects: 'src/**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)  --no-restore'
+    
+- task: DotNetCoreCLI@2
+  displayName: dotnet test
+  inputs:
+    command: test
+    projects: '**/*.UnitTests.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-build'
+
+- task: SonarCloudAnalyze@1
+  displayName: 'Run SonarCloud analysis'
+    
+- task: SonarCloudPublish@1
+  displayName: 'Publish results on build summary'
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish WebApp'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: 'src\SFA.DAS.RoatpAssessor\SFA.DAS.RoatpAssessor.Web\SFA.DAS.RoatpAssessor.Web.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore'
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    Contents: |
+     azure\**
+     config\**
+    TargetFolder: '$(build.artifactstagingdirectory)/publish'
+    OverWrite: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)/publish'
