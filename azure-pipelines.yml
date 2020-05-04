@@ -39,6 +39,7 @@ steps:
     extraProperties: |
       sonar.pullrequest.provider=GitHub
       sonar.pullrequest.github.repository=$(Build.Repository.Name)
+    enabled: false
 
 - task: DotNetCoreCLI@2
   displayName: dot restore
@@ -62,11 +63,13 @@ steps:
 
 - task: SonarCloudAnalyze@1
   displayName: 'Run SonarCloud analysis'
+  enabled: false
     
 - task: SonarCloudPublish@1
   displayName: 'Publish results on build summary'
   inputs:
     pollingTimeoutSec: '300'
+  enabled: false
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish WebApp'
