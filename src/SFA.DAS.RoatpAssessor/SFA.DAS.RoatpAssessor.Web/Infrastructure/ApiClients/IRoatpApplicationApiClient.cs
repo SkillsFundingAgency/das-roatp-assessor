@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
@@ -15,5 +16,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<List<dynamic>> GetAssessorSectionAnswers(Guid applicationId);
 
         Task<AssessorPage> GetAssessorPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
+
+        Task<HttpResponseMessage> DownloadFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string questionId, string filename);
     }
 }

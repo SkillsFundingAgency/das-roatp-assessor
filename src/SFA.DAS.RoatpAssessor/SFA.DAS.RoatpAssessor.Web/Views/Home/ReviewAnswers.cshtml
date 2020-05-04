@@ -81,7 +81,7 @@
                                 @switch (question.InputType)
                                 {
                                     case "FileUpload":
-                                        <a href="#">@*TODO: DOWNLOAD FILE*@ TODO -- @answer</a>
+                                        <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNo="@Model.SequenceNumber" asp-route-sectionNo="@Model.SectionNumber" asp-route-pageId="@Model.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
                                         break;
                                     default:
                                         @if (!string.IsNullOrWhiteSpace(question.InputPrefix))

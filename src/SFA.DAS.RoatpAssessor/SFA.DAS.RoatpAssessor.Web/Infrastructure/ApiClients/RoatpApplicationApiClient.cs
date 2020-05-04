@@ -24,7 +24,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         public async Task<List<AssessorSequence>> GetAssessorSequences(Guid applicationId)
         {
-            var assessorSequences = await Get<List<AssessorSequence>>($"/Assessor/{applicationId}/Overview");
+            var assessorSequences = await Get<List<AssessorSequence>>($"/Assessor/Applications/{applicationId}/Overview");
 
             // NOTE: TO BE REMOVED once we are happy with integrating with RoATP Apply API
             if (assessorSequences is null)
@@ -166,6 +166,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             }
 
             return assessorPage;
+        }
+
+        public async Task<HttpResponseMessage> DownloadFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string questionId, string filename)
+        {
+            return await GetResponse($"/Assessor/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/Questions/{questionId}/download/{filename}");
         }
     }
 }
