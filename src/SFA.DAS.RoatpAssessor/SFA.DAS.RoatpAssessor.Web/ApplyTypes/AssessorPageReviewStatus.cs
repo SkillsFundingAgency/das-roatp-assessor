@@ -7,7 +7,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
 {
     public class AssessorPageReviewStatus
     {
-        public const string InProgress = "In Progress";
+        public const string InProgress = "In progress";
         public const string Pass = "Pass";
         public const string Fail = "Fail";
     }

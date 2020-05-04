@@ -78,8 +78,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 await SubmitAssessorPageOutcome(command);
 
                 // TODO: Change the logic to return to ApplicationOverview or to next page
-                var viewModel = new ReviewAnswersViewModel { ApplicationId = command.ApplicationId };
-                return View(errorView, viewModel);
+                //var viewModel = new ReviewAnswersViewModel { ApplicationId = command.ApplicationId };
+                return Redirect($"/Home/{command.ApplicationId}");
             }
         }
 

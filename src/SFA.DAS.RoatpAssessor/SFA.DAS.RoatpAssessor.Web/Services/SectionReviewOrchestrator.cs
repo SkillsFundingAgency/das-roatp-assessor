@@ -80,7 +80,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             // GetPageReviewStatus(ApplicationId, AssessorType, userId, PageId). We will need SequenceNumber & SectionNumber only if one page could apear in different sections. 
             // Prepare the ViewModel and return it
 
-            viewModel.AssessorType = AssessorType.FirstAssessor; // SetAssessorType(application, userId);
+            viewModel.AssessorType = AssessorType.SecondAssessor; // SetAssessorType(application, userId);
             return viewModel;
         }
 
