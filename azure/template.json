@@ -58,10 +58,10 @@
                 },
                 "parameters": {
                     "appInsightsName": {
-                        "value": "[variables('uiAppServiceName')]"
+                        "value": "[variables('appServiceName')]"
                     },
                     "attachedService": {
-                        "value": "[variables('uiAppServiceName')]"
+                        "value": "[variables('appServiceName')]"
                     }
                 }
             },
