@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
@@ -65,8 +66,40 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
             }
 
+            // GetStatusesForAssessorSection(ApplicationId, SequenceNumber, SectionNumber, AssesssorType, userId)
+            // IF ANY() => Get the first one (We have to ensure that first page is retrieved first)
+            // and obtain page data for it GetPage(ApplicationId, SequenceNumber, SectionNumber, PageId)
+            // prepare the ViewModel and return it.
+            // IF NOT ANY() 
+            // Start processing all subsequent pages and create record in AssessorPageReviewOutcome with emty status for each and every active page 
+            // Keep the data only for the first page, prepare the ViewModel for it and return it.
 
+
+            // On 'Save and Continue' POST action => another method in SectionReviewOrchestrator
+            // Get page data GetPage(ApplicationId, SequenceNumber, SectionNumber, NextPageId) {If NextPageId is null return to Application overview page; in Controller)
+            // GetPageReviewStatus(ApplicationId, AssessorType, userId, PageId). We will need SequenceNumber & SectionNumber only if one page could apear in different sections. 
+            // Prepare the ViewModel and return it
+
+            viewModel.AssessorType = AssessorType.FirstAssessor; // SetAssessorType(application, userId);
             return viewModel;
         }
+
+        // We will need to add Assessor1UserId & Assessor2UserId to Apply object
+        // and when we can get UserId, we shall be able to SetAssessorType
+        //private AssessorType SetAssessorType(Apply application, Guid userId)
+        //{
+        //    if (userId.Equals(application.Assessor1UserId))
+        //    {
+        //        return AssessorType.FirstAssessor;
+        //    }
+        //    else if ((userId.Equals(application.Assessor2UserId)
+        //    {
+        //        return AssessorType.SecondAssessor;
+        //    }
+        //    else
+        //    {
+        //        return AssessorType.Undefined;
+        //    }
+        //}
     }
 }
