@@ -58,7 +58,7 @@
                                                 @item.SubmittedDate.ToSfaShortDateString()
                                             </td>
                                             <td class="govuk-table__cell" data-label="Assessor 1">
-                                                @if (string.IsNullOrEmpty(item.Assessor1))
+                                                @if (string.IsNullOrEmpty(item.Assessor1Name))
                                                 {
                                                     <a class="govuk-link das-no-wrap" asp-action="AssignToAssessor" asp-controller="Dashboard" asp-route-applicationId="@item.ApplicationId" asp-route-assessorNumber="1">Assign to me</a>
                                                 }
@@ -68,7 +68,7 @@
                                                 }
                                             </td>
                                             <td class="govuk-table__cell" data-label="Assessor 2">
-                                                @if (string.IsNullOrEmpty(item.Assessor2))
+                                                @if (string.IsNullOrEmpty(item.Assessor2Name))
                                                 {
                                                     <a class="govuk-link das-no-wrap" asp-action="AssignToAssessor" asp-controller="Dashboard" asp-route-applicationId="@item.ApplicationId" asp-route-assessorNumber="2">Assign to me</a>
                                                 }
