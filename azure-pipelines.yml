@@ -46,7 +46,6 @@ steps:
     extraProperties: |
       sonar.pullrequest.provider=GitHub
       sonar.pullrequest.github.repository=$(Build.Repository.Name)
-    enabled: false
 
 - task: DotNetCoreCLI@2
   displayName: dot restore
@@ -85,15 +84,15 @@ steps:
   inputs:
     command: publish
     publishWebProjects: false
-    projects: 'src\SFA.DAS.RoatpAssessor\SFA.DAS.RoatpAssessor.Web\SFA.DAS.RoatpAssessor.Web.csproj'
+    projects: 'src/SFA.DAS.RoatpAssessor/SFA.DAS.RoatpAssessor.Web/SFA.DAS.RoatpAssessor.Web.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
   inputs:
     Contents: |
-     azure\**
-     config\**
+     azure/**
+     config/**
     TargetFolder: '$(build.artifactstagingdirectory)/publish'
     OverWrite: true
 
