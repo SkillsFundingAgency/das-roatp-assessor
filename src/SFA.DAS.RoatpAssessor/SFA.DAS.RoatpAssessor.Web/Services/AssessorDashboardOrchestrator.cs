@@ -31,7 +31,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             await _apiClient.AssignAssessor(applicationId, new AssignAssessorApplicationRequest(assessorNumber, assessorUserId, assessorName));
         }
 
-        private void AddApplicationsToViewModel(NewApplicationsViewModel viewModel, List<RoatpAssessorApplicationSummary> applications)
+        public async Task<InProgressApplicationsViewModel> GetInProgressApplicationsViewModel(string userId)
+        {
+            var applicationSummary = await _apiClient.GetAssessorSummary(userId);
+            var applications = await _apiClient.GetInProgressApplications(userId);
+
+            var viewModel = new InProgressApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
+            AddApplicationsToViewModel(viewModel, applications);
+            return viewModel;
+        }
+
+        private void AddApplicationsToViewModel(DashboardViewModel viewModel, List<RoatpAssessorApplicationSummary> applications)
         {
             foreach (var application in applications)
             {
@@ -39,12 +49,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 {
                     ApplicationId = application.ApplicationId,
                     ApplicationReferenceNumber = application.ApplicationReferenceNumber,
-                    Assessor1 = application.Assessor1Name,
-                    Assessor2 = application.Assessor2Name,
+                    Assessor1Name = application.Assessor1Name,
+                    Assessor2Name = application.Assessor2Name,
                     ProviderRoute = application.ProviderRoute,
                     OrganisationName = application.OrganisationName,
                     Ukprn = application.Ukprn,
-                    SubmittedDate = application.SubmittedDate
+                    SubmittedDate = application.SubmittedDate,
+                    Assessor1UserId = application.Assessor1UserId,
+                    Assessor2UserId = application.Assessor2UserId
                 };
 
                 viewModel.AddApplication(applicationVm);

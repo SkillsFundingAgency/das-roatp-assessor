@@ -2,27 +2,27 @@
 
 <ul class="govuk-tabs__list">
     <li class="govuk-tabs__list-item @(Model.CurrentPage == "NewApplications" ? "govuk-tabs__list-item--selected" : "")">
-        <a class="govuk-tabs__tab" asp-action="NewApplications" asp-controller="Home">
+        <a class="govuk-tabs__tab" asp-action="NewApplications" asp-controller="Dashboard">
             New (@Model.NewApplications)
         </a>
     </li>
     <li class="govuk-tabs__list-item @(Model.CurrentPage == "InProgressApplications" ? "govuk-tabs__list-item--selected" : "")">
-        <a class="govuk-tabs__tab" asp-action="InProgressApplications" asp-controller="Home">
+        <a class="govuk-tabs__tab" asp-action="InProgressApplications" asp-controller="Dashboard">
             In progress (@Model.InProgressApplications)
         </a>
     </li>
     <li class="govuk-tabs__list-item @(Model.CurrentPage == "ModerationApplications" ? "govuk-tabs__list-item--selected" : "")">
-        <a class="govuk-tabs__tab" asp-action="ModerationApplications" asp-controller="Home">
+        <a class="govuk-tabs__tab" asp-action="ModerationApplications" asp-controller="Dashboard">
             Moderation (@Model.ModerationApplications)
         </a>
     </li>
     <li class="govuk-tabs__list-item @(Model.CurrentPage == "ClarificationApplications" ? "govuk-tabs__list-item--selected" : "")">
-        <a class="govuk-tabs__tab" asp-action="ClarificationApplications" asp-controller="Home">
+        <a class="govuk-tabs__tab" asp-action="ClarificationApplications" asp-controller="Dashboard">
             Clarification (@Model.ClarificationApplications)
         </a>
     </li>
     <li class="govuk-tabs__list-item @(Model.CurrentPage == "ClosedApplications" ? "govuk-tabs__list-item--selected" : "")">
-        <a class="govuk-tabs__tab" asp-action="ClosedApplications" asp-controller="Home">
+        <a class="govuk-tabs__tab" asp-action="ClosedApplications" asp-controller="Dashboard">
             Outcome
         </a>
     </li>

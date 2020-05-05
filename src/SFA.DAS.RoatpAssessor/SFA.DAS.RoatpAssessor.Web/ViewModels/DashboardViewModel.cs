@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.RoatpAssessor.Web.ViewModels
+﻿using System.Collections.Generic;
+
+namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
     public abstract class DashboardViewModel
     {
@@ -9,6 +11,7 @@
             InProgressApplications = inProgressApplications;
             ModerationApplications = moderationApplications;
             ClarificationApplications = clarificationApplications;
+            Applications = new List<ApplicationViewModel>();
         }
 
         public string CurrentPage { get; }
@@ -16,5 +19,11 @@
         public int InProgressApplications { get; }
         public int ModerationApplications { get; }
         public int ClarificationApplications { get; }
+        public List<ApplicationViewModel> Applications { get; }
+
+        public void AddApplication(ApplicationViewModel application)
+        {
+            Applications.Add(application);
+        }
     }
 }
