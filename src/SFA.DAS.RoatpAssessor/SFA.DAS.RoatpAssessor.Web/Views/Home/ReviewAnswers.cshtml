@@ -20,36 +20,6 @@
             <h1 class="govuk-heading-xl">@Model.Heading</h1>
 
             <partial name="~/Views/Home/Pages/_ApplicationSummary.cshtml" for="@Model" />
-
-            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        ApplicationId
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ApplicationId
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        SequenceNumber
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.SequenceNumber
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        SectionNumber
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.SectionNumber
-                    </dd>
-                </div>
-            </dl>
-
         </div>
     </div>
 
@@ -81,7 +51,7 @@
                                 @switch (question.InputType)
                                 {
                                     case "FileUpload":
-                                        <a href="#">@*TODO: DOWNLOAD FILE*@ TODO -- @answer</a>
+                                        <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNo="@Model.SequenceNumber" asp-route-sectionNo="@Model.SectionNumber" asp-route-pageId="@Model.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
                                         break;
                                     default:
                                         @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
