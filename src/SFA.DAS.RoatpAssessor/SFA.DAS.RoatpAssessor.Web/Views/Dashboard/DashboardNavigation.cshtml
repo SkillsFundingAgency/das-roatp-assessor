@@ -1,25 +1,29 @@
 ﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.DashboardViewModel
 
-<a asp-action="Index" asp-controller="Dashboard" class="govuk-back-link">Return to dashboard</a>
-
-<div>
-    <nav class="app-navigation govuk-clearfix">
-        <ul class="app-navigation__list">
-            <li class="app-navigation@(Model.CurrentPage == "NewApplications" ? "--current-page" : "")">
-                <a asp-action="NewApplications" asp-controller="Home">New (@Model.NewApplications)</a>
-            </li>
-            <li class="app-navigation@(Model.CurrentPage == "InProgressApplications" ? "--current-page" : "")">
-                <a asp-action="InProgressApplications" asp-controller="Home">In progress (@Model.InProgressApplications)</a>
-            </li>
-            <li class="app-navigation@(Model.CurrentPage == "ModerationApplications" ? "--current-page" : "")">
-                <a asp-action="ModerationApplications" asp-controller="Home">Moderation (@Model.ModerationApplications)</a>
-            </li>
-            <li class="app-navigation@(Model.CurrentPage == "ClarificationApplications" ? "--current-page" : "")">
-                <a asp-action="ClarificationApplications" asp-controller="Home">Clarification (@Model.ClarificationApplications)</a>
-            </li>
-            <li class="app-navigation@(Model.CurrentPage == "ClosedApplications" ? "--current-page" : "")">
-                <a asp-action="ClosedApplications" asp-controller="Home">Outcome</a>
-            </li>
-        </ul>
-    </nav>
-</div>
+<ul class="govuk-tabs__list">
+    <li class="govuk-tabs__list-item @(Model.CurrentPage == "NewApplications" ? "govuk-tabs__list-item--selected" : "")">
+        <a class="govuk-tabs__tab" asp-action="NewApplications" asp-controller="Home">
+            New (@Model.NewApplications)
+        </a>
+    </li>
+    <li class="govuk-tabs__list-item @(Model.CurrentPage == "InProgressApplications" ? "govuk-tabs__list-item--selected" : "")">
+        <a class="govuk-tabs__tab" asp-action="InProgressApplications" asp-controller="Home">
+            In progress (@Model.InProgressApplications)
+        </a>
+    </li>
+    <li class="govuk-tabs__list-item @(Model.CurrentPage == "ModerationApplications" ? "govuk-tabs__list-item--selected" : "")">
+        <a class="govuk-tabs__tab" asp-action="ModerationApplications" asp-controller="Home">
+            Moderation (@Model.ModerationApplications)
+        </a>
+    </li>
+    <li class="govuk-tabs__list-item @(Model.CurrentPage == "ClarificationApplications" ? "govuk-tabs__list-item--selected" : "")">
+        <a class="govuk-tabs__tab" asp-action="ClarificationApplications" asp-controller="Home">
+            Clarification (@Model.ClarificationApplications)
+        </a>
+    </li>
+    <li class="govuk-tabs__list-item @(Model.CurrentPage == "ClosedApplications" ? "govuk-tabs__list-item--selected" : "")">
+        <a class="govuk-tabs__tab" asp-action="ClosedApplications" asp-controller="Home">
+            Outcome
+        </a>
+    </li>
+</ul>
