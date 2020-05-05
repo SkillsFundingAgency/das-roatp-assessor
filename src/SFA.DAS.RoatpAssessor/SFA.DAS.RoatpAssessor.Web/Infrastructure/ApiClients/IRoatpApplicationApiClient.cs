@@ -28,6 +28,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
                                        string comment);
 
         Task<PageReviewOutcome> GetPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, int assessorType, string userId);
+        Task<List<PageReviewOutcome>> GetAssessorReviewOutcomesPerSection(Guid applicationId, int sequenceNumber, int sectionNumber, int assessorType, string userId);
 
         Task<HttpResponseMessage> DownloadFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string questionId, string filename);
     }

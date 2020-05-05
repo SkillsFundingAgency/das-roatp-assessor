@@ -235,6 +235,36 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return new PageReviewOutcome();
         }
 
+        public async Task<List<PageReviewOutcome>> GetAssessorReviewOutcomesPerSection(Guid applicationId,
+                                                    int sequenceNumber,
+                                                    int sectionNumber,
+                                                    int assessorType,
+                                                    string userId)
+        {
+            _logger.LogInformation($"RoatpApplicationApiClient-GetAssessorReviewOutcomesPerSection - ApplicationId '{applicationId}' - " +
+                                                    $"SequenceNumber '{sequenceNumber}' - SectionNumber '{sectionNumber}' - " +
+                                                    $"AssessorType '{assessorType}' - UserId '{userId}'");
+            try
+            {
+                var assessorReviewOutcomes = await Post<GetAssessorReviewOutcomesPerSectionRequest, List<PageReviewOutcome>>($"/Assessor/GetAssessorReviewOutcomesPerSection", new GetAssessorReviewOutcomesPerSectionRequest
+                {
+                    ApplicationId = applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
+                    AssessorType = assessorType,
+                    UserId = userId
+                });
+
+                return assessorReviewOutcomes;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "RoatpApplicationApiClient-SubmitAssessorPageOutcome - Error: '" + ex.Message + "'");
+            }
+
+            return new List<PageReviewOutcome>();
+        }
+
         public async Task<HttpResponseMessage> DownloadFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string questionId, string filename)
         {
             return await GetResponse($"/Assessor/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/Questions/{questionId}/download/{filename}");

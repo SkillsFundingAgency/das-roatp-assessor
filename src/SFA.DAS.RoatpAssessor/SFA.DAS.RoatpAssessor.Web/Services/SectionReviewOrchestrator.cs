@@ -70,36 +70,52 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             viewModel.PageId = "TestPageId2";
             viewModel.AssessorType = AssessorType.SecondAssessor; // SetAssessorType(application, userId);
 
-            // GetStatusesForAssessorSection(ApplicationId, SequenceNumber, SectionNumber, AssesssorType, userId)
-            // IF ANY() => Get the first one (We have to ensure that first page is retrieved first)
-            // and obtain page data for it GetPage(ApplicationId, SequenceNumber, SectionNumber, PageId)
-            // prepare the ViewModel and return it.
-            // IF NOT ANY() 
-            // Start processing all subsequent pages and create record in AssessorPageReviewOutcome with emty status for each and every active page 
-            // Keep the data only for the first page, prepare the ViewModel for it and return it.
-
-            var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, userId);            
-            if(pageReviewOutcome != null)
+            var assessorReviewOutcomesPerSection = await _applyApiClient.GetAssessorReviewOutcomesPerSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, (int)viewModel.AssessorType, userId);
+            if (assessorReviewOutcomesPerSection != null && assessorReviewOutcomesPerSection.Any())
             {
-                viewModel.Status = pageReviewOutcome.Status;
-                switch (pageReviewOutcome.Status)
+                // GetTheFirstPage from QnA and map it to ViewModel
+                // TODO:
+
+                // Using the PageId => GetPageReviewOutcome
+                var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, userId);
+                if (pageReviewOutcome != null)
                 {
-                    case AssessorPageReviewStatus.Pass:
-                        viewModel.OptionPassText = pageReviewOutcome.Comment;
-                        break;
-                    case AssessorPageReviewStatus.Fail:
-                        viewModel.OptionFailText = pageReviewOutcome.Comment;
-                        break;
-                    case AssessorPageReviewStatus.InProgress:
-                        viewModel.OptionInProgressText = pageReviewOutcome.Comment;
-                        break;
-                    default:
-                        break;
+                    viewModel.Status = pageReviewOutcome.Status;
+                    switch (pageReviewOutcome.Status)
+                    {
+                        case AssessorPageReviewStatus.Pass:
+                            viewModel.OptionPassText = pageReviewOutcome.Comment;
+                            break;
+                        case AssessorPageReviewStatus.Fail:
+                            viewModel.OptionFailText = pageReviewOutcome.Comment;
+                            break;
+                        case AssessorPageReviewStatus.InProgress:
+                            viewModel.OptionInProgressText = pageReviewOutcome.Comment;
+                            break;
+                        default:
+                            break;
+                    }
                 }
+            }
+            else
+            {
+                // Start processing all subsequent pages and create record in AssessorPageReviewOutcome with emty status for each and every active page
+                // TODO:
+                //await _applyApiClient.SubmitAssessorPageOutcome(request.ApplicationId,
+                //                                    request.SequenceNumber,
+                //                                    request.SectionNumber,
+                //                                    PageIdFromTheProcessAbove,  
+                //                                    (int)viewModel.AssessorType,
+                //                                    userId,
+                //                                    null,
+                //                                    null);
+
+                // Keep the data only for the first page, prepare the ViewModel for it and return it.
+                // TODO:
+
             }
 
 
-            
 
             // On 'Save and Continue' POST action => another method in SectionReviewOrchestrator
             // Get page data GetPage(ApplicationId, SequenceNumber, SectionNumber, NextPageId) {If NextPageId is null return to Application overview page; in Controller)
