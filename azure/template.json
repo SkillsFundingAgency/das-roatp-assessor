@@ -24,7 +24,8 @@
             "type": "string"
         },
         "customHostname": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "certificateName": {
             "type": "string"
@@ -70,6 +71,7 @@
             ]
         },
         {
+            "condition": "[greater(length(parameters('customHostName')), 0)]",
             "apiVersion": "2017-05-10",
             "name": "app-service-certificate",
             "resourceGroup": "[parameters('sharedAppServicePlanResourceGroup')]",
