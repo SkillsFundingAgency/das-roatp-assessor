@@ -88,9 +88,6 @@
                     },
                     "keyVaultResourceGroup": {
                         "value": "[parameters('sharedKeyVaultResourceGroupName')]"
-                    },
-                    "serverFarmId": {
-                        "value": "[resourceId(parameters('sharedAppServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('sharedFrontendAppServicePlanName'))]"
                     }
                 }
             }
