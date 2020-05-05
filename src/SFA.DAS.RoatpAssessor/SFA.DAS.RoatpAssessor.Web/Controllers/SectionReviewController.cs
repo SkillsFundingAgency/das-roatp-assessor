@@ -33,8 +33,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var userName = User.UserDisplayName();
             var userId = "";
 
-            var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId));
-            viewModel.PageId = "TestPageId";
+            var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId));           
 
             if (viewModel is null)
             {

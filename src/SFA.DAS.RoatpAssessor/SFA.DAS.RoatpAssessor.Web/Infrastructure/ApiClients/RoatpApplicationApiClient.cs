@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.Models;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
@@ -200,7 +201,38 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             {
                 _logger.LogError(ex, "RoatpApplicationApiClient-SubmitAssessorPageOutcome - Error: '" + ex.Message + "'");
             }
+        }
 
+        public async Task<PageReviewOutcome> GetPageReviewOutcome(Guid applicationId,
+                                                    int sequenceNumber,
+                                                    int sectionNumber,
+                                                    string pageId,
+                                                    int assessorType,
+                                                    string userId)
+        {
+            _logger.LogInformation($"RoatpApplicationApiClient-SubmitAssessorPageOutcome - ApplicationId '{applicationId}' - " +
+                                                    $"SequenceNumber '{sequenceNumber}' - SectionNumber '{sectionNumber}' - PageId '{pageId}' - " +
+                                                    $"AssessorType '{assessorType}' - UserId '{userId}'");
+            try
+            {
+                var pageReviewOutcome = await Post<GetPageReviewOutcomeRequest, PageReviewOutcome>($"/Assessor/GetPageReviewOutcome", new GetPageReviewOutcomeRequest
+                {
+                    ApplicationId = applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
+                    PageId = pageId,
+                    AssessorType = assessorType,
+                    UserId = userId
+                });
+
+                return pageReviewOutcome;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "RoatpApplicationApiClient-SubmitAssessorPageOutcome - Error: '" + ex.Message + "'");
+            }
+
+            return new PageReviewOutcome();
         }
     }
 }

@@ -66,6 +66,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
             }
 
+            var userId = "4dsfdg-MyGuidUserId-yf6re";
+            viewModel.PageId = "TestPageId";
+            viewModel.AssessorType = AssessorType.SecondAssessor; // SetAssessorType(application, userId);
+
             // GetStatusesForAssessorSection(ApplicationId, SequenceNumber, SectionNumber, AssesssorType, userId)
             // IF ANY() => Get the first one (We have to ensure that first page is retrieved first)
             // and obtain page data for it GetPage(ApplicationId, SequenceNumber, SectionNumber, PageId)
@@ -74,13 +78,31 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             // Start processing all subsequent pages and create record in AssessorPageReviewOutcome with emty status for each and every active page 
             // Keep the data only for the first page, prepare the ViewModel for it and return it.
 
+            var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, userId);
+            viewModel.Status = pageReviewOutcome.Status;
+            switch (pageReviewOutcome.Status)
+            {
+                case AssessorPageReviewStatus.Pass:
+                    viewModel.OptionPassText = pageReviewOutcome.Comment;
+                    break;
+                case AssessorPageReviewStatus.Fail:
+                    viewModel.OptionFailText = pageReviewOutcome.Comment;
+                    break;
+                case AssessorPageReviewStatus.InProgress:
+                    viewModel.OptionInProgressText = pageReviewOutcome.Comment;
+                    break;
+                default:
+                    break;
+            }
+
+            //var pageReviewOutcome = new PageReviewOutcome();
 
             // On 'Save and Continue' POST action => another method in SectionReviewOrchestrator
             // Get page data GetPage(ApplicationId, SequenceNumber, SectionNumber, NextPageId) {If NextPageId is null return to Application overview page; in Controller)
             // GetPageReviewStatus(ApplicationId, AssessorType, userId, PageId). We will need SequenceNumber & SectionNumber only if one page could apear in different sections. 
             // Prepare the ViewModel and return it
 
-            viewModel.AssessorType = AssessorType.SecondAssessor; // SetAssessorType(application, userId);
+
             return viewModel;
         }
 
