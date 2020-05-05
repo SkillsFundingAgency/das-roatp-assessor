@@ -20,36 +20,6 @@
             <h1 class="govuk-heading-xl">@Model.Heading</h1>
 
             <partial name="~/Views/Home/Pages/_ApplicationSummary.cshtml" for="@Model" />
-
-            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        ApplicationId
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ApplicationId
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        SequenceNumber
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.SequenceNumber
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        SectionNumber
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.SectionNumber
-                    </dd>
-                </div>
-            </dl>
-
         </div>
     </div>
 
