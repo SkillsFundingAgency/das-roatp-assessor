@@ -97,7 +97,8 @@
                     <input type="hidden" asp-for="SequenceNumber" />
                     <input type="hidden" asp-for="SectionNumber" />
                     <input type="hidden" asp-for="PageId" />
-                    @* Plus any others... *@
+                    <input type="hidden" asp-for="NextPageId" />
+                    <input type="hidden" asp-for="AssessorType" />
 
                     <partial name="~/Views/Home/Pages/_ApprovalSection.cshtml" for="@Model" />
 

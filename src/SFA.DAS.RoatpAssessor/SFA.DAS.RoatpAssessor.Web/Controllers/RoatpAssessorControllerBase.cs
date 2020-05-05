@@ -73,27 +73,42 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 viewModel.ErrorMessages = validationResponse.Errors;
                 return View(errorView, viewModel);
             }
+            else
+            {
+                await SubmitAssessorPageOutcome(command);
 
-            return await SubmitAssessorPageAnswer(command);
+                // TODO: Change the logic to return to ApplicationOverview or to next page
+                //var viewModel = new ReviewAnswersViewModel { ApplicationId = command.ApplicationId };
+                return Redirect($"/Home/{command.ApplicationId}");
+            }
         }
 
-        protected async Task<IActionResult> SubmitAssessorPageAnswer(SubmitAssessorPageAnswerCommand command)
+        protected async Task SubmitAssessorPageOutcome(SubmitAssessorPageAnswerCommand command)
         {
-            //var username = _contextAccessor.HttpContext.User.UserDisplayName();
-            //var comments = SetupGatewayPageOptionTexts(command);
+            var userId = "4dsfdg-MyGuidUserId-yf6re"; // _contextAccessor.HttpContext.User.UserDisplayName();
+            var comment = SetupGatewayPageOptionTexts(command);
 
-            //_logger.LogInformation($"{typeof(T).Name}-SubmitGatewayPageAnswer - ApplicationId '{command.ApplicationId}' - PageId '{command.PageId}' - Status '{command.Status}' - UserName '{username}' - Comments '{comments}'");
-            //try
-            //{
-            //    await _applyApiClient.SubmitGatewayPageAnswer(command.ApplicationId, command.PageId, command.Status, username, comments);
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError(ex, "{typeof(T).Name}-SubmitGatewayPageAnswer - Error: '" + ex.Message + "'");
-            //    throw;
-            //}
-
-            return RedirectToAction("ViewApplication", "Home", new { command.ApplicationId });
+            _logger.LogInformation($"{typeof(T).Name}-SubmitAssessorPageOutcome - ApplicationId '{command.ApplicationId}' - " +
+                                                    $"SequenceNumber '{command.SequenceNumber}' - SectionNumber '{command.SectionNumber}' - PageId '{command.PageId}' - " +
+                                                    $"AssessorType '{command.AssessorType}' - UserId '{userId}' - " +
+                                                    $"Status '{command.Status}' - Comment '{comment}'");
+            
+            try
+            {
+                await _applyApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                                                    command.SequenceNumber,
+                                                    command.SectionNumber,
+                                                    command.PageId,
+                                                    (int)command.AssessorType,
+                                                    userId,
+                                                    command.Status,
+                                                    comment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"{typeof(T).Name}-SubmitAssessorPageOutcome - Error: '" + ex.Message + "'");
+                throw;
+            }
         }
 
     }

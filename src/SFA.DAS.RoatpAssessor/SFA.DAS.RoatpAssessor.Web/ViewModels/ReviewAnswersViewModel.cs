@@ -34,6 +34,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string PageId { get; set; }
 
         public string NextPageId { get; set; }
+        public AssessorType AssessorType { get; set; }
 
         public List<AssessorQuestion> Questions { get; set; }
         public List<AssessorAnswer> Answers { get; set; }
