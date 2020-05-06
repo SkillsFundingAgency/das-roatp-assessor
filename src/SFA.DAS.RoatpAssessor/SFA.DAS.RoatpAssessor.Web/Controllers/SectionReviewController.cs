@@ -33,7 +33,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var userName = User.UserDisplayName();
             var userId = "";
 
-            var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId));           
+            var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));           
 
             if (viewModel is null)
             {
@@ -47,8 +47,24 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         public async Task<IActionResult> EvaluatePageAnswers(SubmitAssessorPageAnswerCommand command)
         {
             var userId = User.UserDisplayName(); // TODO: to be changed to UserId
-            Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId));
+            Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
             return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/Home/ReviewAnswers.cshtml");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReviewNextPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
+        {
+            var userName = User.UserDisplayName();
+            var userId = "";
+
+            var viewModel = await _sectionReviewOrchestrator.GetNextPageReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
+
+            if (viewModel is null)
+            {
+                return Redirect($"/Home/{applicationId}");
+            }
+
+            return View("~/Views/Home/ReviewAnswers.cshtml", viewModel);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
         public int SequenceNumber { get; set; }
         public int SectionNumber { get; set; }
         public string PageId { get; set; }
+        public string NextPageId { get; set; }
         public string Status { get; set; }
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
@@ -28,6 +29,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
         {
             ApplicationId = viewModel.ApplicationId;
             PageId = viewModel.PageId;
+            NextPageId = viewModel.NextPageId;
             SequenceNumber = viewModel.SequenceNumber;
             SectionNumber = viewModel.SectionNumber;
             Status = viewModel.Status;
