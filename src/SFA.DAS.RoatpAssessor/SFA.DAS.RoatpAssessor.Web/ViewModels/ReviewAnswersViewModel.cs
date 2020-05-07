@@ -39,6 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public List<AssessorQuestion> Questions { get; set; }
         public List<AssessorAnswer> Answers { get; set; }
         public List<TabularData> TabularData { get; set; }
+        public List<AssessorSupplementaryInformation> SupplementaryInformation { get; set; }
         public string GuidanceText { get; set; }
 
         public string ApplicationRouteShortText
