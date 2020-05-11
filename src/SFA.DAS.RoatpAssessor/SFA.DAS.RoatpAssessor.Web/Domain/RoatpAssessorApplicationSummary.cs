@@ -12,5 +12,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Domain
         public DateTime SubmittedDate { get; set; }
         public string Assessor1Name { get; set; }
         public string Assessor2Name { get; set; }
+        public string Assessor1UserId { get; set; }
+        public string Assessor2UserId { get; set; }
     }
 }

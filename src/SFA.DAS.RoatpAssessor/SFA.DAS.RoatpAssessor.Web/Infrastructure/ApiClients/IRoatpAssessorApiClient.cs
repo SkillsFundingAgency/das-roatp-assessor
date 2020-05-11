@@ -10,5 +10,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<RoatpAssessorSummary> GetAssessorSummary(string userId);
         Task<List<RoatpAssessorApplicationSummary>> GetNewApplications(string userId);
         Task AssignAssessor(Guid applicationId, AssignAssessorApplicationRequest request);
+        Task<List<RoatpAssessorApplicationSummary>> GetInProgressApplications(string userId);
     }
 }

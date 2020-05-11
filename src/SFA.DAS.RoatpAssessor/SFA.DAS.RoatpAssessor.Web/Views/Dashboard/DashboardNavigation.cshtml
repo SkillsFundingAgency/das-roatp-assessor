@@ -6,19 +6,19 @@
     <nav class="app-navigation govuk-clearfix">
         <ul class="app-navigation__list">
             <li class="app-navigation@(Model.CurrentPage == "NewApplications" ? "--current-page" : "")">
-                <a asp-action="NewApplications" asp-controller="Home">New (@Model.NewApplications)</a>
+                <a asp-action="NewApplications" asp-controller="Dashboard">New (@Model.NewApplications)</a>
             </li>
             <li class="app-navigation@(Model.CurrentPage == "InProgressApplications" ? "--current-page" : "")">
-                <a asp-action="InProgressApplications" asp-controller="Home">In progress (@Model.InProgressApplications)</a>
+                <a asp-action="InProgressApplications" asp-controller="Dashboard">In progress (@Model.InProgressApplications)</a>
             </li>
             <li class="app-navigation@(Model.CurrentPage == "ModerationApplications" ? "--current-page" : "")">
-                <a asp-action="ModerationApplications" asp-controller="Home">Moderation (@Model.ModerationApplications)</a>
+                <a asp-action="ModerationApplications" asp-controller="Dashboard">Moderation (@Model.ModerationApplications)</a>
             </li>
             <li class="app-navigation@(Model.CurrentPage == "ClarificationApplications" ? "--current-page" : "")">
-                <a asp-action="ClarificationApplications" asp-controller="Home">Clarification (@Model.ClarificationApplications)</a>
+                <a asp-action="ClarificationApplications" asp-controller="Dashboard">Clarification (@Model.ClarificationApplications)</a>
             </li>
             <li class="app-navigation@(Model.CurrentPage == "ClosedApplications" ? "--current-page" : "")">
-                <a asp-action="ClosedApplications" asp-controller="Home">Outcome</a>
+                <a asp-action="ClosedApplications" asp-controller="Dashboard">Outcome</a>
             </li>
         </ul>
     </nav>
