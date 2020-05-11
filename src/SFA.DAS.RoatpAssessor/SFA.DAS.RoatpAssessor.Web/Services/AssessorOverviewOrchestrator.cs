@@ -30,6 +30,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var viewmodel = new AssessorApplicationViewModel(application);
             viewmodel.Sequences = await _applyApiClient.GetAssessorSequences(application.ApplicationId);
 
+            // Real saved outcomes (statuses & comments)
+            var userId = "4dsfdg-MyGuidUserId-yf6re";
+            var assessorType = AssessorType.SecondAssessor; // SetAssessorType(application, userId);
+            var savedOutcomes = await _applyApiClient.GetAllAssessorReviewOutcomes(request.ApplicationId, (int)assessorType, userId);
+
+            // Stubbed savedStatuses
             var savedStatuses = await _applyApiClient.GetAssessorSectionAnswers(application.ApplicationId);
             if (savedStatuses is null || !savedStatuses.Any())
             {

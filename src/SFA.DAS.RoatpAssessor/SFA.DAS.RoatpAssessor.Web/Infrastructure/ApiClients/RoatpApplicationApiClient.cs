@@ -265,6 +265,31 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return new List<PageReviewOutcome>();
         }
 
+        public async Task<List<PageReviewOutcome>> GetAllAssessorReviewOutcomes(Guid applicationId,
+                                                    int assessorType,
+                                                    string userId)
+        {
+            _logger.LogInformation($"RoatpApplicationApiClient-GetAllAssessorReviewOutcomes - ApplicationId '{applicationId}' - " +
+                                                    $"AssessorType '{assessorType}' - UserId '{userId}'");
+            try
+            {
+                var assessorReviewOutcomes = await Post<GetAllAssessorReviewOutcomesRequest, List<PageReviewOutcome>>($"/Assessor/GetAllAssessorReviewOutcomes", new GetAllAssessorReviewOutcomesRequest
+                {
+                    ApplicationId = applicationId,
+                    AssessorType = assessorType,
+                    UserId = userId
+                });
+
+                return assessorReviewOutcomes;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "RoatpApplicationApiClient-GetAllAssessorReviewOutcomes - Error: '" + ex.Message + "'");
+            }
+
+            return new List<PageReviewOutcome>();
+        }
+
         public async Task<HttpResponseMessage> DownloadFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string questionId, string filename)
         {
             return await GetResponse($"/Assessor/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/Questions/{questionId}/download/{filename}");
