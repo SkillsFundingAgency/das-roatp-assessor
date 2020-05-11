@@ -72,7 +72,7 @@
                     @foreach (var supplementaryInformation in Model.SupplementaryInformation)
                     {
                         var question = supplementaryInformation.Question;
-                        var answer = supplementaryInformation.Answer.Value;
+                        var answer = supplementaryInformation.Answer?.Value;
 
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell">@Html.Raw(question.Label)</td>
