@@ -49,8 +49,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
                 Caption = assessorPage.Caption,
                 Heading = assessorPage.Heading,
-                
-                GuidanceText = assessorPage.BodyText ?? assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
+
+                GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
 
                 Questions = new List<ApplyTypes.AssessorQuestion>(assessorPage.Questions),
                 Answers = new List<ApplyTypes.AssessorAnswer>(assessorPage.Answers),
@@ -156,7 +156,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 Caption = assessorPage.Caption,
                 Heading = assessorPage.Heading,
 
-                GuidanceText = assessorPage.BodyText ?? assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
+                GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
 
                 Questions = new List<ApplyTypes.AssessorQuestion>(assessorPage.Questions),
                 Answers = new List<ApplyTypes.AssessorAnswer>(assessorPage.Answers),
