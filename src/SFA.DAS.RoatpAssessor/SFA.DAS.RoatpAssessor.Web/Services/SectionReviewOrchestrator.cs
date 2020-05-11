@@ -161,7 +161,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 Questions = new List<ApplyTypes.AssessorQuestion>(assessorPage.Questions),
                 Answers = new List<ApplyTypes.AssessorAnswer>(assessorPage.Answers),
                 TabularData = new List<TabularData>(),
-                SupplementaryInformation = await GetSupplementaryInformation(application.ApplicationId, assessorPage.PageId)
+                SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, assessorPage.PageId)
             };
 
             foreach (var tabularQuestion in viewModel.Questions.Where(q => "TabularData".Equals(q.InputType, StringComparison.OrdinalIgnoreCase)))
