@@ -53,7 +53,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
                 Questions = new List<ApplyTypes.AssessorQuestion>(assessorPage.Questions),
                 Answers = new List<ApplyTypes.AssessorAnswer>(assessorPage.Answers),
-                TabularData = new List<TabularData>(),        
+                TabularData = new List<TabularData>(),
+                SupplementaryInformation = await GetSupplementaryInformation(application.ApplicationId, assessorPage.PageId)
             };
 
             foreach(var tabularQuestion in viewModel.Questions.Where(q => "TabularData".Equals(q.InputType, StringComparison.OrdinalIgnoreCase)))
@@ -159,6 +160,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 Questions = new List<ApplyTypes.AssessorQuestion>(assessorPage.Questions),
                 Answers = new List<ApplyTypes.AssessorAnswer>(assessorPage.Answers),
                 TabularData = new List<TabularData>(),
+                SupplementaryInformation = await GetSupplementaryInformation(application.ApplicationId, assessorPage.PageId)
             };
 
             foreach (var tabularQuestion in viewModel.Questions.Where(q => "TabularData".Equals(q.InputType, StringComparison.OrdinalIgnoreCase)))
@@ -269,5 +271,56 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         //        return AssessorType.Undefined;
         //    }
         //}
+
+        private async Task<List<AssessorSupplementaryInformation>> GetSupplementaryInformation(Guid applicationId, string pageId)
+        {
+            // NOTE: This is only required in one instance. If it is required more frequently then refactor to a service
+            const string pageId_SafeguardingPolicyIncludesPreventDutyPolicy = "4037";
+
+            List<AssessorSupplementaryInformation> supplementaryInformation = new List<AssessorSupplementaryInformation>();
+
+            if (pageId == pageId_SafeguardingPolicyIncludesPreventDutyPolicy)
+            {
+                var safeGuardingPolicySupplementaryInformation = await GetSafeGuardingPolicySupplementaryInformation(applicationId);
+
+                if(safeGuardingPolicySupplementaryInformation != null)
+                {
+                    supplementaryInformation.Add(safeGuardingPolicySupplementaryInformation);
+                }
+            }
+
+            return supplementaryInformation;
+        }
+
+        private async Task<AssessorSupplementaryInformation> GetSafeGuardingPolicySupplementaryInformation(Guid applicationId)
+        {
+            const int sequenceNumber = 4;
+            const int sectionNumber = 4;
+            const string pageId = "4030";
+            const string labelToUse = "Safeguarding policy";
+
+            AssessorSupplementaryInformation supplementaryInformation = null;
+
+            var page = await _applyApiClient.GetAssessorPage(applicationId, sequenceNumber, sectionNumber, pageId);
+
+            if (page?.Questions?.First() != null)
+            {
+                var questionId = page.Questions.First().QuestionId;
+
+                supplementaryInformation = new AssessorSupplementaryInformation
+                {
+                    ApplicationId = page.ApplicationId,
+                    SequenceNumber = page.SequenceNumber,
+                    SectionNumber = page.SectionNumber,
+                    PageId = page.PageId,
+                    Question = page.Questions.First(q => q.QuestionId == questionId),
+                    Answer = page.Answers.First(a => a.QuestionId == questionId)
+                };
+
+                supplementaryInformation.Question.Label = labelToUse;
+            }
+
+            return supplementaryInformation;
+        }
     }
 }

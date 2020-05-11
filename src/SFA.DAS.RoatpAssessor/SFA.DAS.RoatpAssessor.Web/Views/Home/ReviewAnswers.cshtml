@@ -68,6 +68,35 @@
                             </td>
                         </tr>
                     }
+
+                    @foreach (var supplementaryInformation in Model.SupplementaryInformation)
+                    {
+                        var question = supplementaryInformation.Question;
+                        var answer = supplementaryInformation.Answer?.Value;
+
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@Html.Raw(question.Label)</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                @switch (question.InputType)
+                                {
+                                    case "FileUpload":
+                                        <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@supplementaryInformation.ApplicationId" asp-route-sequenceNo="@supplementaryInformation.SequenceNumber" asp-route-sectionNo="@supplementaryInformation.SectionNumber" asp-route-pageId="@supplementaryInformation.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
+                                        break;
+                                    default:
+                                        @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
+                                        {
+                                            <span>@Html.Raw(question.InputPrefix)</span>
+                                        }
+                                        @Html.Raw(answer)
+                                        @if (!string.IsNullOrWhiteSpace(question.InputSuffix))
+                                        {
+                                            <span>@Html.Raw(question.InputSuffix)</span>
+                                        }
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

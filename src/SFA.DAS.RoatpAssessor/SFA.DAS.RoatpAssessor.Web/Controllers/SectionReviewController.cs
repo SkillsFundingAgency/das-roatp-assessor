@@ -33,6 +33,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var userName = User.UserDisplayName();
             var userId = "";
 
+            // TODO: 1st check - does the application exist?
+            // TODO: 2nd check - is sequence number within bounds? Shouldn't be showing sequence 1 for example
+            // TODO: 3rd check - is it in the appropriate state for Assessor Review?
+            // TODO: 4th check - should it be shown in read only mode or not?
+
             var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));           
 
             if (viewModel is null)
@@ -46,6 +51,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> EvaluatePageAnswers(SubmitAssessorPageAnswerCommand command)
         {
+            // NOTE: GET & POST should not modify URLs (i.e. should be on same URL)
+            // Is it possible to do this? See RoatpFinancialController in Admin Service on how to do this!
+
+            // TODO: 1st check - does the application exist?
+            // TODO: 2nd check - is sequence number within bounds? Shouldn't be showing sequence 1 for example
+            // TODO: 3rd check - is it in the appropriate state for Assessor Review?
+            // TODO: 4th check - should it be shown in read only mode or not?
+
             var userId = User.UserDisplayName(); // TODO: to be changed to UserId
             Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
             return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/Home/ReviewAnswers.cshtml");
@@ -54,6 +67,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ReviewNextPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
+            // NOTE: Could we not roll things into just one common end point?
+            // applicationId, sequenceNumber, sectionNumber & pageId is all that's required to display the page
+            // Same applies with the Orchestrator getting the viewmodel
+
+            // TODO: 1st check - does the application exist?
+            // TODO: 2nd check - is sequence number within bounds? Shouldn't be showing sequence 1 for example
+            // TODO: 3rd check - is it in the appropriate state for Assessor Review?
+            // TODO: 4th check - should it be shown in read only mode or not?
+
             var userName = User.UserDisplayName();
             var userId = "";
 
