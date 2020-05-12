@@ -141,6 +141,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
                     SectionNumber = sectionNumber,
                     PageId = "PageId",
 
+                    DisplayType = "Pages",
+
                     Caption = "Caption",
                     Heading = "Heading",
                     Title = "PageTitle",
