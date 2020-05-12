@@ -46,7 +46,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
         }
 
         [Test]
-        public async Task ReviewPageAnswers()
+        public async Task ReviewPageAnswers_When_FirstPageInSection()
         {
             int sequenceNumber = 4;
             int sectionNumber = 2;
@@ -61,6 +61,33 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             };
 
             _sectionReviewOrchestrator.Setup(x => x.GetReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
+
+            // act
+            var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, null) as ViewResult;
+            var actualViewModel = result?.Model as ReviewAnswersViewModel;
+
+            // assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(actualViewModel, Is.Not.Null);
+            Assert.That(actualViewModel, Is.SameAs(viewModel));
+        }
+
+        [Test]
+        public async Task ReviewPageAnswers_When_NotFirstPageInSequence()
+        {
+            int sequenceNumber = 4;
+            int sectionNumber = 2;
+            string pageId = "4200";
+
+            var viewModel = new ReviewAnswersViewModel
+            {
+                ApplicationId = _applicationId,
+                SequenceNumber = sequenceNumber,
+                SectionNumber = sectionNumber,
+                PageId = pageId
+            };
+
+            _sectionReviewOrchestrator.Setup(x => x.GetNextPageReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
 
             // act
             var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId) as ViewResult;
