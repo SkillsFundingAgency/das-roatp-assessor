@@ -49,7 +49,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EvaluatePageAnswers(SubmitAssessorPageAnswerCommand command)
+        public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, SubmitAssessorPageAnswerCommand command)
         {
             // NOTE: GET & POST should not modify URLs (i.e. should be on same URL)
             // Is it possible to do this? See RoatpFinancialController in Admin Service on how to do this!
