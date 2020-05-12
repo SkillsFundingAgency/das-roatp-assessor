@@ -77,14 +77,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             {
                 await SubmitAssessorPageOutcome(command);
 
-                // TODO: Change the logic to return to ApplicationOverview or to next page
                 if (string.IsNullOrEmpty(command.NextPageId))
                 {
                     return Redirect($"/Home/{command.ApplicationId}");
                 }
                 else
                 {
-                    return RedirectToAction("ReviewNextPageAnswers", new { applicationId = command.ApplicationId, sequenceNumber = command.SequenceNumber, sectionNumber = command.SectionNumber, pageId = command.NextPageId });
+                    return RedirectToAction("ReviewPageAnswers", new { applicationId = command.ApplicationId, sequenceNumber = command.SequenceNumber, sectionNumber = command.SectionNumber, pageId = command.NextPageId });
                 }
             }
         }

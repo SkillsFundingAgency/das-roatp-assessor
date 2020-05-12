@@ -38,7 +38,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             // TODO: 3rd check - is it in the appropriate state for Assessor Review?
             // TODO: 4th check - should it be shown in read only mode or not?
 
-            var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));           
+            ReviewAnswersViewModel viewModel;
+
+            if (string.IsNullOrWhiteSpace(pageId))
+            {
+                viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
+            }
+            else
+            {
+                // TODO: Could we remove this altogether and have one function to get the view model?
+                viewModel = await _sectionReviewOrchestrator.GetNextPageReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
+            }
 
             if (viewModel is null)
             {
@@ -62,31 +72,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var userId = User.UserDisplayName(); // TODO: to be changed to UserId
             Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
             return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/Home/ReviewAnswers.cshtml");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ReviewNextPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
-        {
-            // NOTE: Could we not roll things into just one common end point?
-            // applicationId, sequenceNumber, sectionNumber & pageId is all that's required to display the page
-            // Same applies with the Orchestrator getting the viewmodel
-
-            // TODO: 1st check - does the application exist?
-            // TODO: 2nd check - is sequence number within bounds? Shouldn't be showing sequence 1 for example
-            // TODO: 3rd check - is it in the appropriate state for Assessor Review?
-            // TODO: 4th check - should it be shown in read only mode or not?
-
-            var userName = User.UserDisplayName();
-            var userId = "";
-
-            var viewModel = await _sectionReviewOrchestrator.GetNextPageReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
-
-            if (viewModel is null)
-            {
-                return Redirect($"/Home/{applicationId}");
-            }
-
-            return View("~/Views/Home/ReviewAnswers.cshtml", viewModel);
         }
     }
 }
