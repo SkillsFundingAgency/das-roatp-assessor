@@ -25,7 +25,8 @@
                         <tr class="govuk-table__row">
                             @foreach (var column in dataRow.Columns)
                             {
-                                <td class="govuk-table__cell">@column</td>
+                                var answer = string.IsNullOrWhiteSpace(column) ? "Not applicable" : column;
+                                <td class="govuk-table__cell">@answer</td>
                             }
                         </tr>
                     }
