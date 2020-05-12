@@ -62,21 +62,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string SetSectionStatus(AssessorApplicationViewModel viewmodel)
+        public string SetSectionStatus()
         {
             var isReadyForModeration = string.Empty;
 
-            foreach (var sequence in viewmodel.Sequences)
-            {
-                foreach (var section in sequence.Sections)
-                {
-                    if (section.Status == null || (!section.Status.Equals(SectionReviewStatus.Pass) && !section.Status.Equals(SectionReviewStatus.Fail) && !section.Status.Equals(SectionReviewStatus.NotRequired)))
-                    {
-                        isReadyForModeration = "false";
-                        break;
-                    }
-                }
-            }
 
             return isReadyForModeration;
         }
