@@ -12,7 +12,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
     {
         private const string FailDetailsRequired = "Enter comments";
         private const string TooManyWords = "Your comments must be 150 words or less";
-        private const string NoSelectionErrorMessage = "Select";
+        private const string NoSelectionErrorMessage = "Select an outcome";
 
         public async Task<ValidationResponse> Validate(SubmitAssessorPageAnswerCommand command)
         {
@@ -23,7 +23,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
 
             if (string.IsNullOrWhiteSpace(command.Status))
             {
-                //validationResponse.Errors.Add(new ValidationErrorDetail("OptionPass", NoSelectionErrorMessages.Errors[command.PageId]));
                 validationResponse.Errors.Add(new ValidationErrorDetail("OptionPass", NoSelectionErrorMessage));
             }
             else

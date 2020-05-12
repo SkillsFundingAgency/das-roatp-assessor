@@ -65,6 +65,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var validationResponse = await AssessorPageValidator.Validate(command);
             if (validationResponse.Errors != null && validationResponse.Errors.Any())
             {
+                //foreach(var error in validationResponse.Errors)
+                //{
+                //    ModelState.AddModelError(error.Field, error.ErrorMessage);
+                //}
+
                 var viewModel = await viewModelBuilder.Invoke();
                 viewModel.Status = command.Status;
                 viewModel.OptionFailText = command.OptionFailText;
