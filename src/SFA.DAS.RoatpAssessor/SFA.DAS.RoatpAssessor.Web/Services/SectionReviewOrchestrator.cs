@@ -26,13 +26,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         public async Task<ReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request)
         {
-            var viewModel = new ReviewAnswersViewModel { ApplicationId = request.ApplicationId, SequenceNumber = request.SequenceNumber, SectionNumber = request.SectionNumber, PageId = request.PageId };
-
-
             var application = await _applyApiClient.GetApplication(request.ApplicationId);
             var assessorPage = await _applyApiClient.GetAssessorPage(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.PageId);
 
-            viewModel = new ReviewAnswersViewModel
+            if(application is null || assessorPage is null)
+            {
+                return null;
+            }
+
+            var viewModel = new ReviewAnswersViewModel
             {
                 ApplicationId = application.ApplicationId,
 
@@ -69,8 +71,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
 
             var userId = "4dsfdg-MyGuidUserId-yf6re";
-            viewModel.PageId = "TestPageId2";
-            viewModel.NextPageId = "NextTestPageId2";
+            //viewModel.PageId = "TestPageId2";
+            //viewModel.NextPageId = "NextTestPageId2";
             viewModel.AssessorType = AssessorType.SecondAssessor; // SetAssessorType(application, userId);
 
             var assessorReviewOutcomesPerSection = await _applyApiClient.GetAssessorReviewOutcomesPerSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, (int)viewModel.AssessorType, userId);
@@ -132,13 +134,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         public async Task<ReviewAnswersViewModel> GetNextPageReviewAnswersViewModel(GetReviewAnswersRequest request)
         {
-            var viewModel = new ReviewAnswersViewModel { ApplicationId = request.ApplicationId, SequenceNumber = request.SequenceNumber, SectionNumber = request.SectionNumber, PageId = request.PageId };
-
+            // TODO: Can we remove this function and use GetReviewAnswersViewModel ?
 
             var application = await _applyApiClient.GetApplication(request.ApplicationId);
             var assessorPage = await _applyApiClient.GetAssessorPage(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.PageId);
 
-            viewModel = new ReviewAnswersViewModel
+            if (application is null || assessorPage is null)
+            {
+                return null;
+            }
+
+            var viewModel = new ReviewAnswersViewModel
             {
                 ApplicationId = application.ApplicationId,
 
@@ -175,7 +181,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
 
             var userId = "4dsfdg-MyGuidUserId-yf6re";
-            viewModel.PageId = "TestPageId2";
+            //viewModel.PageId = "TestPageId2";
             viewModel.AssessorType = AssessorType.SecondAssessor; // SetAssessorType(application, userId);
 
             #region Don't need it 
