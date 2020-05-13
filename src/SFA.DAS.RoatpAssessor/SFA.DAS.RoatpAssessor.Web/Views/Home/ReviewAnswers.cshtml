@@ -1,4 +1,6 @@
-﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
+
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
 
 @{
     ViewBag.Title = $"Assessor - {@Model.Heading}";
@@ -50,7 +52,7 @@
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 @switch (question.InputType)
                                 {
-                                    case "FileUpload":
+                                    case QuestionInputType.FileUpload:
                                         <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNo="@Model.SequenceNumber" asp-route-sectionNo="@Model.SectionNumber" asp-route-pageId="@Model.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
                                         break;
                                     default:
@@ -79,7 +81,7 @@
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 @switch (question.InputType)
                                 {
-                                    case "FileUpload":
+                                    case QuestionInputType.FileUpload:
                                         <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@supplementaryInformation.ApplicationId" asp-route-sequenceNo="@supplementaryInformation.SequenceNumber" asp-route-sectionNo="@supplementaryInformation.SectionNumber" asp-route-pageId="@supplementaryInformation.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
                                         break;
                                     default:
