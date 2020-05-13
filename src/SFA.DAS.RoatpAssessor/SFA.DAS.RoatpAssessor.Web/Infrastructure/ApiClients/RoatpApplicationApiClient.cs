@@ -28,20 +28,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<List<AssessorSequence>>($"/Assessor/Applications/{applicationId}/Overview");
         }
 
-        public async Task<List<dynamic>> GetAssessorSectionAnswers(Guid applicationId)
-        {
-            // TODO: Needs completing once we know how we're going to store and retrieve answers
-            var answers = new List<dynamic>
-            {
-                new { SequenceNumber = 4, SectionNumber = 2, Status = "Fail" },
-                new { SequenceNumber = 4, SectionNumber = 3, Status = "In progress" },
-                new { SequenceNumber = 4, SectionNumber = 4, Status = "2 Fails out of 4" },
-                new { SequenceNumber = 4, SectionNumber = 5, Status = "Pass" }
-            };
-
-            return await Task.FromResult(answers);
-        }
-
         public async Task<AssessorPage> GetAssessorPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
             AssessorPage assessorPage;

@@ -73,7 +73,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var userId = "4dsfdg-MyGuidUserId-yf6re";
             viewModel.AssessorType = AssessorType.FirstAssessor; // SetAssessorType(application, userId);
 
-            if (string.IsNullOrEmpty(request.PageId)) // It's first page from the section
+            if (string.IsNullOrEmpty(request.PageId)) 
             {
                 var assessorReviewOutcomesPerSection = await _applyApiClient.GetAssessorReviewOutcomesPerSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, (int)viewModel.AssessorType, userId);
                 if (assessorReviewOutcomesPerSection is null || !assessorReviewOutcomesPerSection.Any())
@@ -103,8 +103,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                                                                                null,
                                                                                null);
 
-                            nextPageId = await CreateAssessorPageOutcomeRecord(request.ApplicationId, request.SequenceNumber, request.SectionNumber, nextPageId);
-
+                            nextPageId = await GetNextPageId(request.ApplicationId, request.SequenceNumber, request.SectionNumber, nextPageId);
+                            //var assessorNextPage = await _applyApiClient.GetAssessorPage(request.ApplicationId, request.SequenceNumber, request.SectionNumber, nextPageId);
+                            //nextPageId = assessorNextPage.NextPageId;
                         }
                     }
                 }
@@ -133,7 +134,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewModel;
         }
 
-        public async Task<string> CreateAssessorPageOutcomeRecord(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
+        public async Task<string> GetNextPageId(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
             var assessorPage = await _applyApiClient.GetAssessorPage(applicationId, sequenceNumber, sectionNumber, pageId);           
             if (!string.IsNullOrEmpty(assessorPage.NextPageId))
@@ -143,88 +144,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             return string.Empty;
         }
-
-        // TODO: to be deleted
-        //public async Task<ReviewAnswersViewModel> GetNextPageReviewAnswersViewModel(GetReviewAnswersRequest request)
-        //{
-        //    // TODO: Can we remove this function and use GetReviewAnswersViewModel ?
-
-        //    var application = await _applyApiClient.GetApplication(request.ApplicationId);
-        //    var assessorPage = await _applyApiClient.GetAssessorPage(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.PageId);
-
-        //    if (application is null || assessorPage is null)
-        //    {
-        //        return null;
-        //    }
-
-        //    var viewModel = new ReviewAnswersViewModel
-        //    {
-        //        ApplicationId = application.ApplicationId,
-
-        //        Ukprn = application.ApplyData.ApplyDetails.UKPRN,
-        //        ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
-        //        ApplicationReference = application.ApplyData.ApplyDetails.ReferenceNumber,
-        //        ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
-        //        SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
-
-        //        SequenceNumber = assessorPage.SequenceNumber,
-        //        SectionNumber = assessorPage.SectionNumber,
-        //        PageId = assessorPage.PageId,
-        //        NextPageId = assessorPage.NextPageId,
-
-        //        Caption = assessorPage.Caption,
-        //        Heading = assessorPage.Heading,
-
-        //        GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
-
-        //        Questions = new List<ApplyTypes.AssessorQuestion>(assessorPage.Questions),
-        //        Answers = new List<ApplyTypes.AssessorAnswer>(assessorPage.Answers),
-        //        TabularData = new List<TabularData>(),
-        //        SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, assessorPage.PageId)
-        //    };
-
-        //    foreach (var tabularQuestion in viewModel.Questions.Where(q => "TabularData".Equals(q.InputType, StringComparison.OrdinalIgnoreCase)))
-        //    {
-        //        var jsonAnswer = viewModel.Answers.FirstOrDefault(a => a.QuestionId == tabularQuestion.QuestionId)?.Value;
-
-        //        if (jsonAnswer != null)
-        //        {
-        //            viewModel.TabularData.Add(JsonConvert.DeserializeObject<TabularData>(jsonAnswer));
-        //        }
-        //    }
-
-        //    var userId = "4dsfdg-MyGuidUserId-yf6re";
-        //    viewModel.AssessorType = AssessorType.FirstAssessor; // SetAssessorType(application, userId);
-
-
-        //    // On 'Save and Continue' POST action => another method in SectionReviewOrchestrator
-        //    // Get page data GetPage(ApplicationId, SequenceNumber, SectionNumber, NextPageId) {If NextPageId is null return to Application overview page; in Controller)
-        //    // TODO
-        //    // GetPageReviewStatus(ApplicationId, AssessorType, userId, PageId). We will need SequenceNumber & SectionNumber only if one page could apear in different sections.
-        //    var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, userId);
-        //    if (pageReviewOutcome != null)
-        //    {
-        //        viewModel.Status = pageReviewOutcome.Status;
-        //        switch (pageReviewOutcome.Status)
-        //        {
-        //            case AssessorPageReviewStatus.Pass:
-        //                viewModel.OptionPassText = pageReviewOutcome.Comment;
-        //                break;
-        //            case AssessorPageReviewStatus.Fail:
-        //                viewModel.OptionFailText = pageReviewOutcome.Comment;
-        //                break;
-        //            case AssessorPageReviewStatus.InProgress:
-        //                viewModel.OptionInProgressText = pageReviewOutcome.Comment;
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //    }
-        //    // Prepare the ViewModel and return it
-
-
-        //    return viewModel;
-        //}
 
         // We will need to add Assessor1UserId & Assessor2UserId to Apply object
         // and when we can get UserId, we shall be able to SetAssessorType

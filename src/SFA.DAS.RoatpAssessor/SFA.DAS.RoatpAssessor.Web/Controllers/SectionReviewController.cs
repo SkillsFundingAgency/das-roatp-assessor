@@ -38,18 +38,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             // TODO: 3rd check - is it in the appropriate state for Assessor Review?
             // TODO: 4th check - should it be shown in read only mode or not?
 
-            //ReviewAnswersViewModel viewModel;
-
             var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
-            //if (string.IsNullOrWhiteSpace(pageId))
-            //{
-            //    viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
-            //}
-            //else
-            //{
-            //    // TODO: Could we remove this altogether and have one function to get the view model?
-            //    viewModel = await _sectionReviewOrchestrator.GetNextPageReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
-            //}
 
             if (viewModel is null)
             {
