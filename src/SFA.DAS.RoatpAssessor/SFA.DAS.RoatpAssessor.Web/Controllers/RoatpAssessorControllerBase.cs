@@ -84,7 +84,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
                 if (string.IsNullOrEmpty(command.NextPageId))
                 {
-                    return Redirect($"/Home/{command.ApplicationId}");
+                    return RedirectToAction("ViewApplication", "Overview", new { applicationId = command.ApplicationId });
                 }
                 else
                 {
