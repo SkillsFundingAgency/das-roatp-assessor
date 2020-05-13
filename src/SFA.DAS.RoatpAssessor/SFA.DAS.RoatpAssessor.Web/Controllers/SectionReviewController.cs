@@ -56,7 +56,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 return RedirectToAction("ViewApplication", "Overview", new {applicationId});
             }
 
-            return View("~/Views/Home/ReviewAnswers.cshtml", viewModel);
+            return View("~/Views/SectionReview/ReviewAnswers.cshtml", viewModel);
         }
 
         [HttpPost]
@@ -72,7 +72,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
             var userId = User.UserDisplayName(); // TODO: to be changed to UserId
             Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
-            return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/Home/ReviewAnswers.cshtml");
+            return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/SectionReview/ReviewAnswers.cshtml");
         }
     }
 }

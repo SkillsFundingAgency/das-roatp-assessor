@@ -7,13 +7,13 @@
     Layout = "_Layout";
 }
 
-<partial name="~/Views/Home/Pages/_Breadcrumb.cshtml" for="@Model" />
+<partial name="~/Views/SectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <partial name="~/Views/Home/Pages/_ValidationSummary.cshtml" for="@Model" />
+            <partial name="~/Views/SectionReview/Pages/_ValidationSummary.cshtml" for="@Model" />
 
             <span class="govuk-caption-xl">
                 @Model.Caption
@@ -21,7 +21,7 @@
 
             <h1 class="govuk-heading-xl">@Model.Heading</h1>
 
-            <partial name="~/Views/Home/Pages/_ApplicationSummary.cshtml" for="@Model" />
+            <partial name="~/Views/SectionReview/Pages/_ApplicationSummary.cshtml" for="@Model" />
         </div>
     </div>
 
@@ -29,7 +29,7 @@
     {
         foreach (var item in Model.TabularData)
         {
-            <partial name="~/Views/Home/Pages/_TabularData.cshtml" for="@item" />
+            <partial name="~/Views/SectionReview/Pages/_TabularData.cshtml" for="@item" />
         }
     }
     else
@@ -131,7 +131,7 @@
                     <input type="hidden" asp-for="NextPageId" />
                     <input type="hidden" asp-for="AssessorType" />
 
-                    <partial name="~/Views/Home/Pages/_ApprovalSection.cshtml" for="@Model" />
+                    <partial name="~/Views/SectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
 
                     <button class="govuk-button" type="submit">Save and continue</button>
                 </form>
