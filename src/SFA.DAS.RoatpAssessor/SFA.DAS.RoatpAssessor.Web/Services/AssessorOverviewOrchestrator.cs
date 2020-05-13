@@ -123,7 +123,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 foreach (var section in sequence.Sections)
                 {
-                    if (section.Status == null || (!section.Status.Equals(SectionReviewStatus.Pass) && !section.Status.Equals(SectionReviewStatus.Fail) && !section.Status.Equals(SectionReviewStatus.NotRequired)))
+                    if (section.Status == null || (!section.Status.Equals(AssessorSectionStatus.Pass) && !section.Status.Equals(AssessorSectionStatus.Fail)))
                     {
                         isReadyForModeration = false;
                         break;
