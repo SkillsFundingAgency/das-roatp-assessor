@@ -81,33 +81,33 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     var noTagCount = sectionPageReviewOutcomes.Where(p => p.Status == null || p.Status == string.Empty).Count();
                     var allPassOrFail = sectionPageReviewOutcomes.Count.Equals(passStatusesCount + failStatusesCount);
 
-                    if (sectionPageReviewOutcomes.Count.Equals(passStatusesCount))
+                    if (sectionPageReviewOutcomes.Count.Equals(passStatusesCount)) // All Pass
                     {
                         sectionStatus = AssessorSectionStatus.Pass;
                     }
-                    else if (sectionPageReviewOutcomes.Count.Equals(failStatusesCount))
+                    else if (sectionPageReviewOutcomes.Count.Equals(failStatusesCount)) // All Fail
                     {
                         sectionStatus = AssessorSectionStatus.Fail;
                     }
-                    else if (noTagCount.Equals(0) && passStatusesCount.Equals(0) && failStatusesCount.Equals(0) && inProgressStatusesCount.Equals(0))
+                    else if (noTagCount.Equals(0) && passStatusesCount.Equals(0) && failStatusesCount.Equals(0) && inProgressStatusesCount.Equals(0)) // All empty
                     {
                         sectionStatus = string.Empty;
                     }
-                    else if (inProgressStatusesCount > 0)
+                    else if (inProgressStatusesCount > 0) // One or more 'In Progress'
                     {
                         sectionStatus = AssessorSectionStatus.InProgress;
                     }
-                    else if (inProgressStatusesCount.Equals(0) && !allPassOrFail)
+                    else if (inProgressStatusesCount.Equals(0) && !allPassOrFail) // One or more Pass or Fail, but NOT all
                     {
                         sectionStatus = AssessorSectionStatus.InProgress;
                     }
-                    else if (noTagCount.Equals(0) && inProgressStatusesCount.Equals(0) && allPassOrFail)
+                    else if (noTagCount.Equals(0) && inProgressStatusesCount.Equals(0) && allPassOrFail) // Not empty or 'In Progress', All either Pass or Fail
                     {
                         sectionStatus = string.Format(AssessorSectionStatus.FailOutOf, failStatusesCount, sectionPageReviewOutcomes.Count);
                     }
                     else
                     {
-                        sectionStatus = "Unhandled scenario";
+                        sectionStatus = "Unhandled scenario"; // It should not happen. It's just for testing.
                     }
                 }
             }
