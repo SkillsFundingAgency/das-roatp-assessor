@@ -27,10 +27,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            var userId = "4dsfdg-MyGuidUserId-yf6re";
+            var sequences = await _applyApiClient.GetAssessorSequences(application.ApplicationId);
+            if (sequences is null)
+            {
+                return null;
+            }
 
-            var viewmodel = new AssessorApplicationViewModel(application, userId);
-            viewmodel.Sequences = await _applyApiClient.GetAssessorSequences(application.ApplicationId);
+            var userId = "4dsfdg-MyGuidUserId-yf6re";
+            
+            var viewmodel = new AssessorApplicationViewModel(application, sequences, userId);
 
             // Real saved outcomes (statuses & comments)           
             var assessorType = AssessorType.SecondAssessor; // SetAssessorType(application, userId);

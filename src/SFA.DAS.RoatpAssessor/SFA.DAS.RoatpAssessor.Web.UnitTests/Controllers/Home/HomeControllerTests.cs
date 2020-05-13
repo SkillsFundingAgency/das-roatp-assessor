@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
 using SFA.DAS.RoatpAssessor.Web.Services;
@@ -8,6 +9,7 @@ using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
@@ -51,8 +53,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
             // arrange
             var userId = _controller.User.UserDisplayName();
 
-            var application = new Apply { ApplicationId = _applicationId, Assessor1ReviewStatus = ApplyTypes.AssessorReviewStatus.New, Assessor1UserId = userId };
-            var viewModel = new AssessorApplicationViewModel(application, userId);
+            var application = new Apply { ApplicationId = _applicationId, Assessor1ReviewStatus = AssessorReviewStatus.New, Assessor1UserId = userId };
+            var sequences = new List<AssessorSequence>();
+
+            var viewModel = new AssessorApplicationViewModel(application, sequences, userId);
 
             _assessorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetApplicationOverviewRequest>())).ReturnsAsync(viewModel);
 

@@ -8,18 +8,18 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
     public class AssessorApplicationViewModel : OrganisationDetailsViewModel
     {
         public Guid Id { get; }
-        public Guid ApplicationId { get; set; }
+        public Guid ApplicationId { get; }
         public Guid OrgId { get; }
 
         public string ApplicationStatus { get; }
-        public string AssessorReviewStatus { get; set; }
+        public string AssessorReviewStatus { get; private set; }
 
         public bool IsAssessorApproved { get; set; }
 
-        public List<AssessorSequence> Sequences { get; set; }
+        public List<AssessorSequence> Sequences { get; }
         public bool IsReadyForModeration { get; set; }
 
-        public AssessorApplicationViewModel(Apply application, string userId)
+        public AssessorApplicationViewModel(Apply application, List<AssessorSequence> sequences, string userId)
         {
             Id = application.Id;
             ApplicationId = application.ApplicationId;
@@ -36,6 +36,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 OrganisationName = application.ApplyData.ApplyDetails.OrganisationName;
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn;
             }
+
+            Sequences = sequences;
         }
 
         private void SetAssessorReviewStatus(Apply application, string userId)
