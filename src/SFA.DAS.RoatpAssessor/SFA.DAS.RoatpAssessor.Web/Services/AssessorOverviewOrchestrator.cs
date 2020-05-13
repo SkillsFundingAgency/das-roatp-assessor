@@ -123,6 +123,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 foreach (var section in sequence.Sections)
                 {
+                    // TODO: Rework the logic according to requirements. Attention about AssessorSectionStatus.FailOutOf
                     if (section.Status == null || (!section.Status.Equals(AssessorSectionStatus.Pass) && !section.Status.Equals(AssessorSectionStatus.Fail)))
                     {
                         isReadyForModeration = false;
