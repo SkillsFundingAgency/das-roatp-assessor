@@ -53,7 +53,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
             if (viewModel is null)
             {
-                return Redirect($"/Home/{applicationId}");
+                return RedirectToAction("ViewApplication", "Overview", new {applicationId});
             }
 
             return View("~/Views/Home/ReviewAnswers.cshtml", viewModel);
