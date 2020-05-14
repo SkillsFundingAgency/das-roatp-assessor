@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Validators;
@@ -93,7 +94,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
         protected async Task SubmitAssessorPageOutcome(SubmitAssessorPageAnswerCommand command)
         {
-            var userId = "4dsfdg-MyGuidUserId-yf6re"; // HttpContext.User.UserId();
+            var userId = HttpContext.User.UserId();
+            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
             var comment = SetupGatewayPageOptionTexts(command);
 
             _logger.LogInformation($"{typeof(T).Name}-SubmitAssessorPageOutcome - ApplicationId '{command.ApplicationId}' - " +
