@@ -71,12 +71,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
             }
 
-            var userId = "4dsfdg-MyGuidUserId-yf6re";
-            viewModel.AssessorType = AssessorType.FirstAssessor; // SetAssessorType(application, userId);
+            viewModel.AssessorType = AssessorType.FirstAssessor; // SetAssessorType(application, request.UserId);
 
             if (string.IsNullOrEmpty(request.PageId)) 
             {
-                var assessorReviewOutcomesPerSection = await _applyApiClient.GetAssessorReviewOutcomesPerSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, (int)viewModel.AssessorType, userId);
+                var assessorReviewOutcomesPerSection = await _applyApiClient.GetAssessorReviewOutcomesPerSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, (int)viewModel.AssessorType, request.UserId);
                 if (assessorReviewOutcomesPerSection is null || !assessorReviewOutcomesPerSection.Any())
                 {
                     // Start processing all subsequent pages and create record in AssessorPageReviewOutcome with emty status for each and every active page
@@ -86,7 +85,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                                                         request.SectionNumber,
                                                         viewModel.PageId,
                                                         (int)viewModel.AssessorType,
-                                                        userId,
+                                                        request.UserId,
                                                         null,
                                                         null);
 
@@ -100,7 +99,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                                                                                request.SectionNumber,
                                                                                nextPageId,
                                                                                (int)viewModel.AssessorType,
-                                                                               userId,
+                                                                               request.UserId,
                                                                                null,
                                                                                null);
 
@@ -112,7 +111,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
             }
 
-            var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, userId);
+            var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, request.UserId);
             if (pageReviewOutcome != null)
             {
                 viewModel.Status = pageReviewOutcome.Status;

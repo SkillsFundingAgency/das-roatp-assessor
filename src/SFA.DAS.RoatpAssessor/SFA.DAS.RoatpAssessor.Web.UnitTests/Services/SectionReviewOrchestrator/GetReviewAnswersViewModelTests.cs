@@ -97,9 +97,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             Assert.That(result.ApplicationId, Is.EqualTo(assessorPage.ApplicationId));
             Assert.That(result.SequenceNumber, Is.EqualTo(assessorPage.SequenceNumber));
             Assert.That(result.SectionNumber, Is.EqualTo(assessorPage.SectionNumber));
-            // TODO: Uncomment lines below once done dev debugging is completed
-            //Assert.That(result.PageId, Is.EqualTo(assessorPage.PageId));
-            //Assert.That(result.Status, Is.EqualTo(pageReviewOutcome.Status));
+            Assert.That(result.PageId, Is.EqualTo(assessorPage.PageId));
+            Assert.That(result.Status, Is.EqualTo(pageReviewOutcome.Status));
             CollectionAssert.IsNotEmpty(result.Questions);
             CollectionAssert.IsNotEmpty(result.Answers);
         }

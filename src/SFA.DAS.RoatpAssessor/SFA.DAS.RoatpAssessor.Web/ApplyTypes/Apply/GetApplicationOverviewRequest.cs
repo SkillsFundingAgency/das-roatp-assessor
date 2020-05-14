@@ -5,12 +5,12 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
     public class GetApplicationOverviewRequest
     {
         public Guid ApplicationId { get; }
-        public string UserName { get; }
+        public string UserId { get; }
 
-        public GetApplicationOverviewRequest(Guid applicationId, string userName)
+        public GetApplicationOverviewRequest(Guid applicationId, string userId)
         {
             ApplicationId = applicationId;
-            UserName = userName;
+            UserId = userId;
         }
     }
 }

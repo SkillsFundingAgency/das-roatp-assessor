@@ -29,13 +29,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
-            var userName = HttpContext.User.UserDisplayName();
-            var userId = ""; //HttpContext.User.UserId();
-
-            // TODO: 1st check - does the application exist?
-            // TODO: 2nd check - is sequence number within bounds? Shouldn't be showing sequence 1 for example
-            // TODO: 3rd check - is it in the appropriate state for Assessor Review?
-            // TODO: 4th check - should it be shown in read only mode or not?
+            var userId = HttpContext.User.UserId();
+            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
 
             var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
 
@@ -50,15 +45,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, SubmitAssessorPageAnswerCommand command)
         {
-            // NOTE: GET & POST should not modify URLs (i.e. should be on same URL)
-            // Is it possible to do this? See RoatpFinancialController in Admin Service on how to do this!
+            var userId = HttpContext.User.UserId();
+            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
 
-            // TODO: 1st check - does the application exist?
-            // TODO: 2nd check - is sequence number within bounds? Shouldn't be showing sequence 1 for example
-            // TODO: 3rd check - is it in the appropriate state for Assessor Review?
-            // TODO: 4th check - should it be shown in read only mode or not?
-
-            var userId = User.UserDisplayName(); // TODO: to be changed to UserId
             Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
             return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/SectionReview/ReviewAnswers.cshtml");
         }
