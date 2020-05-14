@@ -4,6 +4,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,8 +54,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 {
                     foreach (var section in sequence.Sections)
                     {
-                        var sectionPageReviewOutcomes = savedOutcomes.Where(p => p.SequenceNumber == sequence.SequenceNumber && p.SectionNumber == section.SectionNumber).ToList();
-                        section.Status = SetSectionStatus(sectionPageReviewOutcomes);
+                        if (string.IsNullOrEmpty(section.Status))
+                        {
+                            var sectionPageReviewOutcomes = savedOutcomes.Where(p => p.SequenceNumber == sequence.SequenceNumber && p.SectionNumber == section.SectionNumber).ToList();
+                            section.Status = SetSectionStatus(sectionPageReviewOutcomes);
+                        }
                     }
                 }
 
@@ -124,7 +128,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 foreach (var section in sequence.Sections)
                 {
                     // TODO: Rework the logic according to requirements. Attention about AssessorSectionStatus.FailOutOf
-                    if (section.Status == null || (!section.Status.Equals(AssessorSectionStatus.Pass) && !section.Status.Equals(AssessorSectionStatus.Fail)))
+                    if (section.Status == null || (!section.Status.Equals(AssessorSectionStatus.Pass) && 
+                                                   !section.Status.Equals(AssessorSectionStatus.Fail) && 
+                                                   !section.Status.Equals(AssessorSectionStatus.NotRequired) &&
+                                                   !section.Status.Contains("OUT", StringComparison.InvariantCultureIgnoreCase)))
                     {
                         isReadyForModeration = false;
                         break;

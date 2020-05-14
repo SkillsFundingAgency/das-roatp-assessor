@@ -157,7 +157,7 @@
                                 {
                                     <li class="app-task-list__item">
                                         <span class="app-task-list__task-name app-task-list__task-name--inactive">
-                                            @if (currentSection.Status != null && currentSection.Status.Equals(SectionReviewStatus.NotRequired))
+                                            @if (currentSection.Status != null && currentSection.Status.Equals(AssessorSectionStatus.NotRequired))
                                             {
                                                 @currentSection.LinkTitle
                                             }
@@ -169,11 +169,9 @@
                                         </span>
                                         @if (!string.IsNullOrWhiteSpace(currentSection.Status))
                                         {
-                                            @if (!currentSection.Status.Equals(SectionReviewStatus.New))
-                                            {
-                                                var cssModifierClassName = Model.GetStatusCss(currentSection.Status);
-                                                <strong class="govuk-tag @cssModifierClassName das-no-wrap">@currentSection.Status</strong>
-                                            }
+
+                                            var cssModifierClassName = Model.GetStatusCss(currentSection.Status);
+                                            <strong class="govuk-tag @cssModifierClassName das-no-wrap">@currentSection.Status</strong>
                                         }
                                     </li>
                                 }

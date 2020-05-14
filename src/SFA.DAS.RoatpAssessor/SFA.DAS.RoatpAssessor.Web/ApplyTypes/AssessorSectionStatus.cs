@@ -11,5 +11,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
         public const string Pass = "Pass";
         public const string Fail = "Fail";
         public const string FailOutOf = "{0} FAIL OUT OF {1}";
+        public const string NotRequired = "Not required";
     }
 }
