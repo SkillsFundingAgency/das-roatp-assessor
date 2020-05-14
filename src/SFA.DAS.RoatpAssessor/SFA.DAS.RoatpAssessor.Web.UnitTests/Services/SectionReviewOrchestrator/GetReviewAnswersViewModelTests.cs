@@ -3,11 +3,14 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
@@ -16,7 +19,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
     public class GetReviewAnswersViewModelTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
-        private readonly string _userId = Guid.NewGuid().ToString();
+        private readonly ClaimsPrincipal _user = MockedUser.Setup();
 
         private Mock<IRoatpApplicationApiClient> _applyApiClient;
         private Web.Services.SectionReviewOrchestrator _orchestrator;
@@ -39,6 +42,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             int sequenceNumber = 4;
             int sectionNumber = 2;
             string pageId = "4200";
+            var userId = _user.UserId();
 
             var application = new Apply
             {
@@ -71,7 +75,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
                 SequenceNumber = sequenceNumber,
                 SectionNumber = sectionNumber,
                 PageId = pageId,
-                UserId = _userId,
+                UserId = userId,
                 Status = AssessorPageReviewStatus.Pass
             };
 
@@ -80,13 +84,13 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);
 
-            _applyApiClient.Setup(x => x.GetAssessorReviewOutcomesPerSection(_applicationId, sequenceNumber, sectionNumber, It.IsAny<int>(), _userId))
+            _applyApiClient.Setup(x => x.GetAssessorReviewOutcomesPerSection(_applicationId, sequenceNumber, sectionNumber, It.IsAny<int>(), userId))
                 .ReturnsAsync(new List<PageReviewOutcome> { pageReviewOutcome });
 
-            _applyApiClient.Setup(x => x.GetPageReviewOutcome(_applicationId, sequenceNumber, sectionNumber, pageId, It.IsAny<int>(), _userId))
+            _applyApiClient.Setup(x => x.GetPageReviewOutcome(_applicationId, sequenceNumber, sectionNumber, pageId, It.IsAny<int>(), userId))
                 .ReturnsAsync(pageReviewOutcome);
 
-            var request = new GetReviewAnswersRequest(_applicationId, _userId, sequenceNumber, sectionNumber, pageId, null);
+            var request = new GetReviewAnswersRequest(_applicationId, userId, sequenceNumber, sectionNumber, pageId, null);
             var result = await _orchestrator.GetReviewAnswersViewModel(request);
 
             Assert.That(result, Is.Not.Null);

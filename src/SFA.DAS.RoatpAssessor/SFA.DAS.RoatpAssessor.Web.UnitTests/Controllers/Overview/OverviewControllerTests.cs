@@ -37,7 +37,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Overview
         public async Task ViewApplication_returns_view_with_expected_viewmodel()
         {
             // arrange
-            var userId = _controller.User.UserDisplayName();
+            var userId = _controller.User.UserId();
 
             var application = new Apply { ApplicationId = _applicationId, Assessor1ReviewStatus = AssessorReviewStatus.New, Assessor1UserId = userId };
             var sequences = new List<AssessorSequence>();

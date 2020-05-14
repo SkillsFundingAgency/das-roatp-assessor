@@ -14,8 +14,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
     [Ignore("These tests need to be unignored once staff idams is setup and the temp code in the controllers is removed")]
     public class DashboardControllerTests
     {
-        private string _userId;
-
         private Mock<IAssessorDashboardOrchestrator> _orchestratorMock;
 
         private DashboardController _controller;
@@ -28,15 +26,14 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
-
-            _userId = _controller.HttpContext.User.UserId();
         }
 
         [Test]
         public async Task When_getting_new_applications_the_users_applications_are_returned()
         {
+            var userId = _controller.User.UserId();
             var expectedViewModel = new NewApplicationsViewModel(1, 2, 3, 4);
-            _orchestratorMock.Setup(x => x.GetNewApplicationsViewModel(_userId)).ReturnsAsync(expectedViewModel);
+            _orchestratorMock.Setup(x => x.GetNewApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
 
             var result = await _controller.NewApplications();
 
@@ -46,8 +43,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         [Test]
         public async Task When_getting_in_progress_applications_the_users_applications_are_returned()
         {
-            var expectedViewModel = new InProgressApplicationsViewModel(_userId, 1, 2, 3, 4);
-            _orchestratorMock.Setup(x => x.GetInProgressApplicationsViewModel(_userId)).ReturnsAsync(expectedViewModel);
+            var userId = _controller.User.UserId();
+            var expectedViewModel = new InProgressApplicationsViewModel(userId, 1, 2, 3, 4);
+            _orchestratorMock.Setup(x => x.GetInProgressApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
 
             var result = await _controller.InProgressApplications();
 
