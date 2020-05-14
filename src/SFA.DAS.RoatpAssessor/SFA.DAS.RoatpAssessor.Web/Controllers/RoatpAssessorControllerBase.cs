@@ -18,7 +18,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
     //[FeatureToggle(FeatureToggles.EnableRoatpGatewayReview, "Dashboard", "Index")]
     public class RoatpAssessorControllerBase<T> : Controller
     {
-        protected readonly IHttpContextAccessor _contextAccessor;
         protected readonly IRoatpApplicationApiClient _applyApiClient;
         protected readonly ILogger<T> _logger;
         protected readonly IRoatpAssessorPageValidator AssessorPageValidator;
@@ -29,10 +28,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
         }
 
-        public RoatpAssessorControllerBase(IHttpContextAccessor contextAccessor, IRoatpApplicationApiClient applyApiClient,
-                                          ILogger<T> logger, IRoatpAssessorPageValidator assessorPageValidator)
+        public RoatpAssessorControllerBase(IRoatpApplicationApiClient applyApiClient,
+                                           ILogger<T> logger, IRoatpAssessorPageValidator assessorPageValidator)
         {
-            _contextAccessor = contextAccessor;
             _applyApiClient = applyApiClient;
             _logger = logger;
             AssessorPageValidator = assessorPageValidator;
@@ -95,7 +93,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
         protected async Task SubmitAssessorPageOutcome(SubmitAssessorPageAnswerCommand command)
         {
-            var userId = "4dsfdg-MyGuidUserId-yf6re"; // _contextAccessor.HttpContext.User.UserDisplayName();
+            var userId = "4dsfdg-MyGuidUserId-yf6re"; // HttpContext.User.UserId();
             var comment = SetupGatewayPageOptionTexts(command);
 
             _logger.LogInformation($"{typeof(T).Name}-SubmitAssessorPageOutcome - ApplicationId '{command.ApplicationId}' - " +

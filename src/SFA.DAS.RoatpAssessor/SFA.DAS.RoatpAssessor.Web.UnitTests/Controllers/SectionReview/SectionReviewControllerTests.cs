@@ -11,8 +11,6 @@ using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
@@ -36,10 +34,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             _assessorPageValidator = new Mock<IRoatpAssessorPageValidator>();
             _sectionReviewOrchestrator = new Mock<ISectionReviewOrchestrator>();
 
-            var httpContextAccessor = MockedHttpContextAccessor.Setup();
             var logger = Mock.Of<ILogger<SectionReviewController>>();
 
-            _controller = new SectionReviewController(_applyApiClient.Object, httpContextAccessor.Object, _assessorPageValidator.Object, _sectionReviewOrchestrator.Object, logger)
+            _controller = new SectionReviewController(_applyApiClient.Object, _assessorPageValidator.Object, _sectionReviewOrchestrator.Object, logger)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };

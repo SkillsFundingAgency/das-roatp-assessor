@@ -19,10 +19,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
     {
         private readonly ISectionReviewOrchestrator _sectionReviewOrchestrator;
         public SectionReviewController(IRoatpApplicationApiClient applyApiClient,
-                                        IHttpContextAccessor contextAccessor,
-                                        IRoatpAssessorPageValidator assessorPageValidator,
-                                         ISectionReviewOrchestrator sectionReviewOrchestrator,
-                                        ILogger<SectionReviewController> logger) : base(contextAccessor, applyApiClient, logger, assessorPageValidator)
+                                       IRoatpAssessorPageValidator assessorPageValidator,
+                                       ISectionReviewOrchestrator sectionReviewOrchestrator,
+                                       ILogger<SectionReviewController> logger) : base(applyApiClient, logger, assessorPageValidator)
         {
             _sectionReviewOrchestrator = sectionReviewOrchestrator;
         }
@@ -30,8 +29,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
-            var userName = User.UserDisplayName();
-            var userId = "";
+            var userName = HttpContext.User.UserDisplayName();
+            var userId = ""; //HttpContext.User.UserId();
 
             // TODO: 1st check - does the application exist?
             // TODO: 2nd check - is sequence number within bounds? Shouldn't be showing sequence 1 for example

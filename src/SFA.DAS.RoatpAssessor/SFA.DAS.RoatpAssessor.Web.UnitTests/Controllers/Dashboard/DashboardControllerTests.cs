@@ -17,7 +17,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         private string _userId;
 
         private Mock<IAssessorDashboardOrchestrator> _orchestratorMock;
-        private Mock<IHttpContextAccessor> _contextAccessorMock;
 
         private DashboardController _controller;
         
@@ -25,13 +24,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         public void Setup()
         {
             _orchestratorMock = new Mock<IAssessorDashboardOrchestrator>();
-            _contextAccessorMock = MockedHttpContextAccessor.Setup();
-            _controller = new DashboardController(_orchestratorMock.Object, _contextAccessorMock.Object)
+            _controller = new DashboardController(_orchestratorMock.Object)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
 
-            _userId = _contextAccessorMock.Object.HttpContext.User.UserId();
+            _userId = _controller.HttpContext.User.UserId();
         }
 
         [Test]
