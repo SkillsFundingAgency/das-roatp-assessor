@@ -60,7 +60,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
             try
             {
-                await Post($"/Assessor/SubmitPageOutcome", new 
+                var response = await Post($"/Assessor/SubmitPageOutcome", new 
                 {
                     applicationId,
                     sequenceNumber,
@@ -71,6 +71,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
                     status,
                     comment
                 });
+
+                _logger.LogInformation($"RoatpApplicationApiClient-SubmitAssessorPageOutcome - ResponseStatusCode '{response}'"); 
             }
             catch (Exception ex)
             {
