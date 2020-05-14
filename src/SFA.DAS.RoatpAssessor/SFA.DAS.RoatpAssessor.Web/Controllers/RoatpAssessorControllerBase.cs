@@ -14,15 +14,11 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
-    //[ExternalApiExceptionFilter]
-    //[Authorize(Roles = Roles.RoatpGatewayAssessorTeam)]
-    //[FeatureToggle(FeatureToggles.EnableRoatpGatewayReview, "Dashboard", "Index")]
     public class RoatpAssessorControllerBase<T> : Controller
     {
         protected readonly IRoatpApplicationApiClient _applyApiClient;
         protected readonly ILogger<T> _logger;
         protected readonly IRoatpAssessorPageValidator AssessorPageValidator;
-        //protected const string GatewayViewsLocation = "~/Views/Roatp/Apply/Gateway/pages";
 
         public RoatpAssessorControllerBase()
         {
@@ -64,11 +60,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var validationResponse = await AssessorPageValidator.Validate(command);
             if (validationResponse.Errors != null && validationResponse.Errors.Any())
             {
-                //foreach(var error in validationResponse.Errors)
-                //{
-                //    ModelState.AddModelError(error.Field, error.ErrorMessage);
-                //}
-
                 var viewModel = await viewModelBuilder.Invoke();
                 viewModel.Status = command.Status;
                 viewModel.OptionFailText = command.OptionFailText;
