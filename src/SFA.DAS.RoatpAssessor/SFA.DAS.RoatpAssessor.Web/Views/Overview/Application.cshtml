@@ -120,7 +120,7 @@
                                 {
                                     <li class="app-task-list__item">
                                         <span class="app-task-list__task-name app-task-list__task-name--inactive">
-                                            @if (currentSection.Status != null && currentSection.Status.Equals(AssessorSectionStatus.NotRequired))
+                                            @if (currentSection.Status != null && currentSection.Status.Equals(AssessorSectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase))
                                             {
                                                 @currentSection.LinkTitle
                                             }

@@ -30,9 +30,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             }
 
             return View("~/Views/Overview/Application.cshtml", viewModel);
-
-            //TODO: We will need to redirect to read only when approve/declined is implemented
-            return View("~/Views/Overview/Application_ReadOnly.cshtml", viewModel);
         }
     }
 }
