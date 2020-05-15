@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
+using SFA.DAS.RoatpAssessor.Web.Helpers;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
@@ -62,8 +63,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             };
 
             //TODO: Can't access the user until staff idams is enabled
-            //TODO: Can this be put in the request or determined in Apply Service? Less Assessor needs to know the better
-            viewModel.AssessorType = AssessorType.FirstAssessor; // SetAssessorType(application, request.UserId);
+            viewModel.AssessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId); //  AssessorType.FirstAssessor; 
 
             //TODO: Explain why all of this is required? We're getting the viewmodel but I'm seeing stuff being submitted
             if (string.IsNullOrEmpty(request.PageId)) 
@@ -167,23 +167,5 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             return string.Empty;
         }
-
-        // We will need to add Assessor1UserId & Assessor2UserId to Apply object
-        // and when we can get UserId, we shall be able to SetAssessorType
-        //private AssessorType SetAssessorType(Apply application, Guid userId)
-        //{
-        //    if (userId.Equals(application.Assessor1UserId))
-        //    {
-        //        return AssessorType.FirstAssessor;
-        //    }
-        //    else if ((userId.Equals(application.Assessor2UserId)
-        //    {
-        //        return AssessorType.SecondAssessor;
-        //    }
-        //    else
-        //    {
-        //        return AssessorType.Undefined;
-        //    }
-        //}
     }
 }
