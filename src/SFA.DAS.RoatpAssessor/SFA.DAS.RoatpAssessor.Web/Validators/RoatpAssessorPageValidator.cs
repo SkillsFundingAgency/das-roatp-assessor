@@ -10,7 +10,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
 {
     public class RoatpAssessorPageValidator : IRoatpAssessorPageValidator
     {
-        private const int MaxWordAcount = 150;
+        private const int MaxWordsAcount = 150;
         private const string FailDetailsRequired = "Enter comments";
         private const string TooManyWords = "Your comments must be 150 words or less";
         private const string NoSelectionErrorMessage = "Select an outcome";
@@ -45,7 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                 case AssessorPageReviewStatus.Pass when !string.IsNullOrEmpty(command.OptionPassText):
                     {
                         var wordCount = command.OptionPassText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Length;
-                        if (wordCount > MaxWordAcount)
+                        if (wordCount > MaxWordsAcount)
                         {
                             validationResponse.Errors.Add(new ValidationErrorDetail("OptionPassText",
                                 TooManyWords));
@@ -56,7 +56,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                 case AssessorPageReviewStatus.Fail when !string.IsNullOrEmpty(command.OptionFailText):
                     {
                         var wordCount = command.OptionFailText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Length;
-                        if (wordCount > MaxWordAcount)
+                        if (wordCount > MaxWordsAcount)
                         {
                             validationResponse.Errors.Add(new ValidationErrorDetail("OptionFailText",
                                 TooManyWords));
@@ -68,7 +68,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                     {
                         var wordCount = command.OptionInProgressText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries)
                             .Length;
-                        if (wordCount > MaxWordAcount)
+                        if (wordCount > MaxWordsAcount)
                         {
                             validationResponse.Errors.Add(new ValidationErrorDetail("OptionInProgressText",
                                 TooManyWords));
