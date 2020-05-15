@@ -36,10 +36,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
+            //TODO: Can't access the user until staff idams is enabled
+            //TODO: Can this be put in the request or determined in Apply Service? Less Assessor needs to know the better
             var assessorType = AssessorType.FirstAssessor; // SetAssessorType(application, request.UserId);
 
             var viewmodel = new AssessorApplicationViewModel(application, sequences, request.UserId);
-            
 
             var savedOutcomes = await _applyApiClient.GetAllAssessorReviewOutcomes(request.ApplicationId, (int)assessorType, request.UserId);
             if (savedOutcomes is null || !savedOutcomes.Any())

@@ -55,24 +55,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
                 GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
 
-                Questions = new List<ApplyTypes.AssessorQuestion>(assessorPage.Questions),
-                Answers = new List<ApplyTypes.AssessorAnswer>(assessorPage.Answers),
-                TabularData = new List<TabularData>(),
+                Questions = new List<AssessorQuestion>(assessorPage.Questions),
+                Answers = new List<AssessorAnswer>(assessorPage.Answers),
+                TabularData = GetTabularDataFromQuestionsAndAnswers(assessorPage.Questions, assessorPage.Answers),
                 SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, assessorPage.PageId)
             };
 
-            foreach (var tabularQuestion in viewModel.Questions.Where(q => QuestionInputType.TabularData.Equals(q.InputType, StringComparison.OrdinalIgnoreCase)))
-            {
-                var jsonAnswer = viewModel.Answers.FirstOrDefault(a => a.QuestionId == tabularQuestion.QuestionId)?.Value;
-
-                if (jsonAnswer != null)
-                {
-                    viewModel.TabularData.Add(JsonConvert.DeserializeObject<TabularData>(jsonAnswer));
-                }
-            }
-
+            //TODO: Can't access the user until staff idams is enabled
+            //TODO: Can this be put in the request or determined in Apply Service? Less Assessor needs to know the better
             viewModel.AssessorType = AssessorType.FirstAssessor; // SetAssessorType(application, request.UserId);
 
+            //TODO: Explain why all of this is required? We're getting the viewmodel but I'm seeing stuff being submitted
             if (string.IsNullOrEmpty(request.PageId)) 
             {
                 var assessorReviewOutcomesPerSection = await _applyApiClient.GetAssessorReviewOutcomesPerSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, (int)viewModel.AssessorType, request.UserId);
@@ -89,6 +82,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                                                         null,
                                                         null);
 
+                    // TODO: Explain why you're checking NextPageId in the viewmodel and submitting the outcome
                     if (!string.IsNullOrEmpty(viewModel.NextPageId)) // We have multiple pages
                     {
                         var nextPageId = viewModel.NextPageId;
@@ -111,6 +105,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
             }
 
+            // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
             var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, request.UserId);
             if (pageReviewOutcome != null)
             {
@@ -134,7 +129,35 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewModel;
         }
 
-        public async Task<string> GetNextPageId(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
+        private List<TabularData> GetTabularDataFromQuestionsAndAnswers(List<AssessorQuestion> questions, List<AssessorAnswer> answers)
+        {
+            var tabularData = new List<TabularData>();
+
+            if (questions != null && answers != null)
+            {
+                foreach (var tabularQuestion in questions.Where(q => QuestionInputType.TabularData.Equals(q.InputType, StringComparison.OrdinalIgnoreCase)))
+                {
+                    var jsonAnswer = answers.FirstOrDefault(a => a.QuestionId == tabularQuestion.QuestionId)?.Value;
+
+                    if (jsonAnswer != null)
+                    {
+                        try
+                        {
+                            tabularData.Add(JsonConvert.DeserializeObject<TabularData>(jsonAnswer));
+                        }
+                        catch
+                        {
+                            // safe to ignore.
+                            _logger.LogWarning($"Expected TabularData but was something else. Question Id: {tabularQuestion.QuestionId}");
+                        }
+                    }
+                }
+            }
+
+            return tabularData;
+        }
+
+        private async Task<string> GetNextPageId(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
             var assessorPage = await _applyApiClient.GetAssessorPage(applicationId, sequenceNumber, sectionNumber, pageId);           
             if (!string.IsNullOrEmpty(assessorPage.NextPageId))
