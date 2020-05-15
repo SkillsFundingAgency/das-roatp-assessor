@@ -156,7 +156,6 @@
 
 /* Task list - custom */
 
-.app-task-list__task-inprogress,
 .app-task-list__task-pass {
   background-color: #00703c;
 }
