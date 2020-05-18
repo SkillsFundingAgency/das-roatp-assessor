@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+﻿using System.Collections.Generic;
+
+namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
 {
     public class AssessorQuestion
     {
@@ -8,5 +10,7 @@
         public string InputType { get; set; }
         public string InputPrefix { get; set; }
         public string InputSuffix { get; set; }
+
+        public List<AssessorOption> Options { get; set; }
     }
 }
