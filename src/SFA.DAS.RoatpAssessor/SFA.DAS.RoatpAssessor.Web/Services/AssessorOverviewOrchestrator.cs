@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.Helpers;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
@@ -37,8 +38,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
 
             //TODO: Can't access the user until staff idams is enabled
-            //TODO: Can this be put in the request or determined in Apply Service? Less Assessor needs to know the better
-            var assessorType = AssessorType.FirstAssessor; // SetAssessorType(application, request.UserId);
+            var assessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId); // AssessorType.FirstAssessor; 
 
             var viewmodel = new AssessorApplicationViewModel(application, sequences, request.UserId);
 

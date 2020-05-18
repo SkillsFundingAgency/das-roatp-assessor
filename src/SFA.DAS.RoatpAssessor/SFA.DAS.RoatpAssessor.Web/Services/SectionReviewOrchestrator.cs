@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
+using SFA.DAS.RoatpAssessor.Web.Helpers;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
@@ -62,69 +63,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             };
 
             //TODO: Can't access the user until staff idams is enabled
-            //TODO: Can this be put in the request or determined in Apply Service? Less Assessor needs to know the better
-            viewModel.AssessorType = AssessorType.FirstAssessor; // SetAssessorType(application, request.UserId);
+            viewModel.AssessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId); //  AssessorType.FirstAssessor; 
 
             //TODO: Explain why all of this is required? We're getting the viewmodel but I'm seeing stuff being submitted
             if (string.IsNullOrEmpty(request.PageId)) 
             {
-                var assessorReviewOutcomesPerSection = await _applyApiClient.GetAssessorReviewOutcomesPerSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, (int)viewModel.AssessorType, request.UserId);
-                if (assessorReviewOutcomesPerSection is null || !assessorReviewOutcomesPerSection.Any())
-                {
-                    // Start processing all subsequent pages and create record in AssessorPageReviewOutcome with emty status for each and every active page
-                    // Make a record for the first page
-                    await _applyApiClient.SubmitAssessorPageOutcome(request.ApplicationId,
-                                                        request.SequenceNumber,
-                                                        request.SectionNumber,
-                                                        viewModel.PageId,
-                                                        (int)viewModel.AssessorType,
-                                                        request.UserId,
-                                                        null,
-                                                        null);
-
-                    // TODO: Explain why you're checking NextPageId in the viewmodel and submitting the outcome
-                    if (!string.IsNullOrEmpty(viewModel.NextPageId)) // We have multiple pages
-                    {
-                        var nextPageId = viewModel.NextPageId;
-                        while (!string.IsNullOrEmpty(nextPageId))
-                        {
-                            await _applyApiClient.SubmitAssessorPageOutcome(request.ApplicationId,
-                                                                               request.SequenceNumber,
-                                                                               request.SectionNumber,
-                                                                               nextPageId,
-                                                                               (int)viewModel.AssessorType,
-                                                                               request.UserId,
-                                                                               null,
-                                                                               null);
-
-                            nextPageId = await GetNextPageId(request.ApplicationId, request.SequenceNumber, request.SectionNumber, nextPageId);
-                            //var assessorNextPage = await _applyApiClient.GetAssessorPage(request.ApplicationId, request.SequenceNumber, request.SectionNumber, nextPageId);
-                            //nextPageId = assessorNextPage.NextPageId;
-                        }
-                    }
-                }
+                await ProcessAllAssessorPagesPerSection(request, viewModel);
             }
 
-            // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
-            var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, request.UserId);
-            if (pageReviewOutcome != null)
-            {
-                viewModel.Status = pageReviewOutcome.Status;
-                switch (pageReviewOutcome.Status)
-                {
-                    case AssessorPageReviewStatus.Pass:
-                        viewModel.OptionPassText = pageReviewOutcome.Comment;
-                        break;
-                    case AssessorPageReviewStatus.Fail:
-                        viewModel.OptionFailText = pageReviewOutcome.Comment;
-                        break;
-                    case AssessorPageReviewStatus.InProgress:
-                        viewModel.OptionInProgressText = pageReviewOutcome.Comment;
-                        break;
-                    default:
-                        break;
-                }
-            }
+            await SetPageReviewOutcome(request, viewModel);
 
             return viewModel;
         }
@@ -157,6 +104,44 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return tabularData;
         }
 
+        private async Task ProcessAllAssessorPagesPerSection(GetReviewAnswersRequest request, ReviewAnswersViewModel viewModel)
+        {
+            var assessorReviewOutcomesPerSection = await _applyApiClient.GetAssessorReviewOutcomesPerSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, (int)viewModel.AssessorType, request.UserId);
+            if (assessorReviewOutcomesPerSection is null || !assessorReviewOutcomesPerSection.Any())
+            {
+                // Start processing all subsequent pages and create record in AssessorPageReviewOutcome with emty status for each and every active page
+                // Make a record for the first page
+                await _applyApiClient.SubmitAssessorPageOutcome(request.ApplicationId,
+                                                    request.SequenceNumber,
+                                                    request.SectionNumber,
+                                                    viewModel.PageId,
+                                                    (int)viewModel.AssessorType,
+                                                    request.UserId,
+                                                    null,
+                                                    null);
+
+                // TODO: Explain why you're checking NextPageId in the viewmodel and submitting the outcome
+                if (!string.IsNullOrEmpty(viewModel.NextPageId)) // We have multiple pages
+                {
+                    var nextPageId = viewModel.NextPageId;
+                    while (!string.IsNullOrEmpty(nextPageId))
+                    {
+                        await _applyApiClient.SubmitAssessorPageOutcome(request.ApplicationId,
+                                                                           request.SequenceNumber,
+                                                                           request.SectionNumber,
+                                                                           nextPageId,
+                                                                           (int)viewModel.AssessorType,
+                                                                           request.UserId,
+                                                                           null,
+                                                                           null);
+
+                        nextPageId = await GetNextPageId(request.ApplicationId, request.SequenceNumber, request.SectionNumber, nextPageId);
+                    }
+                }
+            }
+        }
+
+
         private async Task<string> GetNextPageId(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
             var assessorPage = await _applyApiClient.GetAssessorPage(applicationId, sequenceNumber, sectionNumber, pageId);           
@@ -168,22 +153,28 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return string.Empty;
         }
 
-        // We will need to add Assessor1UserId & Assessor2UserId to Apply object
-        // and when we can get UserId, we shall be able to SetAssessorType
-        //private AssessorType SetAssessorType(Apply application, Guid userId)
-        //{
-        //    if (userId.Equals(application.Assessor1UserId))
-        //    {
-        //        return AssessorType.FirstAssessor;
-        //    }
-        //    else if ((userId.Equals(application.Assessor2UserId)
-        //    {
-        //        return AssessorType.SecondAssessor;
-        //    }
-        //    else
-        //    {
-        //        return AssessorType.Undefined;
-        //    }
-        //}
+        private async Task SetPageReviewOutcome(GetReviewAnswersRequest request, ReviewAnswersViewModel viewModel)
+        {
+            // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
+            var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, request.UserId);
+            if (pageReviewOutcome != null)
+            {
+                viewModel.Status = pageReviewOutcome.Status;
+                switch (pageReviewOutcome.Status)
+                {
+                    case AssessorPageReviewStatus.Pass:
+                        viewModel.OptionPassText = pageReviewOutcome.Comment;
+                        break;
+                    case AssessorPageReviewStatus.Fail:
+                        viewModel.OptionFailText = pageReviewOutcome.Comment;
+                        break;
+                    case AssessorPageReviewStatus.InProgress:
+                        viewModel.OptionInProgressText = pageReviewOutcome.Comment;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }
