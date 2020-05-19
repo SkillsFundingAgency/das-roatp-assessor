@@ -11,6 +11,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
     {
         public static AssessorType SetAssessorType(Apply application, string userId)
         {
+            // TODO: We shouldn't need this function in Assessor. The back end service should determine which assessor type it is
             if (userId.Equals(application.Assessor1UserId))
             {
                 return AssessorType.FirstAssessor;

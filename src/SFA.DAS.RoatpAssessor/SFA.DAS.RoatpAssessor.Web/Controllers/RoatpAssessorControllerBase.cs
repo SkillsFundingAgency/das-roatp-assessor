@@ -20,11 +20,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         protected readonly ILogger<T> _logger;
         protected readonly IRoatpAssessorPageValidator AssessorPageValidator;
 
-        public RoatpAssessorControllerBase()
-        {
-
-        }
-
         public RoatpAssessorControllerBase(IRoatpApplicationApiClient applyApiClient,
                                            ILogger<T> logger, IRoatpAssessorPageValidator assessorPageValidator)
         {
@@ -57,6 +52,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                                                           Func<Task<T>> viewModelBuilder,
                                                           string errorView) where T : ReviewAnswersViewModel
         {
+            // TODO: Split function into two actions. One for validating and one for updating page answer
             var validationResponse = await AssessorPageValidator.Validate(command);
             if (validationResponse.Errors != null && validationResponse.Errors.Any())
             {
@@ -70,7 +66,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             }
             else
             {
-                await SubmitAssessorPageOutcome(command);
+                var userId = HttpContext.User.UserId();
+                var comment = SetupGatewayPageOptionTexts(command);
+
+                await _applyApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                                    command.SequenceNumber,
+                                    command.SectionNumber,
+                                    command.PageId,
+                                    (int)command.AssessorType,
+                                    userId,
+                                    command.Status,
+                                    comment);
 
                 if (string.IsNullOrEmpty(command.NextPageId))
                 {
@@ -82,35 +88,5 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 }
             }
         }
-
-        protected async Task SubmitAssessorPageOutcome(SubmitAssessorPageAnswerCommand command)
-        {
-            var userId = HttpContext.User.UserId();
-
-            var comment = SetupGatewayPageOptionTexts(command);
-
-            _logger.LogInformation($"{typeof(T).Name}-SubmitAssessorPageOutcome - ApplicationId '{command.ApplicationId}' - " +
-                                                    $"SequenceNumber '{command.SequenceNumber}' - SectionNumber '{command.SectionNumber}' - PageId '{command.PageId}' - " +
-                                                    $"AssessorType '{command.AssessorType}' - UserId '{userId}' - " +
-                                                    $"Status '{command.Status}' - Comment '{comment}'");
-            
-            try
-            {
-                await _applyApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
-                                                    command.SequenceNumber,
-                                                    command.SectionNumber,
-                                                    command.PageId,
-                                                    (int)command.AssessorType,
-                                                    userId,
-                                                    command.Status,
-                                                    comment);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"{typeof(T).Name}-SubmitAssessorPageOutcome - Error: '" + ex.Message + "'");
-                throw;
-            }
-        }
-
     }
 }
