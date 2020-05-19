@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.Settings;
 using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -14,14 +16,19 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
     public class DashboardControllerTests
     {
         private Mock<IAssessorDashboardOrchestrator> _orchestratorMock;
-
+        private Mock<IWebConfiguration> _configuration;
         private DashboardController _controller;
-        
+        private string _dashboardUrl;
+
         [SetUp]
         public void Setup()
         {
+            _dashboardUrl = "https://dashboard";
             _orchestratorMock = new Mock<IAssessorDashboardOrchestrator>();
-            _controller = new DashboardController(_orchestratorMock.Object)
+            _configuration = new Mock<IWebConfiguration>();
+            _configuration.Setup(c => c.EsfaAdminServicesBaseUrl).Returns(_dashboardUrl);
+
+            _controller = new DashboardController(_orchestratorMock.Object, _configuration.Object)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
@@ -49,6 +56,14 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
             var result = await _controller.InProgressApplications();
 
             Assert.AreSame(expectedViewModel, result.Model);
+        }
+
+        [Test]
+        public void Dashboard_redirects_to_external_dasbhoard_url()
+        {
+            var result = _controller.Dashboard() as RedirectResult;
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Url, $"{_dashboardUrl}/Dashboard");
         }
     }
 }

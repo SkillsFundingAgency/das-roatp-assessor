@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.Settings;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
@@ -12,10 +13,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
     public class DashboardController : Controller
     {
         private readonly IAssessorDashboardOrchestrator _orchestrator;
-        
-        public DashboardController(IAssessorDashboardOrchestrator orchestrator)
+        private readonly IWebConfiguration _configuration;
+        public DashboardController(IAssessorDashboardOrchestrator orchestrator, IWebConfiguration configuration)
         {
             _orchestrator = orchestrator;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -45,6 +47,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var userId = HttpContext.User.UserId();
             var vm = await _orchestrator.GetInProgressApplicationsViewModel(userId);
             return View(vm);
+        }
+
+
+        [Route("/Dashboard")]
+        public IActionResult Dashboard()
+        {
+            return Redirect(_configuration.EsfaAdminServicesBaseUrl + "/Dashboard");
         }
     }
 }
