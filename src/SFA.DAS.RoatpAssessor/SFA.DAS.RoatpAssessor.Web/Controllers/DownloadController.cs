@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using System;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
+    [Authorize]
     public class DownloadController : Controller
     {
         private readonly IRoatpApplicationApiClient _applyApiClient;

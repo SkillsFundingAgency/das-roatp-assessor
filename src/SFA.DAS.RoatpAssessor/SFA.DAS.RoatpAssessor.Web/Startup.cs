@@ -113,7 +113,6 @@ namespace SFA.DAS.RoatpAssessor.Web
 
         private void AddAuthentication(IServiceCollection services)
         {
-            // TODO: Need to request DevOps to setup - "WtRealm": "https://localhost:44350",
             services.AddAuthentication(sharedOptions =>
             {
                 sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;

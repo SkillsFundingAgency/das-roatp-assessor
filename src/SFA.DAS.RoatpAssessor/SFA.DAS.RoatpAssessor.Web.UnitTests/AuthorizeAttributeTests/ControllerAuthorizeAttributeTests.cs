@@ -20,7 +20,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.AuthorizeAttributeTests
         };
 
         [Test]
-        [Ignore("Authorize attributes can't be added until we have staff idams set up")]
         public void ControllersShouldHaveAuthorizeAttribute()
         {
             var webAssembly = typeof(PingController).GetTypeInfo().Assembly;
