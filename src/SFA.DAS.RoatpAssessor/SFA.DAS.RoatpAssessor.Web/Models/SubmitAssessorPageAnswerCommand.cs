@@ -19,6 +19,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
         public string OptionFailText { get; set; }
         public string OptionInProgressText { get; set; }
         public AssessorType AssessorType { get; set; }
+        public string Heading { get; set; }
 
         public SubmitAssessorPageAnswerCommand()
         {
@@ -37,6 +38,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
             OptionFailText = viewModel.OptionFailText;
             OptionInProgressText = viewModel.OptionInProgressText;
             AssessorType = viewModel.AssessorType;
+            Heading = viewModel.Heading;
         }
     }
 }

@@ -5,83 +5,89 @@
     Layout = "_Layout";
 }
 
-@{ await Html.RenderPartialAsync("DashboardNavigation.cshtml"); }
+<a asp-action="Index" asp-controller="Dashboard" class="govuk-back-link">Return to dashboard</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
-
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds das-no-wrap">
+        <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-xl">
-                New
+                RoATP assessor applications
             </h1>
         </div>
     </div>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @if (@Model.Applications.Any())
-            {
-                <table class="govuk-table govuk-table--s das-table--responsive">
-                    <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Organisation name</th>
-                            <th class="govuk-table__header" scope="col">UKPRN</th>
-                            <th class="govuk-table__header" scope="col">Application reference number</th>
-                            <th class="govuk-table__header" scope="col">Provider route</th>
-                            <th class="govuk-table__header" scope="col">Application submitted</th>
-                            <th class="govuk-table__header" scope="col">Assessor 1</th>
-                            <th class="govuk-table__header" scope="col">Assessor 2</th>
-                        </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                        @foreach (var item in Model.Applications)
-                        {
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell das-no-wrap" data-label="Organisation name">
-                                    @item.OrganisationName
-                                </td>
-                                <td class="govuk-table__cell" data-label="UKPRN">
-                                    @item.Ukprn
-                                </td>
-                                <td class="govuk-table__cell" data-label="Application reference number">
-                                    @item.ApplicationReferenceNumber
-                                </td>
-                                <td class="govuk-table__cell" data-label="Provider route">
-                                    @item.ProviderRoute
-                                </td>
-                                <td class="govuk-table__cell" data-label="Application submitted">
-                                    @item.SubmittedDate.ToSfaShortDateString()
-                                </td>
-                                <td class="govuk-table__cell" data-label="Assessor 1">
-                                    @if (string.IsNullOrEmpty(item.Assessor1Name))
-                                    {
-                                        <a class="govuk-link" asp-action="AssignToAssessor" asp-controller="Dashboard" asp-route-applicationId="@item.ApplicationId" asp-route-assessorNumber="1">Assign to me</a>
-                                    }
-                                    else
-                                    {
-                                        @item.Assessor1Name
-                                    }
-                                </td>
-                                <td class="govuk-table__cell" data-label="Assessor 2">
-                                    @if (string.IsNullOrEmpty(item.Assessor2Name))
-                                    {
-                                        <a class="govuk-link" asp-action="AssignToAssessor" asp-controller="Dashboard" asp-route-applicationId="@item.ApplicationId" asp-route-assessorNumber="2">Assign to me</a>
-                                    }
-                                    else
-                                    {
-                                        @item.Assessor2Name
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p class="govuk-body-l">No applications to assess.</p>
-            }
+            <div class="govuk-tabs">
+
+                @{ await Html.RenderPartialAsync("DashboardNavigation.cshtml"); }
+
+                <div class="govuk-tabs__panel">
+                    @if (Model.Applications != null && Model.Applications.Any())
+                    {
+                        <h2 class="govuk-heading-l">New</h2>
+                        <table class="govuk-table das-table--condensed das-table--responsive-wide">
+                            <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col">Organisation name</th>
+                                    <th class="govuk-table__header" scope="col">UKPRN</th>
+                                    <th class="govuk-table__header" scope="col">Application reference number</th>
+                                    <th class="govuk-table__header" scope="col">Provider route</th>
+                                    <th class="govuk-table__header" scope="col">Application submitted</th>
+                                    <th class="govuk-table__header das-no-wrap" scope="col">Assessor 1</th>
+                                    <th class="govuk-table__header das-no-wrap" scope="col">Assessor 2</th>
+                                </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                                @foreach (var item in Model.Applications)
+                                {
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell" data-label="Organisation name">
+                                            @item.OrganisationName
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="UKPRN">
+                                            @item.Ukprn
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Application reference number">
+                                            @item.ApplicationReferenceNumber
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Provider route">
+                                            @item.ProviderRoute
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Application submitted">
+                                            @item.SubmittedDate.ToSfaShortDateString()
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Assessor 1">
+                                            @if (string.IsNullOrEmpty(item.Assessor1Name))
+                                            {
+                                                <a class="govuk-link das-no-wrap" asp-action="AssignToAssessor" asp-controller="Dashboard" asp-route-applicationId="@item.ApplicationId" asp-route-assessorNumber="1">Assign to me</a>
+                                            }
+                                            else
+                                            {
+                                                @item.Assessor1Name
+                                            }
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Assessor 2">
+                                            @if (string.IsNullOrEmpty(item.Assessor2Name))
+                                            {
+                                                <a class="govuk-link das-no-wrap" asp-action="AssignToAssessor" asp-controller="Dashboard" asp-route-applicationId="@item.ApplicationId" asp-route-assessorNumber="2">Assign to me</a>
+                                            }
+                                            else
+                                            {
+                                                @item.Assessor2Name
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="govuk-body-l">No applications to assess.</p>
+                    }
+                </div>
+            </div>
         </div>
     </div>
-
 </main>

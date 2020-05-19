@@ -37,8 +37,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            //TODO: Can't access the user until staff idams is enabled
-            var assessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId); // AssessorType.FirstAssessor; 
+            var assessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId);
 
             var viewmodel = new AssessorApplicationViewModel(application, sequences, request.UserId);
 
@@ -107,11 +106,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     }
                     else if (noTagCount.Equals(0) && inProgressStatusesCount.Equals(0) && allPassOrFail) // Not empty or 'In Progress', All either Pass or Fail
                     {
-                        sectionStatus = string.Format(AssessorSectionStatus.FailOutOf, failStatusesCount, sectionPageReviewOutcomes.Count);
+                        sectionStatus = $"{failStatusesCount} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
                     }
                     else
                     {
-                        sectionStatus = "Unhandled scenario"; // It should not happen. It's just for testing.
+                        sectionStatus = AssessorSectionStatus.Unknown; // It should not happen. It's just for testing.
                     }
                 }
             }
@@ -131,7 +130,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     if (section.Status == null || (!section.Status.Equals(AssessorSectionStatus.Pass) && 
                                                    !section.Status.Equals(AssessorSectionStatus.Fail) && 
                                                    !section.Status.Equals(AssessorSectionStatus.NotRequired) &&
-                                                   !section.Status.Contains("OUT", StringComparison.InvariantCultureIgnoreCase)))
+                                                   !section.Status.Contains(AssessorSectionStatus.FailOutOf)))
                     {
                         isReadyForModeration = false;
                         break;

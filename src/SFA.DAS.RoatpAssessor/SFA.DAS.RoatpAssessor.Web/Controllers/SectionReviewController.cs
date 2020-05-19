@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,7 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
+    [Authorize]
     public class SectionReviewController : RoatpAssessorControllerBase<SectionReviewController>
     {
         private readonly ISectionReviewOrchestrator _sectionReviewOrchestrator;
@@ -27,11 +29,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             _sectionReviewOrchestrator = sectionReviewOrchestrator;
         }
 
-        [HttpGet]
+        [HttpGet("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}")]
+        [HttpGet("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}")]
         public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
             var userId = HttpContext.User.UserId();
-            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
 
             if (sequenceNumber == 7 && sectionNumber == 6)
             {
@@ -68,11 +70,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             return View("~/Views/SectionReview/ReviewSectorAnswers.cshtml", viewModel);
         }
 
-        [HttpPost]
+        [HttpPost("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}")]
+        [HttpPost("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}")]
         public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, SubmitAssessorPageAnswerCommand command)
         {
             var userId = HttpContext.User.UserId();
-            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
 
             Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
             return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/SectionReview/ReviewAnswers.cshtml");

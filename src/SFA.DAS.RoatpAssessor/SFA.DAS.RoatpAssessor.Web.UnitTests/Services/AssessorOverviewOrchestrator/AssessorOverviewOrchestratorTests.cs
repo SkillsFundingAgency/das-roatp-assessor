@@ -58,8 +58,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, null, AssessorSectionStatus.InProgress)]
         [TestCase(null, null, AssessorPageReviewStatus.Fail, AssessorSectionStatus.InProgress)]
         [TestCase(AssessorPageReviewStatus.Pass, null, AssessorPageReviewStatus.Fail, AssessorSectionStatus.InProgress)]
-        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, "1 FAIL OUT OF 3")]
-        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, "2 FAIL OUT OF 3")]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, "1 " + AssessorSectionStatus.FailOutOf + " 3")]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, "2 " + AssessorSectionStatus.FailOutOf + " 3")]
         public void SetSectionStatus_Muliple_PageReviewOutcomes(string statusOne, string statusTwo, string statusThree, string statusExpected)
         {
             List<PageReviewOutcome> sectionPageReviewOutcomes = new List<PageReviewOutcome>

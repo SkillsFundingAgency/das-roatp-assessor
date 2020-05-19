@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
@@ -7,6 +8,7 @@ using SFA.DAS.RoatpAssessor.Web.Services;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
+    [Authorize]
     public class OverviewController : Controller
     {
         private readonly IAssessorOverviewOrchestrator _overviewOrchestrator;
@@ -20,7 +22,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         public async Task<IActionResult> ViewApplication(Guid applicationId)
         {
             var userId = HttpContext.User.UserId();
-            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
 
             var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, userId));
 
