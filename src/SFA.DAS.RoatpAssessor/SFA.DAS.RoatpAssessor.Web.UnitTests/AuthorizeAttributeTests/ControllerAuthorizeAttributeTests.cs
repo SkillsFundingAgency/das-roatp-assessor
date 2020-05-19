@@ -16,6 +16,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.AuthorizeAttributeTests
         {
             "PingController",
             "ErrorPageController",
+            "AccountController",
             "HomeController"
         };
 
