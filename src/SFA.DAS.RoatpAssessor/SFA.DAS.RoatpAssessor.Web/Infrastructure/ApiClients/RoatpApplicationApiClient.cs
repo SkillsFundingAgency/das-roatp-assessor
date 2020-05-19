@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -44,10 +45,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return assessorPage;
         }
 
-        public async Task SubmitAssessorPageOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId,
+        public async Task<bool> SubmitAssessorPageOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId,
                                                     int assessorType, string userId, string status, string comment)
         {
-            await Post($"/Assessor/SubmitPageOutcome", new
+           var result = await Post($"/Assessor/SubmitPageOutcome", new
             {
                 applicationId,
                 sequenceNumber,
@@ -58,6 +59,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
                 status,
                 comment
             });
+
+            return result == HttpStatusCode.OK;
         }
 
         public async Task<PageReviewOutcome> GetPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber,
