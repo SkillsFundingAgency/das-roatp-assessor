@@ -39,6 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var viewModel = new ReviewAnswersViewModel
             {
                 ApplicationId = application.ApplicationId,
+                AssessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId),
 
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN,
                 ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
@@ -61,9 +62,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 TabularData = GetTabularDataFromQuestionsAndAnswers(assessorPage.Questions, assessorPage.Answers),
                 SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, assessorPage.PageId)
             };
-
-            //TODO: Can't access the user until staff idams is enabled
-            viewModel.AssessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId); //  AssessorType.FirstAssessor; 
 
             //TODO: Explain why all of this is required? We're getting the viewmodel but I'm seeing stuff being submitted
             if (string.IsNullOrEmpty(request.PageId)) 

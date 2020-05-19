@@ -20,7 +20,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         public async Task<IActionResult> ViewApplication(Guid applicationId)
         {
             var userId = HttpContext.User.UserId();
-            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
 
             var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, userId));
 

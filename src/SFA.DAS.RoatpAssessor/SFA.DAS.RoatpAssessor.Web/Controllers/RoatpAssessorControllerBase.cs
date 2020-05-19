@@ -86,7 +86,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         protected async Task SubmitAssessorPageOutcome(SubmitAssessorPageAnswerCommand command)
         {
             var userId = HttpContext.User.UserId();
-            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
+
             var comment = SetupGatewayPageOptionTexts(command);
 
             _logger.LogInformation($"{typeof(T).Name}-SubmitAssessorPageOutcome - ApplicationId '{command.ApplicationId}' - " +

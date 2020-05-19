@@ -11,7 +11,6 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
 {
     [TestFixture]
-    [Ignore("These tests need to be unignored once staff idams is setup and the temp code in the controllers is removed")]
     public class DashboardControllerTests
     {
         private Mock<IAssessorDashboardOrchestrator> _orchestratorMock;

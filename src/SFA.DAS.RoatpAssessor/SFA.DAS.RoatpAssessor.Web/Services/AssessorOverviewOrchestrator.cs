@@ -37,8 +37,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            //TODO: Can't access the user until staff idams is enabled
-            var assessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId); // AssessorType.FirstAssessor; 
+            var assessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId);
 
             var viewmodel = new AssessorApplicationViewModel(application, sequences, request.UserId);
 
