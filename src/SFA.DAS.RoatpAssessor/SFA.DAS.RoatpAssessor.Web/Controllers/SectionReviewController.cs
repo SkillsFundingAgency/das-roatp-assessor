@@ -26,7 +26,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             _sectionReviewOrchestrator = sectionReviewOrchestrator;
         }
 
-        [HttpGet]
+        [HttpGet("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}")]
+        [HttpGet("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}")]
         public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
             var userId = HttpContext.User.UserId();
@@ -41,7 +42,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             return View("~/Views/SectionReview/ReviewAnswers.cshtml", viewModel);
         }
 
-        [HttpPost]
+        [HttpPost("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}")]
+        [HttpPost("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}")]
         public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, SubmitAssessorPageAnswerCommand command)
         {
             var userId = HttpContext.User.UserId();
