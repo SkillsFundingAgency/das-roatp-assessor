@@ -92,7 +92,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
                 Caption = assessorPage.Caption,
-                Heading = assessorPage.Heading,
+                Heading = "Sectors and employee experience",
                 SelectedSectors = await _applyApiClient.GetChosenSectors(request.ApplicationId)
             };
 
