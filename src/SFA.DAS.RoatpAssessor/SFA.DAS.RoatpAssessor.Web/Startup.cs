@@ -22,6 +22,7 @@ using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Settings;
+using SFA.DAS.RoatpAssessor.Web.Validators;
 
 namespace SFA.DAS.RoatpAssessor.Web
 {
@@ -112,7 +113,6 @@ namespace SFA.DAS.RoatpAssessor.Web
 
         private void AddAuthentication(IServiceCollection services)
         {
-            // TODO: Need to request DevOps to setup - "WtRealm": "https://localhost:44350",
             services.AddAuthentication(sharedOptions =>
             {
                 sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -162,6 +162,10 @@ namespace SFA.DAS.RoatpAssessor.Web
                 x.GetService<IRoatpApplicationTokenService>()));
 
             services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
+
+            services.AddTransient<ISupplementaryInformationService, SupplementaryInformationService>();
+            services.AddTransient<ISectionReviewOrchestrator, SectionReviewOrchestrator>();
+            services.AddTransient<IRoatpAssessorPageValidator, RoatpAssessorPageValidator>();
 
             UserExtensions.Logger = services.BuildServiceProvider().GetService<ILogger<ClaimsPrincipal>>();
         }

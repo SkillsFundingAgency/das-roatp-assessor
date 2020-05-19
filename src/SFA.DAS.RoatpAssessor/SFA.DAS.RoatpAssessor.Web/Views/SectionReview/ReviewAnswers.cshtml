@@ -1,0 +1,147 @@
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
+
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
+
+@{
+    ViewBag.Title = $"Assessor - {@Model.Heading}";
+    Layout = "_Layout";
+}
+
+<partial name="~/Views/SectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <partial name="~/Views/SectionReview/Pages/_ValidationSummary.cshtml" for="@Model" />
+
+            <span class="govuk-caption-xl">
+                @Model.Caption
+            </span>
+
+            <h1 class="govuk-heading-xl">@Model.Heading</h1>
+
+            <partial name="~/Views/SectionReview/Pages/_ApplicationSummary.cshtml" for="@Model" />
+        </div>
+    </div>
+
+    @if (Model.TabularData != null && Model.TabularData.Any())
+    {
+        foreach (var item in Model.TabularData)
+        {
+            <partial name="~/Views/SectionReview/Pages/_TabularData.cshtml" for="@item" />
+        }
+    }
+    else
+    {
+        <div class="govuk-grid-column-full">
+            <table class="govuk-table govuk-!-margin-bottom-9">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Application question</th>
+                        <th class="govuk-table__header govuk-table__header--numeric das-no-wrap" scope="col">Applicant's answer</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var question in Model.Questions)
+                    {
+                        var answer = Model.Answers.SingleOrDefault(pg => pg.QuestionId == question.QuestionId)?.Value;
+
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@Html.Raw(question.Label)</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                @switch (question.InputType)
+                                {
+                                    case QuestionInputType.FileUpload:
+                                        <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNo="@Model.SequenceNumber" asp-route-sectionNo="@Model.SectionNumber" asp-route-pageId="@Model.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
+                                        break;
+                                    default:
+                                        @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
+                                        {
+                                            <span>@Html.Raw(question.InputPrefix)</span>
+                                        }
+                                        @Html.Raw(answer)
+                                        @if (!string.IsNullOrWhiteSpace(question.InputSuffix))
+                                        {
+                                            <span>@Html.Raw(question.InputSuffix)</span>
+                                        }
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                    @foreach (var supplementaryInformation in Model.SupplementaryInformation)
+                    {
+                        var question = supplementaryInformation.Question;
+                        var answer = supplementaryInformation.Answer?.Value;
+
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@Html.Raw(question.Label)</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                @switch (question.InputType)
+                                {
+                                    case QuestionInputType.FileUpload:
+                                        <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@supplementaryInformation.ApplicationId" asp-route-sequenceNo="@supplementaryInformation.SequenceNumber" asp-route-sectionNo="@supplementaryInformation.SectionNumber" asp-route-pageId="@supplementaryInformation.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
+                                        break;
+                                    default:
+                                        @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
+                                        {
+                                            <span>@Html.Raw(question.InputPrefix)</span>
+                                        }
+                                        @Html.Raw(answer)
+                                        @if (!string.IsNullOrWhiteSpace(question.InputSuffix))
+                                        {
+                                            <span>@Html.Raw(question.InputSuffix)</span>
+                                        }
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.GuidanceText))
+    {
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    View application guidance
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                @Html.Raw(Model.GuidanceText)
+            </div>
+        </details>
+    }
+
+
+    @if (Model.ApplicationId != Guid.Empty)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <form class="js-disable-on-submit" method="post" asp-action="ReviewPageAnswers" asp-controller="SectionReview">
+                    <input type="hidden" asp-for="ApplicationId" />
+                    <input type="hidden" asp-for="SequenceNumber" />
+                    <input type="hidden" asp-for="SectionNumber" />
+                    <input type="hidden" asp-for="PageId" />
+                    <input type="hidden" asp-for="NextPageId" />
+                    <input type="hidden" asp-for="AssessorType" />
+                    <input type="hidden" asp-for="Heading" />
+
+                    <partial name="~/Views/SectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
+
+                    <button class="govuk-button" type="submit">Save and continue</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    <p class="govuk-body">
+        <a asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@Model.ApplicationId" class="govuk-link">Back to application assessment overview</a>
+    </p>
+
+</main>

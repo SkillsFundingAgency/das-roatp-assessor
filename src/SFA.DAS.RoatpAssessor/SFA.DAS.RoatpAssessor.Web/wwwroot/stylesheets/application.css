@@ -286,3 +286,67 @@
 .das-table--responsive-wide .govuk-table__body tr td:empty {
   display: none;
 }
+
+/* USER PANEL */
+.das-user-panel {
+    margin-top: -10px;
+    padding: 25px 0 15px;
+    background-color: #005ea5;
+}
+
+.das-user-panel__content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+}
+
+.govuk-link--white:link,
+.govuk-link--white:visited {
+    color: #fff;
+}
+
+.govuk-link--white:link:hover,
+.govuk-link--white:visited:hover {
+    color: #ddeef8;
+}
+
+@media print {
+    .das-user-panel__content {
+        font-family: sans-serif;
+        font-size: 14pt;
+        line-height: 1.2;
+        color: #000;
+    }
+}
+
+.das-user-panel__content__tag {
+    margin-right: 10px;
+}
+
+.das-user-panel__item {
+    color: #fff;
+    margin-right: 15px;
+    margin-bottom: 0;
+}
+
+.das-user-panel__item:last-child {
+    margin-right: 0;
+}
+
+.das-user-panel__item--grow {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
+@media (max-width: 40.0525em) {
+    .das-user-panel__item--grow {
+        -ms-flex-preferred-size: 320px;
+        flex-basis: 320px;
+    }
+}

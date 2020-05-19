@@ -11,10 +11,7 @@
 <div class="govuk-breadcrumbs">
     <ol class="govuk-breadcrumbs__list">
         <li class="govuk-breadcrumbs__list-item">
-            <a class="govuk-breadcrumbs__link" href="/Home">RoATP applications</a>
-        </li>
-        <li class="govuk-breadcrumbs__list-item">
-            <a class="govuk-breadcrumbs__link" href="/Home/NewApplications">New applications</a>
+            <a class="govuk-breadcrumbs__link" asp-action="Index" asp-controller="Home">RoATP assessor applications</a>
         </li>
         <li class="govuk-breadcrumbs__list-item" aria-current="page">Application assessment overview</li>
     </ol>
@@ -123,23 +120,19 @@
                                 {
                                     <li class="app-task-list__item">
                                         <span class="app-task-list__task-name app-task-list__task-name--inactive">
-                                            @if (currentSection.Status != null && currentSection.Status.Equals(SectionReviewStatus.NotRequired))
+                                            @if (currentSection.Status != null && currentSection.Status.Equals(AssessorSectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase))
                                             {
                                                 @currentSection.LinkTitle
                                             }
                                             else
                                             {
-                                                // TODO: Integrate with 'Section Review' action
-                                                <a class="govuk-link" href="#">@currentSection.LinkTitle</a>
+                                                <a id="@sequence.SequenceNumber.@currentSection.SectionNumber" asp-controller="SectionReview" asp-action="ReviewPageAnswers" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@sequence.SequenceNumber" asp-route-sectionNumber="@currentSection.SectionNumber" class="govuk-link">@currentSection.LinkTitle</a>
                                             }
                                         </span>
                                         @if (!string.IsNullOrWhiteSpace(currentSection.Status))
                                         {
-                                            @if (!currentSection.Status.Equals(SectionReviewStatus.New))
-                                            {
-                                                var cssModifierClassName = Model.GetStatusCss(currentSection.Status);
-                                                <strong class="govuk-tag @cssModifierClassName das-no-wrap">@currentSection.Status</strong>
-                                            }
+                                            var cssModifierClassName = Model.GetStatusCss(currentSection.Status);
+                                            <strong class="govuk-tag @cssModifierClassName das-no-wrap">@currentSection.Status</strong>
                                         }
                                     </li>
                                 }

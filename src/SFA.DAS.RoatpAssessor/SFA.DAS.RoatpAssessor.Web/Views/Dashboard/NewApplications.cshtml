@@ -23,7 +23,7 @@
                 @{ await Html.RenderPartialAsync("DashboardNavigation.cshtml"); }
 
                 <div class="govuk-tabs__panel">
-                    @if (@Model.Applications.Any())
+                    @if (Model.Applications != null && Model.Applications.Any())
                     {
                         <h2 class="govuk-heading-l">New</h2>
                         <table class="govuk-table das-table--condensed das-table--responsive-wide">

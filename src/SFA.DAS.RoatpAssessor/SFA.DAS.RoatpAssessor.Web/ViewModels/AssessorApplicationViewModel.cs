@@ -8,34 +8,25 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
     public class AssessorApplicationViewModel : OrganisationDetailsViewModel
     {
         public Guid Id { get; }
-        public Guid ApplicationId { get; set; }
+        public Guid ApplicationId { get; }
         public Guid OrgId { get; }
 
         public string ApplicationStatus { get; }
-        public string AssessorReviewStatus { get; set; }
+        public string AssessorReviewStatus { get; private set; }
 
         public bool IsAssessorApproved { get; set; }
 
-        public List<AssessorSequence> Sequences { get; set; }
+        public List<AssessorSequence> Sequences { get; }
         public bool IsReadyForModeration { get; set; }
 
-        public AssessorApplicationViewModel(Apply application)
+        public AssessorApplicationViewModel(Apply application, List<AssessorSequence> sequences, string userId)
         {
             Id = application.Id;
             ApplicationId = application.ApplicationId;
             OrgId = application.OrganisationId;
 
             ApplicationStatus = application.ApplicationStatus;
-            AssessorReviewStatus = application.AssessorReviewStatus;
-
-            if (application.AssessorReviewStatus == ApplyTypes.AssessorReviewStatus.Approved)
-            {
-                IsAssessorApproved = true;
-            }
-            else if (application.AssessorReviewStatus == ApplyTypes.AssessorReviewStatus.Declined)
-            {
-                IsAssessorApproved = false;
-            }
+            SetAssessorReviewStatus(application, userId);
 
             if (application.ApplyData?.ApplyDetails != null)
             {
@@ -44,6 +35,22 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN;
                 OrganisationName = application.ApplyData.ApplyDetails.OrganisationName;
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn;
+            }
+
+            Sequences = sequences;
+        }
+
+        private void SetAssessorReviewStatus(Apply application, string userId)
+        {
+            if(application.Assessor1UserId == userId)
+            {
+                AssessorReviewStatus = application.Assessor1ReviewStatus;
+                IsAssessorApproved = application.Assessor1ReviewStatus == ApplyTypes.AssessorReviewStatus.Approved;
+            }
+            else if(application.Assessor2UserId == userId)
+            {
+                AssessorReviewStatus = application.Assessor2ReviewStatus;
+                IsAssessorApproved = application.Assessor2ReviewStatus == ApplyTypes.AssessorReviewStatus.Approved;
             }
         }
 

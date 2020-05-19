@@ -1,8 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.Helpers;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,25 +31,33 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            var viewmodel = new AssessorApplicationViewModel(application);
-            viewmodel.Sequences = await _applyApiClient.GetAssessorSequences(application.ApplicationId);
+            var sequences = await _applyApiClient.GetAssessorSequences(application.ApplicationId);
+            if (sequences is null)
+            {
+                return null;
+            }
 
-            var savedStatuses = await _applyApiClient.GetAssessorSectionAnswers(application.ApplicationId);
-            if (savedStatuses is null || !savedStatuses.Any())
+            var assessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId);
+
+            var viewmodel = new AssessorApplicationViewModel(application, sequences, request.UserId);
+
+            var savedOutcomes = await _applyApiClient.GetAllAssessorReviewOutcomes(request.ApplicationId, (int)assessorType, request.UserId);
+            if (savedOutcomes is null || !savedOutcomes.Any())
             {
                 viewmodel.IsReadyForModeration = false;
             }
             else
             {
                 // Inject the statuses into viewmodel
-                foreach (var currentStatus in savedStatuses)
+                foreach (var sequence in viewmodel.Sequences)
                 {
-                    var sequence = viewmodel.Sequences.FirstOrDefault(seq => seq.SequenceNumber == currentStatus.SequenceNumber);
-                    var section = sequence?.Sections.FirstOrDefault(sec => sec.SectionNumber == currentStatus.SectionNumber);
-
-                    if(section != null)
+                    foreach (var section in sequence.Sections)
                     {
-                        section.Status = currentStatus.Status;
+                        if (string.IsNullOrEmpty(section.Status))
+                        {
+                            var sectionPageReviewOutcomes = savedOutcomes.Where(p => p.SequenceNumber == sequence.SequenceNumber && p.SectionNumber == section.SectionNumber).ToList();
+                            section.Status = SetSectionStatus(sectionPageReviewOutcomes);
+                        }
                     }
                 }
 
@@ -53,6 +65,57 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
 
             return viewmodel;
+        }
+
+        public string SetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes)
+        {
+            var sectionStatus = string.Empty;
+            if(sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
+            {
+                if (sectionPageReviewOutcomes.Count.Equals(1))
+                {
+                    sectionStatus = sectionPageReviewOutcomes[0].Status;
+                }
+                else
+                {
+                    var passStatusesCount = sectionPageReviewOutcomes.Where(p => p.Status == AssessorPageReviewStatus.Pass).Count();
+                    var failStatusesCount = sectionPageReviewOutcomes.Where(p => p.Status == AssessorPageReviewStatus.Fail).Count();
+                    var inProgressStatusesCount = sectionPageReviewOutcomes.Where(p => p.Status == AssessorPageReviewStatus.InProgress).Count();
+                    var noTagCount = sectionPageReviewOutcomes.Where(p => p.Status == null || p.Status == string.Empty).Count();
+                    var allPassOrFail = sectionPageReviewOutcomes.Count.Equals(passStatusesCount + failStatusesCount);
+
+                    if (sectionPageReviewOutcomes.Count.Equals(noTagCount)) // All empty
+                    {
+                        sectionStatus = null;
+                    }
+                    else if (sectionPageReviewOutcomes.Count.Equals(passStatusesCount)) // All Pass
+                    {
+                        sectionStatus = AssessorSectionStatus.Pass;
+                    }
+                    else if (sectionPageReviewOutcomes.Count.Equals(failStatusesCount)) // All Fail
+                    {
+                        sectionStatus = AssessorSectionStatus.Fail;
+                    }
+                    else if (inProgressStatusesCount > 0) // One or more 'In Progress'
+                    {
+                        sectionStatus = AssessorSectionStatus.InProgress;
+                    }
+                    else if ((!passStatusesCount.Equals(0) && !allPassOrFail) || (!failStatusesCount.Equals(0) && !allPassOrFail)) // One or more Pass or Fail, but NOT all
+                    {
+                        sectionStatus = AssessorSectionStatus.InProgress;
+                    }
+                    else if (noTagCount.Equals(0) && inProgressStatusesCount.Equals(0) && allPassOrFail) // Not empty or 'In Progress', All either Pass or Fail
+                    {
+                        sectionStatus = $"{failStatusesCount} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
+                    }
+                    else
+                    {
+                        sectionStatus = AssessorSectionStatus.Unknown; // It should not happen. It's just for testing.
+                    }
+                }
+            }
+
+            return sectionStatus;
         }
 
         private static bool IsReadyForModeration(AssessorApplicationViewModel viewmodel)
@@ -63,7 +126,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 foreach (var section in sequence.Sections)
                 {
-                    if (section.Status == null || (!section.Status.Equals(SectionReviewStatus.Pass) && !section.Status.Equals(SectionReviewStatus.Fail) && !section.Status.Equals(SectionReviewStatus.NotRequired)))
+                    // TODO: Rework the logic according to requirements. Attention about AssessorSectionStatus.FailOutOf
+                    if (section.Status == null || (!section.Status.Equals(AssessorSectionStatus.Pass) && 
+                                                   !section.Status.Equals(AssessorSectionStatus.Fail) && 
+                                                   !section.Status.Equals(AssessorSectionStatus.NotRequired) &&
+                                                   !section.Status.Contains(AssessorSectionStatus.FailOutOf)))
                     {
                         isReadyForModeration = false;
                         break;

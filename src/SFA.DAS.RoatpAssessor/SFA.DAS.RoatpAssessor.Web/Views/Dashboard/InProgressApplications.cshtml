@@ -23,7 +23,7 @@
                 @{ await Html.RenderPartialAsync("DashboardNavigation.cshtml"); }
 
                 <div class="govuk-tabs__panel">
-                    @if (@Model.Applications.Any())
+                    @if (Model.Applications != null && Model.Applications.Any())
                     {
                         <h2 class="govuk-heading-l">In progress</h2>
                         <table class="govuk-table das-table--condensed das-table--responsive-wide">
@@ -45,7 +45,7 @@
                                         <td class="govuk-table__cell das-no-wrap" data-label="Organisation name">
                                             @if (item.Assessor1UserId == Model.CurrentUser || item.Assessor2UserId == Model.CurrentUser)
                                             {
-                                                <a class="govuk-link" asp-action="ViewApplication" asp-controller="Home" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>
+                                                <a class="govuk-link" asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>
                                             }
                                             else
                                             {
