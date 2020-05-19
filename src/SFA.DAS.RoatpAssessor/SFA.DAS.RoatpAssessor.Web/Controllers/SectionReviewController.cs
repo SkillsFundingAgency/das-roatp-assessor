@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -32,6 +33,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var userId = HttpContext.User.UserId();
             userId = "temp"; //TODO: Can't access the user until staff idams is enabled
 
+            if (sequenceNumber == 7 && sectionNumber == 6)
+            {
+                var sectorViewModel = await _sectionReviewOrchestrator.GetSectorsViewModel(new GetSectorsRequest(applicationId, userId));
+
+                if (sectorViewModel is null)
+                {
+                    return RedirectToAction("ViewApplication", "Overview", new { applicationId });
+                }
+
+                return View("~/Views/SectionReview/ReviewSectors.cshtml", sectorViewModel);
+
+            }
+
             var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
 
             if (viewModel is null)
@@ -40,6 +54,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             }
 
             return View("~/Views/SectionReview/ReviewAnswers.cshtml", viewModel);
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId, string title)
+        {
+            var userId = HttpContext.User.UserId();
+            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
+
+            var viewModel = new SectorViewModel {ApplicationId = applicationId, PageId = pageId, Title = title};
+            return View("~/Views/SectionReview/ReviewSectorAnswers.cshtml", viewModel);
         }
 
         [HttpPost]

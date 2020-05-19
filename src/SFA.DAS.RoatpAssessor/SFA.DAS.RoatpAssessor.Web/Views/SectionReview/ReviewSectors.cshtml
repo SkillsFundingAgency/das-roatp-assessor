@@ -1,0 +1,51 @@
+﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationSectorsViewModel
+@{
+    ViewBag.Title = $"Assessor - {@Model.Heading}";
+    Layout = "_Layout";
+}
+
+<partial name="~/Views/SectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            <span class="govuk-caption-xl">
+                @Model.Caption
+            </span>
+
+            <h1 class="govuk-heading-xl">@Model.Heading</h1>
+
+            <partial name="~/Views/SectionReview/Pages/_ApplicationSummary.cshtml" for="@Model"/>
+        </div>
+    </div>
+
+  
+        <div class="govuk-grid-column-full">
+            <table class="govuk-table govuk-!-margin-bottom-9">
+                <tbody class="govuk-table__body">
+                    @foreach (var sector in Model.SelectedSectors)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                <a asp-action="ReviewSectorAnswers" asp-controller="SectionReview" asp-route-applicationId="@Model.ApplicationId" asp-route-pageId="@sector.PageId" class="govuk-link">@Html.Raw(sector.Title)</a>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                             &nbsp;
+                            </td>
+                        </tr>
+                    }
+
+                  
+                </tbody>
+            </table>
+        </div>
+    
+
+
+    <p class="govuk-body">
+        <a asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@Model.ApplicationId" class="govuk-link">Go to application assessment overview</a>
+    </p>
+
+</main>

@@ -1,0 +1,16 @@
+﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.SectorViewModel
+@{
+    ViewBag.Title = $"Assessor -  HOLDING PAGE";
+    Layout = "_Layout";
+}
+<h1>Review Sector Answers Holding page</h1>
+
+
+
+<h2>Exmployee Experience in sector for PageId: @Model.PageId</h2>
+
+<p class="govuk-body">
+    <a asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@Model.ApplicationId" class="govuk-link">Go to application assessment overview</a>
+</p>
+
+

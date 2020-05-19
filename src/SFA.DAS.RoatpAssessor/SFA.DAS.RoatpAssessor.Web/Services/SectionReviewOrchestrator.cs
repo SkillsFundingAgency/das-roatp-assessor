@@ -76,6 +76,32 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewModel;
         }
 
+        public async Task<ApplicationSectorsViewModel> GetSectorsViewModel(GetSectorsRequest request)
+        {
+            var application = await _applyApiClient.GetApplication(request.ApplicationId);
+            var assessorPage = await _applyApiClient.GetAssessorPage(request.ApplicationId, 7, 6, "7610");   // change these magic numbers
+
+            if (application is null || assessorPage is null)
+            {
+                return null;
+            }
+
+            var viewModel = new ApplicationSectorsViewModel
+            {
+                ApplicationId = application.ApplicationId,
+                Ukprn = application.ApplyData.ApplyDetails.UKPRN,
+                ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
+                ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
+                SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
+                Caption = assessorPage.Caption,
+                Heading = assessorPage.Heading,
+                SelectedSectors = await _applyApiClient.GetChosenSectors(request.ApplicationId)
+            };
+
+            return viewModel;
+
+        }
+
         private List<TabularData> GetTabularDataFromQuestionsAndAnswers(List<AssessorQuestion> questions, List<AssessorAnswer> answers)
         {
             var tabularData = new List<TabularData>();
