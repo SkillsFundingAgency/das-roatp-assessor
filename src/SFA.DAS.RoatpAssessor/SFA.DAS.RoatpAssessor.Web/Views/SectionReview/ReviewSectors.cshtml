@@ -21,26 +21,30 @@
         </div>
     </div>
 
-  
-        <div class="govuk-grid-column-full">
-            <table class="govuk-table govuk-!-margin-bottom-9">
-                <tbody class="govuk-table__body">
-                    @foreach (var sector in Model.SelectedSectors)
-                    {
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                                <a asp-action="ReviewSectorAnswers" asp-controller="SectionReview" asp-route-applicationId="@Model.ApplicationId" asp-route-pageId="@sector.PageId" class="govuk-link">@Html.Raw(sector.Title)</a>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                             &nbsp;
-                            </td>
-                        </tr>
-                    }
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
 
-                  
-                </tbody>
-            </table>
+            <ol class="app-task-list">
+                <li>
+                    <ul class="app-task-list__items govuk-!-padding-left-0">
+                        @foreach (var sector in Model.SelectedSectors)
+                        {
+                            <li class="app-task-list__item">
+                                <span class="app-task-list__task-name">
+                                    <a asp-action="ReviewSectorAnswers" asp-controller="SectionReview" asp-route-applicationId="@Model.ApplicationId" asp-route-pageId="@sector.PageId" class="govuk-link" aria-describedby="pageid-@sector.PageId">
+                                        @Html.Raw(sector.Title)
+                                    </a>
+                                </span>
+                                <!-- <strong class="govuk-tag app-task-list__task-inprogress das-no-wrap" id="pageid-@sector.PageId">In progress</strong> -->
+                                <!-- <strong class="govuk-tag app-task-list__task-pass" id="@sector.PageId">Pass</strong> -->
+                                <!-- <strong class="govuk-tag app-task-list__task-fail" id="@sector.PageId">Fail</strong> -->
+                            </li>
+                        }
+                    </ul>
+                </li>
+            </ol>
         </div>
+    </div>
     
 
 
