@@ -4,11 +4,10 @@ using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
-using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
+using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestrator
 {

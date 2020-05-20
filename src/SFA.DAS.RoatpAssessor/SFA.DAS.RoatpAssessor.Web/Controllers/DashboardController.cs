@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Services;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers

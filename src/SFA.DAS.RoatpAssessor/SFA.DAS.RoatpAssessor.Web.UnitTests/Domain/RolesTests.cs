@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.Domain;
-using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
+using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using System;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Domain

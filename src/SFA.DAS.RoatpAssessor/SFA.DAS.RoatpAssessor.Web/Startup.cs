@@ -17,12 +17,13 @@ using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Extensions.Http;
 using SFA.DAS.RoatpAssessor.Web.Domain;
-using SFA.DAS.RoatpAssessor.Web.Extensions;
+using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Settings;
 using SFA.DAS.RoatpAssessor.Web.Validators;
+using SFA.DAS.AdminService.Common;
 
 namespace SFA.DAS.RoatpAssessor.Web
 {
@@ -167,7 +168,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.AddTransient<ISectionReviewOrchestrator, SectionReviewOrchestrator>();
             services.AddTransient<IRoatpAssessorPageValidator, RoatpAssessorPageValidator>();
 
-            UserExtensions.Logger = services.BuildServiceProvider().GetService<ILogger<ClaimsPrincipal>>();
+            DependencyInjection.ConfigureDependencyInjection(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
