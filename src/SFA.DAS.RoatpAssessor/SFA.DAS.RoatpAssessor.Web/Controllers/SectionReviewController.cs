@@ -35,7 +35,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         {
             var userId = HttpContext.User.UserId();
 
-            if (sequenceNumber == 7 && sectionNumber == 6)
+        
+            if (sequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && sectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
             {
                 var sectorViewModel = await _sectionReviewOrchestrator.GetSectorsViewModel(new GetSectorsRequest(applicationId, userId));
 
@@ -45,7 +46,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 }
 
                 return View("~/Views/SectionReview/ReviewSectors.cshtml", sectorViewModel);
-
             }
 
             var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
@@ -63,6 +63,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId, string title)
         {
+            // NOTE THIS IS A HOLDING PAGE FOR STORY APR-1660, to be developed in APR-1661
             var userId = HttpContext.User.UserId();
             userId = "temp"; //TODO: Can't access the user until staff idams is enabled
 

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 
 namespace SFA.DAS.RoatpAssessor.Web.Services
 {
@@ -77,7 +78,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<ApplicationSectorsViewModel> GetSectorsViewModel(GetSectorsRequest request)
         {
             var application = await _applyApiClient.GetApplication(request.ApplicationId);
-            var assessorPage = await _applyApiClient.GetAssessorPage(request.ApplicationId, 7, 6, "7610");   // change these magic numbers
+            var assessorPage = await _applyApiClient.GetAssessorPage(
+                request.ApplicationId, 
+                SequenceIds.DeliveringApprenticeshipTraining, 
+                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, 
+                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesStartingPageId);   
 
             if (application is null || assessorPage is null)
             {
@@ -92,7 +97,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
                 Caption = assessorPage.Caption,
-                Heading = "Sectors and employee experience",
+                Heading = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesHeading,
                 SelectedSectors = await _applyApiClient.GetChosenSectors(request.ApplicationId)
             };
 
