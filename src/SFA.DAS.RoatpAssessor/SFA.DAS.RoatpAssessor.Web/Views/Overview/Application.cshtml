@@ -13,24 +13,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-                    <h2 class="govuk-error-summary__title" id="error-summary-title">
-                        There is a problem
-                    </h2>
-                    <div class="govuk-error-summary__body">
-                        <ul class="govuk-list govuk-error-summary__list">
-                            @*
-                                NOTE: This is for the 'Ready for Moderation' step
-                                ModelState.AddModelError("IsAssessorApproved", "Please evaluate Assessor");
-                            *@
-                            <li><a sfa-validation-for="IsAssessorApproved"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            }
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
 
             <h1 class="govuk-heading-xl">Application assessment overview</h1>
 
