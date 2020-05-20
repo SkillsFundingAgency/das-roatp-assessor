@@ -58,7 +58,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             // TODO: Split function into two actions. One for validating and one for updating page answer
             var validationResponse = await AssessorPageValidator.Validate(command);
 
-            if (!validationResponse.Errors.Any())
+            if (validationResponse.Errors.Any())
             {
                 foreach (var error in validationResponse.Errors)
                 {
