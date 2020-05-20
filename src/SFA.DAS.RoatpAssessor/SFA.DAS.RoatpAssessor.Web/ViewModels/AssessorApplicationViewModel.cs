@@ -11,6 +11,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public Guid ApplicationId { get; }
         public Guid OrgId { get; }
 
+        public string ApplicantEmailAddress { get; }
+
         public string ApplicationStatus { get; }
         public string AssessorReviewStatus { get; private set; }
 
@@ -19,11 +21,13 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public List<AssessorSequence> Sequences { get; }
         public bool IsReadyForModeration { get; set; }
 
-        public AssessorApplicationViewModel(Apply application, List<AssessorSequence> sequences, string userId)
+        public AssessorApplicationViewModel(Apply application, Contact contact, List<AssessorSequence> sequences, string userId)
         {
             Id = application.Id;
             ApplicationId = application.ApplicationId;
             OrgId = application.OrganisationId;
+
+            ApplicantEmailAddress = contact.Email;
 
             ApplicationStatus = application.ApplicationStatus;
             SetAssessorReviewStatus(application, userId);
@@ -33,7 +37,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 ApplicationReference = application.ApplyData.ApplyDetails.ReferenceNumber;
                 ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName;
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN;
-                OrganisationName = application.ApplyData.ApplyDetails.OrganisationName;
+                ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName;
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn;
             }
 

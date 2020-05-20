@@ -8,7 +8,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string ApplicationRoute { get; set; }
 
         public string Ukprn { get; set; }
-        public string OrganisationName { get; set; }
+        public string ApplyLegalName { get; set; }
         public DateTime? SubmittedDate { get; set; }
 
         public string ApplicationRouteShortText

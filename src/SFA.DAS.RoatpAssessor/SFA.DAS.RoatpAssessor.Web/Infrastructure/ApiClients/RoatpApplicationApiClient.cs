@@ -25,6 +25,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<Apply>($"/Application/{applicationId}");
         }
 
+        public async Task<Contact> GetContactForApplication(Guid applicationId)
+        {
+            return await Get<Contact>($"/Application/{applicationId}/Contact");
+        }
+
         public async Task<List<AssessorSequence>> GetAssessorSequences(Guid applicationId)
         {
             return await Get<List<AssessorSequence>>($"/Assessor/Applications/{applicationId}/Overview");

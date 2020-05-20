@@ -53,6 +53,13 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
                 }
             };
 
+            var contact = new Contact
+            {
+                Email = userId,
+                GivenNames = _user.GivenName(),
+                FamilyName = _user.Surname()
+            };
+
             var assessorPage = new AssessorPage
             {
                 ApplicationId = _applicationId,
@@ -80,6 +87,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             };
 
             _applyApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(application);
+
+            _applyApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(contact);
 
             _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);

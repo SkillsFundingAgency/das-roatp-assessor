@@ -12,6 +12,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
     {
         Task<Apply> GetApplication(Guid applicationId);
 
+        Task<Contact> GetContactForApplication(Guid applicationId);
+
         Task<List<AssessorSequence>> GetAssessorSequences(Guid applicationId);
 
         Task<AssessorPage> GetAssessorPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);

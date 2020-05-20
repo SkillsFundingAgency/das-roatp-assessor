@@ -31,6 +31,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
+            var contact = await _applyApiClient.GetContactForApplication(application.ApplicationId);
+            if (contact is null)
+            {
+                return null;
+            }
+
             var sequences = await _applyApiClient.GetAssessorSequences(application.ApplicationId);
             if (sequences is null)
             {
@@ -39,7 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var assessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId);
 
-            var viewmodel = new AssessorApplicationViewModel(application, sequences, request.UserId);
+            var viewmodel = new AssessorApplicationViewModel(application, contact, sequences, request.UserId);
 
             var savedOutcomes = await _applyApiClient.GetAllAssessorReviewOutcomes(request.ApplicationId, (int)assessorType, request.UserId);
             if (savedOutcomes is null || !savedOutcomes.Any())
