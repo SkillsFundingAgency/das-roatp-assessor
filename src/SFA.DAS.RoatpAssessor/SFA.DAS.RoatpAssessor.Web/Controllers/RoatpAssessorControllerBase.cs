@@ -16,7 +16,7 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class RoatpAssessorControllerBase<T> : Controller
     {
         protected readonly IRoatpApplicationApiClient _applyApiClient;

@@ -8,7 +8,7 @@ using SFA.DAS.RoatpAssessor.Web.Services;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class DashboardController : Controller
     {
         private readonly IAssessorDashboardOrchestrator _orchestrator;
