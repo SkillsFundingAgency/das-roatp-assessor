@@ -24,7 +24,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
         public string OptionInProgressText { get; set; }
-        public List<ValidationErrorDetail> ErrorMessages { get; set; }
 
         // It seems that we will need them for grouping statuses
         public int SequenceNumber { get; set; }

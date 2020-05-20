@@ -23,7 +23,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
 
             if (string.IsNullOrWhiteSpace(command.Status))
             {
-                validationResponse.Errors.Add(new ValidationErrorDetail("OptionPass", $"Select the outcome for {command.Heading.ToLower()}"));
+                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.Status), $"Select the outcome for {command.Heading.ToLower()}"));
             }
             else
             {
@@ -35,7 +35,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                             var wordCount = GetWordCount(command.OptionPassText);
                             if (wordCount > MaxWordsCount)
                             {
-                                validationResponse.Errors.Add(new ValidationErrorDetail("OptionPassText", TooManyWords));
+                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionPassText), TooManyWords));
                             }
 
                             break;
@@ -45,11 +45,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                             var wordCount = GetWordCount(command.OptionFailText);
                             if (wordCount < RequiredMinimumWordsCount)
                             {
-                                validationResponse.Errors.Add(new ValidationErrorDetail("OptionFailText", FailDetailsRequired));
+                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionFailText), FailDetailsRequired));
                             }
                             else if (wordCount > MaxWordsCount)
                             {
-                                validationResponse.Errors.Add(new ValidationErrorDetail("OptionFailText", TooManyWords));
+                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionFailText), TooManyWords));
                             }
 
                             break;
@@ -59,7 +59,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                             var wordCount = GetWordCount(command.OptionInProgressText);
                             if (wordCount > MaxWordsCount)
                             {
-                                validationResponse.Errors.Add(new ValidationErrorDetail("OptionInProgressText", TooManyWords));
+                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionInProgressText), TooManyWords));
                             }
 
                             break;

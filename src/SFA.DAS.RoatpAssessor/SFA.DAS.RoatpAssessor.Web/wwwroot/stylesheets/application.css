@@ -350,3 +350,11 @@
         flex-basis: 320px;
     }
 }
+
+/* 
+  Required as word/char count wiptes out 'govuk-textarea--error' 
+  on page load if inside limits 
+*/
+.govuk-textarea--error-override {
+    border: 4px solid #b10e1e;
+}

@@ -58,13 +58,22 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             // TODO: Split function into two actions. One for validating and one for updating page answer
             var validationResponse = await AssessorPageValidator.Validate(command);
 
-            if(!validationResponse.Errors.Any())
+            if (validationResponse.Errors.Any())
             {
-                // passed initial validation, so try to submit
+                foreach (var error in validationResponse.Errors)
+                {
+                    ModelState.AddModelError(error.Field, error.ErrorMessage);
+                }
+            }
+
+            var submittedPageOutcomeSuccessfully = false;
+
+            if(ModelState.IsValid)
+            { 
                 var userId = HttpContext.User.UserId();
                 var comment = SetupGatewayPageOptionTexts(command);
 
-                var success = await _applyApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                submittedPageOutcomeSuccessfully = await _applyApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
@@ -73,21 +82,20 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                                     command.Status,
                                     comment);
 
-                if(!success)
+                if(!submittedPageOutcomeSuccessfully)
                 {
-                    var error = new ValidationErrorDetail("Unable to save outcome as this time", ValidationStatusCode.BadRequest);
-                    validationResponse.Errors.Add(error);
+                    ModelState.AddModelError(string.Empty, "Unable to save outcome as this time");
                 }
             }
 
-            if (validationResponse.Errors.Any())
+            if (!submittedPageOutcomeSuccessfully)
             {
                 var viewModel = await viewModelBuilder.Invoke();
                 viewModel.Status = command.Status;
                 viewModel.OptionFailText = command.OptionFailText;
                 viewModel.OptionInProgressText = command.OptionInProgressText;
                 viewModel.OptionPassText = command.OptionPassText;
-                viewModel.ErrorMessages = validationResponse.Errors;
+
                 return View(errorView, viewModel);
             }
             else if (string.IsNullOrEmpty(command.NextPageId))
@@ -97,7 +105,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             else
             {
                 return RedirectToAction("ReviewPageAnswers", new { applicationId = command.ApplicationId, sequenceNumber = command.SequenceNumber, sectionNumber = command.SectionNumber, pageId = command.NextPageId });
-            }     
+            }
         }
     }
 }
