@@ -40,9 +40,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Overview
             var userId = _controller.User.UserId();
 
             var application = new Apply { ApplicationId = _applicationId, Assessor1ReviewStatus = AssessorReviewStatus.New, Assessor1UserId = userId };
+            var contact = new Contact { Email = userId, GivenNames = _controller.User.GivenName(), FamilyName = _controller.User.Surname() };
             var sequences = new List<AssessorSequence>();
 
-            var viewModel = new AssessorApplicationViewModel(application, sequences, userId);
+            var viewModel = new AssessorApplicationViewModel(application, contact, sequences, userId);
 
             _assessorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetApplicationOverviewRequest>())).ReturnsAsync(viewModel);
 

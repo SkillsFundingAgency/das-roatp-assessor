@@ -3,8 +3,6 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
@@ -12,7 +10,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
     {
   
         public string Status { get; set; }
-        public string ApplicationReference { get; set; }
+        public string ApplicantEmailAddress { get; set; }
 
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }

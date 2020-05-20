@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -56,7 +57,30 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         {
             // TODO: Split function into two actions. One for validating and one for updating page answer
             var validationResponse = await AssessorPageValidator.Validate(command);
-            if (validationResponse.Errors != null && validationResponse.Errors.Any())
+
+            if(!validationResponse.Errors.Any())
+            {
+                // passed initial validation, so try to submit
+                var userId = HttpContext.User.UserId();
+                var comment = SetupGatewayPageOptionTexts(command);
+
+                var success = await _applyApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                                    command.SequenceNumber,
+                                    command.SectionNumber,
+                                    command.PageId,
+                                    (int)command.AssessorType,
+                                    userId,
+                                    command.Status,
+                                    comment);
+
+                if(!success)
+                {
+                    var error = new ValidationErrorDetail("Unable to save outcome as this time", ValidationStatusCode.BadRequest);
+                    validationResponse.Errors.Add(error);
+                }
+            }
+
+            if (validationResponse.Errors.Any())
             {
                 var viewModel = await viewModelBuilder.Invoke();
                 viewModel.Status = command.Status;
@@ -66,29 +90,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 viewModel.ErrorMessages = validationResponse.Errors;
                 return View(errorView, viewModel);
             }
+            else if (string.IsNullOrEmpty(command.NextPageId))
+            {
+                return RedirectToAction("ViewApplication", "Overview", new { applicationId = command.ApplicationId }, $"{command.SequenceNumber}.{command.SectionNumber}");
+            }
             else
             {
-                var userId = HttpContext.User.UserId();
-                var comment = SetupGatewayPageOptionTexts(command);
-
-                await _applyApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
-                                    command.SequenceNumber,
-                                    command.SectionNumber,
-                                    command.PageId,
-                                    (int)command.AssessorType,
-                                    userId,
-                                    command.Status,
-                                    comment);
-
-                if (string.IsNullOrEmpty(command.NextPageId))
-                {
-                    return RedirectToAction("ViewApplication", "Overview", new { applicationId = command.ApplicationId }, $"{command.SequenceNumber}.{command.SectionNumber}");
-                }
-                else
-                {
-                    return RedirectToAction("ReviewPageAnswers", new { applicationId = command.ApplicationId, sequenceNumber = command.SequenceNumber, sectionNumber = command.SectionNumber, pageId = command.NextPageId });
-                }
-            }
+                return RedirectToAction("ReviewPageAnswers", new { applicationId = command.ApplicationId, sequenceNumber = command.SequenceNumber, sectionNumber = command.SectionNumber, pageId = command.NextPageId });
+            }     
         }
     }
 }

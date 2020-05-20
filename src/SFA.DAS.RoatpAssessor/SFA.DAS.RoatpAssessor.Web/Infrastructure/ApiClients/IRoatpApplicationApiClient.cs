@@ -12,13 +12,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
     {
         Task<Apply> GetApplication(Guid applicationId);
 
+        Task<Contact> GetContactForApplication(Guid applicationId);
+
         Task<List<AssessorSequence>> GetAssessorSequences(Guid applicationId);
 
         Task<List<Sector>> GetChosenSectors(Guid applicationId);
 
         Task<AssessorPage> GetAssessorPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
 
-        Task SubmitAssessorPageOutcome(Guid applicationId,
+        Task<bool> SubmitAssessorPageOutcome(Guid applicationId,
                                        int sequenceNumber,
                                        int sectionNumber,
                                        string pageId,

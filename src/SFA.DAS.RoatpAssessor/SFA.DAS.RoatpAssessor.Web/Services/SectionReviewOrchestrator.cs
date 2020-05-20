@@ -30,9 +30,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<ReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request)
         {
             var application = await _applyApiClient.GetApplication(request.ApplicationId);
+            var contact = await _applyApiClient.GetContactForApplication(request.ApplicationId);
             var assessorPage = await _applyApiClient.GetAssessorPage(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.PageId);
 
-            if (application is null || assessorPage is null)
+            if (application is null || contact is null || assessorPage is null)
             {
                 return null;
             }
@@ -44,9 +45,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN,
                 ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
-                ApplicationReference = application.ApplyData.ApplyDetails.ReferenceNumber,
                 ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
+                ApplicantEmailAddress = contact.Email,
 
                 SequenceNumber = assessorPage.SequenceNumber,
                 SectionNumber = assessorPage.SectionNumber,
@@ -58,8 +59,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
                 GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
 
-                Questions = new List<AssessorQuestion>(assessorPage.Questions),
-                Answers = new List<AssessorAnswer>(assessorPage.Answers),
+                Questions = assessorPage.Questions != null ? new List<AssessorQuestion>(assessorPage.Questions) : new List<AssessorQuestion>(),
+                Answers = assessorPage.Answers != null ? new List<AssessorAnswer>(assessorPage.Answers) : new List<AssessorAnswer>(),
                 TabularData = GetTabularDataFromQuestionsAndAnswers(assessorPage.Questions, assessorPage.Answers),
                 SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, assessorPage.PageId)
             };
