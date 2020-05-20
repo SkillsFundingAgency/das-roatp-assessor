@@ -42,63 +42,7 @@
 
             <h1 class="govuk-heading-xl">Application assessment overview</h1>
 
-            <dl class="govuk-summary-list">
-                @if (!string.IsNullOrWhiteSpace(Model.Ukprn))
-                {
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            UKPRN
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            @Model.Ukprn
-                        </dd>
-                    </div>
-                }
-                @if (!string.IsNullOrWhiteSpace(Model.OrganisationName))
-                {
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Legal name
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            @Model.OrganisationName
-                        </dd>
-                    </div>
-                }
-                @if (!string.IsNullOrWhiteSpace(Model.ApplicationRoute))
-                {
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Provider route
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            @Model.ApplicationRoute
-                        </dd>
-                    </div>
-                }
-                @if (!string.IsNullOrWhiteSpace(Model.ApplicationReference))
-                {
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Application reference
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            @Model.ApplicationReference
-                        </dd>
-                    </div>
-                }
-                @if (Model.SubmittedDate.HasValue)
-                {
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Application submitted date
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            @Model.SubmittedDate.ToSfaShortDateString()
-                        </dd>
-                    </div>
-                }
-            </dl>
+            <partial name="~/Views/Overview/_ApplicationSummary.cshtml" for="@Model" />
         </div>
     </div>
 

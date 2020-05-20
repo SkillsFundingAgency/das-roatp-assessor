@@ -1,6 +1,6 @@
 ﻿@using SFA.DAS.RoatpAssessor.Web.Extensions;
 
-@model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.AssessorApplicationViewModel
 
 <dl class="govuk-summary-list govuk-!-margin-bottom-9">
     @if (!string.IsNullOrWhiteSpace(Model.Ukprn))
@@ -54,7 +54,7 @@
                 Application submitted date
             </dt>
             <dd class="govuk-summary-list__value">
-               @Model.SubmittedDate.ToSfaShortDateString()
+                @Model.SubmittedDate.ToSfaShortDateString()
             </dd>
         </div>
     }

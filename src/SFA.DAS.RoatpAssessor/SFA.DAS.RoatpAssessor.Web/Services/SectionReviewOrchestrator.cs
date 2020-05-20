@@ -29,9 +29,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<ReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request)
         {
             var application = await _applyApiClient.GetApplication(request.ApplicationId);
+            var contact = await _applyApiClient.GetContactForApplication(request.ApplicationId);
             var assessorPage = await _applyApiClient.GetAssessorPage(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.PageId);
 
-            if (application is null || assessorPage is null)
+            if (application is null || contact is null || assessorPage is null)
             {
                 return null;
             }
@@ -43,9 +44,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN,
                 ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
-                ApplicationReference = application.ApplyData.ApplyDetails.ReferenceNumber,
                 ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
+                ApplicantEmailAddress = contact.Email,
 
                 SequenceNumber = assessorPage.SequenceNumber,
                 SectionNumber = assessorPage.SectionNumber,
