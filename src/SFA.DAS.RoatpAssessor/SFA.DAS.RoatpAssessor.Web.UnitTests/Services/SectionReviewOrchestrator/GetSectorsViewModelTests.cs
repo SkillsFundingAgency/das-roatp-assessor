@@ -32,6 +32,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
         private string _organisationName;
         private string _providerRouteName;
         private readonly DateTime _applicationSubmittedOn = DateTime.Today;
+        private Contact _contactInformation;
+        private string _emailAddress = "test@test.com";
 
         [SetUp]
         public void SetUp()
@@ -39,6 +41,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             _assessorPageCaption = "Caption for page";
             var logger = new Mock<ILogger<Web.Services.SectionReviewOrchestrator>>();
             _chosenSectors = new List<Sector>();
+            _contactInformation = new Contact {Email=_emailAddress};
 
             _applyApiClient = new Mock<IRoatpApplicationApiClient>();
 
@@ -85,6 +88,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);
 
+
+            _applyApiClient.Setup(x => x.GetContactForApplication(_applicationId))
+                .ReturnsAsync(_contactInformation);
+
             _applyApiClient.Setup(x => x.GetChosenSectors(_applicationId))
                 .ReturnsAsync(_chosenSectors);
 
@@ -102,6 +109,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
                 ApplicationRoute = _providerRouteName,
                 SubmittedDate = _applicationSubmittedOn,
                 Caption = _assessorPageCaption,
+                ApplicantEmailAddress = _emailAddress,
                 Heading = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesHeading
             };
 

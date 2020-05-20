@@ -79,6 +79,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<ApplicationSectorsViewModel> GetSectorsViewModel(GetSectorsRequest request)
         {
             var application = await _applyApiClient.GetApplication(request.ApplicationId);
+            var contact = await _applyApiClient.GetContactForApplication(request.ApplicationId);
             var assessorPage = await _applyApiClient.GetAssessorPage(
                 request.ApplicationId, 
                 SequenceIds.DeliveringApprenticeshipTraining, 
@@ -94,6 +95,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 ApplicationId = application.ApplicationId,
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN,
+                ApplicantEmailAddress = contact.Email,
                 ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
                 ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
