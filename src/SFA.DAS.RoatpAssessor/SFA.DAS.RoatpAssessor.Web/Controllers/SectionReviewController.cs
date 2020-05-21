@@ -17,7 +17,7 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class SectionReviewController : RoatpAssessorControllerBase<SectionReviewController>
     {
         private readonly ISectionReviewOrchestrator _sectionReviewOrchestrator;
