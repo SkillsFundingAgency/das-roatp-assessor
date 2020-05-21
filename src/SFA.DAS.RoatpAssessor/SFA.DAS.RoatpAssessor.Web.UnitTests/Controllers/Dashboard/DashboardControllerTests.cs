@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -58,6 +59,23 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
             var result = await _controller.InProgressApplications();
 
             Assert.AreSame(expectedViewModel, result.Model);
+        }
+
+        [Test]
+        public async Task When_assigning_to_assessor_then_the_application_is_assigned()
+        {
+            var userId = _controller.User.UserId();
+            var userName = _controller.User.UserDisplayName();
+            var applicationId = Guid.NewGuid();
+            var assessorNumber = 2;
+            
+            var result = await _controller.AssignToAssessor(applicationId, assessorNumber) as RedirectToActionResult;
+
+            _orchestratorMock.Verify(x => x.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName));
+
+            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("ViewApplication", result.ActionName);
+            Assert.AreEqual(applicationId, result.RouteValues["applicationId"]);
         }
     }
 }
