@@ -33,5 +33,14 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
             Assert.That(actualViewModel.RequestId, Is.EqualTo(expectedViewModel.RequestId));
             Assert.That(actualViewModel.ShowRequestId, Is.EqualTo(!string.IsNullOrEmpty(expectedViewModel.RequestId)));
         }
+
+        [Test]
+        public void Index_redirects_to_new_applications_dashboard()
+        {
+            var result = _controller.Index() as RedirectToActionResult;
+
+            Assert.AreEqual("Dashboard", result.ControllerName);
+            Assert.AreEqual("NewApplications", result.ActionName);
+        }
     }
 }
