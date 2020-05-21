@@ -100,7 +100,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             }
             else if (string.IsNullOrEmpty(command.NextPageId))
             {
-                return RedirectToAction("ViewApplication", "Overview", new { applicationId = command.ApplicationId }, $"{command.SequenceNumber}.{command.SectionNumber}");
+                return RedirectToAction("ViewApplication", "Overview", new { applicationId = command.ApplicationId }, $"sequence-{command.SequenceNumber}");
             }
             else
             {
