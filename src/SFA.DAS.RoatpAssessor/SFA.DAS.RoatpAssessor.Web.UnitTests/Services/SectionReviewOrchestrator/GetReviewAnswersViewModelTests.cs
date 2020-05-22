@@ -131,5 +131,24 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
 
             _applyApiClient.Verify(x => x.SubmitAssessorPageOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId, (int)AssessorType.FirstAssessor, _userId, null, null));
         }
+
+        [Test]
+        public async Task When_there_is_no_page_id_provided_and_there_are_no_existing_outcomes_then_outcomes_are_submitted_for_next_pages()
+        {
+            _assessorPage.NextPageId = "NP01";
+            _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, _sequenceNumber, _sectionNumber, null)).ReturnsAsync(_assessorPage);
+            _applyApiClient.Setup(x => x.GetAssessorReviewOutcomesPerSection(_applicationId, _sequenceNumber, _sectionNumber, (int)AssessorType.FirstAssessor, _userId)).ReturnsAsync((List<PageReviewOutcome>)null);
+
+            var nextPage = new AssessorPage { NextPageId = "NP02" };
+            _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, _sequenceNumber, _sectionNumber, _assessorPage.NextPageId)).ReturnsAsync(nextPage);
+
+            _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, _sequenceNumber, _sectionNumber, nextPage.NextPageId)).ReturnsAsync(new AssessorPage());
+
+            _request = new GetReviewAnswersRequest(_applicationId, _userId, _sequenceNumber, _sectionNumber, null, null);
+            await _orchestrator.GetReviewAnswersViewModel(_request);
+
+            _applyApiClient.Verify(x => x.SubmitAssessorPageOutcome(_applicationId, _sequenceNumber, _sectionNumber, _assessorPage.NextPageId, (int)AssessorType.FirstAssessor, _userId, null, null));
+            _applyApiClient.Verify(x => x.SubmitAssessorPageOutcome(_applicationId, _sequenceNumber, _sectionNumber, nextPage.NextPageId, (int)AssessorType.FirstAssessor, _userId, null, null));
+        }
     }
 }
