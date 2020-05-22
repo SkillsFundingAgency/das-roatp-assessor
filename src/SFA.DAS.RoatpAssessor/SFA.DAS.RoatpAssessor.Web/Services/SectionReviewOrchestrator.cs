@@ -96,7 +96,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
                             if (questionId == RoatpWorkflowQuestionIds.ManagementHierarchy)
                             {
-                                tabularData = ManagementHeirarchyTransformer.Transform(tabularData);
+                                tabularData = ManagementHierarchyTransformer.Transform(tabularData);
                             }
 
                             tabularDataList.Add(tabularData);

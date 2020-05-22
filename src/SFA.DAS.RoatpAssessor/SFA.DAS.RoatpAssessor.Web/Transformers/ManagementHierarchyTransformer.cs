@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SFA.DAS.RoatpAssessor.Web.Transformers
 {
-    public static class ManagementHeirarchyTransformer
+    public static class ManagementHierarchyTransformer
     {
         private static List<string> InputHeadingTitles = new List<string> { "Name", "Job role", "Years in role", "Months in role", "Part of another organisation", "Organisation details" };
         private static List<string> TransformHeadingTitles = new List<string> { "Full name", "Job role", "Time in role", "Is this person part of any other organisations?", "Enter the names of all these organisations" };
