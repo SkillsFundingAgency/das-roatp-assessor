@@ -23,6 +23,16 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
 
         private Mock<IRoatpApplicationApiClient> _applyApiClient;
         private Web.Services.SectionReviewOrchestrator _orchestrator;
+        private GetReviewAnswersRequest _request;
+        private Apply _application;
+        private Contact _contact;
+        private AssessorPage _assessorPage;
+        private PageReviewOutcome _pageReviewOutcome;
+
+        private readonly int _sequenceNumber = 4;
+        private readonly int _sectionNumber = 2;
+        private readonly string _pageId = "4200";
+        private string _userId;
 
         [SetUp]
         public void SetUp()
@@ -34,38 +44,32 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             var supplementaryInformationService = new Mock<ISupplementaryInformationService>();
 
             _orchestrator = new Web.Services.SectionReviewOrchestrator(logger.Object, _applyApiClient.Object, supplementaryInformationService.Object);
-        }
 
-        [Test]
-        public async Task GetReviewAnswersViewModel_returns_ViewModel()
-        {
-            int sequenceNumber = 4;
-            int sectionNumber = 2;
-            string pageId = "4200";
-            var userId = _user.UserId();
+            _userId = _user.UserId();
 
-            var application = new Apply
+            _application = new Apply
             {
                 ApplicationId = _applicationId,
                 ApplyData = new ApplyData
                 {
                     ApplyDetails = new ApplyDetails { }
-                }
+                },
+                Assessor1UserId = _userId
             };
 
-            var contact = new Contact
+            _contact = new Contact
             {
-                Email = userId,
+                Email = _userId,
                 GivenNames = _user.GivenName(),
                 FamilyName = _user.Surname()
             };
 
-            var assessorPage = new AssessorPage
+            _assessorPage = new AssessorPage
             {
                 ApplicationId = _applicationId,
-                SequenceNumber = sequenceNumber,
-                SectionNumber = sectionNumber,
-                PageId = pageId,
+                SequenceNumber = _sequenceNumber,
+                SectionNumber = _sectionNumber,
+                PageId = _pageId,
                 Questions = new List<AssessorQuestion>
                 {
                     new AssessorQuestion { QuestionId = "Q1" }
@@ -76,40 +80,56 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
                 }
             };
 
-            var pageReviewOutcome = new PageReviewOutcome
+            _pageReviewOutcome = new PageReviewOutcome
             {
                 ApplicationId = _applicationId,
-                SequenceNumber = sequenceNumber,
-                SectionNumber = sectionNumber,
-                PageId = pageId,
-                UserId = userId,
+                SequenceNumber = _sequenceNumber,
+                SectionNumber = _sectionNumber,
+                PageId = _pageId,
+                UserId = _userId,
                 Status = AssessorPageReviewStatus.Pass
             };
 
-            _applyApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(application);
+            _applyApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
 
-            _applyApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(contact);
+            _applyApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
 
-            _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
-                .ReturnsAsync(assessorPage);
+            _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, _sequenceNumber, _sectionNumber, _pageId))
+                .ReturnsAsync(_assessorPage);
 
-            _applyApiClient.Setup(x => x.GetAssessorReviewOutcomesPerSection(_applicationId, sequenceNumber, sectionNumber, It.IsAny<int>(), userId))
-                .ReturnsAsync(new List<PageReviewOutcome> { pageReviewOutcome });
+            _applyApiClient.Setup(x => x.GetAssessorReviewOutcomesPerSection(_applicationId, _sequenceNumber, _sectionNumber, It.IsAny<int>(), _userId))
+                .ReturnsAsync(new List<PageReviewOutcome> { _pageReviewOutcome });
 
-            _applyApiClient.Setup(x => x.GetPageReviewOutcome(_applicationId, sequenceNumber, sectionNumber, pageId, It.IsAny<int>(), userId))
-                .ReturnsAsync(pageReviewOutcome);
+            _applyApiClient.Setup(x => x.GetPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId, It.IsAny<int>(), _userId))
+                .ReturnsAsync(_pageReviewOutcome);
+        }
 
-            var request = new GetReviewAnswersRequest(_applicationId, userId, sequenceNumber, sectionNumber, pageId, null);
-            var result = await _orchestrator.GetReviewAnswersViewModel(request);
+        [Test]
+        public async Task GetReviewAnswersViewModel_returns_ViewModel()
+        {
+            _request = new GetReviewAnswersRequest(_applicationId, _userId, _sequenceNumber, _sectionNumber, _pageId, null);
+            var result = await _orchestrator.GetReviewAnswersViewModel(_request);
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.ApplicationId, Is.EqualTo(assessorPage.ApplicationId));
-            Assert.That(result.SequenceNumber, Is.EqualTo(assessorPage.SequenceNumber));
-            Assert.That(result.SectionNumber, Is.EqualTo(assessorPage.SectionNumber));
-            Assert.That(result.PageId, Is.EqualTo(assessorPage.PageId));
-            Assert.That(result.Status, Is.EqualTo(pageReviewOutcome.Status));
+            Assert.That(result.ApplicationId, Is.EqualTo(_assessorPage.ApplicationId));
+            Assert.That(result.SequenceNumber, Is.EqualTo(_assessorPage.SequenceNumber));
+            Assert.That(result.SectionNumber, Is.EqualTo(_assessorPage.SectionNumber));
+            Assert.That(result.PageId, Is.EqualTo(_assessorPage.PageId));
+            Assert.That(result.Status, Is.EqualTo(_pageReviewOutcome.Status));
             CollectionAssert.IsNotEmpty(result.Questions);
             CollectionAssert.IsNotEmpty(result.Answers);
+        }
+
+        [Test]
+        public async Task When_there_is_no_page_id_provided_and_there_are_no_existing_outcomes_then_outcomes_are_submitted()
+        {
+            _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, _sequenceNumber, _sectionNumber, null)).ReturnsAsync(_assessorPage);
+            _applyApiClient.Setup(x => x.GetAssessorReviewOutcomesPerSection(_applicationId, _sequenceNumber, _sectionNumber, (int)AssessorType.FirstAssessor, _userId)).ReturnsAsync((List<PageReviewOutcome>)null);
+
+            _request = new GetReviewAnswersRequest(_applicationId, _userId, _sequenceNumber, _sectionNumber, null, null);
+            await _orchestrator.GetReviewAnswersViewModel(_request);
+
+            _applyApiClient.Verify(x => x.SubmitAssessorPageOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId, (int)AssessorType.FirstAssessor, _userId, null, null));
         }
     }
 }
