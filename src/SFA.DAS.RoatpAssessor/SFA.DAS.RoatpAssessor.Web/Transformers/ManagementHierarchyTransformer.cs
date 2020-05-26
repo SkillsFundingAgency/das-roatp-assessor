@@ -7,6 +7,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Transformers
 {
     public static class ManagementHierarchyTransformer
     {
+        private static int NameInputColumn = 0;
+        private static int JobRoleInputColumn = 1;
+        private static int YearsInputColumn = 2;
+        private static int MonthsInputColumn = 3;
+        private static int AnotherOrgInputColumn = 4;
+        private static int OrgDetailsInputColumn = 5;
+
         private static List<string> InputHeadingTitles = new List<string> { "Name", "Job role", "Years in role", "Months in role", "Part of another organisation", "Organisation details" };
         private static List<string> TransformHeadingTitles = new List<string> { "Full name", "Job role", "Time in role", "Is this person part of any other organisations?", "Enter the names of all these organisations" };
 
@@ -51,11 +58,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Transformers
             {
                 columns = new List<string>
                 {
-                    tabularDataRowColumns[0],
-                    tabularDataRowColumns[1],
-                    TransformYearsAndMonths(tabularDataRowColumns[2], tabularDataRowColumns[3]),
-                    tabularDataRowColumns[4],
-                    !string.IsNullOrEmpty(tabularDataRowColumns[5]) ? tabularDataRowColumns[5] : "Not applicable",
+                    tabularDataRowColumns[NameInputColumn],
+                    tabularDataRowColumns[JobRoleInputColumn],
+                    TransformYearsAndMonths(tabularDataRowColumns[YearsInputColumn], tabularDataRowColumns[MonthsInputColumn]),
+                    tabularDataRowColumns[AnotherOrgInputColumn],
+                    !string.IsNullOrEmpty(tabularDataRowColumns[OrgDetailsInputColumn]) ? tabularDataRowColumns[OrgDetailsInputColumn] : "Not applicable",
                 };
             }
 
