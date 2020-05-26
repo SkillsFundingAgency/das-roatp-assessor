@@ -15,7 +15,7 @@
                     <tr class="govuk-table__row">
                         @foreach (var title in Model.HeadingTitles)
                         {
-                            <th class="govuk-table__header" scope="col">@Html.Raw(title)</th>
+                            <th class="govuk-table__header" scope="col">@title</th>
                         }
                     </tr>
                 </thead>
@@ -25,8 +25,7 @@
                         <tr class="govuk-table__row">
                             @foreach (var column in dataRow.Columns)
                             {
-                                var answer = string.IsNullOrWhiteSpace(column) ? "Not applicable" : column;
-                                <td class="govuk-table__cell">@answer</td>
+                                <td class="govuk-table__cell">@column</td>
                             }
                         </tr>
                     }
