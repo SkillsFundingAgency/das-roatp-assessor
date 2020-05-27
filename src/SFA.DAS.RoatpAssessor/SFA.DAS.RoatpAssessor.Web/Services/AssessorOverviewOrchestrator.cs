@@ -84,7 +84,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
                 else
                 {
-                    if (sectionPageReviewOutcomes.All(p => p.Status == null || p.Status == string.Empty))
+                    if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
                     {
                         sectionStatus = null;
                     }
