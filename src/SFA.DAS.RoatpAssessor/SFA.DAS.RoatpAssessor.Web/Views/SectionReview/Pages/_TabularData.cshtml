@@ -4,7 +4,7 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <table class="govuk-table govuk-!-margin-bottom-9">
+            <table class="govuk-table das-table das-table--responsive govuk-!-margin-bottom-9">
                 @if (Model.Caption != null)
                 {
                     <caption class="govuk-table__caption">
@@ -27,6 +27,7 @@
                             {
                                 var answer = string.IsNullOrWhiteSpace(column) ? "Not applicable" : column;
                                 <td class="govuk-table__cell">@answer</td>
+                                <!-- <td class="govuk-table__cell" data-label="@Html.Raw(title)">@answer</td> -->
                             }
                         </tr>
                     }
@@ -35,3 +36,25 @@
         </div>
     </div>
 }
+
+
+<thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+        @foreach (var title in Model.HeadingTitles)
+        {
+            <th class="govuk-table__header" scope="col">@Html.Raw(title)</th>
+        }
+    </tr>
+</thead>
+<tbody class="govuk-table__body">
+    @foreach (var dataRow in Model.DataRows)
+    {
+        <tr class="govuk-table__row">
+            @foreach (var column in dataRow.Columns)
+            {
+                var answer = string.IsNullOrWhiteSpace(column) ? "Not applicable" : column;
+                <td class="govuk-table__cell" data-label="@Html.Raw(title)">@answer</td>
+            }
+        </tr>
+    }
+</tbody>
