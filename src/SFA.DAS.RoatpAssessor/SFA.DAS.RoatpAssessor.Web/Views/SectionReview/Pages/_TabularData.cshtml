@@ -13,48 +13,30 @@
                 }
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        @foreach (var title in Model.HeadingTitles)
+                        @for (int index = 0; index < Model.HeadingTitles.Count; index++)
                         {
-                            <th class="govuk-table__header" scope="col">@Html.Raw(title)</th>
+                            var title = Model.HeadingTitles[index];
+                            <th class="govuk-table__header" scope="col">@title</th>
                         }
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                    @foreach (var dataRow in Model.DataRows)
-                    {
-                        <tr class="govuk-table__row">
-                            @foreach (var column in dataRow.Columns)
-                            {
-                                var answer = string.IsNullOrWhiteSpace(column) ? "Not applicable" : column;
-                                <td class="govuk-table__cell">@answer</td>
-                                <!-- <td class="govuk-table__cell" data-label="@Html.Raw(title)">@answer</td> -->
-                            }
-                        </tr>
+                    @{
+                        var headingTitlesCount = Model.HeadingTitles.Count;
+                        @foreach (var dataRow in Model.DataRows)
+                        {
+                            <tr class="govuk-table__row">
+                                @for (int index = 0; index < dataRow.Columns.Count; index++)
+                                {
+                                    var dataLabel = (index < headingTitlesCount) ? Model.HeadingTitles[index] : "";
+                                    var answer = dataRow.Columns[index];
+                                    <td class="govuk-table__cell" data-label="@dataLabel">@answer</td>
+                                }
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
         </div>
     </div>
 }
-
-
-<thead class="govuk-table__head">
-    <tr class="govuk-table__row">
-        @foreach (var title in Model.HeadingTitles)
-        {
-            <th class="govuk-table__header" scope="col">@Html.Raw(title)</th>
-        }
-    </tr>
-</thead>
-<tbody class="govuk-table__body">
-    @foreach (var dataRow in Model.DataRows)
-    {
-        <tr class="govuk-table__row">
-            @foreach (var column in dataRow.Columns)
-            {
-                var answer = string.IsNullOrWhiteSpace(column) ? "Not applicable" : column;
-                <td class="govuk-table__cell" data-label="@Html.Raw(title)">@answer</td>
-            }
-        </tr>
-    }
-</tbody>
