@@ -84,39 +84,25 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
                 else
                 {
-                    var passStatusesCount = sectionPageReviewOutcomes.Where(p => p.Status == AssessorPageReviewStatus.Pass).Count();
-                    var failStatusesCount = sectionPageReviewOutcomes.Where(p => p.Status == AssessorPageReviewStatus.Fail).Count();
-                    var inProgressStatusesCount = sectionPageReviewOutcomes.Where(p => p.Status == AssessorPageReviewStatus.InProgress).Count();
-                    var noTagCount = sectionPageReviewOutcomes.Where(p => p.Status == null || p.Status == string.Empty).Count();
-                    var allPassOrFail = sectionPageReviewOutcomes.Count.Equals(passStatusesCount + failStatusesCount);
-
-                    if (sectionPageReviewOutcomes.Count.Equals(noTagCount)) // All empty
+                    if (sectionPageReviewOutcomes.All(p => p.Status == null || p.Status == string.Empty))
                     {
                         sectionStatus = null;
                     }
-                    else if (sectionPageReviewOutcomes.Count.Equals(passStatusesCount)) // All Pass
+                    else if (sectionPageReviewOutcomes.All(x => x.Status == AssessorPageReviewStatus.Pass))
                     {
                         sectionStatus = AssessorSectionStatus.Pass;
                     }
-                    else if (sectionPageReviewOutcomes.Count.Equals(failStatusesCount)) // All Fail
+                    else if (sectionPageReviewOutcomes.All(p => p.Status == AssessorPageReviewStatus.Fail))
                     {
                         sectionStatus = AssessorSectionStatus.Fail;
                     }
-                    else if (inProgressStatusesCount > 0) // One or more 'In Progress'
+                    else if (sectionPageReviewOutcomes.All(p => p.Status == AssessorPageReviewStatus.Pass || p.Status == AssessorPageReviewStatus.Fail))
                     {
-                        sectionStatus = AssessorSectionStatus.InProgress;
-                    }
-                    else if ((!passStatusesCount.Equals(0) && !allPassOrFail) || (!failStatusesCount.Equals(0) && !allPassOrFail)) // One or more Pass or Fail, but NOT all
-                    {
-                        sectionStatus = AssessorSectionStatus.InProgress;
-                    }
-                    else if (noTagCount.Equals(0) && inProgressStatusesCount.Equals(0) && allPassOrFail) // Not empty or 'In Progress', All either Pass or Fail
-                    {
-                        sectionStatus = $"{failStatusesCount} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
+                        sectionStatus = $"{sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail)} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
                     }
                     else
                     {
-                        sectionStatus = AssessorSectionStatus.Unknown; // It should not happen. It's just for testing.
+                        sectionStatus = AssessorSectionStatus.InProgress;
                     }
                 }
             }
