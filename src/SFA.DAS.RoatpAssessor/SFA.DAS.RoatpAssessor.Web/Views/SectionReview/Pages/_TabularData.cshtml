@@ -29,7 +29,7 @@
                                 @for (int index = 0; index < dataRow.Columns.Count; index++)
                                 {
                                     var dataLabel = (index < headingTitlesCount) ? Model.HeadingTitles[index] : "";
-                                    var answer = dataRow.Columns[index];
+                                    var answer = String.IsNullOrEmpty(dataRow.Columns[index]) ? "Not applicable" : dataRow.Columns[index];
                                     <td class="govuk-table__cell" data-label="@dataLabel">@answer</td>
                                 }
                             </tr>

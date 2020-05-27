@@ -34,12 +34,12 @@
     else
     {
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-full">
                 <table class="govuk-table govuk-!-margin-bottom-9">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Application question</th>
-                            <th class="govuk-table__header govuk-table__header--numeric das-no-wrap" scope="col">Applicant's answer</th>
+                            <th class="govuk-table__header" scope="col">Application question</th>
+                            <th class="govuk-table__header das-no-wrap" scope="col">Applicant's answer</th>
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -48,8 +48,8 @@
                             var answer = Model.Answers.SingleOrDefault(pg => pg.QuestionId == question.QuestionId)?.Value;
 
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">@Html.Raw(question.Label)</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <th scope="row" class="govuk-table__header">@Html.Raw(question.Label)</th>
+                                <td class="govuk-table__cell">
                                     @switch (question.InputType)
                                     {
                                         case QuestionInputType.FileUpload:
@@ -77,8 +77,8 @@
                             var answer = supplementaryInformation.Answer?.Value;
 
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">@Html.Raw(question.Label)</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <th scope="row" class="govuk-table__header">@Html.Raw(question.Label)</th>
+                                <td class="govuk-table__cell">
                                     @switch (question.InputType)
                                     {
                                         case QuestionInputType.FileUpload:
