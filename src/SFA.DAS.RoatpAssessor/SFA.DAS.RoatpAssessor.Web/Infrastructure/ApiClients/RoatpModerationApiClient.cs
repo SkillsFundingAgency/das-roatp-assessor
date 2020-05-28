@@ -19,6 +19,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         public async Task<List<RoatpModerationApplicationSummary>> GetModerationApplications()
         {
             return await Get<List<RoatpModerationApplicationSummary>>($"Assessor/Applications/Moderation");
-        
+        }
     }
 }
