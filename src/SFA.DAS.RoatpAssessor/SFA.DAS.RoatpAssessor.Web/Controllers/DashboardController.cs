@@ -46,5 +46,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var vm = await _orchestrator.GetInProgressApplicationsViewModel(userId);
             return View(vm);
         }
+
+        public async Task<ViewResult> InModerationApplications()
+        {
+            var userId = HttpContext.User.UserId();
+            var vm = await _orchestrator.GetInModerationApplicationsViewModel(userId);
+            return View(vm);
+        }
     }
 }

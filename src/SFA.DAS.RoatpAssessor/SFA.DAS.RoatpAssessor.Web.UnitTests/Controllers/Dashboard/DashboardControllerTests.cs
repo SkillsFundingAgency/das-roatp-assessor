@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -57,6 +56,18 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
             _orchestratorMock.Setup(x => x.GetInProgressApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
 
             var result = await _controller.InProgressApplications();
+
+            Assert.AreSame(expectedViewModel, result.Model);
+        }
+
+        [Test]
+        public async Task When_getting_in_progress_moderation_the_applications_are_returned()
+        {
+            var userId = _controller.User.UserId();
+            var expectedViewModel = new InModerationApplicationsViewModel(userId, 1, 2, 3, 4);
+            _orchestratorMock.Setup(x => x.GetInModerationApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
+
+            var result = await _controller.InModerationApplications();
 
             Assert.AreSame(expectedViewModel, result.Model);
         }
