@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
-    public abstract class DashboardViewModel
+    public abstract class DashboardViewModel<T>
     {
         protected DashboardViewModel(string currentPage, int newApplications, int inProgressApplications, int moderationApplications, int clarificationApplications)
         {
@@ -11,7 +11,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
             InProgressApplications = inProgressApplications;
             ModerationApplications = moderationApplications;
             ClarificationApplications = clarificationApplications;
-            Applications = new List<ApplicationViewModel>();
+            Applications = new List<T>();
         }
 
         public string CurrentPage { get; }
@@ -19,9 +19,9 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public int InProgressApplications { get; }
         public int ModerationApplications { get; }
         public int ClarificationApplications { get; }
-        public List<ApplicationViewModel> Applications { get; }
+        public List<T> Applications { get; }
 
-        public void AddApplication(ApplicationViewModel application)
+        public void AddApplication(T application)
         {
             Applications.Add(application);
         }

@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
-    public class NewApplicationsViewModel : DashboardViewModel
+    public class NewApplicationsViewModel : DashboardViewModel<ApplicationViewModel>
     {
         public NewApplicationsViewModel(int newApplications, int inProgressApplications, int moderationApplications, int clarificationApplications) : base("NewApplications", newApplications, inProgressApplications, moderationApplications, clarificationApplications)
         {
