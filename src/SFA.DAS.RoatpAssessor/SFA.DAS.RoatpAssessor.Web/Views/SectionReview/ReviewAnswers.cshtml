@@ -55,6 +55,15 @@
                                         case QuestionInputType.FileUpload:
                                             <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNo="@Model.SequenceNumber" asp-route-sectionNo="@Model.SectionNumber" asp-route-pageId="@Model.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
                                             break;
+                                        case QuestionInputType.CheckboxList:
+                                        case QuestionInputType.ComplexCheckboxList:
+                                            <ul class="govuk-list">
+                                                @foreach (var selectedAnswer in answer.Split(','))
+                                                {
+                                                    <li>@selectedAnswer</li>
+                                                }
+                                            </ul>
+                                            break;
                                         default:
                                             @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
                                             {
@@ -83,6 +92,15 @@
                                     {
                                         case QuestionInputType.FileUpload:
                                             <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@supplementaryInformation.ApplicationId" asp-route-sequenceNo="@supplementaryInformation.SequenceNumber" asp-route-sectionNo="@supplementaryInformation.SectionNumber" asp-route-pageId="@supplementaryInformation.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
+                                            break;
+                                        case QuestionInputType.CheckboxList:
+                                        case QuestionInputType.ComplexCheckboxList:
+                                            <ul class="govuk-list">
+                                                @foreach (var selectedAnswer in answer.Split(','))
+                                                {
+                                                    <li>@selectedAnswer</li>
+                                                }
+                                            </ul>
                                             break;
                                         default:
                                             @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
