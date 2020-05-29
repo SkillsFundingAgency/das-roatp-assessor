@@ -53,7 +53,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewModel;
         }
 
-        private void AddApplicationsToViewModel(DashboardViewModel<ApplicationViewModel> viewModel, List<RoatpAssessorApplicationSummary> applications)
+        private void AddApplicationsToViewModel(AssessorDashboardViewModel viewModel, List<RoatpAssessorApplicationSummary> applications)
         {
             foreach (var application in applications)
             {
@@ -63,7 +63,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
         }
 
-        private void AddApplicationsToViewModel(DashboardViewModel<ModerationApplicationViewModel> viewModel, List<RoatpModerationApplicationSummary> applications)
+        private void AddApplicationsToViewModel(InModerationApplicationsViewModel viewModel, List<RoatpModerationApplicationSummary> applications)
         {
             foreach (var application in applications)
             {
