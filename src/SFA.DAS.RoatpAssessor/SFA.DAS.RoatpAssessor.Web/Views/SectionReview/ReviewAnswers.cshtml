@@ -123,7 +123,7 @@
         </div>
     }
 
-    @if (!string.IsNullOrWhiteSpace(Model.GuidanceText))
+    @if (Model.GuidanceInformation != null && Model.GuidanceInformation.Any())
     {
         <details class="govuk-details">
             <summary class="govuk-details__summary">
@@ -132,7 +132,14 @@
                 </span>
             </summary>
             <div class="govuk-details__text">
-                @Html.Raw(Model.GuidanceText)
+                <ul class="govuk-list">
+                    @foreach (var guidanceText in Model.GuidanceInformation)
+                    {
+                        <li>
+                            @Html.Raw(guidanceText)
+                        </li>
+                    }
+                </ul>
             </div>
         </details>
     }
