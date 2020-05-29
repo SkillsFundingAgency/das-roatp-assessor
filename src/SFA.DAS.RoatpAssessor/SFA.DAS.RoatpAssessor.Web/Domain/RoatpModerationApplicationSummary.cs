@@ -4,6 +4,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Domain
 {
     public class RoatpModerationApplicationSummary : RoatpAssessorApplicationSummary
     {
-        public ModerationStatus Status { get; set; }
+        public string Status { get; set; }
     }
 }
