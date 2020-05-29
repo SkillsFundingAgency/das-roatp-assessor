@@ -58,7 +58,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 Caption = assessorPage.Caption,
                 Heading = assessorPage.Heading,
 
-                GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
+                GuidanceInformation = GetGuidanceInformation(assessorPage),
 
                 Questions = assessorPage.Questions != null ? new List<AssessorQuestion>(assessorPage.Questions) : new List<AssessorQuestion>(),
                 Answers = assessorPage.Answers != null ? new List<AssessorAnswer>(assessorPage.Answers) : new List<AssessorAnswer>(),
@@ -75,6 +75,32 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             await SetPageReviewOutcome(request, viewModel);
 
             return viewModel;
+        }
+
+        private static List<string> GetGuidanceInformation(AssessorPage page)
+        {
+            var guidanceInformation = new List<string>();
+
+            if(page != null)
+            {
+                if(!string.IsNullOrEmpty(page.BodyText))
+                {
+                    guidanceInformation.Add(page.BodyText);
+                }
+
+                if(page.Questions != null)
+                {
+                    foreach(var question in page.Questions)
+                    {
+                        if (!string.IsNullOrEmpty(question.QuestionBodyText))
+                        {
+                            guidanceInformation.Add(question.QuestionBodyText);
+                        }
+                    }
+                }
+            }
+
+            return guidanceInformation;
         }
 
         private List<TabularData> GetTabularDataFromQuestionsAndAnswers(List<AssessorQuestion> questions, List<AssessorAnswer> answers)
