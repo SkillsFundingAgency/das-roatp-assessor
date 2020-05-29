@@ -7,6 +7,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
     public class ApplicationSummaryAndBreadcrumbViewModel
     {
+     
         public Guid ApplicationId { get; set; }
         public string Heading { get; set; }
         public string Caption { get; set; }
@@ -14,6 +15,13 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string Ukprn { get; set; }
         public string ApplicationRoute { get; set; }
         public DateTime? SubmittedDate { get; set; }
+
+        public string GuidanceText { get; set; }
+        public string Status { get; set; }
+
+        public string OptionPassText { get; set; }
+        public string OptionFailText { get; set; }
+        public string OptionInProgressText { get; set; }
 
         public string ApplicantEmailAddress { get; set; }
 

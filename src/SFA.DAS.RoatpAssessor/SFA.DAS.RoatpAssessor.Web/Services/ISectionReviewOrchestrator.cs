@@ -8,5 +8,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
     {
         Task<ReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request);
         Task<ApplicationSectorsViewModel> GetSectorsViewModel(GetSectorsRequest request);
+
+        Task<SectorViewModel> GetSectorViewModel(GetSectorDetailsRequest request);
     }
 }

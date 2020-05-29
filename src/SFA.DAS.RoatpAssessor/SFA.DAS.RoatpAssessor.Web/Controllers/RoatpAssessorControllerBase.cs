@@ -107,5 +107,65 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 return RedirectToAction("ReviewPageAnswers", new { applicationId = command.ApplicationId, sequenceNumber = command.SequenceNumber, sectionNumber = command.SectionNumber, pageId = command.NextPageId });
             }
         }
+
+
+
+        protected async Task<IActionResult> ValidateAndUpdateSectorPageAnswer<T>(SubmitAssessorPageAnswerCommand command,
+                                                    Func<Task<T>> viewModelBuilder,
+                                                    string errorView) where T : SectorViewModel
+        {
+            // TODO: Split function into two actions. One for validating and one for updating page answer
+            var validationResponse = await AssessorPageValidator.Validate(command);
+
+            if (validationResponse.Errors.Any())
+            {
+                foreach (var error in validationResponse.Errors)
+                {
+                    ModelState.AddModelError(error.Field, error.ErrorMessage);
+                }
+            }
+
+            var submittedPageOutcomeSuccessfully = false;
+
+            if (ModelState.IsValid)
+            {
+                var userId = HttpContext.User.UserId();
+                var comment = SetupGatewayPageOptionTexts(command);
+
+                submittedPageOutcomeSuccessfully = await _applyApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                                    SequenceIds.DeliveringApprenticeshipTraining,
+                          SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                                    command.PageId,
+                                    (int)command.AssessorType,
+                                    userId,
+                                    command.Status,
+                                    comment);
+
+                if (!submittedPageOutcomeSuccessfully)
+                {
+                    ModelState.AddModelError(string.Empty, "Unable to save outcome as this time");
+                }
+            }
+
+            if (!submittedPageOutcomeSuccessfully)
+            {
+                var viewModel = await viewModelBuilder.Invoke();
+                viewModel.Status = command.Status;
+                viewModel.OptionFailText = command.OptionFailText;
+                viewModel.OptionInProgressText = command.OptionInProgressText;
+                viewModel.OptionPassText = command.OptionPassText;
+
+                return View(errorView, viewModel);
+            }
+            else if (string.IsNullOrEmpty(command.NextPageId))
+            {
+                return RedirectToAction("ViewApplication", "Overview", new { applicationId = command.ApplicationId }, $"sequence-{command.SequenceNumber}");
+            }
+            else
+            {
+                return RedirectToAction("ReviewSectorAnswers", new { applicationId = command.ApplicationId, pageId = command.NextPageId });
+            }
+        }
+
     }
 }

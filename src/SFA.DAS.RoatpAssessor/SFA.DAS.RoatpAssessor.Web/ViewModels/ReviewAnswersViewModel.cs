@@ -9,12 +9,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
     public class ReviewAnswersViewModel: ApplicationSummaryAndBreadcrumbViewModel
     {
   
-        public string Status { get; set; }
-        public string ApplicantEmailAddress { get; set; }
+         public string ApplicantEmailAddress { get; set; }
 
-        public string OptionPassText { get; set; }
-        public string OptionFailText { get; set; }
-        public string OptionInProgressText { get; set; }
 
         // It seems that we will need them for grouping statuses
         public int SequenceNumber { get; set; }
@@ -28,6 +24,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public List<AssessorAnswer> Answers { get; set; }
         public List<TabularData> TabularData { get; set; }
         public List<AssessorSupplementaryInformation> SupplementaryInformation { get; set; }
-        public string GuidanceText { get; set; }
+        
     }
 }

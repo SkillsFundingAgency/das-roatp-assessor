@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -60,14 +56,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
 
 
-        [HttpGet]
-        public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId, string title)
+        [HttpGet("SectionReview/{applicationId}/Sector/{PageId}")]
+        public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId)
         {
-            // NOTE THIS IS A HOLDING PAGE FOR STORY APR-1660, to be developed in APR-1661
             var userId = HttpContext.User.UserId();
-            userId = "temp"; //TODO: Can't access the user until staff idams is enabled
-
-            var viewModel = new SectorViewModel {ApplicationId = applicationId, PageId = pageId, Title = title};
+            var viewModel = await _sectionReviewOrchestrator.GetSectorViewModel(new GetSectorDetailsRequest(applicationId, pageId, userId));
             return View("~/Views/SectionReview/ReviewSectorAnswers.cshtml", viewModel);
         }
 
@@ -79,6 +72,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
             Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
             return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/SectionReview/ReviewAnswers.cshtml");
+        }
+
+
+        [HttpPost("SectionReview/{applicationId}/Sector/{PageId}")]
+        public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId, SubmitAssessorPageAnswerCommand command)
+        {
+            var userId = HttpContext.User.UserId();
+            Func<Task<SectorViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetSectorViewModel(new GetSectorDetailsRequest(command.ApplicationId, command.PageId, userId));
+
+            return await ValidateAndUpdateSectorPageAnswer(command, viewModelBuilder, $"~/Views/SectionReview/ReviewSectorAnswers.cshtml");
         }
     }
 }

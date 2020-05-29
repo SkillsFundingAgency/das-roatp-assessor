@@ -34,6 +34,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<List<AssessorSequence>>($"/Assessor/Applications/{applicationId}/Overview");
         }
 
+
+        public async Task<SectorDetails> GetSectorDetails(Guid applicationId, string pageId)
+        {
+            return await Get<SectorDetails>($"/Assessor/Applications/{applicationId}/SectorDetails/{pageId}");
+        }
+
         public async Task<List<Sector>> GetChosenSectors(Guid applicationId)
         {
             return await Get<List<Sector>>($"/Assessor/Applications/ChosenSectors/{applicationId}");

@@ -100,11 +100,47 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
                 Caption = assessorPage.Caption,
                 Heading = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesHeading,
-                SelectedSectors = await _applyApiClient.GetChosenSectors(request.ApplicationId)
+                SelectedSectors = await _applyApiClient.GetChosenSectors(request.ApplicationId),
+                GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
             };
 
             return viewModel;
 
+        }
+
+        public async Task<SectorViewModel> GetSectorViewModel(GetSectorDetailsRequest request)
+        {
+            var sectorDetails = await _applyApiClient.GetSectorDetails(request.ApplicationId, request.PageId);
+            var application = await _applyApiClient.GetApplication(request.ApplicationId);
+            var assessorPage = await _applyApiClient.GetAssessorPage(
+                request.ApplicationId,
+                SequenceIds.DeliveringApprenticeshipTraining,
+                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesStartingPageId);
+
+            if (application is null || assessorPage is null)
+            {
+                return null;
+            }
+
+            var viewModel = new SectorViewModel
+            {
+                ApplicationId = application.ApplicationId,
+                Ukprn = application.ApplyData.ApplyDetails.UKPRN,
+                AssessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId),
+                PageId = request.PageId,
+                ApplicantEmailAddress = null,
+                ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
+                ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
+                SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
+                Caption = assessorPage.Caption,
+                Heading = $"Delivering training in '{sectorDetails?.SectorName}' sector",
+               SectorDetails = sectorDetails
+            };
+
+
+            await SetSectorReviewOutcome(request, viewModel);
+            return viewModel;
         }
 
         private List<TabularData> GetTabularDataFromQuestionsAndAnswers(List<AssessorQuestion> questions, List<AssessorAnswer> answers)
@@ -183,6 +219,33 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             return string.Empty;
         }
+
+        private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, SectorViewModel viewModel)
+        {
+            // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
+            var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
+                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, 
+                viewModel.PageId, (int)viewModel.AssessorType, request.UserId);
+            if (pageReviewOutcome != null)
+            {
+                viewModel.Status = pageReviewOutcome.Status;
+                switch (pageReviewOutcome.Status)
+                {
+                    case AssessorPageReviewStatus.Pass:
+                        viewModel.OptionPassText = pageReviewOutcome.Comment;
+                        break;
+                    case AssessorPageReviewStatus.Fail:
+                        viewModel.OptionFailText = pageReviewOutcome.Comment;
+                        break;
+                    case AssessorPageReviewStatus.InProgress:
+                        viewModel.OptionInProgressText = pageReviewOutcome.Comment;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
 
         private async Task SetPageReviewOutcome(GetReviewAnswersRequest request, ReviewAnswersViewModel viewModel)
         {
