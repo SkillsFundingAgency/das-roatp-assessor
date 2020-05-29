@@ -88,6 +88,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             _applyApiClient.Setup(x => x.GetChosenSectors(_applicationId))
                 .ReturnsAsync(_chosenSectors);
 
+
             var request = new GetSectorsRequest(_applicationId, userId);
             var actualViewModel = await _orchestrator.GetSectorsViewModel(request);
 

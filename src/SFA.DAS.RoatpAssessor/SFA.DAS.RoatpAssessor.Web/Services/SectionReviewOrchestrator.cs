@@ -101,7 +101,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 Caption = assessorPage.Caption,
                 Heading = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesHeading,
                 SelectedSectors = await _applyApiClient.GetChosenSectors(request.ApplicationId),
-                GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
+                GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions?.FirstOrDefault()?.QuestionBodyText,
             };
 
             return viewModel;
