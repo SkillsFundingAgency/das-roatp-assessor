@@ -89,8 +89,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 return null;
             }
-
-            var viewModel = new ApplicationSectorsViewModel
+           var viewModel = new ApplicationSectorsViewModel
             {
                 ApplicationId = application.ApplicationId,
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN,
@@ -100,7 +99,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
                 Caption = assessorPage.Caption,
                 Heading = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesHeading,
-                SelectedSectors = await _applyApiClient.GetChosenSectors(request.ApplicationId),
+                SelectedSectors = await _applyApiClient.GetChosenSectors(request.ApplicationId,request.UserId),
                 GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions?.FirstOrDefault()?.QuestionBodyText,
             };
 

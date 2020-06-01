@@ -35,9 +35,18 @@
                                         @Html.Raw(sector.Title)
                                     </a>
                                 </span>
-                                <!-- <strong class="govuk-tag app-task-list__task-inprogress das-no-wrap" id="pageid-@sector.PageId">In progress</strong> -->
-                                <!-- <strong class="govuk-tag app-task-list__task-pass" id="@sector.PageId">Pass</strong> -->
-                                <!-- <strong class="govuk-tag app-task-list__task-fail" id="@sector.PageId">Fail</strong> -->
+                                @if(sector.Status=="In progress")
+                                { 
+                                 <strong class="govuk-tag app-task-list__task-inprogress das-no-wrap" id="pageid-@sector.PageId">In progress</strong> 
+                                }
+                                @if (sector.Status == "Pass")
+                                {
+                                    <strong class="govuk-tag app-task-list__task-pass" id="pageid-@sector.PageId">Pass</strong>
+                                }
+                                @if (sector.Status == "Fail")
+                                {
+                                    <strong class="govuk-tag app-task-list__task-fail" id="pageid-@sector.PageId">Fail</strong>
+                                }
                             </li>
                         }
                     </ul>

@@ -54,7 +54,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             int sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
             string pageId = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesStartingPageId;
             var userId = _user.UserId();
-            _chosenSectors.Add(new Sector {PageId = "1",Title="page 1 title"});
+            _chosenSectors.Add(new Sector {PageId = "1",Title="page 1 title", Status="Pass"});
             _chosenSectors.Add(new Sector { PageId = "2", Title = "page 2 title" });
             _ukprn = "1234";
             _organisationName = "org name";
@@ -85,7 +85,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);
 
-            _applyApiClient.Setup(x => x.GetChosenSectors(_applicationId))
+            _applyApiClient.Setup(x => x.GetChosenSectors(_applicationId, userId))
                 .ReturnsAsync(_chosenSectors);
 
 
