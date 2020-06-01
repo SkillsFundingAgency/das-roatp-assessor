@@ -1,10 +1,7 @@
-﻿@using SFA.DAS.RoatpAssessor.Web.Settings
-@inject IWebConfiguration Configuration
-
-<div class="govuk-breadcrumbs">
+﻿<div class="govuk-breadcrumbs">
     <ol class="govuk-breadcrumbs__list">
         <li class="govuk-breadcrumbs__list-item">
-            <a class="govuk-breadcrumbs__link" href="@Configuration.EsfaAdminServicesBaseUrl">RoATP dashboard</a>
+            <a class="govuk-breadcrumbs__link" asp-controller="Home" asp-action="Dashboard">RoATP dashboard</a>
         </li>
         <li class="govuk-breadcrumbs__list-item" aria-current="page">RoATP assessor applications</li>
     </ol>
