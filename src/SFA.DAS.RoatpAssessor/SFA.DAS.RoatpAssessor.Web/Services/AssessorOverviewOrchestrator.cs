@@ -75,6 +75,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         public string SetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes)
         {
+            // TODO: It looks like this function belongs in AssessorApplicationViewModel and not to be publicly exposed in the AssessorOverviewOrchestrator
+            // TODO: Convert into static function
             var sectionStatus = string.Empty;
             if(sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
@@ -112,14 +114,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         private static bool IsReadyForModeration(AssessorApplicationViewModel viewmodel)
         {
+            // TODO: It looks like this function belongs in AssessorApplicationViewModel and not to be publicly exposed in the AssessorOverviewOrchestrator
             var isReadyForModeration = true;
 
             foreach (var sequence in viewmodel.Sequences)
             {
                 foreach (var section in sequence.Sections)
                 {
-                    // TODO: Rework the logic according to requirements. Attention about AssessorSectionStatus.FailOutOf
-                    if (section.Status == null || (!section.Status.Equals(AssessorSectionStatus.Pass) && 
+                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(AssessorSectionStatus.Pass) && 
                                                    !section.Status.Equals(AssessorSectionStatus.Fail) && 
                                                    !section.Status.Equals(AssessorSectionStatus.NotRequired) &&
                                                    !section.Status.Contains(AssessorSectionStatus.FailOutOf)))
@@ -128,6 +130,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         break;
                     }
                 }
+
+                if (!isReadyForModeration) break;
             }
 
             return isReadyForModeration;
