@@ -222,7 +222,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, SectorViewModel viewModel)
         {
-            // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
             var pageReviewOutcome = await _applyApiClient.GetPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
                 SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, 
                 viewModel.PageId, (int)viewModel.AssessorType, request.UserId);

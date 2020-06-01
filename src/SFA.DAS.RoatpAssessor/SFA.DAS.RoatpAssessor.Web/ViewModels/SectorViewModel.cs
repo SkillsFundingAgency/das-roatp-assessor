@@ -9,7 +9,5 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string PageId { get; set; }
         public AssessorType AssessorType { get; set; }
         public SectorDetails SectorDetails { get; set; }
-
-       // public string[] HowIsTrainingDelivered => SectorDetails?.HowHaveTheyDeliveredTraining?.Split(",");
     }
 }
