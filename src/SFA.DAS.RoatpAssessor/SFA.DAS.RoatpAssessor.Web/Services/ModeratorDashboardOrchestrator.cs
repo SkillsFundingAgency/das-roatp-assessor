@@ -31,12 +31,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         {
             foreach (var application in applications)
             {
-                var applicationVm = CreateApplicationViewModel<ModerationApplicationViewModel>(application);
+                var applicationVm = CreateApplicationViewModel(application);
                 viewModel.AddApplication(applicationVm);
             }
         }
 
-        private ModerationApplicationViewModel CreateApplicationViewModel<TViewModel>(RoatpModerationApplicationSummary application)
+        private ModerationApplicationViewModel CreateApplicationViewModel(RoatpModerationApplicationSummary application)
         {
             var viewModel = new ModerationApplicationViewModel();
 
