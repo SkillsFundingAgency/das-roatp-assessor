@@ -24,7 +24,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
         public void SetUp()
         {
             _apiClient = new Mock<IRoatpAssessorApiClient>();
-            _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_apiClient.Object, Mock.Of<IRoatpModerationApiClient>());
+            _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_apiClient.Object);
 
             _apiClient.Setup(x => x.GetInProgressApplications(It.IsAny<string>())).ReturnsAsync(new List<RoatpAssessorApplicationSummary>());
             _apiClient.Setup(x => x.GetAssessorSummary(It.IsAny<string>())).ReturnsAsync(new RoatpAssessorSummary());

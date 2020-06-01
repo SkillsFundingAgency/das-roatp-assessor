@@ -22,7 +22,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
         public void SetUp()
         {
             _apiClient = new Mock<IRoatpAssessorApiClient>();
-            _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_apiClient.Object, Mock.Of<IRoatpModerationApiClient>());
+            _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_apiClient.Object);
         }
 
         [Test]

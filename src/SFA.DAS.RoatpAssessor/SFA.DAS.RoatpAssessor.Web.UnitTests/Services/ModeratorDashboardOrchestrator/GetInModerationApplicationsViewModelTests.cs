@@ -10,7 +10,7 @@ using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
-namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestrator
+namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchestrator
 {
     [TestFixture]
     public class GetInModerationApplicationsViewModelTests
@@ -19,14 +19,14 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
 
         private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Mock<IRoatpModerationApiClient> _moderationApiClient;
-        private Web.Services.AssessorDashboardOrchestrator _orchestrator;
+        private Web.Services.ModeratorDashboardOrchestrator _orchestrator;
         
         [SetUp]
         public void SetUp()
         {
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
             _moderationApiClient = new Mock<IRoatpModerationApiClient>();
-            _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_assessorApiClient.Object, _moderationApiClient.Object);
+            _orchestrator = new Web.Services.ModeratorDashboardOrchestrator(_assessorApiClient.Object, _moderationApiClient.Object);
 
             _moderationApiClient.Setup(x => x.GetModerationApplications()).ReturnsAsync(new List<RoatpModerationApplicationSummary>());
             _assessorApiClient.Setup(x => x.GetAssessorSummary(It.IsAny<string>())).ReturnsAsync(new RoatpAssessorSummary());

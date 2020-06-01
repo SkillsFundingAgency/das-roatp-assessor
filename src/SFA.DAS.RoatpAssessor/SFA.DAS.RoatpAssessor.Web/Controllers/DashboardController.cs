@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Services;
@@ -11,11 +10,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class DashboardController : Controller
     {
-        private readonly IAssessorDashboardOrchestrator _orchestrator;
-        
-        public DashboardController(IAssessorDashboardOrchestrator orchestrator)
+        private readonly IAssessorDashboardOrchestrator _assessorOrchestrator;
+        private readonly IModeratorDashboardOrchestrator _moderatorOrchestrator;
+
+        public DashboardController(IAssessorDashboardOrchestrator orchestrator, IModeratorDashboardOrchestrator moderatorOrchestrator)
         {
-            _orchestrator = orchestrator;
+            _assessorOrchestrator = orchestrator;
+            _moderatorOrchestrator = moderatorOrchestrator;
         }
 
         public IActionResult Index()
@@ -26,7 +27,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         public async Task<ViewResult> NewApplications()
         {
             var userId = HttpContext.User.UserId();
-            var vm = await _orchestrator.GetNewApplicationsViewModel(userId);
+            var vm = await _assessorOrchestrator.GetNewApplicationsViewModel(userId);
             return View(vm);
         }
 
@@ -35,7 +36,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var userId = HttpContext.User.UserId();
             var userName = HttpContext.User.UserDisplayName();
 
-            await _orchestrator.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName);
+            await _assessorOrchestrator.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName);
 
             return RedirectToAction("ViewApplication", "Overview", new { applicationId });
         }
@@ -43,14 +44,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         public async Task<ViewResult> InProgressApplications()
         {
             var userId = HttpContext.User.UserId();
-            var vm = await _orchestrator.GetInProgressApplicationsViewModel(userId);
+            var vm = await _assessorOrchestrator.GetInProgressApplicationsViewModel(userId);
             return View(vm);
         }
 
         public async Task<ViewResult> InModerationApplications()
         {
             var userId = HttpContext.User.UserId();
-            var vm = await _orchestrator.GetInModerationApplicationsViewModel(userId);
+            var vm = await _moderatorOrchestrator.GetInModerationApplicationsViewModel(userId);
             return View(vm);
         }
     }

@@ -10,12 +10,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
     public class AssessorDashboardOrchestrator : IAssessorDashboardOrchestrator
     {
         private readonly IRoatpAssessorApiClient _assessorApiClient;
-        private readonly IRoatpModerationApiClient _roatpModerationApiClient;
 
-        public AssessorDashboardOrchestrator(IRoatpAssessorApiClient assessorApiClient, IRoatpModerationApiClient roatpModerationApiClient)
+        public AssessorDashboardOrchestrator(IRoatpAssessorApiClient assessorApiClient)
         {
             _assessorApiClient = assessorApiClient;
-            _roatpModerationApiClient = roatpModerationApiClient;
         }
 
         public async Task<NewApplicationsViewModel> GetNewApplicationsViewModel(string userId)
@@ -43,39 +41,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewModel;
         }
 
-        public async Task<InModerationApplicationsViewModel> GetInModerationApplicationsViewModel(string userId)
-        {
-            var applicationSummary = await _assessorApiClient.GetAssessorSummary(userId);
-            var applications = await _roatpModerationApiClient.GetModerationApplications();
-
-            var viewModel = new InModerationApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
-            AddApplicationsToViewModel(viewModel, applications);
-            return viewModel;
-        }
-
         private void AddApplicationsToViewModel(AssessorDashboardViewModel viewModel, List<RoatpAssessorApplicationSummary> applications)
         {
             foreach (var application in applications)
             {
-                var applicationVm = CreateApplicationViewModel<ApplicationViewModel>(application);
+                var applicationVm = CreateApplicationViewModel(application);
 
                 viewModel.AddApplication(applicationVm);
             }
         }
 
-        private void AddApplicationsToViewModel(InModerationApplicationsViewModel viewModel, List<RoatpModerationApplicationSummary> applications)
+        private ApplicationViewModel CreateApplicationViewModel(RoatpAssessorApplicationSummary application)
         {
-            foreach (var application in applications)
-            {
-                var applicationVm = CreateApplicationViewModel<ModerationApplicationViewModel>(application);
-                applicationVm.Status = application.Status;
-                viewModel.AddApplication(applicationVm);
-            }
-        }
-
-        private TViewModel CreateApplicationViewModel<TViewModel>(RoatpAssessorApplicationSummary application) where TViewModel : ApplicationViewModel, new()
-        {
-            var viewModel = new TViewModel();
+            var viewModel = new ApplicationViewModel();
 
             viewModel.ApplicationId = application.ApplicationId;
             viewModel.ApplicationReferenceNumber = application.ApplicationReferenceNumber;
