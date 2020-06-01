@@ -5,7 +5,7 @@
     Layout = "_Layout";
 }
 
-<a asp-action="Index" asp-controller="Dashboard" class="govuk-back-link">Return to dashboard</a>
+<partial name="~/Views/Dashboard/_Breadcrumb.cshtml" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
@@ -42,7 +42,7 @@
                                 @foreach (var item in Model.Applications)
                                 {
                                     <tr class="govuk-table__row">
-                                        <td class="govuk-table__cell das-no-wrap" data-label="Organisation name">
+                                        <td class="govuk-table__cell" data-label="Organisation name">
                                             @if (item.Assessor1UserId == Model.CurrentUser || item.Assessor2UserId == Model.CurrentUser)
                                             {
                                                 <a class="govuk-link" asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>

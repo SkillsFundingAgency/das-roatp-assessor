@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class OverviewController : Controller
     {
         private readonly IAssessorOverviewOrchestrator _overviewOrchestrator;

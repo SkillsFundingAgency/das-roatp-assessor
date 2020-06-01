@@ -11,10 +11,11 @@ using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class SectionReviewController : RoatpAssessorControllerBase<SectionReviewController>
     {
         private readonly ISectionReviewOrchestrator _sectionReviewOrchestrator;

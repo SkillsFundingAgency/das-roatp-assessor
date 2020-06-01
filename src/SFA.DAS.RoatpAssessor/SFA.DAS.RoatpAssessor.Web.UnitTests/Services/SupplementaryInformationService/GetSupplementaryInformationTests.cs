@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
         [Test]
         public async Task When_SupplementaryInformation_does_exist()
         {
-            var safeguardingPreventDutyPolicyPageId = "4037";
+            var safeguardingPreventDutyPolicyPageId = RoatpWorkflowPageIds.SafeguardingPolicyIncludesPreventDutyPolicy;
 
             var assessorPage = new AssessorPage
             {

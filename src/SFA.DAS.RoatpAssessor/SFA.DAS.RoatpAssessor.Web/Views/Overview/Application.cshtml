@@ -8,30 +8,13 @@
     Layout = "_Layout";
 }
 
-<partial name="~/Views/Overview/_Breadcrumb.cshtml" for="@Model" />
+<partial name="~/Views/Overview/_Breadcrumb.cshtml" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-                    <h2 class="govuk-error-summary__title" id="error-summary-title">
-                        There is a problem
-                    </h2>
-                    <div class="govuk-error-summary__body">
-                        <ul class="govuk-list govuk-error-summary__list">
-                            @*
-                                NOTE: This is for the 'Ready for Moderation' step
-                                ModelState.AddModelError("IsAssessorApproved", "Please evaluate Assessor");
-                            *@
-                            <li><a sfa-validation-for="IsAssessorApproved"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            }
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
 
             <h1 class="govuk-heading-xl">Application assessment overview</h1>
 
@@ -50,20 +33,20 @@
                         index++;
                         <li>
                             <h2 class="app-task-list__section">
-                                <span class="app-task-list__section-number">@index. </span>@sequence.SequenceTitle
+                                <span id="sequence-@sequence.SequenceNumber" class="app-task-list__section-number">@index. </span>@sequence.SequenceTitle
                             </h2>
                             <ul class="app-task-list__items">
                                 @foreach (var currentSection in sequence.Sections)
                                 {
                                     <li class="app-task-list__item">
-                                        <span class="app-task-list__task-name app-task-list__task-name--inactive">
+                                        <span id="section-@sequence.SequenceNumber.@currentSection.SectionNumber" class="app-task-list__task-name app-task-list__task-name--inactive">
                                             @if (currentSection.Status != null && currentSection.Status.Equals(AssessorSectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase))
                                             {
                                                 @currentSection.LinkTitle
                                             }
                                             else
                                             {
-                                                <a id="@sequence.SequenceNumber.@currentSection.SectionNumber" asp-controller="SectionReview" asp-action="ReviewPageAnswers" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@sequence.SequenceNumber" asp-route-sectionNumber="@currentSection.SectionNumber" class="govuk-link">@currentSection.LinkTitle</a>
+                                                <a asp-controller="SectionReview" asp-action="ReviewPageAnswers" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@sequence.SequenceNumber" asp-route-sectionNumber="@currentSection.SectionNumber" class="govuk-link">@currentSection.LinkTitle</a>
                                             }
                                         </span>
                                         @if (!string.IsNullOrWhiteSpace(currentSection.Status))

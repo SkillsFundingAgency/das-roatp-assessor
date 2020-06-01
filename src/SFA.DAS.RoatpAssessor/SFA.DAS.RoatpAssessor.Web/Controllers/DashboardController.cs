@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.AdminService.Common.Extensions;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Services;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class DashboardController : Controller
     {
         private readonly IAssessorDashboardOrchestrator _orchestrator;
