@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -62,7 +63,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             // submit if validation passed and user specified to do so
             if (ModelState.IsValid && submitForModeration)
             {
-                var submittedSuccessfully = await _applyApiClient.MoveApplicationToModeration(command.ApplicationId, (int)command.AssessorType, userId);
+                var submittedSuccessfully = await _applyApiClient.UpdateAssessorReviewStatus(command.ApplicationId, (int)command.AssessorType, userId, AssessorReviewStatus.Approved);
 
                 if (!submittedSuccessfully)
                 {

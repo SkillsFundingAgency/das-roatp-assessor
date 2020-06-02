@@ -33,6 +33,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         Task<HttpResponseMessage> DownloadFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string questionId, string filename);
 
-        Task<bool> MoveApplicationToModeration(Guid applicationId, int assessorType, string userId);
+        Task<bool> UpdateAssessorReviewStatus(Guid applicationId, int assessorType, string userId, string status);
     }
 }

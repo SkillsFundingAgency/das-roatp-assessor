@@ -110,13 +110,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await GetResponse($"/Assessor/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/Questions/{questionId}/download/{filename}");
         }
 
-        public async Task<bool> MoveApplicationToModeration(Guid applicationId, int assessorType, string userId)
+        public async Task<bool> UpdateAssessorReviewStatus(Guid applicationId, int assessorType, string userId, string status)
         {
-            var result = await Post($"/Assessor/MoveApplicationToModeration", new
+            var result = await Post($"/Assessor/UpdateAssessorReviewStatus", new
             {
                 applicationId,
                 assessorType,
-                userId
+                userId,
+                status
             });
 
             return result == HttpStatusCode.OK;
