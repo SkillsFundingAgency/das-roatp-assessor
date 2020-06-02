@@ -154,6 +154,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.AddTransient(x => ApplicationConfiguration);
 
             services.AddTransient<IAssessorDashboardOrchestrator, AssessorDashboardOrchestrator>();
+            services.AddTransient<IModeratorDashboardOrchestrator, ModeratorDashboardOrchestrator>();
             services.AddTransient<IRoatpApplicationTokenService, RoatpApplicationTokenService>();
 
             services.AddTransient<IRoatpAssessorApiClient>(x => new RoatpAssessorApiClient(
