@@ -1,0 +1,91 @@
+﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.AssessorApplicationViewModel
+
+@{
+    var caption = "Assessor outcome";
+    ViewBag.Title = $"Assessor - {caption}";
+    Layout = "_Layout";
+}
+
+<div class="govuk-breadcrumbs">
+    <ol class="govuk-breadcrumbs__list">
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" asp-controller="Home" asp-action="Dashboard">RoATP dashboard</a>
+        </li>
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" asp-action="Index" asp-controller="Home">RoATP assessor applications</a>
+        </li>
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@Model.ApplicationId">Application assessment overview</a>
+        </li>
+        <li class="govuk-breadcrumbs__list-item" aria-current="page">@caption</li>
+    </ol>
+</div>
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
+
+            <span class="govuk-caption-xl">
+                @caption
+            </span>
+            <h1 class="govuk-heading-xl">Are you sure this application is ready for moderation?</h1>
+
+            <partial name="~/Views/Overview/_ApplicationSummary.cshtml" for="@Model" />
+        </div>
+    </div>
+
+    @if (Model.ApplicationId != Guid.Empty)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <form class="js-disable-on-submit" method="post" asp-action="AssessorOutcome" asp-controller="Assessor" asp-route-applicationId="@Model.ApplicationId">
+                    <input type="hidden" asp-for="ApplicationId" />
+                    <input type="hidden" asp-for="AssessorType" />
+
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">Warning</span>
+                            You will not be able to change any outcome or comments.
+                        </strong>
+                    </div>
+
+                    <div class="govuk-form-group">
+                        <div class="govuk-radios govuk-radios--inline">
+                            <!-- Yes -->
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input"
+                                       type="radio"
+                                       id="OptionYes"
+                                       name="MoveToModeration"
+                                       value="YES" />
+                                <label class="govuk-label govuk-radios__label" for="OptionYes">
+                                    Yes
+                                </label>
+                            </div>
+
+                            <!-- No-->
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input"
+                                       type="radio"
+                                       id="OptionNo"
+                                       name="MoveToModeration"
+                                       value="NO" />
+                                <label class="govuk-label govuk-radios__label" for="OptionNo">
+                                    No
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <button class="govuk-button" type="submit">Save and continue</button>
+                </form>
+            </div>
+        </div>
+    }
+</main>
+
+
