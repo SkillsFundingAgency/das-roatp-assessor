@@ -40,7 +40,7 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <form class="js-disable-on-submit" method="post" asp-action="AssessorOutcome" asp-controller="Assessor" asp-route-applicationId="@Model.ApplicationId">
+                <form class="js-disable-on-submit" method="post" asp-action="AssessorOutcome" asp-controller="AssessorOutcome" asp-route-applicationId="@Model.ApplicationId">
                     <input type="hidden" asp-for="ApplicationId" />
                     <input type="hidden" asp-for="AssessorType" />
 
@@ -53,6 +53,18 @@
                     </div>
 
                     <div class="govuk-form-group">
+                        @* 
+                            TODO: If we move to a dedicated viewmodel, remove the if statement and use this tag instead
+                            <span id="MoveToModeration" class="govuk-error-message" asp-validation-for="MoveToModeration"></span>
+                        *@
+                        @if (ViewData.ModelState.TryGetValue("MoveToModeration", out var moveToModerationErrors))
+                        {
+                            foreach (var error in moveToModerationErrors.Errors)
+                            {
+                                <span id="MoveToModeration" class="govuk-error-message">@error.ErrorMessage</span>
+                            }
+                        }
+
                         <div class="govuk-radios govuk-radios--inline">
                             <!-- Yes -->
                             <div class="govuk-radios__item">
