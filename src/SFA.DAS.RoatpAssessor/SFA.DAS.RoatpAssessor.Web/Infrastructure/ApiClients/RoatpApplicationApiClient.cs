@@ -109,5 +109,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         {
             return await GetResponse($"/Assessor/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/Questions/{questionId}/download/{filename}");
         }
+
+        public async Task<bool> MoveApplicationToModeration(Guid applicationId, int assessorType, string userId)
+        {
+            var result = await Post($"/Assessor/MoveApplicationToModeration", new
+            {
+                applicationId,
+                assessorType,
+                userId
+            });
+
+            return result == HttpStatusCode.OK;
+        }
     }
 }
