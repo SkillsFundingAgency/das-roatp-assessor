@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 
 namespace SFA.DAS.RoatpAssessor.Web.Services
 {
@@ -61,8 +62,35 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     {
                         if (string.IsNullOrEmpty(section.Status))
                         {
-                            var sectionPageReviewOutcomes = savedOutcomes.Where(p => p.SequenceNumber == sequence.SequenceNumber && p.SectionNumber == section.SectionNumber).ToList();
-                            section.Status = SetSectionStatus(sectionPageReviewOutcomes);
+                            if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
+                            {
+                                var sectorsChosen = await _applyApiClient.GetChosenSectors(request.ApplicationId, request.UserId);
+
+                                var sectorCount = sectorsChosen != null && sectorsChosen.Any() ? sectorsChosen.Count : 0;
+
+                                var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
+                                    p.SequenceNumber == sequence.SequenceNumber &&
+                                    p.SectionNumber == section.SectionNumber).ToList();
+
+                                var sectorsWithValuesCount =
+                                    sectionPageReviewOutcomes.Count(p => !string.IsNullOrEmpty(p.Status));
+
+                                if (sectorsWithValuesCount > 0 && sectorCount > 0 && sectorsWithValuesCount < sectorCount)
+                                {
+                                    section.Status = AssessorSectionStatus.InProgress;
+                                }
+                                else
+                                {
+                                    section.Status = SetSectionStatus(sectionPageReviewOutcomes, true);
+                                }
+                            }
+                            else
+                            {
+                                var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
+                                    p.SequenceNumber == sequence.SequenceNumber &&
+                                    p.SectionNumber == section.SectionNumber).ToList();
+                                section.Status = SetSectionStatus(sectionPageReviewOutcomes, false);
+                            }
                         }
                     }
                 }
@@ -73,7 +101,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string SetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes)
+        public string SetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes, bool sectorSection)
         {
             var sectionStatus = string.Empty;
             if(sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
@@ -84,10 +112,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
                 else
                 {
-                    var passStatusesCount = sectionPageReviewOutcomes.Where(p => p.Status == AssessorPageReviewStatus.Pass).Count();
-                    var failStatusesCount = sectionPageReviewOutcomes.Where(p => p.Status == AssessorPageReviewStatus.Fail).Count();
-                    var inProgressStatusesCount = sectionPageReviewOutcomes.Where(p => p.Status == AssessorPageReviewStatus.InProgress).Count();
-                    var noTagCount = sectionPageReviewOutcomes.Where(p => p.Status == null || p.Status == string.Empty).Count();
+                    var passStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Pass);
+                    var failStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail);
+                    var inProgressStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.InProgress);
+                    var noTagCount = sectionPageReviewOutcomes.Count(p => string.IsNullOrEmpty(p.Status));
                     var allPassOrFail = sectionPageReviewOutcomes.Count.Equals(passStatusesCount + failStatusesCount);
 
                     if (sectionPageReviewOutcomes.Count.Equals(noTagCount)) // All empty
@@ -112,7 +140,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     }
                     else if (noTagCount.Equals(0) && inProgressStatusesCount.Equals(0) && allPassOrFail) // Not empty or 'In Progress', All either Pass or Fail
                     {
-                        sectionStatus = $"{failStatusesCount} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
+                        sectionStatus = sectorSection ? AssessorSectionStatus.Fail : $"{failStatusesCount} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
                     }
                     else
                     {
