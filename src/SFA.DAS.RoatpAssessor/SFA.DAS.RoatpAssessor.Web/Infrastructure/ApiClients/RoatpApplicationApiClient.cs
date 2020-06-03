@@ -9,6 +9,7 @@ using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.Models;
+using SFA.DAS.AdminService.Common.Infrastructure;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
