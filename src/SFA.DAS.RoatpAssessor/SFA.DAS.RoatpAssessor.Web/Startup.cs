@@ -166,6 +166,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.AddTransient<ISupplementaryInformationService, SupplementaryInformationService>();
             services.AddTransient<ISectionReviewOrchestrator, SectionReviewOrchestrator>();
             services.AddTransient<IRoatpAssessorPageValidator, RoatpAssessorPageValidator>();
+            services.AddTransient<IRoatpAssessorOutcomeValidator, RoatpAssessorOutcomeValidator>();
 
             UserExtensions.Logger = services.BuildServiceProvider().GetService<ILogger<ClaimsPrincipal>>();
         }

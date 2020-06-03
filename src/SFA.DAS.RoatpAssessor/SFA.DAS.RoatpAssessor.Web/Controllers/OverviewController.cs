@@ -29,6 +29,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             {
                 return RedirectToAction("NewApplications", "Dashboard");
             }
+            else if(viewModel.IsAssessorApproved)
+            {
+                return RedirectToAction("AssessmentComplete", "AssessorOutcome", new { applicationId });
+            }
 
             return View("~/Views/Overview/Application.cshtml", viewModel);
         }
