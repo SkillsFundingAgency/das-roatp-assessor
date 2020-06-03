@@ -43,7 +43,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            var assessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId);
+            var assessorType = AssessorReviewHelper.SetAssessorType(application, request.UserId);
 
             var viewmodel = new AssessorApplicationViewModel(application, contact, sequences, request.UserId);
 

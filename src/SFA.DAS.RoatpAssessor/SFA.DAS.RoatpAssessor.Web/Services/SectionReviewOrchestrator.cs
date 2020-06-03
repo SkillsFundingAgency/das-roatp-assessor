@@ -42,7 +42,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var viewModel = new ReviewAnswersViewModel
             {
                 ApplicationId = application.ApplicationId,
-                AssessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId),
+                AssessorType = AssessorReviewHelper.SetAssessorType(application, request.UserId),
 
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN,
                 ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,

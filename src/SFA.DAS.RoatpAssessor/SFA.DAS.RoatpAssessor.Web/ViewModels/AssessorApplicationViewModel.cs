@@ -48,7 +48,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 
         private void SetAssessorReviewStatus(Apply application, string userId)
         {
-            AssessorType = AssessorReviewHelpers.SetAssessorType(application, userId);
+            AssessorType = AssessorReviewHelper.SetAssessorType(application, userId);
 
             if (AssessorType == AssessorType.FirstAssessor)
             {
