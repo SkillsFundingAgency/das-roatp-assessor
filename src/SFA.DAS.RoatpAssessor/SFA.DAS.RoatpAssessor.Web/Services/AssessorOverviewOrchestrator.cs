@@ -8,6 +8,7 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 
@@ -64,32 +65,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         {
                             if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
                             {
-                                var sectorsChosen = await _applyApiClient.GetChosenSectors(request.ApplicationId, request.UserId);
-
-                                var sectorCount = sectorsChosen != null && sectorsChosen.Any() ? sectorsChosen.Count : 0;
-
-                                var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
-                                    p.SequenceNumber == sequence.SequenceNumber &&
-                                    p.SectionNumber == section.SectionNumber).ToList();
-
-                                var sectorsWithValuesCount =
-                                    sectionPageReviewOutcomes.Count(p => !string.IsNullOrEmpty(p.Status));
-
-                                if (sectorsWithValuesCount > 0 && sectorCount > 0 && sectorsWithValuesCount < sectorCount)
-                                {
-                                    section.Status = AssessorSectionStatus.InProgress;
-                                }
-                                else
-                                {
-                                    section.Status = SetSectionStatus(sectionPageReviewOutcomes, true);
-                                }
+                                section.Status = await GetSectionStatusForSectors(request, savedOutcomes);
                             }
                             else
                             {
                                 var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
                                     p.SequenceNumber == sequence.SequenceNumber &&
                                     p.SectionNumber == section.SectionNumber).ToList();
-                                section.Status = SetSectionStatus(sectionPageReviewOutcomes, false);
+                                section.Status = GetSectionStatus(sectionPageReviewOutcomes, false);
                             }
                         }
                     }
@@ -101,7 +84,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string SetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes, bool sectorSection)
+        public string GetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes, bool sectorSection)
         {
             var sectionStatus = string.Empty;
             if(sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
@@ -152,6 +135,28 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return sectionStatus;
         }
 
+
+        private async Task<string> GetSectionStatusForSectors(GetApplicationOverviewRequest request, IEnumerable<PageReviewOutcome> savedOutcomes)
+        {
+            var sectorsChosen = await _applyApiClient.GetChosenSectors(request.ApplicationId, request.UserId);
+
+            var sectorCount = sectorsChosen != null && sectorsChosen.Any() ? sectorsChosen.Count : 0;
+
+            var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
+                p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
+                p.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees).ToList();
+
+            var sectorsWithValuesCount =
+                sectionPageReviewOutcomes.Count(p => !string.IsNullOrEmpty(p.Status));
+
+            if (sectorsWithValuesCount > 0 && sectorCount > 0 && sectorsWithValuesCount < sectorCount)
+            {
+                return AssessorSectionStatus.InProgress;
+            }
+
+            return GetSectionStatus(sectionPageReviewOutcomes, true);
+
+        }
         private static bool IsReadyForModeration(AssessorApplicationViewModel viewmodel)
         {
             var isReadyForModeration = true;

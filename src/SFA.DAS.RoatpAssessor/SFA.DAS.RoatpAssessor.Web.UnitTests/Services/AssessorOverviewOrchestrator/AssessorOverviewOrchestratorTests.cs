@@ -45,7 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
                 }
             };
 
-            var sectionStatus = _orchestrator.SetSectionStatus(sectionPageReviewOutcomes,false);
+            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes,false);
             Assert.AreSame(status, sectionStatus);
         }
 
@@ -90,7 +90,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
                 }
             };
 
-            var sectionStatus = _orchestrator.SetSectionStatus(sectionPageReviewOutcomes,sectionStatusFlag);
+            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes,sectionStatusFlag);
             Assert.AreEqual(statusExpected, sectionStatus);
         }
     }
