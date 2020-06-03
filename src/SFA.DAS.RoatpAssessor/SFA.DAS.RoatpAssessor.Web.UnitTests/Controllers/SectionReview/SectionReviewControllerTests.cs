@@ -2,15 +2,19 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
@@ -75,13 +79,15 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             int sequenceNumber = 4;
             int sectionNumber = 2;
             string pageId = "4200";
+            string nextPageId = "4210";
 
             var viewModel = new ReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
                 SequenceNumber = sequenceNumber,
                 SectionNumber = sectionNumber,
-                PageId = pageId
+                PageId = pageId,
+                NextPageId = nextPageId
             };
 
             _sectionReviewOrchestrator.Setup(x => x.GetReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
@@ -94,6 +100,100 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             Assert.That(result, Is.Not.Null);
             Assert.That(actualViewModel, Is.Not.Null);
             Assert.That(actualViewModel, Is.SameAs(viewModel));
+        }
+
+        [Test]
+        public async Task POST_ReviewPageAnswers_When_Valid_submits_AssessorPageOutcome()
+        {
+            int sequenceNumber = 4;
+            int sectionNumber = 2;
+            string pageId = "4200";
+
+            var viewModel = new ReviewAnswersViewModel
+            {
+                ApplicationId = _applicationId,
+                SequenceNumber = sequenceNumber,
+                SectionNumber = sectionNumber,
+                PageId = pageId,
+                Status = AssessorPageReviewStatus.Pass,
+                OptionPassText = "test"
+            };
+
+            var command = new SubmitAssessorPageAnswerCommand(viewModel);
+
+            _sectionReviewOrchestrator.Setup(x => x.GetReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
+
+            var validationResponse = new ValidationResponse();
+            _assessorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
+
+            _applyApiClient.Setup(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+                                    command.SequenceNumber,
+                                    command.SectionNumber,
+                                    command.PageId,
+                                    (int)command.AssessorType,
+                                    _controller.User.UserId(),
+                                    command.Status,
+                                    command.OptionPassText)).ReturnsAsync(true);
+
+            // act
+            var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;
+
+            // assert
+            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("ViewApplication", result.ActionName);
+
+            _applyApiClient.Verify(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+                        command.SequenceNumber,
+                        command.SectionNumber,
+                        command.PageId,
+                        (int)command.AssessorType,
+                        _controller.User.UserId(),
+                        command.Status,
+                        command.OptionPassText), Times.Once);
+        }
+
+        [Test]
+        public async Task POST_ReviewPageAnswers_When_Invalid_does_not_submit_AssessorPageOutcome()
+        {
+            int sequenceNumber = 4;
+            int sectionNumber = 2;
+            string pageId = "4200";
+
+            var viewModel = new ReviewAnswersViewModel
+            {
+                ApplicationId = _applicationId,
+                SequenceNumber = sequenceNumber,
+                SectionNumber = sectionNumber,
+                PageId = pageId,
+                Status = AssessorPageReviewStatus.Pass,
+                OptionPassText = "test"
+            };
+
+            var command = new SubmitAssessorPageAnswerCommand(viewModel);
+
+            _sectionReviewOrchestrator.Setup(x => x.GetReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
+
+            var error = new ValidationErrorDetail { Field = "Status", ErrorMessage = "Error" };
+            var validationResponse = new ValidationResponse { Errors = new List<ValidationErrorDetail> { error } };
+            _assessorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
+
+            // act
+            var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as ViewResult;
+            var actualViewModel = result?.Model as ReviewAnswersViewModel;
+
+            // assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(actualViewModel, Is.Not.Null);
+            Assert.That(actualViewModel, Is.SameAs(viewModel));
+
+            _applyApiClient.Verify(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+                        command.SequenceNumber,
+                        command.SectionNumber,
+                        command.PageId,
+                        (int)command.AssessorType,
+                        _controller.User.UserId(),
+                        command.Status,
+                        command.OptionPassText), Times.Never);
         }
     }
 }
