@@ -137,6 +137,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         public async Task AssessmentComplete_When_IsAssessorApproved_TRUE_returns_view_with_expected_viewmodel()
         {
             // arrange
+            _applicationViewModel.AssessorReviewStatus = AssessorReviewStatus.Approved;
             _applicationViewModel.IsAssessorApproved = true;
 
             // act
@@ -153,6 +154,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         public async Task AssessmentComplete_When_IsAssessorApproved_FALSE_redirects_to_Application_Overview()
         {
             // arrange
+            _applicationViewModel.AssessorReviewStatus = AssessorReviewStatus.New;
             _applicationViewModel.IsAssessorApproved = false;
 
             // act
