@@ -68,8 +68,7 @@
                                 <span class="app-task-list__task-name app-task-list__task-name--inactive">
                                     @if (Model.IsReadyForModeration)
                                     {
-                                        // TODO: Integrate with 'Ready for Moderation' action
-                                        <a href="#">Ready for moderation</a>
+                                        <a asp-controller="AssessorOutcome" asp-action="AssessorOutcome" asp-route-applicationId="@Model.ApplicationId">Ready for moderation</a>
                                     }
                                     else
                                     {
