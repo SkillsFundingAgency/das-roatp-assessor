@@ -49,12 +49,5 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             var vm = await _orchestrator.GetInProgressApplicationsViewModel(userId);
             return View(vm);
         }
-
-
-        [Route("/Dashboard")]
-        public IActionResult Dashboard()
-        {
-            return Redirect(_configuration.EsfaAdminServicesBaseUrl + "/Dashboard");
-        }
     }
 }

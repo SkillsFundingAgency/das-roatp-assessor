@@ -83,13 +83,5 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
             Assert.AreEqual("ViewApplication", result.ActionName);
             Assert.AreEqual(applicationId, result.RouteValues["applicationId"]);
         }
-        
-        [Test]
-        public void Dashboard_redirects_to_external_dasbhoard_url()
-        {
-            var result = _controller.Dashboard() as RedirectResult;
-            Assert.IsNotNull(result);
-            Assert.AreEqual(result.Url, $"{_dashboardUrl}/Dashboard");
-        }
     }
 }

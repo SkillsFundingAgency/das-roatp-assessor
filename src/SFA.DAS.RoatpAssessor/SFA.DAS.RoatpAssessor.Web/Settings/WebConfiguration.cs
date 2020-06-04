@@ -13,6 +13,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Settings
 
         [JsonRequired]
         public ClientApiAuthentication RoatpApplicationApiAuthentication { get; set; }
+
         [JsonRequired]
         public string EsfaAdminServicesBaseUrl { get; set; }
     }

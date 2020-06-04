@@ -84,8 +84,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var assessorPage = await _applyApiClient.GetAssessorPage(
                 request.ApplicationId, 
                 SequenceIds.DeliveringApprenticeshipTraining, 
-                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, 
-                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesStartingPageId);   
+                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                RoatpWorkflowPageIds.YourSectorsAndEmployeesStartingPageId);   
 
             if (application is null || assessorPage is null)
             {
@@ -117,7 +117,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 request.ApplicationId,
                 SequenceIds.DeliveringApprenticeshipTraining,
                 SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesStartingPageId);
+                RoatpWorkflowPageIds.YourSectorsAndEmployeesStartingPageId);
 
             if (application is null || assessorPage is null)
             {
