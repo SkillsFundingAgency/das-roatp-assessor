@@ -2,9 +2,11 @@
 using Newtonsoft.Json;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
 using SFA.DAS.RoatpAssessor.Web.Helpers;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Transformers;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -41,7 +43,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var viewModel = new ReviewAnswersViewModel
             {
                 ApplicationId = application.ApplicationId,
-                AssessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId),
+                AssessorType = AssessorReviewHelper.SetAssessorType(application, request.UserId),
 
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN,
                 ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
@@ -57,7 +59,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 Caption = assessorPage.Caption,
                 Heading = assessorPage.Heading,
 
-                GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
+                GuidanceInformation = assessorPage.GuidanceInformation,
 
                 Questions = assessorPage.Questions != null ? new List<AssessorQuestion>(assessorPage.Questions) : new List<AssessorQuestion>(),
                 Answers = assessorPage.Answers != null ? new List<AssessorAnswer>(assessorPage.Answers) : new List<AssessorAnswer>(),
@@ -66,7 +68,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             };
 
             //TODO: Explain why all of this is required? We're getting the viewmodel but I'm seeing stuff being submitted
-            if (string.IsNullOrEmpty(request.PageId)) 
+            if (string.IsNullOrEmpty(request.PageId))
             {
                 await ProcessAllAssessorPagesPerSection(request, viewModel);
             }
@@ -109,30 +111,38 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         private List<TabularData> GetTabularDataFromQuestionsAndAnswers(List<AssessorQuestion> questions, List<AssessorAnswer> answers)
         {
-            var tabularData = new List<TabularData>();
+            var tabularDataList = new List<TabularData>();
 
             if (questions != null && answers != null)
             {
                 foreach (var tabularQuestion in questions.Where(q => QuestionInputType.TabularData.Equals(q.InputType, StringComparison.OrdinalIgnoreCase)))
                 {
-                    var jsonAnswer = answers.FirstOrDefault(a => a.QuestionId == tabularQuestion.QuestionId)?.Value;
+                    var questionId = tabularQuestion.QuestionId;
+                    var jsonAnswer = answers.FirstOrDefault(a => a.QuestionId == questionId)?.Value;
 
                     if (jsonAnswer != null)
                     {
                         try
                         {
-                            tabularData.Add(JsonConvert.DeserializeObject<TabularData>(jsonAnswer));
+                            var tabularData = JsonConvert.DeserializeObject<TabularData>(jsonAnswer);
+
+                            if (questionId == RoatpWorkflowQuestionIds.ManagementHierarchy)
+                            {
+                                tabularData = ManagementHierarchyTransformer.Transform(tabularData);
+                            }
+
+                            tabularDataList.Add(tabularData);
                         }
                         catch
                         {
                             // safe to ignore.
-                            _logger.LogWarning($"Expected TabularData but was something else. Question Id: {tabularQuestion.QuestionId}");
+                            _logger.LogWarning($"Expected TabularData but was something else. Question Id: {questionId}");
                         }
                     }
                 }
             }
 
-            return tabularData;
+            return tabularDataList;
         }
 
         private async Task ProcessAllAssessorPagesPerSection(GetReviewAnswersRequest request, ReviewAnswersViewModel viewModel)
@@ -175,7 +185,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         private async Task<string> GetNextPageId(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
-            var assessorPage = await _applyApiClient.GetAssessorPage(applicationId, sequenceNumber, sectionNumber, pageId);           
+            var assessorPage = await _applyApiClient.GetAssessorPage(applicationId, sequenceNumber, sectionNumber, pageId);
             if (!string.IsNullOrEmpty(assessorPage.NextPageId))
             {
                 return assessorPage.NextPageId;

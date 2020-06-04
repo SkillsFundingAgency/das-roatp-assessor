@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         public async Task<List<AssessorSupplementaryInformation>> GetSupplementaryInformation(Guid applicationId, string pageId)
         {
-            // NOTE: This is only required for one page. If more pages need supplementary information then change to lookup
-            const string safeguardingPreventDutyPolicyPageId = "4037";
+            var supplementaryInformation = new List<AssessorSupplementaryInformation>();
 
-            List<AssessorSupplementaryInformation> supplementaryInformation = new List<AssessorSupplementaryInformation>();
-
-            if (pageId == safeguardingPreventDutyPolicyPageId)
+            if (pageId == RoatpWorkflowPageIds.SafeguardingPolicyIncludesPreventDutyPolicy)
             {
                 var safeGuardingPolicySupplementaryInformation = await GetSafeguardingPolicySupplementaryInformation(applicationId);
 
@@ -43,7 +41,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         {
             const int safegaurdingPolicySequenceNumber = 4;
             const int safegaurdingPolicySectionNumber = 4;
-            const string safegaurdingPolicyPageId = "4030";
+            const string safegaurdingPolicyPageId = RoatpWorkflowPageIds.SafeguardingPolicy;
             const string safegaurdingPolicyLabel = "Safeguarding policy";
 
             AssessorSupplementaryInformation supplementaryInformation = null;

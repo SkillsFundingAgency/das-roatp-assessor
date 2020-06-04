@@ -26,5 +26,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
         public List<AssessorQuestion> Questions { get; set; }
 
         public List<AssessorAnswer> Answers { get; set; }
+
+        public List<string> GuidanceInformation { get; set; }
     }
 }
