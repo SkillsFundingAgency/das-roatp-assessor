@@ -5,8 +5,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
-using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Account
 {
