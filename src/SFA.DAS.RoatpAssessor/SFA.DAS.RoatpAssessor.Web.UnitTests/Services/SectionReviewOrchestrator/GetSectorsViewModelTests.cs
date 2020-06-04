@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
@@ -53,7 +54,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
         {
             int sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining;
             int sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
-            string pageId = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesStartingPageId;
+            string pageId = RoatpWorkflowPageIds.YourSectorsAndEmployeesStartingPageId;
             var userId = _user.UserId();
             _chosenSectors.Add(new Sector {PageId = "1",Title="page 1 title", Status="Pass"});
             _chosenSectors.Add(new Sector { PageId = "2", Title = "page 2 title" });
