@@ -36,7 +36,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
             @{
-                var tableSpacingCssClass = string.IsNullOrWhiteSpace(Model.GuidanceText) ? "govuk-!-margin-bottom-9" : "";
+                var tableSpacingCssClass = Model.GuidanceInformation != null && Model.GuidanceInformation.Any() ? "" : "govuk-!-margin-bottom-9";
                 <table class="govuk-table @tableSpacingCssClass">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
@@ -59,7 +59,7 @@
                                         break;
                                     case QuestionInputType.CheckboxList:
                                     case QuestionInputType.ComplexCheckboxList:
-                                        <ul class="govuk-list">
+                                        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
                                             @foreach (var selectedAnswer in answer.Split(','))
                                             {
                                                 <li>@selectedAnswer</li>
@@ -97,7 +97,7 @@
                                         break;
                                     case QuestionInputType.CheckboxList:
                                     case QuestionInputType.ComplexCheckboxList:
-                                        <ul class="govuk-list">
+                                        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
                                             @foreach (var selectedAnswer in answer.Split(','))
                                             {
                                                 <li>@selectedAnswer</li>
@@ -128,23 +128,27 @@
 
     @if (Model.GuidanceInformation != null && Model.GuidanceInformation.Any())
     {
-        <details class="govuk-details">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                    View application guidance
-                </span>
-            </summary>
-            <div class="govuk-details__text">
-                <ul class="govuk-list">
-                    @foreach (var guidanceText in Model.GuidanceInformation)
-                    {
-                        <li>
-                            @Html.Raw(guidanceText)
-                        </li>
-                    }
-                </ul>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <details class="govuk-details govuk-!-margin-bottom-9">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            View application guidance
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <ul class="govuk-list">
+                            @foreach (var guidanceText in Model.GuidanceInformation)
+                            {
+                                <li>
+                                    @Html.Raw(guidanceText)
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </details>
             </div>
-        </details>
+        </div>
     }
 
 
