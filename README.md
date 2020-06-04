@@ -31,7 +31,7 @@ Licensed under the [MIT license](https://github.com/SkillsFundingAgency/das-roat
 - Open Visual Studio as an administrator
 
 ##### Publish Database
-RoATP Assessor does not have a database it accesses the RoATP database via its internal APIs.
+RoATP Assessor does not have a database it accesses the RoATP Apply database via its internal APIs.
 
 ##### Config
 
@@ -40,11 +40,11 @@ RoATP Assessor does not have a database it accesses the RoATP database via its i
 - Add a row to the Configuration table with fields: PartitionKey: LOCAL, RowKey: SFA.DAS.RoatpAssessor_1.0, Data: {{The contents of the local config json file}}.
 
 ##### To run a local copy you will also require 
-To use RoATP admin functionality; you will need to have the SFA.DAS.RoATPService.Application.Api project running, from the das-roatp-service projects respectively.
+To use RoATP Apply functionality; you will need to have the SFA.DAS.ApplyService.InternalApi project running, from the das-apply-service project.
 
-- [RoATP Service](https://github.com/SkillsFundingAgency/das-roatp-service)
+- [RoATP Apply Service](https://github.com/SkillsFundingAgency/das-apply-service)
 
-To access the assessment functionality for training providers:
+To access the QnA functionality for training providers:
 
 - [QnA API](https://github.com/SkillsFundingAgency/das-qna-api)
 
