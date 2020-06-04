@@ -36,7 +36,7 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                @{ 
+                @{
                     var tableSpacingCssClass = string.IsNullOrWhiteSpace(Model.GuidanceText) ? "govuk-!-margin-bottom-9" : "";
                     <table class="govuk-table @tableSpacingCssClass">
                         <thead class="govuk-table__head">
@@ -85,17 +85,15 @@
                                         @switch (question.InputType)
                                         {
                                             case QuestionInputType.FileUpload:
-                                                <a
-                                                    class="govuk-link"
-                                                    asp-controller="Download"
-                                                    asp-action="DownloadFile"
-                                                    asp-route-applicationId="@supplementaryInformation.ApplicationId"
-                                                    asp-route-sequenceNo="@supplementaryInformation.SequenceNumber"
-                                                    asp-route-sectionNo="@supplementaryInformation.SectionNumber"
-                                                    asp-route-pageId="@supplementaryInformation.PageId"
-                                                    asp-route-questionId="@question.QuestionId"
-                                                    asp-route-filename="@answer"
-                                                >
+                                                <a class="govuk-link"
+                                                   asp-controller="Download"
+                                                   asp-action="DownloadFile"
+                                                   asp-route-applicationId="@supplementaryInformation.ApplicationId"
+                                                   asp-route-sequenceNo="@supplementaryInformation.SequenceNumber"
+                                                   asp-route-sectionNo="@supplementaryInformation.SectionNumber"
+                                                   asp-route-pageId="@supplementaryInformation.PageId"
+                                                   asp-route-questionId="@question.QuestionId"
+                                                   asp-route-filename="@answer">
                                                     @answer
                                                 </a>
                                                 break;
