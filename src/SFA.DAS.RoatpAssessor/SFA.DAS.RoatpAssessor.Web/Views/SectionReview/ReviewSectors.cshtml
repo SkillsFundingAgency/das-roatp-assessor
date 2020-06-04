@@ -53,13 +53,12 @@
                     </ul>
                 </li>
             </ol>
+
+            <p class="govuk-body">
+                <a asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@Model.ApplicationId" class="govuk-link govuk-link--no-visited-state">
+                    Go to application assessment overview
+                </a>
+            </p>
         </div>
     </div>
-    
-
-
-    <p class="govuk-body">
-        <a asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@Model.ApplicationId" class="govuk-link govuk-link--no-visited-state">Go to application assessment overview</a>
-    </p>
-
 </main>
