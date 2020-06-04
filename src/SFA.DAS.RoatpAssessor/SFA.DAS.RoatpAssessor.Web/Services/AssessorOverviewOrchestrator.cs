@@ -26,19 +26,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<AssessorApplicationViewModel> GetOverviewViewModel(GetApplicationOverviewRequest request)
         {
             var application = await _applyApiClient.GetApplication(request.ApplicationId);
-            if (application is null)
-            {
-                return null;
-            }
+            var contact = await _applyApiClient.GetContactForApplication(request.ApplicationId);
+            var sequences = await _applyApiClient.GetAssessorSequences(request.ApplicationId);
 
-            var contact = await _applyApiClient.GetContactForApplication(application.ApplicationId);
-            if (contact is null)
-            {
-                return null;
-            }
-
-            var sequences = await _applyApiClient.GetAssessorSequences(application.ApplicationId);
-            if (sequences is null)
+            if (application is null || contact is null || sequences is null)
             {
                 return null;
             }
@@ -54,6 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
             else
             {
+                // TODO: Can this be part of AssessorApplicationViewModel rather than injecting things outside?
                 // Inject the statuses into viewmodel
                 foreach (var sequence in viewmodel.Sequences)
                 {
