@@ -16,7 +16,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
     public class DashboardControllerTests
     {
         private Mock<IAssessorDashboardOrchestrator> _orchestratorMock;
-        private Mock<IWebConfiguration> _configuration;
         private DashboardController _controller;
         private string _dashboardUrl;
 
@@ -25,10 +24,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         {
             _dashboardUrl = "https://dashboard";
             _orchestratorMock = new Mock<IAssessorDashboardOrchestrator>();
-            _configuration = new Mock<IWebConfiguration>();
-            _configuration.Setup(c => c.EsfaAdminServicesBaseUrl).Returns(_dashboardUrl);
 
-            _controller = new DashboardController(_orchestratorMock.Object, _configuration.Object)
+            _controller = new DashboardController(_orchestratorMock.Object)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
