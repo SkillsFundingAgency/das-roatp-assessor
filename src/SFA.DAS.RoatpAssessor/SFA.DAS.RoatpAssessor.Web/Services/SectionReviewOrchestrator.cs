@@ -42,7 +42,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var viewModel = new ReviewAnswersViewModel
             {
                 ApplicationId = application.ApplicationId,
-                AssessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId),
+                AssessorType = AssessorReviewHelper.SetAssessorType(application, request.UserId),
 
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN,
                 ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
@@ -58,7 +58,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 Caption = assessorPage.Caption,
                 Heading = assessorPage.Heading,
 
-                GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions.FirstOrDefault()?.QuestionBodyText,
+                GuidanceInformation = assessorPage.GuidanceInformation,
 
                 Questions = assessorPage.Questions != null ? new List<AssessorQuestion>(assessorPage.Questions) : new List<AssessorQuestion>(),
                 Answers = assessorPage.Answers != null ? new List<AssessorAnswer>(assessorPage.Answers) : new List<AssessorAnswer>(),

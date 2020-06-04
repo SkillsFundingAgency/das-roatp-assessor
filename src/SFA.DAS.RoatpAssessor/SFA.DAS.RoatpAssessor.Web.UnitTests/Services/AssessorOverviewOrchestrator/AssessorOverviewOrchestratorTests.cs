@@ -4,15 +4,15 @@ using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
-using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
+using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
+using SFA.DAS.AdminService.Common.Extensions;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestrator
 {
@@ -25,7 +25,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         private Mock<ILogger<Web.Services.AssessorOverviewOrchestrator>> _logger;
         private Mock<IRoatpApplicationApiClient> _apiClient;
         private Web.Services.AssessorOverviewOrchestrator _orchestrator;
-        private string _userId;
+        private string _userId => _user.UserId();
         private Apply _application;
         private Contact _contact;
         private List<AssessorSequence> _sequences;
@@ -39,8 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
             _apiClient = new Mock<IRoatpApplicationApiClient>();
             _orchestrator = new Web.Services.AssessorOverviewOrchestrator(_logger.Object, _apiClient.Object);
 
-            _userId = "user";
-            _application = new Apply { ApplicationId = _applicationId, Assessor2UserId = _userId, Id = Guid.NewGuid(), OrganisationId = Guid.NewGuid(), Status = "Status", Assessor2ReviewStatus = "In Progress" };
+            _application = new Apply { ApplicationId = _applicationId, OrganisationId = Guid.NewGuid(), Status = "Status", Assessor2UserId = _userId, Assessor2ReviewStatus = AssessorReviewStatus.InProgress};
             _contact = new Contact { Email = "email@address.com" };
             _sequences = new List<AssessorSequence>();
             _outcomes = new List<PageReviewOutcome>();

@@ -26,24 +26,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<AssessorApplicationViewModel> GetOverviewViewModel(GetApplicationOverviewRequest request)
         {
             var application = await _applyApiClient.GetApplication(request.ApplicationId);
-            if (application is null)
+            var contact = await _applyApiClient.GetContactForApplication(request.ApplicationId);
+            var sequences = await _applyApiClient.GetAssessorSequences(request.ApplicationId);
+
+            if (application is null || contact is null || sequences is null)
             {
                 return null;
             }
 
-            var contact = await _applyApiClient.GetContactForApplication(application.ApplicationId);
-            if (contact is null)
-            {
-                return null;
-            }
-
-            var sequences = await _applyApiClient.GetAssessorSequences(application.ApplicationId);
-            if (sequences is null)
-            {
-                return null;
-            }
-
-            var assessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId);
+            var assessorType = AssessorReviewHelper.SetAssessorType(application, request.UserId);
 
             var viewmodel = new AssessorApplicationViewModel(application, contact, sequences, request.UserId);
 
@@ -54,6 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
             else
             {
+                // TODO: Can this be part of AssessorApplicationViewModel rather than injecting things outside?
                 // Inject the statuses into viewmodel
                 foreach (var sequence in viewmodel.Sequences)
                 {
@@ -75,6 +67,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         public string SetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes)
         {
+            // TODO: It looks like this function belongs in AssessorApplicationViewModel and not to be publicly exposed in the AssessorOverviewOrchestrator
+            // TODO: Convert into static function
             var sectionStatus = string.Empty;
             if(sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
@@ -112,14 +106,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         private static bool IsReadyForModeration(AssessorApplicationViewModel viewmodel)
         {
+            // TODO: It looks like this function belongs in AssessorApplicationViewModel and not to be publicly exposed in the AssessorOverviewOrchestrator
             var isReadyForModeration = true;
 
             foreach (var sequence in viewmodel.Sequences)
             {
                 foreach (var section in sequence.Sections)
                 {
-                    // TODO: Rework the logic according to requirements. Attention about AssessorSectionStatus.FailOutOf
-                    if (section.Status == null || (!section.Status.Equals(AssessorSectionStatus.Pass) && 
+                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(AssessorSectionStatus.Pass) && 
                                                    !section.Status.Equals(AssessorSectionStatus.Fail) && 
                                                    !section.Status.Equals(AssessorSectionStatus.NotRequired) &&
                                                    !section.Status.Contains(AssessorSectionStatus.FailOutOf)))
@@ -128,6 +122,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         break;
                     }
                 }
+
+                if (!isReadyForModeration) break;
             }
 
             return isReadyForModeration;

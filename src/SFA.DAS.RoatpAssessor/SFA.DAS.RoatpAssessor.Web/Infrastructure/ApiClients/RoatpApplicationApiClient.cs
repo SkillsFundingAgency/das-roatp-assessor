@@ -9,6 +9,7 @@ using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.Models;
+using SFA.DAS.AdminService.Common.Infrastructure;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
@@ -108,6 +109,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         public async Task<HttpResponseMessage> DownloadFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string questionId, string filename)
         {
             return await GetResponse($"/Assessor/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/Questions/{questionId}/download/{filename}");
+        }
+
+        public async Task<bool> UpdateAssessorReviewStatus(Guid applicationId, int assessorType, string userId, string status)
+        {
+            var result = await Post($"/Assessor/UpdateAssessorReviewStatus", new
+            {
+                applicationId,
+                assessorType,
+                userId,
+                status
+            });
+
+            return result == HttpStatusCode.OK;
         }
     }
 }
