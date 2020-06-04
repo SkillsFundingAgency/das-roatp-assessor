@@ -11,7 +11,9 @@ namespace SFA.DAS.RoatpAssessor.Web
     {
         public static void Main(string[] args)
         {
-            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            var nlogConfigFileName = "nlog.config";
+            var logger = NLogBuilder.ConfigureNLog(nlogConfigFileName).GetCurrentClassLogger();
+
             try
             {
                 logger.Info("Starting up host");

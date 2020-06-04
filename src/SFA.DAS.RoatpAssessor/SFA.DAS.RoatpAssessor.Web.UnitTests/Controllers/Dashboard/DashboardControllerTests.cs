@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -36,7 +35,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         }
 
         [Test]
-        public async Task Index_redirects_to_new_applications()
+        public void Index_redirects_to_new_applications()
         {
             var result = _controller.Index() as RedirectToActionResult;
 
