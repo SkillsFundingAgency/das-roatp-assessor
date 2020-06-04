@@ -2,7 +2,7 @@
 
 ## RoATP Assessor
 
-Licensed under the [MIT license](https://github.com/SkillsFundingAgency/das-roatp-assessor/blob/master/LICENSE.txt)
+Licensed under the [MIT license](https://github.com/SkillsFundingAgency/das-roatp-assessor/blob/master/LICENSE)
 
 |               |               |
 | ------------- | ------------- |
