@@ -1,6 +1,5 @@
 ﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using System;
 using System.Collections.Generic;
 
