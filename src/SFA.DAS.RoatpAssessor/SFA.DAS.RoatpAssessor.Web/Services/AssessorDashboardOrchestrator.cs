@@ -43,6 +43,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         private void AddApplicationsToViewModel(DashboardViewModel viewModel, List<RoatpAssessorApplicationSummary> applications)
         {
+            // TODO: Consider using a Mapper with unit tests, or just use the domain class instead
             foreach (var application in applications)
             {
                 var applicationVm = new ApplicationViewModel
