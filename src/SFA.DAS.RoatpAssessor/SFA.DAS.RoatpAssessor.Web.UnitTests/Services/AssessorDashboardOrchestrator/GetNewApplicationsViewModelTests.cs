@@ -7,8 +7,9 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
-using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
+using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
+using SFA.DAS.AdminService.Common.Extensions;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestrator
 {

@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
@@ -28,6 +29,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             if (viewModel is null)
             {
                 return RedirectToAction("NewApplications", "Dashboard");
+            }
+            else if(viewModel.IsAssessorApproved)
+            {
+                return RedirectToAction("AssessmentComplete", "AssessorOutcome", new { applicationId });
             }
 
             return View("~/Views/Overview/Application.cshtml", viewModel);
