@@ -12,8 +12,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
     public class RoatpAssessorApiClient : ApiClientBase<RoatpAssessorApiClient>, IRoatpAssessorApiClient
     {
-        private HttpClient _client;
-
         public RoatpAssessorApiClient(string baseUri, ILogger<RoatpAssessorApiClient> logger, IRoatpApplicationTokenService tokenService) : base(new HttpClient { BaseAddress = new Uri(baseUri) }, logger)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenService.GetToken(_httpClient.BaseAddress));

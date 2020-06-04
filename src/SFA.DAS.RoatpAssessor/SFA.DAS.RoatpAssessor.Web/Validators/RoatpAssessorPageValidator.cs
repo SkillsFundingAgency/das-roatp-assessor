@@ -67,7 +67,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                 }
             }
 
-            return validationResponse;
+            return await Task.FromResult(validationResponse);
         }
 
         private static int GetWordCount(string text)

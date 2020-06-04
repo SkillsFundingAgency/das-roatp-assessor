@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SFA.DAS.RoatpAssessor.Web.ViewModels
+﻿namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
     public class NewApplicationsViewModel : DashboardViewModel
     {
