@@ -7,15 +7,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Transformers
 {
     public static class ManagementHierarchyTransformer
     {
-        private static int NameInputColumn = 0;
-        private static int JobRoleInputColumn = 1;
-        private static int YearsInputColumn = 2;
-        private static int MonthsInputColumn = 3;
-        private static int AnotherOrgInputColumn = 4;
-        private static int OrgDetailsInputColumn = 5;
+        private const int NameInputColumn = 0;
+        private const int JobRoleInputColumn = 1;
+        private const int YearsInputColumn = 2;
+        private const int MonthsInputColumn = 3;
+        private const int AnotherOrgInputColumn = 4;
+        private const int OrgDetailsInputColumn = 5;
 
-        private static List<string> InputHeadingTitles = new List<string> { "Name", "Job role", "Years in role", "Months in role", "Part of another organisation", "Organisation details" };
-        private static List<string> TransformHeadingTitles = new List<string> { "Full name", "Job role", "Time in role", "Is this person part of any other organisations?", "Enter the names of all these organisations" };
+        private static readonly List<string> InputHeadingTitles = new List<string> { "Name", "Job role", "Years in role", "Months in role", "Part of another organisation", "Organisation details" };
+        private static readonly List<string> TransformHeadingTitles = new List<string> { "Full name", "Job role", "Time in role", "Is this person part of any other organisations?", "Enter the names of all these organisations" };
 
         public static TabularData Transform(TabularData tabularData)
         {
