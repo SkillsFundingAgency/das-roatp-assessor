@@ -1,6 +1,5 @@
 ﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using System;
 using System.Collections.Generic;
 
@@ -25,5 +24,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public List<TabularData> TabularData { get; set; }
         public List<AssessorSupplementaryInformation> SupplementaryInformation { get; set; }
         
+        public List<string> GuidanceInformation { get; set; }
     }
 }

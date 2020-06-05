@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationSectorsViewModel
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationSectorsViewModel
 @{
     ViewBag.Title = $"Assessor - {@Model.Heading}";
     Layout = "_Layout";
@@ -35,15 +36,15 @@
                                         @Html.Raw(sector.Title)
                                     </a>
                                 </span>
-                                @if(sector.Status=="In progress")
-                                { 
+                                @if(sector.Status== AssessorPageReviewStatus.InProgress)
+                                {
                                  <strong class="govuk-tag app-task-list__task-inprogress das-no-wrap" id="pageid-@sector.PageId">In progress</strong> 
                                 }
-                                @if (sector.Status == "Pass")
+                                @if (sector.Status == AssessorPageReviewStatus.Pass)
                                 {
                                     <strong class="govuk-tag app-task-list__task-pass" id="pageid-@sector.PageId">Pass</strong>
                                 }
-                                @if (sector.Status == "Fail")
+                                @if (sector.Status == AssessorPageReviewStatus.Fail)
                                 {
                                     <strong class="govuk-tag app-task-list__task-fail" id="pageid-@sector.PageId">Fail</strong>
                                 }
@@ -52,13 +53,12 @@
                     </ul>
                 </li>
             </ol>
+
+            <p class="govuk-body">
+                <a asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@Model.ApplicationId" class="govuk-link govuk-link--no-visited-state">
+                    Go to application assessment overview
+                </a>
+            </p>
         </div>
     </div>
-    
-
-
-    <p class="govuk-body">
-        <a asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@Model.ApplicationId" class="govuk-link">Go to application assessment overview</a>
-    </p>
-
 </main>

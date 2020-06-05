@@ -61,13 +61,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         [HttpGet]
         public IActionResult SignedOut()
         {
-            return View();
+            return View("SignedOut");
         }
 
         [HttpGet]
         public IActionResult AccessDenied()
         {
-            return View();
+            return View("AccessDenied");
         }
     }
 }

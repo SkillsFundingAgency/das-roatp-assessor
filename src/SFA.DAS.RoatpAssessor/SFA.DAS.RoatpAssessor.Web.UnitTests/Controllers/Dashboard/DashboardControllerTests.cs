@@ -1,13 +1,13 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Settings;
-using SFA.DAS.RoatpAssessor.Web.UnitTests.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
@@ -16,7 +16,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
     public class DashboardControllerTests
     {
         private Mock<IAssessorDashboardOrchestrator> _orchestratorMock;
-        private Mock<IWebConfiguration> _configuration;
         private DashboardController _controller;
         private string _dashboardUrl;
 
@@ -25,13 +24,19 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         {
             _dashboardUrl = "https://dashboard";
             _orchestratorMock = new Mock<IAssessorDashboardOrchestrator>();
-            _configuration = new Mock<IWebConfiguration>();
-            _configuration.Setup(c => c.EsfaAdminServicesBaseUrl).Returns(_dashboardUrl);
 
-            _controller = new DashboardController(_orchestratorMock.Object, _configuration.Object)
+            _controller = new DashboardController(_orchestratorMock.Object)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
+        }
+
+        [Test]
+        public void Index_redirects_to_new_applications()
+        {
+            var result = _controller.Index() as RedirectToActionResult;
+
+            Assert.AreEqual("NewApplications", result.ActionName);
         }
 
         [Test]
@@ -59,11 +64,20 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         }
 
         [Test]
-        public void Dashboard_redirects_to_external_dasbhoard_url()
+        public async Task When_assigning_to_assessor_then_the_application_is_assigned()
         {
-            var result = _controller.Dashboard() as RedirectResult;
-            Assert.IsNotNull(result);
-            Assert.AreEqual(result.Url, $"{_dashboardUrl}/Dashboard");
+            var userId = _controller.User.UserId();
+            var userName = _controller.User.UserDisplayName();
+            var applicationId = Guid.NewGuid();
+            var assessorNumber = 2;
+            
+            var result = await _controller.AssignToAssessor(applicationId, assessorNumber) as RedirectToActionResult;
+
+            _orchestratorMock.Verify(x => x.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName));
+
+            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("ViewApplication", result.ActionName);
+            Assert.AreEqual(applicationId, result.RouteValues["applicationId"]);
         }
     }
 }

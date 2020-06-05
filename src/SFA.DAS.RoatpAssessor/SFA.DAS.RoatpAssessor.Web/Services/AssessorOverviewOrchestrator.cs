@@ -28,24 +28,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<AssessorApplicationViewModel> GetOverviewViewModel(GetApplicationOverviewRequest request)
         {
             var application = await _applyApiClient.GetApplication(request.ApplicationId);
-            if (application is null)
+            var contact = await _applyApiClient.GetContactForApplication(request.ApplicationId);
+            var sequences = await _applyApiClient.GetAssessorSequences(request.ApplicationId);
+
+            if (application is null || contact is null || sequences is null)
             {
                 return null;
             }
 
-            var contact = await _applyApiClient.GetContactForApplication(application.ApplicationId);
-            if (contact is null)
-            {
-                return null;
-            }
-
-            var sequences = await _applyApiClient.GetAssessorSequences(application.ApplicationId);
-            if (sequences is null)
-            {
-                return null;
-            }
-
-            var assessorType = AssessorReviewHelpers.SetAssessorType(application, request.UserId);
+            var assessorType = AssessorReviewHelper.SetAssessorType(application, request.UserId);
 
             var viewmodel = new AssessorApplicationViewModel(application, contact, sequences, request.UserId);
 
@@ -56,6 +47,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
             else
             {
+                // TODO: Can this be part of AssessorApplicationViewModel rather than injecting things outside?
                 // Inject the statuses into viewmodel
                 foreach (var sequence in viewmodel.Sequences)
                 {
@@ -86,6 +78,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         public string GetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes, bool sectorSection)
         {
+            // TODO: It looks like this function belongs in AssessorApplicationViewModel and not to be publicly exposed in the AssessorOverviewOrchestrator
+            // TODO: Convert into static function
             var sectionStatus = string.Empty;
             if(sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
@@ -99,35 +93,25 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     var failStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail);
                     var inProgressStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.InProgress);
                     var noTagCount = sectionPageReviewOutcomes.Count(p => string.IsNullOrEmpty(p.Status));
-                    var allPassOrFail = sectionPageReviewOutcomes.Count.Equals(passStatusesCount + failStatusesCount);
-
-                    if (sectionPageReviewOutcomes.Count.Equals(noTagCount)) // All empty
                     {
                         sectionStatus = null;
                     }
-                    else if (sectionPageReviewOutcomes.Count.Equals(passStatusesCount)) // All Pass
+                    else if (sectionPageReviewOutcomes.All(x => x.Status == AssessorPageReviewStatus.Pass))
                     {
                         sectionStatus = AssessorSectionStatus.Pass;
                     }
-                    else if (sectionPageReviewOutcomes.Count.Equals(failStatusesCount)) // All Fail
+                    else if (sectionPageReviewOutcomes.All(p => p.Status == AssessorPageReviewStatus.Fail))
                     {
                         sectionStatus = AssessorSectionStatus.Fail;
                     }
-                    else if (inProgressStatusesCount > 0) // One or more 'In Progress'
+                    else if (sectionPageReviewOutcomes.All(p => p.Status == AssessorPageReviewStatus.Pass || p.Status == AssessorPageReviewStatus.Fail))
                     {
-                        sectionStatus = AssessorSectionStatus.InProgress;
+                        sectionStatus = $"{sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail)} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
                     }
-                    else if ((!passStatusesCount.Equals(0) && !allPassOrFail) || (!failStatusesCount.Equals(0) && !allPassOrFail)) // One or more Pass or Fail, but NOT all
-                    {
-                        sectionStatus = AssessorSectionStatus.InProgress;
-                    }
-                    else if (noTagCount.Equals(0) && inProgressStatusesCount.Equals(0) && allPassOrFail) // Not empty or 'In Progress', All either Pass or Fail
-                    {
                         sectionStatus = sectorSection ? AssessorSectionStatus.Fail : $"{failStatusesCount} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
-                    }
                     else
                     {
-                        sectionStatus = AssessorSectionStatus.Unknown; // It should not happen. It's just for testing.
+                        sectionStatus = AssessorSectionStatus.InProgress;
                     }
                 }
             }
@@ -165,8 +149,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 foreach (var section in sequence.Sections)
                 {
-                    // TODO: Rework the logic according to requirements. Attention about AssessorSectionStatus.FailOutOf
-                    if (section.Status == null || (!section.Status.Equals(AssessorSectionStatus.Pass) && 
+                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(AssessorSectionStatus.Pass) && 
                                                    !section.Status.Equals(AssessorSectionStatus.Fail) && 
                                                    !section.Status.Equals(AssessorSectionStatus.NotRequired) &&
                                                    !section.Status.Contains(AssessorSectionStatus.FailOutOf)))
@@ -175,6 +158,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         break;
                     }
                 }
+
+                if (!isReadyForModeration) break;
             }
 
             return isReadyForModeration;

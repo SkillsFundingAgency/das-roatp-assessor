@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes
+@using SFA.DAS.AdminService.Common.Extensions
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes
 
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.AssessorApplicationViewModel
 
@@ -7,7 +8,7 @@
     Layout = "_Layout";
 }
 
-<partial name="~/Views/Overview/_Breadcrumb.cshtml" for="@Model" />
+<partial name="~/Views/Overview/_Breadcrumb.cshtml" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
@@ -67,8 +68,7 @@
                                 <span class="app-task-list__task-name app-task-list__task-name--inactive">
                                     @if (Model.IsReadyForModeration)
                                     {
-                                        // TODO: Integrate with 'Ready for Moderation' action
-                                        <a href="#">Ready for moderation</a>
+                                        <a asp-controller="AssessorOutcome" asp-action="AssessorOutcome" asp-route-applicationId="@Model.ApplicationId">Ready for moderation</a>
                                     }
                                     else
                                     {

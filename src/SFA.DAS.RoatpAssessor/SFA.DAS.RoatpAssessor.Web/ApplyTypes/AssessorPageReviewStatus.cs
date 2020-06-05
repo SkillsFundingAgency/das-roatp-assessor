@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
 {
-    public class AssessorPageReviewStatus
+    public static class AssessorPageReviewStatus
     {
         public const string InProgress = "In progress";
         public const string Pass = "Pass";

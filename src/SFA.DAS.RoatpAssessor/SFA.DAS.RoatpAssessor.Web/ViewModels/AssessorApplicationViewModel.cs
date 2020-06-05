@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public Guid OrgId { get; }
      
         public string ApplicationStatus { get; }
-        public string AssessorReviewStatus { get; private set; }
+        public string AssessorReviewStatus { get; set; }
+        public AssessorType AssessorType { get; set; }
 
         public bool IsAssessorApproved { get; set; }
 
@@ -44,12 +46,14 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 
         private void SetAssessorReviewStatus(Apply application, string userId)
         {
-            if(application.Assessor1UserId == userId)
+            AssessorType = AssessorReviewHelper.SetAssessorType(application, userId);
+
+            if (AssessorType == AssessorType.FirstAssessor)
             {
                 AssessorReviewStatus = application.Assessor1ReviewStatus;
                 IsAssessorApproved = application.Assessor1ReviewStatus == ApplyTypes.AssessorReviewStatus.Approved;
             }
-            else if(application.Assessor2UserId == userId)
+            else if(AssessorType == AssessorType.SecondAssessor)
             {
                 AssessorReviewStatus = application.Assessor2ReviewStatus;
                 IsAssessorApproved = application.Assessor2ReviewStatus == ApplyTypes.AssessorReviewStatus.Approved;
