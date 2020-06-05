@@ -93,6 +93,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     var failStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail);
                     var inProgressStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.InProgress);
                     var noTagCount = sectionPageReviewOutcomes.Count(p => string.IsNullOrEmpty(p.Status));
+                    if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
                     {
                         sectionStatus = null;
                     }
@@ -104,11 +105,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     {
                         sectionStatus = AssessorSectionStatus.Fail;
                     }
-                    else if (sectionPageReviewOutcomes.All(p => p.Status == AssessorPageReviewStatus.Pass || p.Status == AssessorPageReviewStatus.Fail))
+                    else if (sectionPageReviewOutcomes.All(p =>
+                        p.Status == AssessorPageReviewStatus.Pass || p.Status == AssessorPageReviewStatus.Fail))
                     {
-                        sectionStatus = $"{sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail)} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
+                        sectionStatus = sectorSection
+                            ? AssessorSectionStatus.Fail
+                            : $"{failStatusesCount} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
                     }
-                        sectionStatus = sectorSection ? AssessorSectionStatus.Fail : $"{failStatusesCount} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
                     else
                     {
                         sectionStatus = AssessorSectionStatus.InProgress;
