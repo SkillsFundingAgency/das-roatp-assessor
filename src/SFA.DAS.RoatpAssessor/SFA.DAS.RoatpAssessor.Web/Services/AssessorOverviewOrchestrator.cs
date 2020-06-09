@@ -8,7 +8,9 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 
 namespace SFA.DAS.RoatpAssessor.Web.Services
 {
@@ -53,8 +55,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     {
                         if (string.IsNullOrEmpty(section.Status))
                         {
-                            var sectionPageReviewOutcomes = savedOutcomes.Where(p => p.SequenceNumber == sequence.SequenceNumber && p.SectionNumber == section.SectionNumber).ToList();
-                            section.Status = SetSectionStatus(sectionPageReviewOutcomes);
+                            if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
+                            {
+                                section.Status = await GetSectionStatusForSectors(request, savedOutcomes);
+                            }
+                            else
+                            {
+                                var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
+                                    p.SequenceNumber == sequence.SequenceNumber &&
+                                    p.SectionNumber == section.SectionNumber).ToList();
+                                section.Status = GetSectionStatus(sectionPageReviewOutcomes, false);
+                            }
                         }
                     }
                 }
@@ -65,7 +76,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string SetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes)
+        public string GetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes, bool sectorSection)
         {
             // TODO: It looks like this function belongs in AssessorApplicationViewModel and not to be publicly exposed in the AssessorOverviewOrchestrator
             // TODO: Convert into static function
@@ -78,6 +89,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
                 else
                 {
+                    var passStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Pass);
+                    var failStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail);
+                    var inProgressStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.InProgress);
+                    var noTagCount = sectionPageReviewOutcomes.Count(p => string.IsNullOrEmpty(p.Status));
                     if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
                     {
                         sectionStatus = null;
@@ -90,9 +105,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     {
                         sectionStatus = AssessorSectionStatus.Fail;
                     }
-                    else if (sectionPageReviewOutcomes.All(p => p.Status == AssessorPageReviewStatus.Pass || p.Status == AssessorPageReviewStatus.Fail))
+                    else if (sectionPageReviewOutcomes.All(p =>
+                        p.Status == AssessorPageReviewStatus.Pass || p.Status == AssessorPageReviewStatus.Fail))
                     {
-                        sectionStatus = $"{sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail)} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
+                        sectionStatus = sectorSection
+                            ? AssessorSectionStatus.Fail
+                            : $"{failStatusesCount} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
                     }
                     else
                     {
@@ -104,9 +122,30 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return sectionStatus;
         }
 
+
+        private async Task<string> GetSectionStatusForSectors(GetApplicationOverviewRequest request, IEnumerable<PageReviewOutcome> savedOutcomes)
+        {
+            var sectorsChosen = await _applyApiClient.GetChosenSectors(request.ApplicationId, request.UserId);
+
+            var sectorCount = sectorsChosen != null && sectorsChosen.Any() ? sectorsChosen.Count : 0;
+
+            var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
+                p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
+                p.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees).ToList();
+
+            var sectorsWithValuesCount =
+                sectionPageReviewOutcomes.Count(p => !string.IsNullOrEmpty(p.Status));
+
+            if (sectorsWithValuesCount > 0 && sectorCount > 0 && sectorsWithValuesCount < sectorCount)
+            {
+                return AssessorSectionStatus.InProgress;
+            }
+
+            return GetSectionStatus(sectionPageReviewOutcomes, true);
+
+        }
         private static bool IsReadyForModeration(AssessorApplicationViewModel viewmodel)
         {
-            // TODO: It looks like this function belongs in AssessorApplicationViewModel and not to be publicly exposed in the AssessorOverviewOrchestrator
             var isReadyForModeration = true;
 
             foreach (var sequence in viewmodel.Sequences)
