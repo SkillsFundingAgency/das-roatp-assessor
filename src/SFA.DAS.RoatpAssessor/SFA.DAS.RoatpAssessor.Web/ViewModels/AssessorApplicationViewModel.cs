@@ -11,9 +11,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public Guid Id { get; }
         public Guid ApplicationId { get; }
         public Guid OrgId { get; }
-
-        public string ApplicantEmailAddress { get; }
-
+     
         public string ApplicationStatus { get; }
         public string AssessorReviewStatus { get; set; }
         public AssessorType AssessorType { get; set; }

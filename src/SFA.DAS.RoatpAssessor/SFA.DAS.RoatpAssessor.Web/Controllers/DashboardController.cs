@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Domain;
@@ -13,7 +12,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
     public class DashboardController : Controller
     {
         private readonly IAssessorDashboardOrchestrator _orchestrator;
-        
         public DashboardController(IAssessorDashboardOrchestrator orchestrator)
         {
             _orchestrator = orchestrator;

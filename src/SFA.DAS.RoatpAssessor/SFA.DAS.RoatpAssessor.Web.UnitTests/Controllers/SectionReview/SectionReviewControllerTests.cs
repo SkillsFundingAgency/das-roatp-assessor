@@ -16,6 +16,8 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
 {
@@ -68,6 +70,34 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             var actualViewModel = result?.Model as ReviewAnswersViewModel;
 
             // assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(actualViewModel, Is.Not.Null);
+            Assert.That(actualViewModel, Is.SameAs(viewModel));
+        }
+
+
+        [Test]
+        public async Task ReviewPageAnswers_When_Sectors_Page_Invoked()
+        {
+            var sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining;
+            var sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
+            var chosenSectors = new List<Sector>
+            {
+                new Sector {PageId = "1", Title = "Page 1"},
+                new Sector {PageId = "2", Title = "Page 2"}
+            };
+
+            var viewModel = new ApplicationSectorsViewModel
+            {
+                ApplicationId = _applicationId,
+               SelectedSectors = chosenSectors
+            };
+
+            _sectionReviewOrchestrator.Setup(x => x.GetSectorsViewModel(It.IsAny<GetSectorsRequest>())).ReturnsAsync(viewModel);
+
+            var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, null) as ViewResult;
+            var actualViewModel = result?.Model as ApplicationSectorsViewModel;
+
             Assert.That(result, Is.Not.Null);
             Assert.That(actualViewModel, Is.Not.Null);
             Assert.That(actualViewModel, Is.SameAs(viewModel));
