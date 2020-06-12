@@ -11,6 +11,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string ApplyLegalName { get; set; }
         public DateTime? SubmittedDate { get; set; }
 
+        public string ApplicantEmailAddress { get; set; }
+
         public string ApplicationRouteShortText
         {
             get

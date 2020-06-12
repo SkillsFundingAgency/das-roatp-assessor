@@ -4,5 +4,6 @@
     {
         public const string SafeguardingPolicy = "4030";
         public const string SafeguardingPolicyIncludesPreventDutyPolicy = "4037";
+        public const string YourSectorsAndEmployeesStartingPageId = "7600";
     }
 }

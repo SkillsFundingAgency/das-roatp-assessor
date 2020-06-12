@@ -7,6 +7,7 @@ using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.Settings;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
@@ -18,13 +19,16 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         private Mock<IModeratorDashboardOrchestrator> _moderatorOrchestrator;
 
         private DashboardController _controller;
-        
+        private string _dashboardUrl;
+
         [SetUp]
         public void Setup()
         {
+            _dashboardUrl = "https://dashboard";
+
             _assessorOrchestrator = new Mock<IAssessorDashboardOrchestrator>();
             _moderatorOrchestrator = new Mock<IModeratorDashboardOrchestrator>();
-            _controller = new DashboardController(_assessorOrchestrator.Object, _moderatorOrchestrator.Object)
+            _controller = new DashboardController(_assessorOrchestrator.Object, _moderatorOrchestrator.Object)           
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
