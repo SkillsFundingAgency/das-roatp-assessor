@@ -221,7 +221,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         private async Task<string> GetNextPageId(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
             var assessorPage = await _applyApiClient.GetAssessorPage(applicationId, sequenceNumber, sectionNumber, pageId);
-            if (!string.IsNullOrEmpty(assessorPage.NextPageId))
+            if (!string.IsNullOrEmpty(assessorPage?.NextPageId))
             {
                 return assessorPage.NextPageId;
             }
