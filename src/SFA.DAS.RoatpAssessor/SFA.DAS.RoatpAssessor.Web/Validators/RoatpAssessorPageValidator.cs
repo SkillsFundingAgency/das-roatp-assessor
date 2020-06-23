@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
+using SFA.DAS.RoatpAssessor.Web.Helpers;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
 
             if (string.IsNullOrWhiteSpace(command.Status))
             {
-                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.Status), $"Select the outcome for {command.Heading.ToLower()}"));
+                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.Status), ValidationHelper.MandatoryValidationMessage(command)));
             }
             else
             {
