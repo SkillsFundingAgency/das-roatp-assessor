@@ -15,7 +15,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
     [TestFixture]
     public class DashboardControllerTests
     {
-        private Mock<IAssessorDashboardOrchestrator> _orchestratorMock;
+        private Mock<IAssessorDashboardOrchestrator> _assessorOrchestrator;
+        private Mock<IModeratorDashboardOrchestrator> _moderatorOrchestrator;
+
         private DashboardController _controller;
         private string _dashboardUrl;
 
@@ -23,9 +25,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         public void Setup()
         {
             _dashboardUrl = "https://dashboard";
-            _orchestratorMock = new Mock<IAssessorDashboardOrchestrator>();
 
-            _controller = new DashboardController(_orchestratorMock.Object)
+            _assessorOrchestrator = new Mock<IAssessorDashboardOrchestrator>();
+            _moderatorOrchestrator = new Mock<IModeratorDashboardOrchestrator>();
+            _controller = new DashboardController(_assessorOrchestrator.Object, _moderatorOrchestrator.Object)           
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
@@ -44,7 +47,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         {
             var userId = _controller.User.UserId();
             var expectedViewModel = new NewApplicationsViewModel(1, 2, 3, 4);
-            _orchestratorMock.Setup(x => x.GetNewApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
+            _assessorOrchestrator.Setup(x => x.GetNewApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
 
             var result = await _controller.NewApplications();
 
@@ -56,9 +59,21 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         {
             var userId = _controller.User.UserId();
             var expectedViewModel = new InProgressApplicationsViewModel(userId, 1, 2, 3, 4);
-            _orchestratorMock.Setup(x => x.GetInProgressApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
+            _assessorOrchestrator.Setup(x => x.GetInProgressApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
 
             var result = await _controller.InProgressApplications();
+
+            Assert.AreSame(expectedViewModel, result.Model);
+        }
+
+        [Test]
+        public async Task When_getting_in_progress_moderation_the_applications_are_returned()
+        {
+            var userId = _controller.User.UserId();
+            var expectedViewModel = new InModerationApplicationsViewModel(userId, 1, 2, 3, 4);
+            _moderatorOrchestrator.Setup(x => x.GetInModerationApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
+
+            var result = await _controller.InModerationApplications();
 
             Assert.AreSame(expectedViewModel, result.Model);
         }
@@ -73,7 +88,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
             
             var result = await _controller.AssignToAssessor(applicationId, assessorNumber) as RedirectToActionResult;
 
-            _orchestratorMock.Verify(x => x.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName));
+            _assessorOrchestrator.Verify(x => x.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName));
 
             Assert.AreEqual("Overview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
