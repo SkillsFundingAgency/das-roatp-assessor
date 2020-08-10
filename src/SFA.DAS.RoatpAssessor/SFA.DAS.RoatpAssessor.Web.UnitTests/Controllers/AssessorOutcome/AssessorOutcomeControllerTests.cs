@@ -89,6 +89,21 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         }
 
         [Test]
+        public async Task AssessorOutcome_When_IsAssessorApproved_redirects_to_AssessmentComplete()
+        {
+            // arrange
+            _applicationViewModel.IsReadyForModeration = true;
+            _applicationViewModel.IsAssessorApproved = true;
+
+            // act
+            var result = await _controller.AssessorOutcome(_applicationId) as RedirectToActionResult;
+
+            // assert
+            Assert.AreEqual("AssessorOutcome", result.ControllerName);
+            Assert.AreEqual("AssessmentComplete", result.ActionName);
+        }
+
+        [Test]
         public async Task POST_AssessorOutcome_When_MoveToModeration_YES_redirects_to_AssessmentComplete()
         {
             // arrange

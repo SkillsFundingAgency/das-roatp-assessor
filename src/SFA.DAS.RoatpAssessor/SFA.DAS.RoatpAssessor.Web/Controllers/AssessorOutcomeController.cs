@@ -40,8 +40,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             {
                 return RedirectToAction("ViewApplication", "Overview", new { applicationId });
             }
-
-            return View("~/Views/AssessorOutcome/AssessorOutcome.cshtml", viewModel);
+            else if (viewModel.IsAssessorApproved)
+            {
+                // This is in case the user presses the browser back button on AssessmentComplete
+                return RedirectToAction("AssessmentComplete", "AssessorOutcome", new { applicationId });
+            }
+            else
+            {
+                return View("~/Views/AssessorOutcome/AssessorOutcome.cshtml", viewModel);
+            }
         }
 
         [HttpPost("AssessorOutcome/{applicationId}")]
