@@ -89,18 +89,17 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         }
 
         [Test]
-        public async Task AssessorOutcome_When_IsAssessorApproved_redirects_to_AssessmentComplete()
+        public async Task AssessorOutcome_When_IsAssessorApproved_redirects_to_Dashboard()
         {
             // arrange
-            _applicationViewModel.IsReadyForModeration = true;
             _applicationViewModel.IsAssessorApproved = true;
 
             // act
             var result = await _controller.AssessorOutcome(_applicationId) as RedirectToActionResult;
 
             // assert
-            Assert.AreEqual("AssessorOutcome", result.ControllerName);
-            Assert.AreEqual("AssessmentComplete", result.ActionName);
+            Assert.AreEqual("Dashboard", result.ControllerName);
+            Assert.AreEqual("Index", result.ActionName);
         }
 
         [Test]

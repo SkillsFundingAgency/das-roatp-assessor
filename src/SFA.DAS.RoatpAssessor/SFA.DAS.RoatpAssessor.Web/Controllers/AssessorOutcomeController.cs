@@ -36,14 +36,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
             var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, userId));
 
-            if (viewModel is null || !viewModel.IsReadyForModeration)
-            {
-                return RedirectToAction("ViewApplication", "Overview", new { applicationId });
-            }
-            else if (viewModel.IsAssessorApproved)
+            if (viewModel is null || viewModel.IsAssessorApproved)
             {
                 // This is in case the user presses the browser back button on AssessmentComplete
-                return RedirectToAction("AssessmentComplete", "AssessorOutcome", new { applicationId });
+                return RedirectToAction("Index", "Dashboard");
+            }
+            else if (!viewModel.IsReadyForModeration)
+            {
+                return RedirectToAction("ViewApplication", "Overview", new { applicationId });
             }
             else
             {
