@@ -57,14 +57,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         {
                             if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
                             {
-                                section.Status = await GetSectionStatusForSectors(request, savedOutcomes);
+                                var sectorsChosen = await _applyApiClient.GetChosenSectors(request.ApplicationId, request.UserId);
+                                section.Status = GetSectorsSectionStatus(sectorsChosen, savedOutcomes);
                             }
                             else
                             {
                                 var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
                                     p.SequenceNumber == sequence.SequenceNumber &&
                                     p.SectionNumber == section.SectionNumber).ToList();
-                                section.Status = GetSectionStatus(sectionPageReviewOutcomes, false);
+
+                                section.Status = GetSectionStatus(sectionPageReviewOutcomes);
                             }
                         }
                     }
@@ -76,23 +78,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string GetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes, bool sectorSection)
+        public string GetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes)
         {
-            // TODO: It looks like this function belongs in AssessorApplicationViewModel and not to be publicly exposed in the AssessorOverviewOrchestrator
-            // TODO: Convert into static function
             var sectionStatus = string.Empty;
             if(sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
                 if (sectionPageReviewOutcomes.Count.Equals(1))
                 {
+                    // The section only has 1 question
                     sectionStatus = sectionPageReviewOutcomes[0].Status;
                 }
                 else
                 {
-                    var passStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Pass);
-                    var failStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail);
-                    var inProgressStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.InProgress);
-                    var noTagCount = sectionPageReviewOutcomes.Count(p => string.IsNullOrEmpty(p.Status));
+                    // The section contains multiple question
                     if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
                     {
                         sectionStatus = null;
@@ -101,16 +99,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     {
                         sectionStatus = AssessorSectionStatus.Pass;
                     }
-                    else if (sectionPageReviewOutcomes.All(p => p.Status == AssessorPageReviewStatus.Fail))
-                    {
-                        sectionStatus = AssessorSectionStatus.Fail;
-                    }
                     else if (sectionPageReviewOutcomes.All(p =>
                         p.Status == AssessorPageReviewStatus.Pass || p.Status == AssessorPageReviewStatus.Fail))
                     {
-                        sectionStatus = sectorSection
-                            ? AssessorSectionStatus.Fail
-                            : $"{failStatusesCount} {AssessorSectionStatus.FailOutOf} {sectionPageReviewOutcomes.Count}";
+                        var failStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail);
+                        var pluarlisedFailsOutOf = failStatusesCount == 1 ? AssessorSectionStatus.FailOutOf : AssessorSectionStatus.FailsOutOf;
+
+                        sectionStatus = $"{failStatusesCount} {pluarlisedFailsOutOf} {sectionPageReviewOutcomes.Count}";
                     }
                     else
                     {
@@ -122,28 +117,37 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return sectionStatus;
         }
 
-
-        private async Task<string> GetSectionStatusForSectors(GetApplicationOverviewRequest request, IEnumerable<PageReviewOutcome> savedOutcomes)
+        public string GetSectorsSectionStatus(IEnumerable<Sector> sectorsChosen, IEnumerable<PageReviewOutcome> savedOutcomes)
         {
-            var sectorsChosen = await _applyApiClient.GetChosenSectors(request.ApplicationId, request.UserId);
-
-            var sectorCount = sectorsChosen != null && sectorsChosen.Any() ? sectorsChosen.Count : 0;
-
-            var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
+            var sectionPageReviewOutcomes = savedOutcomes?.Where(p =>
                 p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
                 p.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees).ToList();
 
-            var sectorsWithValuesCount =
-                sectionPageReviewOutcomes.Count(p => !string.IsNullOrEmpty(p.Status));
-
-            if (sectorsWithValuesCount > 0 && sectorCount > 0 && sectorsWithValuesCount < sectorCount)
+            var sectionStatus = string.Empty;
+            if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
-                return AssessorSectionStatus.InProgress;
+                if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
+                {
+                    sectionStatus = null;
+                }
+                else if (sectionPageReviewOutcomes.All(p => p.Status == AssessorPageReviewStatus.Pass))
+                {
+                    sectionStatus = AssessorSectionStatus.Pass;
+                }
+                else if (sectionPageReviewOutcomes.All(p =>
+                            p.Status == AssessorPageReviewStatus.Pass || p.Status == AssessorPageReviewStatus.Fail))
+                {
+                    sectionStatus = AssessorSectionStatus.Fail;
+                }
+                else
+                {
+                    sectionStatus = AssessorSectionStatus.InProgress;
+                }
             }
 
-            return GetSectionStatus(sectionPageReviewOutcomes, true);
-
+            return sectionStatus;
         }
+
         private static bool IsReadyForModeration(AssessorApplicationViewModel viewmodel)
         {
             var isReadyForModeration = true;

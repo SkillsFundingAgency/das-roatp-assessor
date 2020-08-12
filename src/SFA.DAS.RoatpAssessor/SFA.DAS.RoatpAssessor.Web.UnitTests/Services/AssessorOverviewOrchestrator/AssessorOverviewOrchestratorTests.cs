@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using SFA.DAS.AdminService.Common.Extensions;
 
@@ -54,7 +55,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         [TestCase(AssessorPageReviewStatus.Pass)]
         [TestCase(AssessorPageReviewStatus.Fail)]
         [TestCase(AssessorPageReviewStatus.InProgress)]
-        public void SetSectionStatus_Single_PageReviewOutcome(string status)
+        public void GetSectionStatus_Single_PageReviewOutcome(string status)
         {
             List<PageReviewOutcome> sectionPageReviewOutcomes = new List<PageReviewOutcome>
             {
@@ -65,31 +66,33 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
                 }
             };
 
-            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes,false);
+            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes);
             Assert.AreSame(status, sectionStatus);
         }
 
-        [TestCase(null, null, null, null, false)]
-        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorSectionStatus.Pass, false)]
-        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorSectionStatus.Fail, false)]
-        [TestCase(AssessorPageReviewStatus.InProgress, null, null, AssessorSectionStatus.InProgress, false)]
-        [TestCase(null, AssessorPageReviewStatus.Pass,  null, AssessorSectionStatus.InProgress, false)]
-        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, null, AssessorSectionStatus.InProgress, false)]
-        [TestCase(null, null, AssessorPageReviewStatus.Fail, AssessorSectionStatus.InProgress, false)]
-        [TestCase(AssessorPageReviewStatus.Pass, null, AssessorPageReviewStatus.Fail, AssessorSectionStatus.InProgress, false)]
-        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, "1 " + AssessorSectionStatus.FailOutOf + " 3", false)]
-        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, "2 " + AssessorSectionStatus.FailOutOf + " 3", false)]
-        [TestCase(null, null, null, null, true)]
-        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorSectionStatus.Pass, true)]
-        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorSectionStatus.Fail, true)]
-        [TestCase(AssessorPageReviewStatus.InProgress, null, null, AssessorSectionStatus.InProgress, true)]
-        [TestCase(null, AssessorPageReviewStatus.Pass, null, AssessorSectionStatus.InProgress, true)]
-        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, null, AssessorSectionStatus.InProgress, true)]
-        [TestCase(null, null, AssessorPageReviewStatus.Fail, AssessorSectionStatus.InProgress, true)]
-        [TestCase(AssessorPageReviewStatus.Pass, null, AssessorPageReviewStatus.Fail, AssessorSectionStatus.InProgress, true)]
-        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, AssessorSectionStatus.Fail, true)]
-        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, AssessorSectionStatus.Fail, true)]
-        public void SetSectionStatus_Muliple_PageReviewOutcomes(string statusOne, string statusTwo, string statusThree, string statusExpected, bool sectionStatusFlag)
+        [TestCase(null, null, null, null)]
+        [TestCase(AssessorPageReviewStatus.Pass, null, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.InProgress, null, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Fail, null, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.InProgress, AssessorPageReviewStatus.Pass, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.InProgress, AssessorPageReviewStatus.Fail, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.InProgress, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.InProgress, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.InProgress, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.InProgress, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorSectionStatus.Pass)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, "1 " + AssessorSectionStatus.FailOutOf + " 3")]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, "1 " + AssessorSectionStatus.FailOutOf + " 3")]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, "1 " + AssessorSectionStatus.FailOutOf + " 3")]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, "2 " + AssessorSectionStatus.FailsOutOf + " 3")]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, "2 " + AssessorSectionStatus.FailsOutOf + " 3")]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, "2 " + AssessorSectionStatus.FailsOutOf + " 3")]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, "3 " + AssessorSectionStatus.FailsOutOf + " 3")]
+        public void GetSectionStatus_Multiple_PageReviewOutcomes(string statusOne, string statusTwo, string statusThree, string statusExpected)
         {
             List<PageReviewOutcome> sectionPageReviewOutcomes = new List<PageReviewOutcome>
             {
@@ -110,7 +113,83 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
                 }
             };
 
-            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes,sectionStatusFlag);
+            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes);
+            Assert.AreEqual(statusExpected, sectionStatus);
+        }
+
+        [TestCase(null, null, null, null)]
+        [TestCase(AssessorPageReviewStatus.Pass, null, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.InProgress, null, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Fail, null, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.InProgress, AssessorPageReviewStatus.Pass, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.InProgress, AssessorPageReviewStatus.Fail, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, null, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.InProgress, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.InProgress, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.InProgress, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.InProgress, AssessorSectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorSectionStatus.Pass)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorSectionStatus.Fail)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorSectionStatus.Fail)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, AssessorSectionStatus.Fail)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorSectionStatus.Fail)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Fail, AssessorSectionStatus.Fail)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Pass, AssessorSectionStatus.Fail)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorSectionStatus.Fail)]
+        public void GetSectorsSectionStatus(string statusOne, string statusTwo, string statusThree, string statusExpected)
+        {
+            const string firstSectorPageId = "1";
+            const string secondSectorPageId = "2";
+            const string thirdSectorPageId = "3";
+
+            List<Sector> sectorsChosen = new List<Sector>
+            {
+                new Sector
+                {
+                    PageId = firstSectorPageId
+                },
+                new Sector
+                {
+                    PageId = secondSectorPageId
+                },
+                new Sector
+                {
+                    PageId = thirdSectorPageId
+                }
+            };
+
+            List<PageReviewOutcome> sectionPageReviewOutcomes = new List<PageReviewOutcome>
+            {
+                new PageReviewOutcome
+                {
+                    ApplicationId = _applicationId,
+                    Status = statusOne,
+                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                    PageId = firstSectorPageId
+                },
+                new PageReviewOutcome
+                {
+                    ApplicationId = _applicationId,
+                    Status = statusTwo,
+                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                    PageId = secondSectorPageId
+                },
+                new PageReviewOutcome
+                {
+                    ApplicationId = _applicationId,
+                    Status = statusThree,
+                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                    PageId = thirdSectorPageId
+                }
+            };
+
+            var sectionStatus = _orchestrator.GetSectorsSectionStatus(sectorsChosen, sectionPageReviewOutcomes);
             Assert.AreEqual(statusExpected, sectionStatus);
         }
 
