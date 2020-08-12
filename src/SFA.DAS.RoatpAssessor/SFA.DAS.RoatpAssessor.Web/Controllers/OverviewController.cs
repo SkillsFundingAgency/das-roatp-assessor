@@ -28,7 +28,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
             if (viewModel is null)
             {
-                return RedirectToAction("NewApplications", "Dashboard");
+                return RedirectToAction("Index", "Dashboard");
             }
             else if(viewModel.IsAssessorApproved)
             {
