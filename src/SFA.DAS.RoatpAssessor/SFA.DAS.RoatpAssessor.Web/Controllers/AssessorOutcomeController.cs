@@ -39,7 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             if (viewModel is null || viewModel.IsAssessorApproved)
             {
                 // This is in case the user presses the browser back button on AssessmentComplete
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Index", "Home");
             }
             else if (!viewModel.IsReadyForModeration)
             {

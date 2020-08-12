@@ -35,11 +35,11 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Account
         }
 
         [Test]
-        public void PostSignIn_redirects_to_Dashboard()
+        public void PostSignIn_redirects_to_Home()
         {
             var result = _controller.PostSignIn() as RedirectToActionResult;
 
-            Assert.AreEqual("Dashboard", result.ControllerName);
+            Assert.AreEqual("Home", result.ControllerName);
             Assert.AreEqual("Index", result.ActionName);
         }
 

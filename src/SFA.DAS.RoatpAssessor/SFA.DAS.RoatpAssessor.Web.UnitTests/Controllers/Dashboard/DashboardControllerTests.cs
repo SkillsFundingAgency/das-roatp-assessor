@@ -35,14 +35,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         }
 
         [Test]
-        public void Index_redirects_to_new_applications()
-        {
-            var result = _controller.Index() as RedirectToActionResult;
-
-            Assert.AreEqual("NewApplications", result.ActionName);
-        }
-
-        [Test]
         public async Task When_getting_new_applications_the_users_applications_are_returned()
         {
             var userId = _controller.User.UserId();

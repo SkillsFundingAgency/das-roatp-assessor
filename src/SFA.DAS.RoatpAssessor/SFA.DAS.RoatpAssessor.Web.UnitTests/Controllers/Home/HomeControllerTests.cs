@@ -42,12 +42,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
         }
 
         [Test]
-        public void Index_redirects_to_new_dashboard_index()
+        public void Index_redirects_to_new_applications_dashboard()
         {
             var result = _controller.Index() as RedirectToActionResult;
 
             Assert.AreEqual("Dashboard", result.ControllerName);
-            Assert.AreEqual("Index", result.ActionName);
+            Assert.AreEqual("NewApplications", result.ActionName);
         }
 
         [Test]

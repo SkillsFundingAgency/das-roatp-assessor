@@ -21,9 +21,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("Index", "Dashboard");
+            return RedirectToAction("NewApplications", "Dashboard");
         }
 
+        [Route("/Dashboard")]
         public IActionResult Dashboard()
         {
             return Redirect(_configuration.EsfaAdminServicesBaseUrl + "/Dashboard");

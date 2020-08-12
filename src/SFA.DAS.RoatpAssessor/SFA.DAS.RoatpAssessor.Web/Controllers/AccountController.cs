@@ -39,7 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             //    return RedirectToAction("AccessDenied");
             //}
 
-            return RedirectToAction("Index", "Dashboard");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

@@ -20,11 +20,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             _moderatorOrchestrator = moderatorOrchestrator;
         }
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("NewApplications");
-        }
-
+        [HttpGet("/Dashboard/New")]
         public async Task<ViewResult> NewApplications()
         {
             var userId = HttpContext.User.UserId();
@@ -32,6 +28,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             return View(vm);
         }
 
+        [Route("/Dashboard/AssignToAssessor")]
         public async Task<IActionResult> AssignToAssessor(Guid applicationId, int assessorNumber)
         {
             var userId = HttpContext.User.UserId();
@@ -42,6 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             return RedirectToAction("ViewApplication", "Overview", new { applicationId });
         }
 
+        [HttpGet("/Dashboard/InProgress")]
         public async Task<ViewResult> InProgressApplications()
         {
             var userId = HttpContext.User.UserId();
@@ -49,6 +47,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             return View(vm);
         }
 
+        [HttpGet("/Dashboard/InModeration")]
         public async Task<ViewResult> InModerationApplications()
         {
             var userId = HttpContext.User.UserId();
