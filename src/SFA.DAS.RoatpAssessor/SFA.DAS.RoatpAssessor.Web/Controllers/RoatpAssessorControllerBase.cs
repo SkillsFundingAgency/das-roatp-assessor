@@ -5,28 +5,27 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using SFA.DAS.AdminService.Common.Extensions;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using SFA.DAS.RoatpAssessor.Web.Domain;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class RoatpAssessorControllerBase<T> : Controller
     {
-        protected readonly IRoatpApplicationApiClient _applyApiClient;
+        protected readonly IRoatpAssessorApiClient _assessorApiClient;
         protected readonly ILogger<T> _logger;
         protected readonly IRoatpAssessorPageValidator AssessorPageValidator;
 
-        public RoatpAssessorControllerBase(IRoatpApplicationApiClient applyApiClient,
+        public RoatpAssessorControllerBase(IRoatpAssessorApiClient assessorApiClient,
                                            ILogger<T> logger, IRoatpAssessorPageValidator assessorPageValidator)
         {
-            _applyApiClient = applyApiClient;
+            _assessorApiClient = assessorApiClient;
             _logger = logger;
             AssessorPageValidator = assessorPageValidator;
         }
@@ -68,12 +67,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
             var submittedPageOutcomeSuccessfully = false;
 
-            if(ModelState.IsValid)
-            { 
+            if (ModelState.IsValid)
+            {
                 var userId = HttpContext.User.UserId();
                 var comment = SetupGatewayPageOptionTexts(command);
 
-                submittedPageOutcomeSuccessfully = await _applyApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
@@ -82,7 +81,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                                     command.Status,
                                     comment);
 
-                if(!submittedPageOutcomeSuccessfully)
+                if (!submittedPageOutcomeSuccessfully)
                 {
                     ModelState.AddModelError(string.Empty, "Unable to save outcome as this time");
                 }
@@ -132,7 +131,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 var userId = HttpContext.User.UserId();
                 var comment = SetupGatewayPageOptionTexts(command);
 
-                submittedPageOutcomeSuccessfully = await _applyApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
                                     SequenceIds.DeliveringApprenticeshipTraining,
                           SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
                                     command.PageId,
@@ -158,9 +157,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 return View(errorView, viewModel);
             }
 
-            return RedirectToAction("ReviewPageAnswers", new { applicationId = command.ApplicationId,
+            return RedirectToAction("ReviewPageAnswers", new
+            {
+                applicationId = command.ApplicationId,
                 sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees });
+                sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
+            });
 
         }
 

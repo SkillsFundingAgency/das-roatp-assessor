@@ -8,19 +8,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 {
     public class ModeratorDashboardOrchestrator : IModeratorDashboardOrchestrator
     {
-        private readonly IRoatpAssessorApiClient _assessorApiClient;
-        private readonly IRoatpModerationApiClient _roatpModerationApiClient;
+        private readonly IRoatpApplicationApiClient _applicationApiClient;
 
-        public ModeratorDashboardOrchestrator(IRoatpAssessorApiClient assessorApiClient, IRoatpModerationApiClient roatpModerationApiClient)
+        public ModeratorDashboardOrchestrator(IRoatpApplicationApiClient applicationApiClient)
         {
-            _assessorApiClient = assessorApiClient;
-            _roatpModerationApiClient = roatpModerationApiClient;
+            _applicationApiClient = applicationApiClient;
         }
 
         public async Task<InModerationApplicationsViewModel> GetInModerationApplicationsViewModel(string userId)
         {
-            var applicationSummary = await _assessorApiClient.GetAssessorSummary(userId);
-            var applications = await _roatpModerationApiClient.GetModerationApplications();
+            var applicationSummary = await _applicationApiClient.GetAssessorSummary(userId);
+            var applications = await _applicationApiClient.GetModerationApplications(userId);
 
             var viewModel = new InModerationApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
             AddApplicationsToViewModel(viewModel, applications);

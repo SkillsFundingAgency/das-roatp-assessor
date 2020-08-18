@@ -3,21 +3,20 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
+using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
-using SFA.DAS.RoatpAssessor.Web.Domain;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
 {
@@ -26,23 +25,23 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
     {
         private readonly Guid _applicationId = Guid.NewGuid();
 
-        private Mock<IRoatpApplicationApiClient> _applyApiClient;
+        private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Mock<IRoatpAssessorPageValidator> _assessorPageValidator;
         private Mock<ISectionReviewOrchestrator> _sectionReviewOrchestrator;
 
         private SectionReviewController _controller;
-        
+
 
         [SetUp]
         public void SetUp()
         {
-            _applyApiClient = new Mock<IRoatpApplicationApiClient>();
+            _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
             _assessorPageValidator = new Mock<IRoatpAssessorPageValidator>();
             _sectionReviewOrchestrator = new Mock<ISectionReviewOrchestrator>();
 
             var logger = Mock.Of<ILogger<SectionReviewController>>();
 
-            _controller = new SectionReviewController(_applyApiClient.Object, _assessorPageValidator.Object, _sectionReviewOrchestrator.Object, logger)
+            _controller = new SectionReviewController(_assessorApiClient.Object, _assessorPageValidator.Object, _sectionReviewOrchestrator.Object, logger)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
@@ -90,7 +89,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             var viewModel = new ApplicationSectorsViewModel
             {
                 ApplicationId = _applicationId,
-               SelectedSectors = chosenSectors
+                SelectedSectors = chosenSectors
             };
 
             _sectionReviewOrchestrator.Setup(x => x.GetSectorsViewModel(It.IsAny<GetSectorsRequest>())).ReturnsAsync(viewModel);
@@ -156,7 +155,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             var validationResponse = new ValidationResponse();
             _assessorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
-            _applyApiClient.Setup(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+            _assessorApiClient.Setup(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
@@ -172,7 +171,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             Assert.AreEqual("Overview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
 
-            _applyApiClient.Verify(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+            _assessorApiClient.Verify(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
                         command.SequenceNumber,
                         command.SectionNumber,
                         command.PageId,
@@ -216,7 +215,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             Assert.That(actualViewModel, Is.Not.Null);
             Assert.That(actualViewModel, Is.SameAs(viewModel));
 
-            _applyApiClient.Verify(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+            _assessorApiClient.Verify(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
                         command.SequenceNumber,
                         command.SectionNumber,
                         command.PageId,

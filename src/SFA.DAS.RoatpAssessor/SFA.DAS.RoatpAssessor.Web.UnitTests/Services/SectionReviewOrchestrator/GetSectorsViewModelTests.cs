@@ -1,21 +1,19 @@
-﻿using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.Domain;
-using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
-using SFA.DAS.RoatpAssessor.Web.Models;
-using SFA.DAS.RoatpAssessor.Web.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Newtonsoft.Json;
+using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
+using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
@@ -26,7 +24,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
         private readonly Guid _applicationId = Guid.NewGuid();
         private readonly ClaimsPrincipal _user = MockedUser.Setup();
 
-        private Mock<IRoatpApplicationApiClient> _applyApiClient;
+        private Mock<IRoatpApplicationApiClient> _applicationApiClient;
+        private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Web.Services.SectionReviewOrchestrator _orchestrator;
         private string _assessorPageCaption;
         private string _ukprn;
@@ -42,11 +41,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             var logger = new Mock<ILogger<Web.Services.SectionReviewOrchestrator>>();
             _chosenSectors = new List<Sector>();
 
-            _applyApiClient = new Mock<IRoatpApplicationApiClient>();
+            _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
+            _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
 
             var supplementaryInformationService = new Mock<ISupplementaryInformationService>();
 
-            _orchestrator = new Web.Services.SectionReviewOrchestrator(logger.Object, _applyApiClient.Object, supplementaryInformationService.Object);
+            _orchestrator = new Web.Services.SectionReviewOrchestrator(logger.Object, _applicationApiClient.Object, _assessorApiClient.Object, supplementaryInformationService.Object);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             int sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
             string pageId = RoatpWorkflowPageIds.YourSectorsAndEmployeesStartingPageId;
             var userId = _user.UserId();
-            _chosenSectors.Add(new Sector {PageId = "1",Title="page 1 title", Status="Pass"});
+            _chosenSectors.Add(new Sector { PageId = "1", Title = "page 1 title", Status = "Pass" });
             _chosenSectors.Add(new Sector { PageId = "2", Title = "page 2 title" });
             _ukprn = "1234";
             _organisationName = "org name";
@@ -82,12 +82,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
                 Caption = _assessorPageCaption
             };
 
-            _applyApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(application);
+            _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(application);
 
-            _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
+            _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);
 
-            _applyApiClient.Setup(x => x.GetChosenSectors(_applicationId, userId))
+            _assessorApiClient.Setup(x => x.GetChosenSectors(_applicationId, userId))
                 .ReturnsAsync(_chosenSectors);
 
 

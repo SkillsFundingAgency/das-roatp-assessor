@@ -1,35 +1,33 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Helpers;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+
 
 namespace SFA.DAS.RoatpAssessor.Web.Services
 {
     public class AssessorOverviewOrchestrator : IAssessorOverviewOrchestrator
     {
-        private readonly ILogger<AssessorOverviewOrchestrator> _logger;
-        private readonly IRoatpApplicationApiClient _applyApiClient;
+        private readonly IRoatpApplicationApiClient _applicationApiClient;
+        private readonly IRoatpAssessorApiClient _assessorApiClient;
 
-        public AssessorOverviewOrchestrator(ILogger<AssessorOverviewOrchestrator> logger, IRoatpApplicationApiClient applyApiClient)
+        public AssessorOverviewOrchestrator(IRoatpApplicationApiClient applyApiClient, IRoatpAssessorApiClient assessorApiClient)
         {
-            _logger = logger;
-            _applyApiClient = applyApiClient;
+            _applicationApiClient = applyApiClient;
+            _assessorApiClient = assessorApiClient;
         }
 
         public async Task<AssessorApplicationViewModel> GetOverviewViewModel(GetApplicationOverviewRequest request)
         {
-            var application = await _applyApiClient.GetApplication(request.ApplicationId);
-            var contact = await _applyApiClient.GetContactForApplication(request.ApplicationId);
-            var sequences = await _applyApiClient.GetAssessorSequences(request.ApplicationId);
+            var application = await _applicationApiClient.GetApplication(request.ApplicationId);
+            var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
+            var sequences = await _assessorApiClient.GetAssessorSequences(request.ApplicationId);
 
             if (application is null || contact is null || sequences is null)
             {
@@ -40,7 +38,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var viewmodel = new AssessorApplicationViewModel(application, contact, sequences, request.UserId);
 
-            var savedOutcomes = await _applyApiClient.GetAllAssessorReviewOutcomes(request.ApplicationId, (int)assessorType, request.UserId);
+            var savedOutcomes = await _assessorApiClient.GetAllAssessorReviewOutcomes(request.ApplicationId, (int)assessorType, request.UserId);
             if (savedOutcomes is null || !savedOutcomes.Any())
             {
                 viewmodel.IsReadyForModeration = false;
@@ -57,7 +55,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         {
                             if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
                             {
-                                var sectorsChosen = await _applyApiClient.GetChosenSectors(request.ApplicationId, request.UserId);
+                                var sectorsChosen = await _assessorApiClient.GetChosenSectors(request.ApplicationId, request.UserId);
                                 section.Status = GetSectorsSectionStatus(sectorsChosen, savedOutcomes);
                             }
                             else
@@ -81,7 +79,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public string GetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes)
         {
             var sectionStatus = string.Empty;
-            if(sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
+            if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
                 if (sectionPageReviewOutcomes.Count.Equals(1))
                 {
@@ -156,8 +154,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 foreach (var section in sequence.Sections)
                 {
-                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(AssessorSectionStatus.Pass) && 
-                                                   !section.Status.Equals(AssessorSectionStatus.Fail) && 
+                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(AssessorSectionStatus.Pass) &&
+                                                   !section.Status.Equals(AssessorSectionStatus.Fail) &&
                                                    !section.Status.Equals(AssessorSectionStatus.NotRequired) &&
                                                    !section.Status.Contains(AssessorSectionStatus.FailOutOf)))
                     {

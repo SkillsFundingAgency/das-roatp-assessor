@@ -5,11 +5,11 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.AdminService.Common.Extensions;
+using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using SFA.DAS.AdminService.Common.Extensions;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestrator
 {
@@ -18,17 +18,19 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
     {
         private readonly ClaimsPrincipal _user = MockedUser.Setup();
 
-        private Mock<IRoatpAssessorApiClient> _apiClient;
+        private Mock<IRoatpApplicationApiClient> _applicationApiClient;
+        private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Web.Services.AssessorDashboardOrchestrator _orchestrator;
-        
+
         [SetUp]
         public void SetUp()
         {
-            _apiClient = new Mock<IRoatpAssessorApiClient>();
-            _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_apiClient.Object);
+            _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
+            _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
+            _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_applicationApiClient.Object, _assessorApiClient.Object);
 
-            _apiClient.Setup(x => x.GetNewApplications(It.IsAny<string>())).ReturnsAsync(new List<RoatpAssessorApplicationSummary>());
-            _apiClient.Setup(x => x.GetAssessorSummary(It.IsAny<string>())).ReturnsAsync(new RoatpAssessorSummary());
+            _applicationApiClient.Setup(x => x.GetNewApplications(It.IsAny<string>())).ReturnsAsync(new List<RoatpAssessorApplicationSummary>());
+            _applicationApiClient.Setup(x => x.GetAssessorSummary(It.IsAny<string>())).ReturnsAsync(new RoatpAssessorSummary());
         }
 
         [Test]
@@ -36,8 +38,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
         {
             var userId = _user.UserId();
             var summary = new RoatpAssessorSummary { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6 };
-            
-            _apiClient.Setup(x => x.GetAssessorSummary(userId)).ReturnsAsync(summary);
+
+            _applicationApiClient.Setup(x => x.GetAssessorSummary(userId)).ReturnsAsync(summary);
 
             var response = await _orchestrator.GetNewApplicationsViewModel(userId);
 
@@ -57,7 +59,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
                 new RoatpAssessorApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid() }
             };
 
-            _apiClient.Setup(x => x.GetNewApplications(userId)).ReturnsAsync(applications);
+            _applicationApiClient.Setup(x => x.GetNewApplications(userId)).ReturnsAsync(applications);
 
             var response = await _orchestrator.GetNewApplicationsViewModel(userId);
 

@@ -23,7 +23,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         private readonly Guid _applicationId = Guid.NewGuid();
         private const AssessorType _assessorType = AssessorType.FirstAssessor;
 
-        private Mock<IRoatpApplicationApiClient> _applyApiClient;
+        private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Mock<IAssessorOverviewOrchestrator> _assessorOverviewOrchestrator;
         private IRoatpAssessorOutcomeValidator _assessorOutcomeValidator;
 
@@ -33,16 +33,16 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         [SetUp]
         public void SetUp()
         {
-            _applyApiClient = new Mock<IRoatpApplicationApiClient>();
+            _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
             _assessorOutcomeValidator = new RoatpAssessorOutcomeValidator();
             _assessorOverviewOrchestrator = new Mock<IAssessorOverviewOrchestrator>();
 
-            _controller = new AssessorOutcomeController(_applyApiClient.Object, _assessorOverviewOrchestrator.Object, _assessorOutcomeValidator)
+            _controller = new AssessorOutcomeController(_assessorApiClient.Object, _assessorOverviewOrchestrator.Object, _assessorOutcomeValidator)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
 
-            _applyApiClient.Setup(x => x.UpdateAssessorReviewStatus(_applicationId, (int)_assessorType, _controller.User.UserId(), It.IsAny<string>())).ReturnsAsync(true);
+            _assessorApiClient.Setup(x => x.UpdateAssessorReviewStatus(_applicationId, (int)_assessorType, _controller.User.UserId(), It.IsAny<string>())).ReturnsAsync(true);
 
             _applicationViewModel = GetApplicationViewModel();
             _assessorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetApplicationOverviewRequest>())).ReturnsAsync(_applicationViewModel);

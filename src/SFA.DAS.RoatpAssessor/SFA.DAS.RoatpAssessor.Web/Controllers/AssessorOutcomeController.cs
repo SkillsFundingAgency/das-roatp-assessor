@@ -18,13 +18,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class AssessorOutcomeController : Controller
     {
-        private readonly IRoatpApplicationApiClient _applyApiClient;
+        private readonly IRoatpAssessorApiClient _assessorApiClient;
         private readonly IAssessorOverviewOrchestrator _overviewOrchestrator;
         private readonly IRoatpAssessorOutcomeValidator _assessorOutcomeValidator;
 
-        public AssessorOutcomeController(IRoatpApplicationApiClient applyApiClient, IAssessorOverviewOrchestrator overviewOrchestrator, IRoatpAssessorOutcomeValidator assessorOutcomeValidator)
+        public AssessorOutcomeController(IRoatpAssessorApiClient assessorApiClient, IAssessorOverviewOrchestrator overviewOrchestrator, IRoatpAssessorOutcomeValidator assessorOutcomeValidator)
         {
-            _applyApiClient = applyApiClient;
+            _assessorApiClient = assessorApiClient;
             _overviewOrchestrator = overviewOrchestrator;
             _assessorOutcomeValidator = assessorOutcomeValidator;
         }
@@ -71,7 +71,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             // submit if validation passed and user specified to do so
             if (ModelState.IsValid && submitForModeration)
             {
-                var submittedSuccessfully = await _applyApiClient.UpdateAssessorReviewStatus(command.ApplicationId, (int)command.AssessorType, userId, AssessorReviewStatus.Approved);
+                var submittedSuccessfully = await _assessorApiClient.UpdateAssessorReviewStatus(command.ApplicationId, (int)command.AssessorType, userId, AssessorReviewStatus.Approved);
 
                 if (!submittedSuccessfully)
                 {
@@ -85,7 +85,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, userId));
                 return View("~/Views/AssessorOutcome/AssessorOutcome.cshtml", viewModel);
             }
-            else if(!submitForModeration)
+            else if (!submitForModeration)
             {
                 return RedirectToAction("ViewApplication", "Overview", new { applicationId });
             }

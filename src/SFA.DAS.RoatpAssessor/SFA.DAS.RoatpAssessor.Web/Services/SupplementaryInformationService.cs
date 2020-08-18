@@ -1,23 +1,20 @@
-﻿using Microsoft.Extensions.Logging;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
-using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
+using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 
 namespace SFA.DAS.RoatpAssessor.Web.Services
 {
     public class SupplementaryInformationService : ISupplementaryInformationService
     {
-        private readonly IRoatpApplicationApiClient _applyApiClient;
-        private readonly ILogger<SupplementaryInformationService> _logger;
+        private readonly IRoatpAssessorApiClient _assessorApiClient;
 
-        public SupplementaryInformationService(ILogger<SupplementaryInformationService> logger, IRoatpApplicationApiClient applyApiClient)
+        public SupplementaryInformationService(IRoatpAssessorApiClient assessorApiClient)
         {
-            _applyApiClient = applyApiClient;
-            _logger = logger;
+            _assessorApiClient = assessorApiClient;
         }
 
         public async Task<List<AssessorSupplementaryInformation>> GetSupplementaryInformation(Guid applicationId, string pageId)
@@ -46,7 +43,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             AssessorSupplementaryInformation supplementaryInformation = null;
 
-            var page = await _applyApiClient.GetAssessorPage(applicationId, safegaurdingPolicySequenceNumber, safegaurdingPolicySectionNumber, safegaurdingPolicyPageId);
+            var page = await _assessorApiClient.GetAssessorPage(applicationId, safegaurdingPolicySequenceNumber, safegaurdingPolicySectionNumber, safegaurdingPolicyPageId);
 
             if (page?.Questions?.First() != null)
             {
