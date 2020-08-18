@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
-using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Services;
-using SFA.DAS.RoatpAssessor.Web.Settings;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
@@ -28,7 +27,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
 
             _assessorOrchestrator = new Mock<IAssessorDashboardOrchestrator>();
             _moderatorOrchestrator = new Mock<IModeratorDashboardOrchestrator>();
-            _controller = new DashboardController(_assessorOrchestrator.Object, _moderatorOrchestrator.Object)           
+            _controller = new DashboardController(_assessorOrchestrator.Object, _moderatorOrchestrator.Object)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
@@ -77,7 +76,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
             var userName = _controller.User.UserDisplayName();
             var applicationId = Guid.NewGuid();
             var assessorNumber = 2;
-            
+
             var result = await _controller.AssignToAssessor(applicationId, assessorNumber) as RedirectToActionResult;
 
             _assessorOrchestrator.Verify(x => x.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName));

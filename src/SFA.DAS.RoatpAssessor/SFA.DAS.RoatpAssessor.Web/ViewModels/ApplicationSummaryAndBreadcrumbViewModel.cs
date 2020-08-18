@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
     public class ApplicationSummaryAndBreadcrumbViewModel
     {
-     
+
         public Guid ApplicationId { get; set; }
         public string Heading { get; set; }
         public string Caption { get; set; }
@@ -29,7 +26,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(ApplicationRoute))
+                if (string.IsNullOrWhiteSpace(ApplicationRoute))
                 {
                     return string.Empty;
                 }
