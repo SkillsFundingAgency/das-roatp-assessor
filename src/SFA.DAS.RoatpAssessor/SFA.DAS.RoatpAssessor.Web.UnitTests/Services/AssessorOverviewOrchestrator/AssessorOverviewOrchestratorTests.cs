@@ -1,19 +1,18 @@
-﻿using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
-using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
-using SFA.DAS.RoatpAssessor.Web.Models;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.AdminService.Common.Extensions;
+using SFA.DAS.AdminService.Common.Testing.MockedObjects;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using SFA.DAS.AdminService.Common.Extensions;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestrator
 {
@@ -23,8 +22,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         private readonly Guid _applicationId = Guid.NewGuid();
         private readonly ClaimsPrincipal _user = MockedUser.Setup();
 
-        private Mock<ILogger<Web.Services.AssessorOverviewOrchestrator>> _logger;
-        private Mock<IRoatpApplicationApiClient> _apiClient;
+        private Mock<IRoatpApplicationApiClient> _applicationApiClient;
+        private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Web.Services.AssessorOverviewOrchestrator _orchestrator;
         private string _userId => _user.UserId();
         private Apply _application;
@@ -36,19 +35,19 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         [SetUp]
         public void SetUp()
         {
-            _logger = new Mock<ILogger<Web.Services.AssessorOverviewOrchestrator>>();
-            _apiClient = new Mock<IRoatpApplicationApiClient>();
-            _orchestrator = new Web.Services.AssessorOverviewOrchestrator(_logger.Object, _apiClient.Object);
+            _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
+            _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
+            _orchestrator = new Web.Services.AssessorOverviewOrchestrator(_applicationApiClient.Object, _assessorApiClient.Object);
 
-            _application = new Apply { ApplicationId = _applicationId, OrganisationId = Guid.NewGuid(), Status = "Status", Assessor2UserId = _userId, Assessor2ReviewStatus = AssessorReviewStatus.InProgress};
+            _application = new Apply { ApplicationId = _applicationId, OrganisationId = Guid.NewGuid(), Status = "Status", Assessor2UserId = _userId, Assessor2ReviewStatus = AssessorReviewStatus.InProgress };
             _contact = new Contact { Email = "email@address.com" };
             _sequences = new List<AssessorSequence>();
             _outcomes = new List<PageReviewOutcome>();
 
-            _apiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
-            _apiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
-            _apiClient.Setup(x => x.GetAssessorSequences(_applicationId)).ReturnsAsync(_sequences);
-            _apiClient.Setup(x => x.GetAllAssessorReviewOutcomes(_applicationId, (int)AssessorType.SecondAssessor, _userId)).ReturnsAsync(_outcomes);
+            _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
+            _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
+            _assessorApiClient.Setup(x => x.GetAssessorSequences(_applicationId)).ReturnsAsync(_sequences);
+            _assessorApiClient.Setup(x => x.GetAllAssessorReviewOutcomes(_applicationId, (int)AssessorType.SecondAssessor, _userId)).ReturnsAsync(_outcomes);
         }
 
         [TestCase(null)]
@@ -197,7 +196,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         public async Task GetOverviewViewModel_WhenApplicationNotFound_ThenNoViewModelIsReturned()
         {
             var applicationId = Guid.NewGuid();
-            _apiClient.Setup(x => x.GetApplication(applicationId)).ReturnsAsync((Apply) null);
+            _applicationApiClient.Setup(x => x.GetApplication(applicationId)).ReturnsAsync((Apply)null);
 
             var result = await _orchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, "userId"));
 
@@ -208,8 +207,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         public async Task GetOverviewViewModel_WhenApplicationContactNotFound_ThenNoViewModelIsReturned()
         {
             var applicationId = Guid.NewGuid();
-            _apiClient.Setup(x => x.GetApplication(applicationId)).ReturnsAsync(new Apply { ApplicationId = applicationId });
-            _apiClient.Setup(x => x.GetContactForApplication(applicationId)).ReturnsAsync((Contact) null);
+            _applicationApiClient.Setup(x => x.GetApplication(applicationId)).ReturnsAsync(new Apply { ApplicationId = applicationId });
+            _applicationApiClient.Setup(x => x.GetContactForApplication(applicationId)).ReturnsAsync((Contact)null);
 
             var result = await _orchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, "userId"));
 
@@ -220,9 +219,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         public async Task GetOverviewViewModel_WhenSequencesNotFound_ThenNoViewModelIsReturned()
         {
             var applicationId = Guid.NewGuid();
-            _apiClient.Setup(x => x.GetApplication(applicationId)).ReturnsAsync(new Apply { ApplicationId = applicationId });
-            _apiClient.Setup(x => x.GetContactForApplication(applicationId)).ReturnsAsync(new Contact());
-            _apiClient.Setup(x => x.GetAssessorSequences(applicationId)).ReturnsAsync((List<AssessorSequence>)null);
+            _applicationApiClient.Setup(x => x.GetApplication(applicationId)).ReturnsAsync(new Apply { ApplicationId = applicationId });
+            _applicationApiClient.Setup(x => x.GetContactForApplication(applicationId)).ReturnsAsync(new Contact());
+            _assessorApiClient.Setup(x => x.GetAssessorSequences(applicationId)).ReturnsAsync((List<AssessorSequence>)null);
 
             var result = await _orchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, "userId"));
 
@@ -254,8 +253,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         public async Task GetOverviewViewModel_WhenThereAreSavedOutcomesAndTheyAllPass_ThenTheOutcomesAreReturnedAndTheApplicationIsReadyForModeration()
         {
             var expectedStatus = AssessorSectionStatus.Pass;
-            _sequences.Add(new AssessorSequence { SequenceNumber =  1, Sections = new List<AssessorSection> { new AssessorSection { SectionNumber = 2 } } });
-            _outcomes.Add(new PageReviewOutcome { SequenceNumber = 1, SectionNumber = 2,Status = expectedStatus });
+            _sequences.Add(new AssessorSequence { SequenceNumber = 1, Sections = new List<AssessorSection> { new AssessorSection { SectionNumber = 2 } } });
+            _outcomes.Add(new PageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
 
             var result = await _orchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(_applicationId, _userId));
 

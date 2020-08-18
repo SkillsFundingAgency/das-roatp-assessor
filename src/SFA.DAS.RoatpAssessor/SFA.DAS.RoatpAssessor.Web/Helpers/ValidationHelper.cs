@@ -7,7 +7,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
     {
         public static string MandatoryValidationMessage(SubmitAssessorPageAnswerCommand command)
         {
-            switch(command.PageId)
+            switch (command.PageId)
             {
                 case RoatpWorkflowPageIds.HowTeamWorkedWithOtherOrganisationsToDevelopAndDeliverTraining:
                     {

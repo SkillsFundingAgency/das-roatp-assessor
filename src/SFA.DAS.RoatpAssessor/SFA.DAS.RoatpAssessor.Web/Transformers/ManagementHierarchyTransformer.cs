@@ -86,7 +86,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Transformers
 
             StringBuilder sb = new StringBuilder();
 
-            if(years == 1)
+            if (years == 1)
             {
                 sb.Append($"{years} year");
             }

@@ -3,10 +3,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.AdminService.Common.Extensions;
+using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.AdminService.Common.Extensions;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestrator
 {
@@ -16,14 +16,16 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
         private readonly Guid _applicationId = Guid.NewGuid();
         private readonly ClaimsPrincipal _user = MockedUser.Setup();
 
-        private Mock<IRoatpAssessorApiClient> _apiClient;
+        private Mock<IRoatpApplicationApiClient> _applicationApiClient;
+        private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Web.Services.AssessorDashboardOrchestrator _orchestrator;
-        
+
         [SetUp]
         public void SetUp()
         {
-            _apiClient = new Mock<IRoatpAssessorApiClient>();
-            _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_apiClient.Object);
+            _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
+            _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
+            _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_applicationApiClient.Object, _assessorApiClient.Object);
         }
 
         [Test]
@@ -35,7 +37,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
 
             await _orchestrator.AssignApplicationToAssessor(_applicationId, assessorNumber, userId, userName);
 
-            _apiClient.Verify(x => x.AssignAssessor(_applicationId, It.Is<AssignAssessorApplicationRequest>(r => r.AssessorUserId == userId && r.AssessorName == userName && r.AssessorNumber == assessorNumber)));
+            _assessorApiClient.Verify(x => x.AssignAssessor(_applicationId, It.Is<AssignAssessorApplicationRequest>(r => r.AssessorUserId == userId && r.AssessorName == userName && r.AssessorNumber == assessorNumber)));
         }
     }
 }

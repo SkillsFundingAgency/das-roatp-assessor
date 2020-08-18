@@ -2,10 +2,10 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.Services;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
@@ -30,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            else if(viewModel.IsAssessorApproved)
+            else if (viewModel.IsAssessorApproved)
             {
                 return RedirectToAction("AssessmentComplete", "AssessorOutcome", new { applicationId });
             }

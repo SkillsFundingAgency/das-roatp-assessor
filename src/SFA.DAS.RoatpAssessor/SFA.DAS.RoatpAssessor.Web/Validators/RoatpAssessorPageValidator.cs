@@ -75,7 +75,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
         {
             int wordCount = 0;
 
-            if(!string.IsNullOrWhiteSpace(text))
+            if (!string.IsNullOrWhiteSpace(text))
             {
                 wordCount = text.Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries)
                             .Length;

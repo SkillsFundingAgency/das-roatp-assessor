@@ -1,14 +1,13 @@
 ﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using System;
 using System.Collections.Generic;
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
-    public class ReviewAnswersViewModel: ApplicationSummaryAndBreadcrumbViewModel
+    public class ReviewAnswersViewModel : ApplicationSummaryAndBreadcrumbViewModel
     {
-  
-         public string ApplicantEmailAddress { get; set; }
+
+        public string ApplicantEmailAddress { get; set; }
 
 
         // It seems that we will need them for grouping statuses
@@ -23,7 +22,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public List<AssessorAnswer> Answers { get; set; }
         public List<TabularData> TabularData { get; set; }
         public List<AssessorSupplementaryInformation> SupplementaryInformation { get; set; }
-        
+
         public List<string> GuidanceInformation { get; set; }
     }
 }

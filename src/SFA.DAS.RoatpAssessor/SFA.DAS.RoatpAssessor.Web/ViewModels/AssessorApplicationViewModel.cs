@@ -11,7 +11,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public Guid Id { get; }
         public Guid ApplicationId { get; }
         public Guid OrgId { get; }
-     
+
         public string ApplicationStatus { get; }
         public string AssessorReviewStatus { get; set; }
         public AssessorType AssessorType { get; set; }
@@ -53,7 +53,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 AssessorReviewStatus = application.Assessor1ReviewStatus;
                 IsAssessorApproved = application.Assessor1ReviewStatus == ApplyTypes.AssessorReviewStatus.Approved;
             }
-            else if(AssessorType == AssessorType.SecondAssessor)
+            else if (AssessorType == AssessorType.SecondAssessor)
             {
                 AssessorReviewStatus = application.Assessor2ReviewStatus;
                 IsAssessorApproved = application.Assessor2ReviewStatus == ApplyTypes.AssessorReviewStatus.Approved;
@@ -64,17 +64,17 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         {
             switch (status)
             {
-                case null: 
+                case null:
                     return string.Empty;
-                case string a when a.Equals("pass", StringComparison.InvariantCultureIgnoreCase): 
+                case string a when a.Equals("pass", StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__task-pass";
-                case string b when b.Contains("fail", StringComparison.InvariantCultureIgnoreCase): 
+                case string b when b.Contains("fail", StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__task-fail";
                 case string c when c.Equals("in progress", StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__task-inprogress";
                 case string d when d.Equals("not required", StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__task-inactive";
-                default: 
+                default:
                     return string.Empty;
             }
         }

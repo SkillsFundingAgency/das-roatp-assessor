@@ -9,17 +9,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 {
     public class AssessorDashboardOrchestrator : IAssessorDashboardOrchestrator
     {
+        private readonly IRoatpApplicationApiClient _applicationApiClient;
         private readonly IRoatpAssessorApiClient _assessorApiClient;
 
-        public AssessorDashboardOrchestrator(IRoatpAssessorApiClient assessorApiClient)
+        public AssessorDashboardOrchestrator(IRoatpApplicationApiClient applicationApiClient, IRoatpAssessorApiClient assessorApiClient)
         {
+            _applicationApiClient = applicationApiClient;
             _assessorApiClient = assessorApiClient;
         }
 
         public async Task<NewApplicationsViewModel> GetNewApplicationsViewModel(string userId)
         {
-            var applicationSummary = await _assessorApiClient.GetAssessorSummary(userId);
-            var applications = await _assessorApiClient.GetNewApplications(userId);
+            var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
+            var applications = await _applicationApiClient.GetNewApplications(userId);
 
             var viewModel = new NewApplicationsViewModel(applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
             AddApplicationsToViewModel(viewModel, applications);
@@ -33,8 +35,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         public async Task<InProgressApplicationsViewModel> GetInProgressApplicationsViewModel(string userId)
         {
-            var applicationSummary = await _assessorApiClient.GetAssessorSummary(userId);
-            var applications = await _assessorApiClient.GetInProgressApplications(userId);
+            var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
+            var applications = await _applicationApiClient.GetInProgressApplications(userId);
 
             var viewModel = new InProgressApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
             AddApplicationsToViewModel(viewModel, applications);

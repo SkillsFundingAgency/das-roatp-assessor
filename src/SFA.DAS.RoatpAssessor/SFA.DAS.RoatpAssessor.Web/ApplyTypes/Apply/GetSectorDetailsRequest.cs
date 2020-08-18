@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.ApplicationInsights;
 
 namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
 {

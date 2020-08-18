@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.AdminService.Common.Extensions;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using SFA.DAS.RoatpAssessor.Web.Domain;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
@@ -18,10 +18,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
     public class SectionReviewController : RoatpAssessorControllerBase<SectionReviewController>
     {
         private readonly ISectionReviewOrchestrator _sectionReviewOrchestrator;
-        public SectionReviewController(IRoatpApplicationApiClient applyApiClient,
+        public SectionReviewController(IRoatpAssessorApiClient assessorApiClient,
                                        IRoatpAssessorPageValidator assessorPageValidator,
                                        ISectionReviewOrchestrator sectionReviewOrchestrator,
-                                       ILogger<SectionReviewController> logger) : base(applyApiClient, logger, assessorPageValidator)
+                                       ILogger<SectionReviewController> logger) : base(assessorApiClient, logger, assessorPageValidator)
         {
             _sectionReviewOrchestrator = sectionReviewOrchestrator;
         }
@@ -32,7 +32,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         {
             var userId = HttpContext.User.UserId();
 
-        
+
             if (sequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && sectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
             {
                 var sectorViewModel = await _sectionReviewOrchestrator.GetSectorsViewModel(new GetSectorsRequest(applicationId, userId));
@@ -49,7 +49,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
             if (viewModel is null)
             {
-                return RedirectToAction("ViewApplication", "Overview", new {applicationId});
+                return RedirectToAction("ViewApplication", "Overview", new { applicationId });
             }
 
             return View("~/Views/SectionReview/ReviewAnswers.cshtml", viewModel);

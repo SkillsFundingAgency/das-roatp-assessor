@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
@@ -15,16 +14,15 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
     {
         private readonly Guid _applicationId = Guid.NewGuid();
 
-        private Mock<IRoatpApplicationApiClient> _applyApiClient;
+        private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Web.Services.SupplementaryInformationService _service;
 
         [SetUp]
         public void SetUp()
         {
-            var logger = new Mock<ILogger<Web.Services.SupplementaryInformationService>>();
-            _applyApiClient = new Mock<IRoatpApplicationApiClient>();
+            _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
 
-            _service = new Web.Services.SupplementaryInformationService(logger.Object, _applyApiClient.Object);
+            _service = new Web.Services.SupplementaryInformationService(_assessorApiClient.Object);
         }
 
         [Test]
@@ -34,7 +32,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
 
             var assessorPage = default(AssessorPage);
 
-            _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+            _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
                 .ReturnsAsync(assessorPage);
 
             var result = await _service.GetSupplementaryInformation(_applicationId, pageId);
@@ -51,7 +49,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
             {
                 ApplicationId = _applicationId,
                 Questions = new List<AssessorQuestion>
-                {      
+                {
                     new AssessorQuestion { QuestionId = "Q1" }
                 },
                 Answers = new List<AssessorAnswer>
@@ -60,7 +58,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
                 }
             };
 
-            _applyApiClient.Setup(x => x.GetAssessorPage(_applicationId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+            _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
                 .ReturnsAsync(assessorPage);
 
             var result = await _service.GetSupplementaryInformation(_applicationId, safeguardingPreventDutyPolicyPageId);
