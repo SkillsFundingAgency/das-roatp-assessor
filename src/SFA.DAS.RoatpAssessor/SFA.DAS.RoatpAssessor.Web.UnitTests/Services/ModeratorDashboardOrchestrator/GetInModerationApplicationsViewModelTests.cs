@@ -28,16 +28,16 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
             _orchestrator = new Web.Services.ModeratorDashboardOrchestrator(_applicationApiClient.Object);
 
             _applicationApiClient.Setup(x => x.GetModerationApplications(_user.UserId())).ReturnsAsync(new List<RoatpModerationApplicationSummary>());
-            _applicationApiClient.Setup(x => x.GetAssessorSummary(_user.UserId())).ReturnsAsync(new RoatpAssessorSummary());
+            _applicationApiClient.Setup(x => x.GetApplicationCounts(_user.UserId())).ReturnsAsync(new ApplicationCounts());
         }
 
         [Test]
         public async Task When_getting_in_moderation_applications_then_the_application_summary_is_returned()
         {
             var userId = _user.UserId();
-            var summary = new RoatpAssessorSummary { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6 };
+            var summary = new ApplicationCounts { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6 };
 
-            _applicationApiClient.Setup(x => x.GetAssessorSummary(userId)).ReturnsAsync(summary);
+            _applicationApiClient.Setup(x => x.GetApplicationCounts(userId)).ReturnsAsync(summary);
 
             var response = await _orchestrator.GetInModerationApplicationsViewModel(userId);
 

@@ -18,9 +18,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenService.GetToken(_httpClient.BaseAddress));
         }
 
-        public async Task<RoatpAssessorSummary> GetAssessorSummary(string userId)
+        public async Task<ApplicationCounts> GetApplicationCounts(string userId)
         {
-            return await Get<RoatpAssessorSummary>($"Assessor/Applications/{userId}");
+            return await Get<ApplicationCounts>($"Assessor/Applications/{userId}");
         }
 
         public async Task<List<RoatpAssessorApplicationSummary>> GetNewApplications(string userId)

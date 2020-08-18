@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.RoatpAssessor.Web.Domain
 {
-    public class RoatpAssessorSummary
+    public class ApplicationCounts
     {
         public int NewApplications { get; set; }
         public int InProgressApplications { get; set; }

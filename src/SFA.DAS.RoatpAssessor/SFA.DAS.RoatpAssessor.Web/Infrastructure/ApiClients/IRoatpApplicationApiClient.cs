@@ -9,11 +9,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
     public interface IRoatpApplicationApiClient
     {
-        Task<RoatpAssessorSummary> GetAssessorSummary(string userId); // Maybe call objects GetDashboardCounts
+        Task<ApplicationCounts> GetApplicationCounts(string userId);
 
-        Task<List<RoatpAssessorApplicationSummary>> GetNewApplications(string userId); // Maybe return a RoatpApplicationSummary object
-        Task<List<RoatpAssessorApplicationSummary>> GetInProgressApplications(string userId); // Maybe return a RoatpApplicationSummary object
-        Task<List<RoatpModerationApplicationSummary>> GetModerationApplications(string userId); // Maybe return a RoatpApplicationSummary object
+        Task<List<RoatpAssessorApplicationSummary>> GetNewApplications(string userId);
+        Task<List<RoatpAssessorApplicationSummary>> GetInProgressApplications(string userId);
+        Task<List<RoatpModerationApplicationSummary>> GetModerationApplications(string userId);
 
         Task<Apply> GetApplication(Guid applicationId);
 

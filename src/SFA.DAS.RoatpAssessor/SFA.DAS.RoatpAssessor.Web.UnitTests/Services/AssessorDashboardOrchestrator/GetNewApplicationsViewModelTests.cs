@@ -29,17 +29,17 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
             _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_applicationApiClient.Object, _assessorApiClient.Object);
 
-            _applicationApiClient.Setup(x => x.GetNewApplications(It.IsAny<string>())).ReturnsAsync(new List<RoatpAssessorApplicationSummary>());
-            _applicationApiClient.Setup(x => x.GetAssessorSummary(It.IsAny<string>())).ReturnsAsync(new RoatpAssessorSummary());
+            _applicationApiClient.Setup(x => x.GetNewApplications(_user.UserId())).ReturnsAsync(new List<RoatpAssessorApplicationSummary>());
+            _applicationApiClient.Setup(x => x.GetApplicationCounts(_user.UserId())).ReturnsAsync(new ApplicationCounts());
         }
 
         [Test]
         public async Task When_getting_new_applications_then_the_application_summary_is_returned()
         {
             var userId = _user.UserId();
-            var summary = new RoatpAssessorSummary { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6 };
+            var summary = new ApplicationCounts { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6 };
 
-            _applicationApiClient.Setup(x => x.GetAssessorSummary(userId)).ReturnsAsync(summary);
+            _applicationApiClient.Setup(x => x.GetApplicationCounts(userId)).ReturnsAsync(summary);
 
             var response = await _orchestrator.GetNewApplicationsViewModel(userId);
 

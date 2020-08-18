@@ -17,7 +17,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         public async Task<InModerationApplicationsViewModel> GetInModerationApplicationsViewModel(string userId)
         {
-            var applicationSummary = await _applicationApiClient.GetAssessorSummary(userId);
+            var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
             var applications = await _applicationApiClient.GetModerationApplications(userId);
 
             var viewModel = new InModerationApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
