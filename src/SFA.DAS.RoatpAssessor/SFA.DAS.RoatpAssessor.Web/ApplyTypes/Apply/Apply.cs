@@ -10,10 +10,13 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public string ApplicationStatus { get; set; }
         public string GatewayReviewStatus { get; set; }
         public string FinancialReviewStatus { get; set; }
+        public string ModerationStatus { get; set; }
 
         public string Assessor1UserId { get; set; }
+        public string Assessor1Name { get; set; }
         public string Assessor1ReviewStatus { get; set; }
         public string Assessor2UserId { get; set; }
+        public string Assessor2Name { get; set; }
         public string Assessor2ReviewStatus { get; set; }
 
         public ApplyData ApplyData { get; set; }
