@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor
 {
     public class AssessorSequence
     {
