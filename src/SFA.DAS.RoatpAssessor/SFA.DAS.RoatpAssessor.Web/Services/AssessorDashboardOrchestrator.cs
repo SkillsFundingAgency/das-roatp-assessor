@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -43,7 +44,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewModel;
         }
 
-        private void AddApplicationsToViewModel(AssessorDashboardViewModel viewModel, List<RoatpAssessorApplicationSummary> applications)
+        private void AddApplicationsToViewModel(AssessorDashboardViewModel viewModel, List<AssessorApplicationSummary> applications)
         {
             // TODO: Consider using a Mapper with unit tests, or just use the domain class instead
             foreach (var application in applications)
@@ -54,7 +55,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
         }
 
-        private ApplicationViewModel CreateApplicationViewModel(RoatpAssessorApplicationSummary application)
+        private ApplicationViewModel CreateApplicationViewModel(AssessorApplicationSummary application)
         {
             var viewModel = new ApplicationViewModel();
 

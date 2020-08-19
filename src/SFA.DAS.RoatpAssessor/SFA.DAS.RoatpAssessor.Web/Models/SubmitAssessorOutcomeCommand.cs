@@ -1,4 +1,4 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using System;
 
 namespace SFA.DAS.RoatpAssessor.Web.Models

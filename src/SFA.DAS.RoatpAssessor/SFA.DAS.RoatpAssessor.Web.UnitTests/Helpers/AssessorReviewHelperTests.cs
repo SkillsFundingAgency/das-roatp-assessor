@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Helpers;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Helpers

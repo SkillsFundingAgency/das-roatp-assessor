@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -25,7 +25,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewModel;
         }
 
-        private void AddApplicationsToViewModel(InModerationApplicationsViewModel viewModel, List<RoatpModerationApplicationSummary> applications)
+        private void AddApplicationsToViewModel(InModerationApplicationsViewModel viewModel, List<ModerationApplicationSummary> applications)
         {
             foreach (var application in applications)
             {
@@ -34,7 +34,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
         }
 
-        private ModerationApplicationViewModel CreateApplicationViewModel(RoatpModerationApplicationSummary application)
+        private ModerationApplicationViewModel CreateApplicationViewModel(ModerationApplicationSummary application)
         {
             var viewModel = new ModerationApplicationViewModel();
 

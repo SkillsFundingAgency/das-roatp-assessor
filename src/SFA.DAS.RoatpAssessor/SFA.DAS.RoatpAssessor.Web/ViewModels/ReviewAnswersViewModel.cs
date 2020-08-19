@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using System.Collections.Generic;
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels

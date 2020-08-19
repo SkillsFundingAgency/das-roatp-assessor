@@ -7,7 +7,8 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -27,7 +28,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
             _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
             _orchestrator = new Web.Services.ModeratorDashboardOrchestrator(_applicationApiClient.Object);
 
-            _applicationApiClient.Setup(x => x.GetModerationApplications(_user.UserId())).ReturnsAsync(new List<RoatpModerationApplicationSummary>());
+            _applicationApiClient.Setup(x => x.GetModerationApplications(_user.UserId())).ReturnsAsync(new List<ModerationApplicationSummary>());
             _applicationApiClient.Setup(x => x.GetApplicationCounts(_user.UserId())).ReturnsAsync(new ApplicationCounts());
         }
 
@@ -51,10 +52,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
         public async Task When_getting_in_moderation_applications_the_applications__are_returned()
         {
             var userId = _user.UserId();
-            var applications = new List<RoatpModerationApplicationSummary>
+            var applications = new List<ModerationApplicationSummary>
             {
-                new RoatpModerationApplicationSummary { ApplicationReferenceNumber = "sdjfs", Assessor1Name = "sdjfghdfgd", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), Assessor1UserId = "flggfdg", Status = ModerationStatus.InModeration },
-                new RoatpModerationApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), Assessor1UserId = "fbvkjghb", Assessor2UserId = "fdkgjgfdh", Status = ModerationStatus.New }
+                new ModerationApplicationSummary { ApplicationReferenceNumber = "sdjfs", Assessor1Name = "sdjfghdfgd", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), Assessor1UserId = "flggfdg", Status = ModerationStatus.InModeration },
+                new ModerationApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), Assessor1UserId = "fbvkjghb", Assessor2UserId = "fdkgjgfdh", Status = ModerationStatus.New }
             };
 
             _applicationApiClient.Setup(x => x.GetModerationApplications(userId)).ReturnsAsync(applications);
@@ -66,7 +67,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
             AssertApplicationsMatch(applications.Last(), response.Applications.Last());
         }
 
-        private void AssertApplicationsMatch(RoatpModerationApplicationSummary expected, ModerationApplicationViewModel actual)
+        private void AssertApplicationsMatch(ModerationApplicationSummary expected, ModerationApplicationViewModel actual)
         {
             Assert.AreEqual(expected.ApplicationId, actual.ApplicationId);
             Assert.AreEqual(expected.OrganisationName, actual.OrganisationName);

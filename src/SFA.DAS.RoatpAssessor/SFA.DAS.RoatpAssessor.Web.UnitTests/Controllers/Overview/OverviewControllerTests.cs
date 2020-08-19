@@ -11,6 +11,7 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Overview
 {

@@ -1,5 +1,5 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Helpers;
 using System;
 using System.Collections.Generic;
@@ -51,12 +51,12 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
             if (AssessorType == AssessorType.FirstAssessor)
             {
                 AssessorReviewStatus = application.Assessor1ReviewStatus;
-                IsAssessorApproved = application.Assessor1ReviewStatus == ApplyTypes.AssessorReviewStatus.Approved;
+                IsAssessorApproved = application.Assessor1ReviewStatus == ApplyTypes.Apply.AssessorReviewStatus.Approved;
             }
             else if (AssessorType == AssessorType.SecondAssessor)
             {
                 AssessorReviewStatus = application.Assessor2ReviewStatus;
-                IsAssessorApproved = application.Assessor2ReviewStatus == ApplyTypes.AssessorReviewStatus.Approved;
+                IsAssessorApproved = application.Assessor2ReviewStatus == ApplyTypes.Apply.AssessorReviewStatus.Approved;
             }
         }
 
