@@ -4,7 +4,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
 {
     public class GetAssessorPageReviewOutcomeRequest
     {
-        public Guid ApplicationId { get; set; }
         public int SequenceNumber { get; set; }
         public int SectionNumber { get; set; }
         public string PageId { get; set; }
