@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Infrastructure;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -48,7 +50,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         public async Task<List<Sector>> GetChosenSectors(Guid applicationId, string userId)
         {
-            return await Get<List<Sector>>($"/Assessor/Applications/ChosenSectors/{applicationId}/user/{userId}");
+            return await Get<List<Sector>>($"/Assessor/Applications/{applicationId}/ChosenSectors/user/{userId}");
         }
 
         public async Task<SectorDetails> GetSectorDetails(Guid applicationId, string pageId)
