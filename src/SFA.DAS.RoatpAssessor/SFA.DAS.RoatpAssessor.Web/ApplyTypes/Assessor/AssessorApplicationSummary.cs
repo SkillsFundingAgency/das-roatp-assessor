@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace SFA.DAS.RoatpAssessor.Web.Domain
+namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor
 {
-    public class RoatpAssessorApplicationSummary
+    public class AssessorApplicationSummary
     {
         public Guid ApplicationId { get; set; }
         public string OrganisationName { get; set; }
