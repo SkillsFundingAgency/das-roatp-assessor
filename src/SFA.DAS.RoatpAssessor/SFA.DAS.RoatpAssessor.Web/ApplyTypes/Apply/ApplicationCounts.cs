@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.RoatpAssessor.Web.Domain
+﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
 {
     public class ApplicationCounts
     {
