@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Helpers;
@@ -24,7 +23,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             _assessorApiClient = assessorApiClient;
         }
 
-        public async Task<AssessorApplicationViewModel> GetOverviewViewModel(GetApplicationOverviewRequest request)
+        public async Task<AssessorApplicationViewModel> GetOverviewViewModel(GetAssessorOverviewRequest request)
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
@@ -39,7 +38,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var viewmodel = new AssessorApplicationViewModel(application, contact, sequences, request.UserId);
 
-            var savedOutcomes = await _assessorApiClient.GetAllAssessorReviewOutcomes(request.ApplicationId, (int)assessorType, request.UserId);
+            var savedOutcomes = await _assessorApiClient.GetAllAssessorPageReviewOutcomes(request.ApplicationId, (int)assessorType, request.UserId);
             if (savedOutcomes is null || !savedOutcomes.Any())
             {
                 viewmodel.IsReadyForModeration = false;
@@ -77,7 +76,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string GetSectionStatus(List<PageReviewOutcome> sectionPageReviewOutcomes)
+        public string GetSectionStatus(List<AssessorPageReviewOutcome> sectionPageReviewOutcomes)
         {
             var sectionStatus = string.Empty;
             if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
@@ -116,7 +115,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return sectionStatus;
         }
 
-        public string GetSectorsSectionStatus(IEnumerable<Sector> sectorsChosen, IEnumerable<PageReviewOutcome> savedOutcomes)
+        public string GetSectorsSectionStatus(IEnumerable<Sector> sectorsChosen, IEnumerable<AssessorPageReviewOutcome> savedOutcomes)
         {
             var sectionPageReviewOutcomes = savedOutcomes?.Where(p =>
                 p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&

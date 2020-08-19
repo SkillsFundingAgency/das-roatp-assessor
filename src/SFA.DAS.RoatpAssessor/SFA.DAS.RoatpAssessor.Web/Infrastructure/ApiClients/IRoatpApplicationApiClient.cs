@@ -14,7 +14,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         Task<List<AssessorApplicationSummary>> GetNewApplications(string userId);
         Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId);
-        Task<List<ModerationApplicationSummary>> GetModerationApplications(string userId);
+        Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId);
 
         Task<Apply> GetApplication(Guid applicationId);
 

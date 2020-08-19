@@ -72,7 +72,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 var userId = HttpContext.User.UserId();
                 var comment = SetupGatewayPageOptionTexts(command);
 
-                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
@@ -131,7 +131,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 var userId = HttpContext.User.UserId();
                 var comment = SetupGatewayPageOptionTexts(command);
 
-                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                                     SequenceIds.DeliveringApprenticeshipTraining,
                           SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
                                     command.PageId,

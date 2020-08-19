@@ -73,7 +73,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             //TODO: Explain why all of this is required? We're getting the viewmodel but I'm seeing stuff being submitted
             if (string.IsNullOrEmpty(request.PageId))
             {
-                await ProcessAllAssessorPagesPerSection(request, viewModel);
+                await ProcessAllAssessorPagesForSection(request, viewModel);
             }
 
             await SetPageReviewOutcome(request, viewModel);
@@ -184,14 +184,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return tabularDataList;
         }
 
-        private async Task ProcessAllAssessorPagesPerSection(GetReviewAnswersRequest request, ReviewAnswersViewModel viewModel)
+        private async Task ProcessAllAssessorPagesForSection(GetReviewAnswersRequest request, ReviewAnswersViewModel viewModel)
         {
-            var assessorReviewOutcomesPerSection = await _assessorApiClient.GetAssessorReviewOutcomesPerSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, (int)viewModel.AssessorType, request.UserId);
+            var assessorReviewOutcomesPerSection = await _assessorApiClient.GetAssessorPageReviewOutcomesForSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, (int)viewModel.AssessorType, request.UserId);
             if (assessorReviewOutcomesPerSection is null || !assessorReviewOutcomesPerSection.Any())
             {
                 // Start processing all subsequent pages and create record in AssessorPageReviewOutcome with emty status for each and every active page
                 // Make a record for the first page
-                await _assessorApiClient.SubmitAssessorPageOutcome(request.ApplicationId,
+                await _assessorApiClient.SubmitAssessorPageReviewOutcome(request.ApplicationId,
                                                     request.SequenceNumber,
                                                     request.SectionNumber,
                                                     viewModel.PageId,
@@ -206,7 +206,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     var nextPageId = viewModel.NextPageId;
                     while (!string.IsNullOrEmpty(nextPageId))
                     {
-                        await _assessorApiClient.SubmitAssessorPageOutcome(request.ApplicationId,
+                        await _assessorApiClient.SubmitAssessorPageReviewOutcome(request.ApplicationId,
                                                                            request.SequenceNumber,
                                                                            request.SectionNumber,
                                                                            nextPageId,
@@ -235,7 +235,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, SectorViewModel viewModel)
         {
-            var pageReviewOutcome = await _assessorApiClient.GetPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
+            var pageReviewOutcome = await _assessorApiClient.GetAssessorPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
                 SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
                 viewModel.PageId, (int)viewModel.AssessorType, request.UserId);
             if (pageReviewOutcome != null)
@@ -262,7 +262,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         private async Task SetPageReviewOutcome(GetReviewAnswersRequest request, ReviewAnswersViewModel viewModel)
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
-            var pageReviewOutcome = await _assessorApiClient.GetPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, request.UserId);
+            var pageReviewOutcome = await _assessorApiClient.GetAssessorPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, (int)viewModel.AssessorType, request.UserId);
             if (pageReviewOutcome != null)
             {
                 viewModel.Status = pageReviewOutcome.Status;

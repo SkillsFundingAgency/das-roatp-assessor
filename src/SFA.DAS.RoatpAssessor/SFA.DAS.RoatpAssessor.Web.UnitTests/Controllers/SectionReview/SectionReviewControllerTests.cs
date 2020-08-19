@@ -133,7 +133,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
         }
 
         [Test]
-        public async Task POST_ReviewPageAnswers_When_Valid_submits_AssessorPageOutcome()
+        public async Task POST_ReviewPageAnswers_When_Valid_submits_AssessorPageReviewOutcome()
         {
             int sequenceNumber = 4;
             int sectionNumber = 2;
@@ -156,7 +156,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             var validationResponse = new ValidationResponse();
             _assessorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
-            _assessorApiClient.Setup(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+            _assessorApiClient.Setup(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
@@ -172,7 +172,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             Assert.AreEqual("Overview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
 
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                         command.SequenceNumber,
                         command.SectionNumber,
                         command.PageId,
@@ -183,7 +183,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
         }
 
         [Test]
-        public async Task POST_ReviewPageAnswers_When_Invalid_does_not_submit_AssessorPageOutcome()
+        public async Task POST_ReviewPageAnswers_When_Invalid_does_not_submit_AssessorPageReviewOutcome()
         {
             int sequenceNumber = 4;
             int sectionNumber = 2;
@@ -216,7 +216,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             Assert.That(actualViewModel, Is.Not.Null);
             Assert.That(actualViewModel, Is.SameAs(viewModel));
 
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                         command.SequenceNumber,
                         command.SectionNumber,
                         command.PageId,

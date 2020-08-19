@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Services
@@ -29,9 +29,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewModel;
         }
 
-        public async Task AssignApplicationToAssessor(Guid applicationId, int assessorNumber, string assessorUserId, string assessorName)
+        public async Task<bool> AssignApplicationToAssessor(Guid applicationId, int assessorNumber, string assessorUserId, string assessorName)
         {
-            await _assessorApiClient.AssignAssessor(applicationId, new AssignAssessorApplicationRequest(assessorNumber, assessorUserId, assessorName));
+            return await _assessorApiClient.AssignAssessor(applicationId, new AssignAssessorCommand(assessorNumber, assessorUserId, assessorName));
         }
 
         public async Task<InProgressApplicationsViewModel> GetInProgressApplicationsViewModel(string userId)

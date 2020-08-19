@@ -30,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         private Apply _application;
         private Contact _contact;
         private List<AssessorSequence> _sequences;
-        private List<PageReviewOutcome> _outcomes;
+        private List<AssessorPageReviewOutcome> _outcomes;
 
 
         [SetUp]
@@ -43,12 +43,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
             _application = new Apply { ApplicationId = _applicationId, OrganisationId = Guid.NewGuid(), Status = "Status", Assessor2UserId = _userId, Assessor2ReviewStatus = AssessorReviewStatus.InProgress };
             _contact = new Contact { Email = "email@address.com" };
             _sequences = new List<AssessorSequence>();
-            _outcomes = new List<PageReviewOutcome>();
+            _outcomes = new List<AssessorPageReviewOutcome>();
 
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _assessorApiClient.Setup(x => x.GetAssessorSequences(_applicationId)).ReturnsAsync(_sequences);
-            _assessorApiClient.Setup(x => x.GetAllAssessorReviewOutcomes(_applicationId, (int)AssessorType.SecondAssessor, _userId)).ReturnsAsync(_outcomes);
+            _assessorApiClient.Setup(x => x.GetAllAssessorPageReviewOutcomes(_applicationId, (int)AssessorType.SecondAssessor, _userId)).ReturnsAsync(_outcomes);
         }
 
         [TestCase(null)]
@@ -57,9 +57,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         [TestCase(AssessorPageReviewStatus.InProgress)]
         public void GetSectionStatus_Single_PageReviewOutcome(string status)
         {
-            List<PageReviewOutcome> sectionPageReviewOutcomes = new List<PageReviewOutcome>
+            List<AssessorPageReviewOutcome> sectionPageReviewOutcomes = new List<AssessorPageReviewOutcome>
             {
-                new PageReviewOutcome
+                new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = status
@@ -94,19 +94,19 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, "3 " + AssessorSectionStatus.FailsOutOf + " 3")]
         public void GetSectionStatus_Multiple_PageReviewOutcomes(string statusOne, string statusTwo, string statusThree, string statusExpected)
         {
-            List<PageReviewOutcome> sectionPageReviewOutcomes = new List<PageReviewOutcome>
+            List<AssessorPageReviewOutcome> sectionPageReviewOutcomes = new List<AssessorPageReviewOutcome>
             {
-                new PageReviewOutcome
+                new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusOne
                 },
-                new PageReviewOutcome
+                new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusTwo
                 },
-                new PageReviewOutcome
+                new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusThree
@@ -161,9 +161,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
                 }
             };
 
-            List<PageReviewOutcome> sectionPageReviewOutcomes = new List<PageReviewOutcome>
+            List<AssessorPageReviewOutcome> sectionPageReviewOutcomes = new List<AssessorPageReviewOutcome>
             {
-                new PageReviewOutcome
+                new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusOne,
@@ -171,7 +171,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
                     SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
                     PageId = firstSectorPageId
                 },
-                new PageReviewOutcome
+                new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusTwo,
@@ -179,7 +179,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
                     SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
                     PageId = secondSectorPageId
                 },
-                new PageReviewOutcome
+                new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusThree,
@@ -199,7 +199,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
             var applicationId = Guid.NewGuid();
             _applicationApiClient.Setup(x => x.GetApplication(applicationId)).ReturnsAsync((Apply)null);
 
-            var result = await _orchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, "userId"));
+            var result = await _orchestrator.GetOverviewViewModel(new GetAssessorOverviewRequest(applicationId, "userId"));
 
             Assert.IsNull(result);
         }
@@ -211,7 +211,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
             _applicationApiClient.Setup(x => x.GetApplication(applicationId)).ReturnsAsync(new Apply { ApplicationId = applicationId });
             _applicationApiClient.Setup(x => x.GetContactForApplication(applicationId)).ReturnsAsync((Contact)null);
 
-            var result = await _orchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, "userId"));
+            var result = await _orchestrator.GetOverviewViewModel(new GetAssessorOverviewRequest(applicationId, "userId"));
 
             Assert.IsNull(result);
         }
@@ -224,7 +224,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
             _applicationApiClient.Setup(x => x.GetContactForApplication(applicationId)).ReturnsAsync(new Contact());
             _assessorApiClient.Setup(x => x.GetAssessorSequences(applicationId)).ReturnsAsync((List<AssessorSequence>)null);
 
-            var result = await _orchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, "userId"));
+            var result = await _orchestrator.GetOverviewViewModel(new GetAssessorOverviewRequest(applicationId, "userId"));
 
             Assert.IsNull(result);
         }
@@ -232,7 +232,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         [Test]
         public async Task GetOverviewViewModel_WhenThereAreNoSavedOutcomes_ThenTheApplicationIsNotReadyForModeration()
         {
-            var result = await _orchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(_applicationId, _userId));
+            var result = await _orchestrator.GetOverviewViewModel(new GetAssessorOverviewRequest(_applicationId, _userId));
 
             AssertCommonProperties(result);
             Assert.IsFalse(result.IsReadyForModeration);
@@ -255,9 +255,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         {
             var expectedStatus = AssessorSectionStatus.Pass;
             _sequences.Add(new AssessorSequence { SequenceNumber = 1, Sections = new List<AssessorSection> { new AssessorSection { SectionNumber = 2 } } });
-            _outcomes.Add(new PageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
+            _outcomes.Add(new AssessorPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
 
-            var result = await _orchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(_applicationId, _userId));
+            var result = await _orchestrator.GetOverviewViewModel(new GetAssessorOverviewRequest(_applicationId, _userId));
 
             AssertCommonProperties(result);
             Assert.AreEqual(result.Sequences.First().Sections.First().Status, expectedStatus);
@@ -269,9 +269,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         {
             var expectedStatus = "";
             _sequences.Add(new AssessorSequence { SequenceNumber = 1, Sections = new List<AssessorSection> { new AssessorSection { SectionNumber = 2 } } });
-            _outcomes.Add(new PageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
+            _outcomes.Add(new AssessorPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
 
-            var result = await _orchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(_applicationId, _userId));
+            var result = await _orchestrator.GetOverviewViewModel(new GetAssessorOverviewRequest(_applicationId, _userId));
 
             AssertCommonProperties(result);
             Assert.AreEqual(result.Sequences.First().Sections.First().Status, expectedStatus);

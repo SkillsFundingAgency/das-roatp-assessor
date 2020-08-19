@@ -34,9 +34,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/InProgress");
         }
 
-        public async Task<List<ModerationApplicationSummary>> GetModerationApplications(string userId)
+        public async Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId)
         {
-            return await Get<List<ModerationApplicationSummary>>($"Assessor/Applications/{userId}/Moderation");
+            return await Get<List<ModerationApplicationSummary>>($"Assessor/Applications/{userId}/InModeration");
         }
 
         public async Task<Apply> GetApplication(Guid applicationId)

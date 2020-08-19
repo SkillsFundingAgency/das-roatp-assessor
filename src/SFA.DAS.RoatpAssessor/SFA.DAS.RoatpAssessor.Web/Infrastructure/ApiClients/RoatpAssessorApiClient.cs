@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Infrastructure;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
-using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.Models;
 
@@ -22,9 +20,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenService.GetToken(_httpClient.BaseAddress));
         }
 
-        public async Task AssignAssessor(Guid applicationId, AssignAssessorApplicationRequest request)
+        public async Task<bool> AssignAssessor(Guid applicationId, AssignAssessorCommand request)
         {
-            await Post($"Assessor/Applications/{applicationId}/Assign", request);
+            var result = await Post($"Assessor/Applications/{applicationId}/Assign", request);
+
+            return result == HttpStatusCode.OK;
         }
 
         public async Task<List<AssessorSequence>> GetAssessorSequences(Guid applicationId)
@@ -58,30 +58,28 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<SectorDetails>($"/Assessor/Applications/{applicationId}/SectorDetails/{pageId}");
         }
 
-        public async Task<bool> SubmitAssessorPageOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId,
+        public async Task<bool> SubmitAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId,
                                                     int assessorType, string userId, string status, string comment)
         {
-            var result = await Post($"/Assessor/SubmitPageOutcome", new
+            var result = await Post($"/Assessor/Applications/{applicationId}/SubmitPageReviewOutcome", new SubmitAssessorPageReviewOutcomeCommand
             {
-                applicationId,
-                sequenceNumber,
-                sectionNumber,
-                pageId,
-                assessorType,
-                userId,
-                status,
-                comment
+                SequenceNumber = sequenceNumber,
+                SectionNumber = sectionNumber,
+                PageId = pageId,
+                AssessorType = assessorType,
+                UserId = userId,
+                Status = status,
+                Comment = comment
             });
 
             return result == HttpStatusCode.OK;
         }
 
-        public async Task<PageReviewOutcome> GetPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber,
+        public async Task<AssessorPageReviewOutcome> GetAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber,
                                                                   string pageId, int assessorType, string userId)
         {
-            return await Post<GetPageReviewOutcomeRequest, PageReviewOutcome>($"/Assessor/GetPageReviewOutcome", new GetPageReviewOutcomeRequest
+            return await Post<GetAssessorPageReviewOutcomeRequest, AssessorPageReviewOutcome>($"/Assessor/Applications/{applicationId}/GetPageReviewOutcome", new GetAssessorPageReviewOutcomeRequest
             {
-                ApplicationId = applicationId,
                 SequenceNumber = sequenceNumber,
                 SectionNumber = sectionNumber,
                 PageId = pageId,
@@ -90,12 +88,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             });
         }
 
-        public async Task<List<PageReviewOutcome>> GetAssessorReviewOutcomesPerSection(Guid applicationId, int sequenceNumber, int sectionNumber,
+        public async Task<List<AssessorPageReviewOutcome>> GetAssessorPageReviewOutcomesForSection(Guid applicationId, int sequenceNumber, int sectionNumber,
                                                                                        int assessorType, string userId)
         {
-            return await Post<GetAssessorReviewOutcomesPerSectionRequest, List<PageReviewOutcome>>($"/Assessor/GetAssessorReviewOutcomesPerSection", new GetAssessorReviewOutcomesPerSectionRequest
+            return await Post<GetAssessorPageReviewOutcomesForSectionRequest, List<AssessorPageReviewOutcome>>($"/Assessor/Applications/{applicationId}/GetPageReviewOutcomesForSection", new GetAssessorPageReviewOutcomesForSectionRequest
             {
-                ApplicationId = applicationId,
                 SequenceNumber = sequenceNumber,
                 SectionNumber = sectionNumber,
                 AssessorType = assessorType,
@@ -103,11 +100,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             });
         }
 
-        public async Task<List<PageReviewOutcome>> GetAllAssessorReviewOutcomes(Guid applicationId, int assessorType, string userId)
+        public async Task<List<AssessorPageReviewOutcome>> GetAllAssessorPageReviewOutcomes(Guid applicationId, int assessorType, string userId)
         {
-            return await Post<GetAllAssessorReviewOutcomesRequest, List<PageReviewOutcome>>($"/Assessor/GetAllAssessorReviewOutcomes", new GetAllAssessorReviewOutcomesRequest
+            return await Post<GetAllAssessorPageReviewOutcomesRequest, List<AssessorPageReviewOutcome>>($"/Assessor/Applications/{applicationId}/GetAllPageReviewOutcomes", new GetAllAssessorPageReviewOutcomesRequest
             {
-                ApplicationId = applicationId,
                 AssessorType = assessorType,
                 UserId = userId
             });
@@ -115,12 +111,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         public async Task<bool> UpdateAssessorReviewStatus(Guid applicationId, int assessorType, string userId, string status)
         {
-            var result = await Post($"/Assessor/UpdateAssessorReviewStatus", new
+            var result = await Post($"/Assessor/Applications/{applicationId}/UpdateAssessorReviewStatus", new UpdateAssessorReviewStatusCommand
             {
-                applicationId,
-                assessorType,
-                userId,
-                status
+                AssessorType = assessorType,
+                UserId = userId,
+                Status = status
             });
 
             return result == HttpStatusCode.OK;
