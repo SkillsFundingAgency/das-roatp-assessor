@@ -158,17 +158,17 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
             const string secondSectorPageId = "2";
             const string thirdSectorPageId = "3";
 
-            List<AssessorSector> sectorsChosen = new List<AssessorSector>
+            List<ModeratorSector> sectorsChosen = new List<ModeratorSector>
             {
-                new AssessorSector
+                new ModeratorSector
                 {
                     PageId = firstSectorPageId
                 },
-                new AssessorSector
+                new ModeratorSector
                 {
                     PageId = secondSectorPageId
                 },
-                new AssessorSector
+                new ModeratorSector
                 {
                     PageId = thirdSectorPageId
                 }
