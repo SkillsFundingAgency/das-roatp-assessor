@@ -1,6 +1,6 @@
-﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor
 {
-    public class SectorDetails
+    public class AssessorSectorDetails
     {
         public string SectorName { get; set; }
         public string FullName { get; set; }

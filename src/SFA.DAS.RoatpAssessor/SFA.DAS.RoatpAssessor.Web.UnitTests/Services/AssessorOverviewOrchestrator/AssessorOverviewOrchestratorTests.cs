@@ -7,7 +7,6 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Domain;
@@ -145,17 +144,17 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
             const string secondSectorPageId = "2";
             const string thirdSectorPageId = "3";
 
-            List<Sector> sectorsChosen = new List<Sector>
+            List<AssessorSector> sectorsChosen = new List<AssessorSector>
             {
-                new Sector
+                new AssessorSector
                 {
                     PageId = firstSectorPageId
                 },
-                new Sector
+                new AssessorSector
                 {
                     PageId = secondSectorPageId
                 },
-                new Sector
+                new AssessorSector
                 {
                     PageId = thirdSectorPageId
                 }

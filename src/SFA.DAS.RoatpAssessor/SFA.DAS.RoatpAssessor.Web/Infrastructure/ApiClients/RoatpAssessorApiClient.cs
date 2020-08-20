@@ -48,17 +48,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return assessorPage;
         }
 
-        public async Task<List<Sector>> GetAssessorSectors(Guid applicationId, string userId)
+        public async Task<List<AssessorSector>> GetAssessorSectors(Guid applicationId, string userId)
         {
-            return await Post<GetAssessorSectorsRequest, List<Sector>>($"/Assessor/Applications/{applicationId}/ChosenSectors", new GetAssessorSectorsRequest
+            return await Post<GetAssessorSectorsRequest, List<AssessorSector>>($"/Assessor/Applications/{applicationId}/Sectors", new GetAssessorSectorsRequest
             {
                 UserId = userId
             });
         }
 
-        public async Task<SectorDetails> GetAssessorSectorDetails(Guid applicationId, string pageId)
+        public async Task<AssessorSectorDetails> GetAssessorSectorDetails(Guid applicationId, string pageId)
         {
-            return await Get<SectorDetails>($"/Assessor/Applications/{applicationId}/SectorDetails/{pageId}");
+            return await Get<AssessorSectorDetails>($"/Assessor/Applications/{applicationId}/SectorDetails/{pageId}");
         }
 
         public async Task<bool> SubmitAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId,

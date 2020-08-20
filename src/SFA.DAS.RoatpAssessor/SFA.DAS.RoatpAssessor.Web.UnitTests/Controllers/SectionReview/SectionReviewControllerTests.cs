@@ -4,7 +4,6 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
@@ -81,10 +80,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
         {
             var sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining;
             var sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
-            var chosenSectors = new List<Sector>
+            var chosenSectors = new List<AssessorSector>
             {
-                new Sector {PageId = "1", Title = "Page 1"},
-                new Sector {PageId = "2", Title = "Page 2"}
+                new AssessorSector {PageId = "1", Title = "Page 1"},
+                new AssessorSector {PageId = "2", Title = "Page 2"}
             };
 
             var viewModel = new ApplicationSectorsViewModel

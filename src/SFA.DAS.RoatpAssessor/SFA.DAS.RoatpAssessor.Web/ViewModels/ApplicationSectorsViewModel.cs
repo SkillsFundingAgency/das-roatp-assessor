@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+﻿using System.Collections.Generic;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
     public class ApplicationSectorsViewModel : ApplicationSummaryAndBreadcrumbViewModel
     {
-        public List<Sector> SelectedSectors { get; set; }
+        public List<AssessorSector> SelectedSectors { get; set; }
     }
 }

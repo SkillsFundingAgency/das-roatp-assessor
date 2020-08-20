@@ -15,9 +15,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         Task<AssessorPage> GetAssessorPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
 
-        Task<List<Sector>> GetAssessorSectors(Guid applicationId, string userId);
+        Task<List<AssessorSector>> GetAssessorSectors(Guid applicationId, string userId);
 
-        Task<SectorDetails> GetAssessorSectorDetails(Guid applicationId, string pageId);
+        Task<AssessorSectorDetails> GetAssessorSectorDetails(Guid applicationId, string pageId);
 
         Task<bool> SubmitAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId, string status, string comment);
 

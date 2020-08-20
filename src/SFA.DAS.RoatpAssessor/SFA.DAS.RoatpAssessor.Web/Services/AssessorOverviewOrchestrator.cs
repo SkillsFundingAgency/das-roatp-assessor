@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -112,7 +111,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return sectionStatus;
         }
 
-        public string GetSectorsSectionStatus(IEnumerable<Sector> sectorsChosen, IEnumerable<AssessorPageReviewOutcome> savedOutcomes)
+        public string GetSectorsSectionStatus(IEnumerable<AssessorSector> sectorsChosen, IEnumerable<AssessorPageReviewOutcome> savedOutcomes)
         {
             var sectionPageReviewOutcomes = savedOutcomes?.Where(p =>
                 p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
