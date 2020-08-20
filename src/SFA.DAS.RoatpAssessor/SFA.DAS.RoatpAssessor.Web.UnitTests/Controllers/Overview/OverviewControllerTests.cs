@@ -45,7 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Overview
             var contact = new Contact { Email = userId, GivenNames = _controller.User.GivenName(), FamilyName = _controller.User.Surname() };
             var sequences = new List<AssessorSequence>();
 
-            return new AssessorApplicationViewModel(application, contact, sequences, userId) { AssessorType = AssessorType.FirstAssessor };
+            return new AssessorApplicationViewModel(application, contact, sequences, userId);
         }
 
         [Test]

@@ -48,25 +48,27 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return assessorPage;
         }
 
-        public async Task<List<Sector>> GetChosenSectors(Guid applicationId, string userId)
+        public async Task<List<Sector>> GetAssessorSectors(Guid applicationId, string userId)
         {
-            return await Get<List<Sector>>($"/Assessor/Applications/{applicationId}/ChosenSectors/user/{userId}");
+            return await Post<GetAssessorSectorsRequest, List<Sector>>($"/Assessor/Applications/{applicationId}/ChosenSectors", new GetAssessorSectorsRequest
+            {
+                UserId = userId
+            });
         }
 
-        public async Task<SectorDetails> GetSectorDetails(Guid applicationId, string pageId)
+        public async Task<SectorDetails> GetAssessorSectorDetails(Guid applicationId, string pageId)
         {
             return await Get<SectorDetails>($"/Assessor/Applications/{applicationId}/SectorDetails/{pageId}");
         }
 
         public async Task<bool> SubmitAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId,
-                                                    int assessorType, string userId, string status, string comment)
+                                                    string userId, string status, string comment)
         {
             var result = await Post($"/Assessor/Applications/{applicationId}/SubmitPageReviewOutcome", new SubmitAssessorPageReviewOutcomeCommand
             {
                 SequenceNumber = sequenceNumber,
                 SectionNumber = sectionNumber,
                 PageId = pageId,
-                AssessorType = assessorType,
                 UserId = userId,
                 Status = status,
                 Comment = comment
@@ -76,44 +78,40 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         }
 
         public async Task<AssessorPageReviewOutcome> GetAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber,
-                                                                  string pageId, int assessorType, string userId)
+                                                                  string pageId, string userId)
         {
             return await Post<GetAssessorPageReviewOutcomeRequest, AssessorPageReviewOutcome>($"/Assessor/Applications/{applicationId}/GetPageReviewOutcome", new GetAssessorPageReviewOutcomeRequest
             {
                 SequenceNumber = sequenceNumber,
                 SectionNumber = sectionNumber,
                 PageId = pageId,
-                AssessorType = assessorType,
                 UserId = userId
             });
         }
 
         public async Task<List<AssessorPageReviewOutcome>> GetAssessorPageReviewOutcomesForSection(Guid applicationId, int sequenceNumber, int sectionNumber,
-                                                                                       int assessorType, string userId)
+                                                                                       string userId)
         {
             return await Post<GetAssessorPageReviewOutcomesForSectionRequest, List<AssessorPageReviewOutcome>>($"/Assessor/Applications/{applicationId}/GetPageReviewOutcomesForSection", new GetAssessorPageReviewOutcomesForSectionRequest
             {
                 SequenceNumber = sequenceNumber,
                 SectionNumber = sectionNumber,
-                AssessorType = assessorType,
                 UserId = userId
             });
         }
 
-        public async Task<List<AssessorPageReviewOutcome>> GetAllAssessorPageReviewOutcomes(Guid applicationId, int assessorType, string userId)
+        public async Task<List<AssessorPageReviewOutcome>> GetAllAssessorPageReviewOutcomes(Guid applicationId, string userId)
         {
             return await Post<GetAllAssessorPageReviewOutcomesRequest, List<AssessorPageReviewOutcome>>($"/Assessor/Applications/{applicationId}/GetAllPageReviewOutcomes", new GetAllAssessorPageReviewOutcomesRequest
             {
-                AssessorType = assessorType,
                 UserId = userId
             });
         }
 
-        public async Task<bool> UpdateAssessorReviewStatus(Guid applicationId, int assessorType, string userId, string status)
+        public async Task<bool> UpdateAssessorReviewStatus(Guid applicationId, string userId, string status)
         {
             var result = await Post($"/Assessor/Applications/{applicationId}/UpdateAssessorReviewStatus", new UpdateAssessorReviewStatusCommand
             {
-                AssessorType = assessorType,
                 UserId = userId,
                 Status = status
             });

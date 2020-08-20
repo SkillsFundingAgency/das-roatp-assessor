@@ -76,7 +76,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
-                                    (int)command.AssessorType,
+
                                     userId,
                                     command.Status,
                                     comment);
@@ -135,7 +135,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                                     SequenceIds.DeliveringApprenticeshipTraining,
                           SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
                                     command.PageId,
-                                    (int)command.AssessorType,
                                     userId,
                                     command.Status,
                                     comment);

@@ -2,7 +2,6 @@
 {
     public class GetAllAssessorPageReviewOutcomesRequest
     {
-        public int AssessorType { get; set; }
         public string UserId { get; set; }
     }
 }

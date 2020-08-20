@@ -7,7 +7,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
         public int SequenceNumber { get; set; }
         public int SectionNumber { get; set; }
         public string PageId { get; set; }
-        public int AssessorType { get; set; }
         public string UserId { get; set; }
     }
 }

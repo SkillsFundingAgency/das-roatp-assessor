@@ -87,7 +87,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);
 
-            _assessorApiClient.Setup(x => x.GetChosenSectors(_applicationId, userId))
+            _assessorApiClient.Setup(x => x.GetAssessorSectors(_applicationId, userId))
                 .ReturnsAsync(_chosenSectors);
 
 

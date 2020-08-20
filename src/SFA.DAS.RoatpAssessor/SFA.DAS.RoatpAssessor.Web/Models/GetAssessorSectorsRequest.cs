@@ -1,8 +1,7 @@
 ﻿namespace SFA.DAS.RoatpAssessor.Web.Models
 {
-    public class UpdateAssessorReviewStatusCommand
+    public class GetAssessorSectorsRequest
     {
         public string UserId { get; set; }
-        public string Status { get; set; }
     }
 }

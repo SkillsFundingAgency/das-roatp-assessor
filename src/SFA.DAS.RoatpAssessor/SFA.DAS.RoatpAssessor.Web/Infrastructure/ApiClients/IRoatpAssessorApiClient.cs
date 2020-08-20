@@ -15,16 +15,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         Task<AssessorPage> GetAssessorPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
 
-        Task<List<Sector>> GetChosenSectors(Guid applicationId, string userId);
+        Task<List<Sector>> GetAssessorSectors(Guid applicationId, string userId);
 
-        Task<SectorDetails> GetSectorDetails(Guid applicationId, string pageId);
+        Task<SectorDetails> GetAssessorSectorDetails(Guid applicationId, string pageId);
 
-        Task<bool> SubmitAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, int assessorType, string userId, string status, string comment);
+        Task<bool> SubmitAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId, string status, string comment);
 
-        Task<AssessorPageReviewOutcome> GetAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, int assessorType, string userId);
-        Task<List<AssessorPageReviewOutcome>> GetAssessorPageReviewOutcomesForSection(Guid applicationId, int sequenceNumber, int sectionNumber, int assessorType, string userId);
-        Task<List<AssessorPageReviewOutcome>> GetAllAssessorPageReviewOutcomes(Guid applicationId, int assessorType, string userId);
+        Task<AssessorPageReviewOutcome> GetAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId);
+        Task<List<AssessorPageReviewOutcome>> GetAssessorPageReviewOutcomesForSection(Guid applicationId, int sequenceNumber, int sectionNumber, string userId);
+        Task<List<AssessorPageReviewOutcome>> GetAllAssessorPageReviewOutcomes(Guid applicationId, string userId);
 
-        Task<bool> UpdateAssessorReviewStatus(Guid applicationId, int assessorType, string userId, string status);
+        Task<bool> UpdateAssessorReviewStatus(Guid applicationId, string userId, string status);
     }
 }

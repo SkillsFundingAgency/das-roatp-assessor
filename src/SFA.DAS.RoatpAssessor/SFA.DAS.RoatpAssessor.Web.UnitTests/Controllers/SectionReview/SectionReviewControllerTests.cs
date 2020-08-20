@@ -160,7 +160,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
-                                    (int)command.AssessorType,
                                     _controller.User.UserId(),
                                     command.Status,
                                     command.OptionPassText)).ReturnsAsync(true);
@@ -176,7 +175,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
                         command.SequenceNumber,
                         command.SectionNumber,
                         command.PageId,
-                        (int)command.AssessorType,
                         _controller.User.UserId(),
                         command.Status,
                         command.OptionPassText), Times.Once);
@@ -220,7 +218,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
                         command.SequenceNumber,
                         command.SectionNumber,
                         command.PageId,
-                        (int)command.AssessorType,
                         _controller.User.UserId(),
                         command.Status,
                         command.OptionPassText), Times.Never);

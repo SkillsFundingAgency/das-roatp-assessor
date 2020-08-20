@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Domain;
-using SFA.DAS.RoatpAssessor.Web.Helpers;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
@@ -34,11 +33,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            var assessorType = AssessorReviewHelper.SetAssessorType(application, request.UserId);
-
             var viewmodel = new AssessorApplicationViewModel(application, contact, sequences, request.UserId);
 
-            var savedOutcomes = await _assessorApiClient.GetAllAssessorPageReviewOutcomes(request.ApplicationId, (int)assessorType, request.UserId);
+            var savedOutcomes = await _assessorApiClient.GetAllAssessorPageReviewOutcomes(request.ApplicationId, request.UserId);
             if (savedOutcomes is null || !savedOutcomes.Any())
             {
                 viewmodel.IsReadyForModeration = false;
@@ -55,7 +52,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         {
                             if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
                             {
-                                var sectorsChosen = await _assessorApiClient.GetChosenSectors(request.ApplicationId, request.UserId);
+                                var sectorsChosen = await _assessorApiClient.GetAssessorSectors(request.ApplicationId, request.UserId);
                                 section.Status = GetSectorsSectionStatus(sectorsChosen, savedOutcomes);
                             }
                             else
