@@ -262,7 +262,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
             Assert.AreEqual(_application.Assessor1Name, result.Assessor1Name);
             Assert.AreEqual(_application.Assessor2Name, result.Assessor2Name);
             Assert.AreSame(_sequences, result.Sequences);
-            Assert.IsFalse(result.IsReadyForModeratorConfirmation);
         }
 
         [Test]
