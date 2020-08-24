@@ -54,7 +54,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         public async Task<List<ModeratorSector>> GetModeratorSectors(Guid applicationId, string userId)
         {
-            return await Get<List<ModeratorSector>>($"/Moderator/Applications/{applicationId}/ChosenSectors/user/{userId}");
+            return await Post<GetModeratorSectorsRequest, List<ModeratorSector>>($"/Moderator/Applications/{applicationId}/Sectors", new GetModeratorSectorsRequest
+            {
+                UserId = userId
+            });
         }
     }
 }
