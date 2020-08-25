@@ -13,7 +13,7 @@ using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
-namespace SFA.DAS.RoatpAssessor.Web.Controllers
+namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
 {
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class AssessorControllerBase<T> : Controller

@@ -7,7 +7,7 @@ using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 
-namespace SFA.DAS.RoatpAssessor.Web.Controllers
+namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
 {
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class OverviewController : Controller

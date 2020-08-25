@@ -8,7 +8,7 @@ using SFA.DAS.RoatpAssessor.Web.Services;
 using System;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.RoatpAssessor.Web.Controllers
+namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 {
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class ModeratorOverviewController : Controller
