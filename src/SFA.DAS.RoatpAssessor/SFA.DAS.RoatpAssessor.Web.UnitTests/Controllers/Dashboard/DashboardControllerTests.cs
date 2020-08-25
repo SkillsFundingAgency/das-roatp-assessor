@@ -81,7 +81,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
 
             _assessorOrchestrator.Verify(x => x.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName));
 
-            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("AssessorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
             Assert.AreEqual(applicationId, result.RouteValues["applicationId"]);
         }

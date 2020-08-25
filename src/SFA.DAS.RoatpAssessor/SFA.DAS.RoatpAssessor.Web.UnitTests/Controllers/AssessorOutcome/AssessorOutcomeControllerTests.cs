@@ -83,7 +83,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
             var result = await _controller.AssessorOutcome(_applicationId) as RedirectToActionResult;
 
             // assert
-            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("AssessorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
         }
 
@@ -125,7 +125,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
             var result = await _controller.AssessorOutcome(_applicationId, command) as RedirectToActionResult;
 
             // assert
-            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("AssessorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
         }
 
@@ -174,7 +174,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
             var result = await _controller.AssessmentComplete(_applicationId) as RedirectToActionResult;
 
             // assert
-            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("AssessorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
         }
     }

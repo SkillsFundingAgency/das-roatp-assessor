@@ -39,7 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
 
                 if (sectorViewModel is null)
                 {
-                    return RedirectToAction("ViewApplication", "Overview", new { applicationId });
+                    return RedirectToAction("ViewApplication", "AssessorOverview", new { applicationId });
                 }
 
                 return View("~/Views/SectionReview/ReviewSectors.cshtml", sectorViewModel);
@@ -49,7 +49,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
 
             if (viewModel is null)
             {
-                return RedirectToAction("ViewApplication", "Overview", new { applicationId });
+                return RedirectToAction("ViewApplication", "AssessorOverview", new { applicationId });
             }
 
             return View("~/Views/SectionReview/ReviewAnswers.cshtml", viewModel);

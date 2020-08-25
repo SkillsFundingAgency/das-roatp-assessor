@@ -167,7 +167,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;
 
             // assert
-            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("AssessorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
 
             _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,

@@ -42,7 +42,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             }
             else if (!viewModel.IsReadyForModeration)
             {
-                return RedirectToAction("ViewApplication", "Overview", new { applicationId });
+                return RedirectToAction("ViewApplication", "AssessorOverview", new { applicationId });
             }
             else
             {
@@ -86,7 +86,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             }
             else if (!submitForModeration)
             {
-                return RedirectToAction("ViewApplication", "Overview", new { applicationId });
+                return RedirectToAction("ViewApplication", "AssessorOverview", new { applicationId });
             }
             else
             {
@@ -103,7 +103,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
 
             if (viewModel is null || !viewModel.IsAssessorApproved)
             {
-                return RedirectToAction("ViewApplication", "Overview", new { applicationId });
+                return RedirectToAction("ViewApplication", "AssessorOverview", new { applicationId });
             }
 
             return View("~/Views/AssessorOutcome/AssessmentComplete.cshtml", viewModel);

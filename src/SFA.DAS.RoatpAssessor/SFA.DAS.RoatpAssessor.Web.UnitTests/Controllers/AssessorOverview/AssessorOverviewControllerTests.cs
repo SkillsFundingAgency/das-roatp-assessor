@@ -13,15 +13,15 @@ using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Models;
 
-namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Overview
+namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOverview
 {
     [TestFixture]
-    public class OverviewControllerTests
+    public class AssessorOverviewControllerTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
 
         private Mock<IAssessorOverviewOrchestrator> _assessorOverviewOrchestrator;
-        private OverviewController _controller;
+        private AssessorOverviewController _controller;
         private AssessorApplicationViewModel _applicationViewModel;
 
         [SetUp]
@@ -29,7 +29,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Overview
         {
             _assessorOverviewOrchestrator = new Mock<IAssessorOverviewOrchestrator>();
 
-            _controller = new OverviewController(_assessorOverviewOrchestrator.Object)
+            _controller = new AssessorOverviewController(_assessorOverviewOrchestrator.Object)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };

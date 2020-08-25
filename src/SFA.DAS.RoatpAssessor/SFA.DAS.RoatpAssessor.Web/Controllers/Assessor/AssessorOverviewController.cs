@@ -10,16 +10,16 @@ using SFA.DAS.RoatpAssessor.Web.Services;
 namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
 {
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
-    public class OverviewController : Controller
+    public class AssessorOverviewController : Controller
     {
         private readonly IAssessorOverviewOrchestrator _overviewOrchestrator;
 
-        public OverviewController(IAssessorOverviewOrchestrator overviewOrchestrator)
+        public AssessorOverviewController(IAssessorOverviewOrchestrator overviewOrchestrator)
         {
             _overviewOrchestrator = overviewOrchestrator;
         }
 
-        [HttpGet("Overview/{applicationId}")]
+        [HttpGet("AssessorOverview/{applicationId}")]
         public async Task<IActionResult> ViewApplication(Guid applicationId)
         {
             var userId = HttpContext.User.UserId();
@@ -35,7 +35,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                 return RedirectToAction("AssessmentComplete", "AssessorOutcome", new { applicationId });
             }
 
-            return View("~/Views/Overview/Application.cshtml", viewModel);
+            return View("~/Views/AssessorOverview/Application.cshtml", viewModel);
         }
     }
 }
