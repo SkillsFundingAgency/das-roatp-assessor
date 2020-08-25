@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -16,25 +15,23 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
 {
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
-    public class AssessorControllerBase<T> : Controller
+    public class AssessorControllerBase<T> : Controller where T : class
     {
         protected readonly IRoatpAssessorApiClient _assessorApiClient;
         protected readonly ILogger<T> _logger;
         protected readonly IAssessorPageValidator _assessorPageValidator;
 
-        public AssessorControllerBase(IRoatpAssessorApiClient assessorApiClient,
-                                           ILogger<T> logger, IAssessorPageValidator assessorPageValidator)
+        public AssessorControllerBase(IRoatpAssessorApiClient assessorApiClient, ILogger<T> logger, IAssessorPageValidator assessorPageValidator)
         {
             _assessorApiClient = assessorApiClient;
             _logger = logger;
             _assessorPageValidator = assessorPageValidator;
         }
 
-        protected async Task<IActionResult> ValidateAndUpdatePageAnswer<T>(SubmitAssessorPageAnswerCommand command,
-                                                          Func<Task<T>> viewModelBuilder,
-                                                          string errorView) where T : ReviewAnswersViewModel
+        protected async Task<IActionResult> ValidateAndUpdatePageAnswer<RAVM>(SubmitAssessorPageAnswerCommand command,
+                                                          Func<Task<RAVM>> viewModelBuilder,
+                                                          string errorView) where RAVM : ReviewAnswersViewModel
         {
-            // TODO: Split function into two actions. One for validating and one for updating page answer
             var validationResponse = await _assessorPageValidator.Validate(command);
 
             if (validationResponse.Errors.Any())
@@ -85,13 +82,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             }
         }
 
-
-
-        protected async Task<IActionResult> ValidateAndUpdateSectorPageAnswer<T>(SubmitAssessorPageAnswerCommand command,
-                                                    Func<Task<T>> viewModelBuilder,
-                                                    string errorView) where T : SectorViewModel
+        protected async Task<IActionResult> ValidateAndUpdateSectorPageAnswer<SVM>(SubmitAssessorPageAnswerCommand command,
+                                                    Func<Task<SVM>> viewModelBuilder,
+                                                    string errorView) where SVM : SectorViewModel
         {
-            // TODO: Split function into two actions. One for validating and one for updating page answer
             var validationResponse = await _assessorPageValidator.Validate(command);
 
             if (validationResponse.Errors.Any())
@@ -139,8 +133,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                 sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
                 sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
             });
-
         }
-
     }
 }
