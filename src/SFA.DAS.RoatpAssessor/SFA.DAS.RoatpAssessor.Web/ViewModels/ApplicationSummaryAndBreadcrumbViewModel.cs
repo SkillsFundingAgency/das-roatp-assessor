@@ -13,7 +13,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string ApplicationRoute { get; set; }
         public DateTime? SubmittedDate { get; set; }
 
-        public string GuidanceText { get; set; }
         public string Status { get; set; }
 
         public string OptionPassText { get; set; }

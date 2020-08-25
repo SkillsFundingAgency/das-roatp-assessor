@@ -1,5 +1,4 @@
-﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
-@model SFA.DAS.RoatpAssessor.Web.ViewModels.SectorViewModel;
+﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.SectorViewModel;
 
 @{
     ViewBag.Title = $"Assessor - {@Model.Heading}";
@@ -27,9 +26,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             @{ 
-                var tableSpacingCssClass = !string.IsNullOrWhiteSpace(Model.GuidanceText) ? "" : "govuk-!-margin-bottom-9";
-                
-                <table class="govuk-table @tableSpacingCssClass">
+                <table class="govuk-table govuk-!-margin-bottom-9">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Application question</th>
@@ -116,26 +113,6 @@
             }
         </div>
     </div>
-
-
-    @if (!string.IsNullOrWhiteSpace(Model.GuidanceText))
-    {
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                <details class="govuk-details govuk-!-margin-bottom-9">
-                    <summary class="govuk-details__summary">
-                        <span class="govuk-details__summary-text">
-                            View application guidance
-                        </span>
-                    </summary>
-                    <div class="govuk-details__text">
-                        @Html.Raw(Model.GuidanceText)
-                    </div>
-                </details>
-            </div>
-        </div>
-    }
-
 
     @if (Model.ApplicationId != Guid.Empty)
     {

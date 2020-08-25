@@ -102,8 +102,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
                 Caption = assessorPage.Caption,
                 Heading = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesHeading,
-                SelectedSectors = await _assessorApiClient.GetAssessorSectors(request.ApplicationId, request.UserId),
-                GuidanceText = !string.IsNullOrEmpty(assessorPage.BodyText) ? assessorPage.BodyText : assessorPage.Questions?.FirstOrDefault()?.QuestionBodyText,
+                SelectedSectors = await _assessorApiClient.GetAssessorSectors(request.ApplicationId, request.UserId)
             };
 
             return viewModel;
