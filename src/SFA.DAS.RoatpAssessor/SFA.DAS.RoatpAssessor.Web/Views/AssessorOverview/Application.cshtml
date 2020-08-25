@@ -46,7 +46,7 @@
                                             }
                                             else
                                             {
-                                                <a asp-controller="SectionReview" asp-action="ReviewPageAnswers" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@sequence.SequenceNumber" asp-route-sectionNumber="@currentSection.SectionNumber" class="govuk-link">@currentSection.LinkTitle</a>
+                                                <a asp-controller="AssessorSectionReview" asp-action="ReviewPageAnswers" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@sequence.SequenceNumber" asp-route-sectionNumber="@currentSection.SectionNumber" class="govuk-link">@currentSection.LinkTitle</a>
                                             }
                                         </span>
                                         @if (!string.IsNullOrWhiteSpace(currentSection.Status))

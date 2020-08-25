@@ -18,18 +18,18 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
+namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
 {
     [TestFixture]
-    public class SectionReviewControllerTests
+    public class AssessorSectionReviewControllerTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
 
         private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Mock<IAssessorPageValidator> _assessorPageValidator;
-        private Mock<ISectionReviewOrchestrator> _sectionReviewOrchestrator;
+        private Mock<IAssessorSectionReviewOrchestrator> _sectionReviewOrchestrator;
 
-        private SectionReviewController _controller;
+        private AssessorSectionReviewController _controller;
 
 
         [SetUp]
@@ -37,11 +37,11 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
         {
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
             _assessorPageValidator = new Mock<IAssessorPageValidator>();
-            _sectionReviewOrchestrator = new Mock<ISectionReviewOrchestrator>();
+            _sectionReviewOrchestrator = new Mock<IAssessorSectionReviewOrchestrator>();
 
-            var logger = Mock.Of<ILogger<SectionReviewController>>();
+            var logger = Mock.Of<ILogger<AssessorSectionReviewController>>();
 
-            _controller = new SectionReviewController(_assessorApiClient.Object, _assessorPageValidator.Object, _sectionReviewOrchestrator.Object, logger)
+            _controller = new AssessorSectionReviewController(_assessorApiClient.Object, _assessorPageValidator.Object, _sectionReviewOrchestrator.Object, logger)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };

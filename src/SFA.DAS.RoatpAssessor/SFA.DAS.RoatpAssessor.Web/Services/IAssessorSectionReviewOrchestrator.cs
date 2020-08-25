@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.Services
 {
-    public interface ISectionReviewOrchestrator
+    public interface IAssessorSectionReviewOrchestrator
     {
         Task<ReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request);
         Task<ApplicationSectorsViewModel> GetSectorsViewModel(GetSectorsRequest request);

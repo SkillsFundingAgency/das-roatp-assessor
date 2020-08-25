@@ -5,7 +5,7 @@
     Layout = "_Layout";
 }
 
-<partial name="~/Views/SectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
+<partial name="~/Views/AssessorSectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
@@ -18,7 +18,7 @@
 
             <h1 class="govuk-heading-xl">@Model.Heading</h1>
 
-            <partial name="~/Views/SectionReview/Pages/_ApplicationSummary.cshtml" for="@Model"/>
+            <partial name="~/Views/AssessorSectionReview/Pages/_ApplicationSummary.cshtml" for="@Model"/>
         </div>
     </div>
 
@@ -32,7 +32,7 @@
                         {
                             <li class="app-task-list__item">
                                 <span class="app-task-list__task-name">
-                                    <a asp-action="ReviewSectorAnswers" asp-controller="SectionReview" asp-route-applicationId="@Model.ApplicationId" asp-route-pageId="@sector.PageId" class="govuk-link" aria-describedby="pageid-@sector.PageId">
+                                    <a asp-action="ReviewSectorAnswers" asp-controller="AssessorSectionReview" asp-route-applicationId="@Model.ApplicationId" asp-route-pageId="@sector.PageId" class="govuk-link" aria-describedby="pageid-@sector.PageId">
                                         @Html.Raw(sector.Title)
                                     </a>
                                 </span>

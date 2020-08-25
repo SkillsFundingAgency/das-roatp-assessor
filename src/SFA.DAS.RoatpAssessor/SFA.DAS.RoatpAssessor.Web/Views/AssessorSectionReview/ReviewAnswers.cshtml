@@ -7,7 +7,7 @@
     Layout = "_Layout";
 }
 
-<partial name="~/Views/SectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
+<partial name="~/Views/AssessorSectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
@@ -20,7 +20,7 @@
             </span>
             <h1 class="govuk-heading-xl">@Model.Heading</h1>
 
-            <partial name="~/Views/SectionReview/Pages/_ApplicationSummary.cshtml" for="@Model" />
+            <partial name="~/Views/AssessorSectionReview/Pages/_ApplicationSummary.cshtml" for="@Model" />
         </div>
     </div>
 
@@ -28,7 +28,7 @@
     {
         foreach (var item in Model.TabularData)
         {
-            <partial name="~/Views/SectionReview/Pages/_TabularData.cshtml" for="@item" />
+            <partial name="~/Views/AssessorSectionReview/Pages/_TabularData.cshtml" for="@item" />
         }
     }
     else
@@ -156,7 +156,7 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <form class="js-disable-on-submit" method="post" asp-action="ReviewPageAnswers" asp-controller="SectionReview">
+                <form class="js-disable-on-submit" method="post" asp-action="ReviewPageAnswers" asp-controller="AssessorSectionReview">
                     <input type="hidden" asp-for="ApplicationId" />
                     <input type="hidden" asp-for="SequenceNumber" />
                     <input type="hidden" asp-for="SectionNumber" />
@@ -164,7 +164,7 @@
                     <input type="hidden" asp-for="NextPageId" />
                     <input type="hidden" asp-for="Heading" />
 
-                    <partial name="~/Views/SectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
+                    <partial name="~/Views/AssessorSectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
 
                     <button class="govuk-button" type="submit">Save and continue</button>
                 </form>

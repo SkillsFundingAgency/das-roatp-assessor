@@ -15,19 +15,19 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
 {
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
-    public class SectionReviewController : AssessorControllerBase<SectionReviewController>
+    public class AssessorSectionReviewController : AssessorControllerBase<AssessorSectionReviewController>
     {
-        private readonly ISectionReviewOrchestrator _sectionReviewOrchestrator;
-        public SectionReviewController(IRoatpAssessorApiClient assessorApiClient,
+        private readonly IAssessorSectionReviewOrchestrator _sectionReviewOrchestrator;
+        public AssessorSectionReviewController(IRoatpAssessorApiClient assessorApiClient,
                                        IAssessorPageValidator assessorPageValidator,
-                                       ISectionReviewOrchestrator sectionReviewOrchestrator,
-                                       ILogger<SectionReviewController> logger) : base(assessorApiClient, logger, assessorPageValidator)
+                                       IAssessorSectionReviewOrchestrator sectionReviewOrchestrator,
+                                       ILogger<AssessorSectionReviewController> logger) : base(assessorApiClient, logger, assessorPageValidator)
         {
             _sectionReviewOrchestrator = sectionReviewOrchestrator;
         }
 
-        [HttpGet("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}")]
-        [HttpGet("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}")]
+        [HttpGet("AssessorSectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}")]
+        [HttpGet("AssessorSectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}")]
         public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
         {
             var userId = HttpContext.User.UserId();
@@ -42,7 +42,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                     return RedirectToAction("ViewApplication", "AssessorOverview", new { applicationId });
                 }
 
-                return View("~/Views/SectionReview/ReviewSectors.cshtml", sectorViewModel);
+                return View("~/Views/AssessorSectionReview/ReviewSectors.cshtml", sectorViewModel);
             }
 
             var viewModel = await _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(applicationId, userId, sequenceNumber, sectionNumber, pageId, null));
@@ -52,37 +52,37 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                 return RedirectToAction("ViewApplication", "AssessorOverview", new { applicationId });
             }
 
-            return View("~/Views/SectionReview/ReviewAnswers.cshtml", viewModel);
+            return View("~/Views/AssessorSectionReview/ReviewAnswers.cshtml", viewModel);
         }
 
 
 
-        [HttpGet("SectionReview/{applicationId}/Sector/{PageId}")]
+        [HttpGet("AssessorSectionReview/{applicationId}/Sector/{PageId}")]
         public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId)
         {
             var userId = HttpContext.User.UserId();
             var viewModel = await _sectionReviewOrchestrator.GetSectorViewModel(new GetSectorDetailsRequest(applicationId, pageId, userId));
-            return View("~/Views/SectionReview/ReviewSectorAnswers.cshtml", viewModel);
+            return View("~/Views/AssessorSectionReview/ReviewSectorAnswers.cshtml", viewModel);
         }
 
-        [HttpPost("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}")]
-        [HttpPost("SectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}")]
+        [HttpPost("AssessorSectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}")]
+        [HttpPost("AssessorSectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}")]
         public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, SubmitAssessorPageAnswerCommand command)
         {
             var userId = HttpContext.User.UserId();
 
             Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
-            return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/SectionReview/ReviewAnswers.cshtml");
+            return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/AssessorSectionReview/ReviewAnswers.cshtml");
         }
 
 
-        [HttpPost("SectionReview/{applicationId}/Sector/{PageId}")]
+        [HttpPost("AssessorSectionReview/{applicationId}/Sector/{PageId}")]
         public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId, SubmitAssessorPageAnswerCommand command)
         {
             var userId = HttpContext.User.UserId();
             Func<Task<SectorViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetSectorViewModel(new GetSectorDetailsRequest(command.ApplicationId, command.PageId, userId));
 
-            return await ValidateAndUpdateSectorPageAnswer(command, viewModelBuilder, $"~/Views/SectionReview/ReviewSectorAnswers.cshtml");
+            return await ValidateAndUpdateSectorPageAnswer(command, viewModelBuilder, $"~/Views/AssessorSectionReview/ReviewSectorAnswers.cshtml");
         }
     }
 }

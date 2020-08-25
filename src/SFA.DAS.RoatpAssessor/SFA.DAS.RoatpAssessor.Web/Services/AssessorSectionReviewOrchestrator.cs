@@ -16,14 +16,14 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Services
 {
-    public class SectionReviewOrchestrator : ISectionReviewOrchestrator
+    public class AssessorSectionReviewOrchestrator : IAssessorSectionReviewOrchestrator
     {
-        private readonly ILogger<SectionReviewOrchestrator> _logger;
+        private readonly ILogger<AssessorSectionReviewOrchestrator> _logger;
         private readonly IRoatpApplicationApiClient _applicationApiClient;
         private readonly IRoatpAssessorApiClient _assessorApiClient;
         private readonly ISupplementaryInformationService _supplementaryInformationService;
 
-        public SectionReviewOrchestrator(ILogger<SectionReviewOrchestrator> logger, IRoatpApplicationApiClient applicationApiClient, IRoatpAssessorApiClient assessorApiClient, ISupplementaryInformationService supplementaryInformationService)
+        public AssessorSectionReviewOrchestrator(ILogger<AssessorSectionReviewOrchestrator> logger, IRoatpApplicationApiClient applicationApiClient, IRoatpAssessorApiClient assessorApiClient, ISupplementaryInformationService supplementaryInformationService)
         {
             _logger = logger;
             _applicationApiClient = applicationApiClient;

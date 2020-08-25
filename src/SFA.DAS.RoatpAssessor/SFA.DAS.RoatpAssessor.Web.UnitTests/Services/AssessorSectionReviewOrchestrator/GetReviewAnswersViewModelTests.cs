@@ -14,7 +14,7 @@ using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Services;
 
 
-namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
+namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrchestrator
 {
     [TestFixture]
     public class GetReviewAnswersViewModelTests
@@ -24,7 +24,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
 
         private Mock<IRoatpApplicationApiClient> _applyApiClient;
         private Mock<IRoatpAssessorApiClient> _assessorApiClient;
-        private Web.Services.SectionReviewOrchestrator _orchestrator;
+        private Web.Services.AssessorSectionReviewOrchestrator _orchestrator;
         private GetReviewAnswersRequest _request;
         private Apply _application;
         private Contact _contact;
@@ -39,14 +39,14 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
         [SetUp]
         public void SetUp()
         {
-            var logger = new Mock<ILogger<Web.Services.SectionReviewOrchestrator>>();
+            var logger = new Mock<ILogger<Web.Services.AssessorSectionReviewOrchestrator>>();
 
             _applyApiClient = new Mock<IRoatpApplicationApiClient>();
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
 
             var supplementaryInformationService = new Mock<ISupplementaryInformationService>();
 
-            _orchestrator = new Web.Services.SectionReviewOrchestrator(logger.Object, _applyApiClient.Object, _assessorApiClient.Object, supplementaryInformationService.Object);
+            _orchestrator = new Web.Services.AssessorSectionReviewOrchestrator(logger.Object, _applyApiClient.Object, _assessorApiClient.Object, supplementaryInformationService.Object);
 
             _userId = _user.UserId();
 

@@ -17,7 +17,7 @@ using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
-namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
+namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrchestrator
 {
     [TestFixture]
     public class GetSectorsViewModelTests
@@ -27,7 +27,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
 
         private Mock<IRoatpApplicationApiClient> _applicationApiClient;
         private Mock<IRoatpAssessorApiClient> _assessorApiClient;
-        private Web.Services.SectionReviewOrchestrator _orchestrator;
+        private Web.Services.AssessorSectionReviewOrchestrator _orchestrator;
         private string _assessorPageCaption;
         private string _ukprn;
         private List<AssessorSector> _chosenSectors;
@@ -39,7 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
         public void SetUp()
         {
             _assessorPageCaption = "Caption for page";
-            var logger = new Mock<ILogger<Web.Services.SectionReviewOrchestrator>>();
+            var logger = new Mock<ILogger<Web.Services.AssessorSectionReviewOrchestrator>>();
             _chosenSectors = new List<AssessorSector>();
 
             _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
@@ -47,7 +47,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
 
             var supplementaryInformationService = new Mock<ISupplementaryInformationService>();
 
-            _orchestrator = new Web.Services.SectionReviewOrchestrator(logger.Object, _applicationApiClient.Object, _assessorApiClient.Object, supplementaryInformationService.Object);
+            _orchestrator = new Web.Services.AssessorSectionReviewOrchestrator(logger.Object, _applicationApiClient.Object, _assessorApiClient.Object, supplementaryInformationService.Object);
         }
 
         [Test]
