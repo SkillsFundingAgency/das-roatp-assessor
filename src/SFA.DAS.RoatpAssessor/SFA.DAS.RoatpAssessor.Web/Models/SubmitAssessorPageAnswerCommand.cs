@@ -17,6 +17,33 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
         public string OptionInProgressText { get; set; }
         public string Heading { get; set; }
 
+        public string ReviewComment
+        {
+            get
+            {
+                string reviewComment;
+
+                switch (Status)
+                {
+                    case AssessorPageReviewStatus.Pass:
+                        reviewComment = OptionPassText;
+                        break;
+                    case AssessorPageReviewStatus.Fail:
+                        reviewComment = OptionFailText;
+                        break;
+                    case AssessorPageReviewStatus.InProgress:
+                        reviewComment = OptionInProgressText;
+                        break;
+                    default:
+                        reviewComment = null;
+                        break;
+                }
+
+                return reviewComment;
+            }
+        }
+
+
         public SubmitAssessorPageAnswerCommand()
         {
                 

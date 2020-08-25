@@ -30,26 +30,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             _assessorPageValidator = assessorPageValidator;
         }
 
-        public string SetupGatewayPageOptionTexts(SubmitAssessorPageAnswerCommand command)
-        {
-            if (command?.Status == null) return string.Empty;
-            command.OptionInProgressText = command.Status == AssessorPageReviewStatus.InProgress && !string.IsNullOrEmpty(command.OptionInProgressText) ? command.OptionInProgressText : string.Empty;
-            command.OptionPassText = command.Status == AssessorPageReviewStatus.Pass && !string.IsNullOrEmpty(command.OptionPassText) ? command.OptionPassText : string.Empty;
-            command.OptionFailText = command.Status == AssessorPageReviewStatus.Fail && !string.IsNullOrEmpty(command.OptionFailText) ? command.OptionFailText : string.Empty;
-
-            switch (command.Status)
-            {
-                case AssessorPageReviewStatus.Pass:
-                    return command.OptionPassText;
-                case AssessorPageReviewStatus.Fail:
-                    return command.OptionFailText;
-                case AssessorPageReviewStatus.InProgress:
-                    return command.OptionInProgressText;
-                default:
-                    return string.Empty;
-            }
-        }
-
         protected async Task<IActionResult> ValidateAndUpdatePageAnswer<T>(SubmitAssessorPageAnswerCommand command,
                                                           Func<Task<T>> viewModelBuilder,
                                                           string errorView) where T : ReviewAnswersViewModel
@@ -70,16 +50,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             if (ModelState.IsValid)
             {
                 var userId = HttpContext.User.UserId();
-                var comment = SetupGatewayPageOptionTexts(command);
 
                 submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
-
                                     userId,
                                     command.Status,
-                                    comment);
+                                    command.ReviewComment);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
@@ -129,7 +107,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             if (ModelState.IsValid)
             {
                 var userId = HttpContext.User.UserId();
-                var comment = SetupGatewayPageOptionTexts(command);
 
                 submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                                     SequenceIds.DeliveringApprenticeshipTraining,
@@ -137,7 +114,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                                     command.PageId,
                                     userId,
                                     command.Status,
-                                    comment);
+                                    command.ReviewComment);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
