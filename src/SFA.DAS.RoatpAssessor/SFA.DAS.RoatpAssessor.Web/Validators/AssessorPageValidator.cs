@@ -1,9 +1,7 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using SFA.DAS.RoatpAssessor.Web.Helpers;
 using SFA.DAS.RoatpAssessor.Web.Models;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,7 +23,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
 
             if (string.IsNullOrWhiteSpace(command.Status))
             {
-                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.Status), ValidationHelper.MandatoryValidationMessage(command)));
+                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.Status), ValidationHelper.StatusMandatoryValidationMessage(command.PageId, command.Heading)));
             }
             else
             {
@@ -34,7 +32,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                 {
                     case AssessorPageReviewStatus.Pass:
                         {
-                            var wordCount = GetWordCount(command.OptionPassText);
+                            var wordCount = ValidationHelper.GetWordCount(command.OptionPassText);
                             if (wordCount > MaxWordsCount)
                             {
                                 validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionPassText), TooManyWords));
@@ -44,7 +42,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                         }
                     case AssessorPageReviewStatus.Fail:
                         {
-                            var wordCount = GetWordCount(command.OptionFailText);
+                            var wordCount = ValidationHelper.GetWordCount(command.OptionFailText);
                             if (wordCount < RequiredMinimumWordsCount)
                             {
                                 validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionFailText), FailDetailsRequired));
@@ -58,7 +56,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                         }
                     case AssessorPageReviewStatus.InProgress:
                         {
-                            var wordCount = GetWordCount(command.OptionInProgressText);
+                            var wordCount = ValidationHelper.GetWordCount(command.OptionInProgressText);
                             if (wordCount > MaxWordsCount)
                             {
                                 validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionInProgressText), TooManyWords));
@@ -70,19 +68,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
             }
 
             return await Task.FromResult(validationResponse);
-        }
-
-        private static int GetWordCount(string text)
-        {
-            int wordCount = 0;
-
-            if (!string.IsNullOrWhiteSpace(text))
-            {
-                wordCount = text.Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries)
-                            .Length;
-            }
-
-            return wordCount;
         }
     }
 
