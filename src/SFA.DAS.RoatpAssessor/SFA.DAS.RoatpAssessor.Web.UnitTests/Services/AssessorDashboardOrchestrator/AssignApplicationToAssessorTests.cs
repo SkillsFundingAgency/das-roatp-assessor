@@ -5,8 +5,9 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestrator
 {
@@ -37,7 +38,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
 
             await _orchestrator.AssignApplicationToAssessor(_applicationId, assessorNumber, userId, userName);
 
-            _assessorApiClient.Verify(x => x.AssignAssessor(_applicationId, It.Is<AssignAssessorApplicationRequest>(r => r.AssessorUserId == userId && r.AssessorName == userName && r.AssessorNumber == assessorNumber)));
+            _assessorApiClient.Verify(x => x.AssignAssessor(_applicationId, It.Is<AssignAssessorCommand>(r => r.AssessorUserId == userId && r.AssessorName == userName && r.AssessorNumber == assessorNumber)));
         }
     }
 }

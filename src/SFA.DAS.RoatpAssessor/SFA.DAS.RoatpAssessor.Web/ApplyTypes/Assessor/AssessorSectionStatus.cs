@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor
 {
     public static class AssessorSectionStatus
     {

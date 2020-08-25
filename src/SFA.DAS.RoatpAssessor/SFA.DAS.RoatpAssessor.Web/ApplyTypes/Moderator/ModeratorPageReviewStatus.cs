@@ -1,6 +1,6 @@
-﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator
 {
-    public static class AssessorPageReviewStatus
+    public static class ModeratorPageReviewStatus
     {
         public const string InProgress = "In progress";
         public const string Pass = "Pass";

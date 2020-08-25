@@ -1,6 +1,6 @@
-﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator
 {
-    public class Sector
+    public class ModeratorSector
     {
         public string PageId { get; set; }
         public string Title { get; set; }

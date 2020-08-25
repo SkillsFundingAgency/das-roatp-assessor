@@ -4,8 +4,8 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
 using SFA.DAS.RoatpAssessor.Web.Domain;
@@ -80,10 +80,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
         {
             var sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining;
             var sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
-            var chosenSectors = new List<Sector>
+            var chosenSectors = new List<AssessorSector>
             {
-                new Sector {PageId = "1", Title = "Page 1"},
-                new Sector {PageId = "2", Title = "Page 2"}
+                new AssessorSector {PageId = "1", Title = "Page 1"},
+                new AssessorSector {PageId = "2", Title = "Page 2"}
             };
 
             var viewModel = new ApplicationSectorsViewModel
@@ -132,7 +132,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
         }
 
         [Test]
-        public async Task POST_ReviewPageAnswers_When_Valid_submits_AssessorPageOutcome()
+        public async Task POST_ReviewPageAnswers_When_Valid_submits_AssessorPageReviewOutcome()
         {
             int sequenceNumber = 4;
             int sectionNumber = 2;
@@ -155,11 +155,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             var validationResponse = new ValidationResponse();
             _assessorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
-            _assessorApiClient.Setup(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+            _assessorApiClient.Setup(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
-                                    (int)command.AssessorType,
                                     _controller.User.UserId(),
                                     command.Status,
                                     command.OptionPassText)).ReturnsAsync(true);
@@ -171,18 +170,17 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             Assert.AreEqual("Overview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
 
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                         command.SequenceNumber,
                         command.SectionNumber,
                         command.PageId,
-                        (int)command.AssessorType,
                         _controller.User.UserId(),
                         command.Status,
                         command.OptionPassText), Times.Once);
         }
 
         [Test]
-        public async Task POST_ReviewPageAnswers_When_Invalid_does_not_submit_AssessorPageOutcome()
+        public async Task POST_ReviewPageAnswers_When_Invalid_does_not_submit_AssessorPageReviewOutcome()
         {
             int sequenceNumber = 4;
             int sectionNumber = 2;
@@ -215,11 +213,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
             Assert.That(actualViewModel, Is.Not.Null);
             Assert.That(actualViewModel, Is.SameAs(viewModel));
 
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageOutcome(command.ApplicationId,
+            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                         command.SequenceNumber,
                         command.SectionNumber,
                         command.PageId,
-                        (int)command.AssessorType,
                         _controller.User.UserId(),
                         command.Status,
                         command.OptionPassText), Times.Never);

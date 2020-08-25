@@ -1,5 +1,5 @@
 ﻿@using SFA.DAS.AdminService.Common.Extensions
-@using SFA.DAS.RoatpAssessor.Web.Domain
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
 
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.InModerationApplicationsViewModel
 @{
@@ -46,7 +46,7 @@
                                 {
                                     <tr class="govuk-table__row">
                                         <td class="govuk-table__cell" data-label="Organisation name">
-                                            @item.OrganisationName
+                                            <a class="govuk-link" asp-action="ViewApplication" asp-controller="ModeratorOverview" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>
                                         </td>
                                         <td class="govuk-table__cell" data-label="UKPRN">
                                             @item.Ukprn

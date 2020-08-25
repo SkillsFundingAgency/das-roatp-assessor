@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -18,14 +18,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<InModerationApplicationsViewModel> GetInModerationApplicationsViewModel(string userId)
         {
             var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
-            var applications = await _applicationApiClient.GetModerationApplications(userId);
+            var applications = await _applicationApiClient.GetInModerationApplications(userId);
 
             var viewModel = new InModerationApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
             AddApplicationsToViewModel(viewModel, applications);
             return viewModel;
         }
 
-        private void AddApplicationsToViewModel(InModerationApplicationsViewModel viewModel, List<RoatpModerationApplicationSummary> applications)
+        private void AddApplicationsToViewModel(InModerationApplicationsViewModel viewModel, List<ModerationApplicationSummary> applications)
         {
             foreach (var application in applications)
             {
@@ -34,7 +34,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
         }
 
-        private ModerationApplicationViewModel CreateApplicationViewModel(RoatpModerationApplicationSummary application)
+        private ModerationApplicationViewModel CreateApplicationViewModel(ModerationApplicationSummary application)
         {
             var viewModel = new ModerationApplicationViewModel();
 

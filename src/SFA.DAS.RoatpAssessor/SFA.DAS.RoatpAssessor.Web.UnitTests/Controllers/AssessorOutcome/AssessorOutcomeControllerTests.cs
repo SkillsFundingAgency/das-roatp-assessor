@@ -3,8 +3,8 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -21,7 +21,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
     public class AssessorOutcomeControllerTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
-        private const AssessorType _assessorType = AssessorType.FirstAssessor;
 
         private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Mock<IAssessorOverviewOrchestrator> _assessorOverviewOrchestrator;
@@ -42,10 +41,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
                 ControllerContext = MockedControllerContext.Setup()
             };
 
-            _assessorApiClient.Setup(x => x.UpdateAssessorReviewStatus(_applicationId, (int)_assessorType, _controller.User.UserId(), It.IsAny<string>())).ReturnsAsync(true);
+            _assessorApiClient.Setup(x => x.UpdateAssessorReviewStatus(_applicationId, _controller.User.UserId(), It.IsAny<string>())).ReturnsAsync(true);
 
             _applicationViewModel = GetApplicationViewModel();
-            _assessorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetApplicationOverviewRequest>())).ReturnsAsync(_applicationViewModel);
+            _assessorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetAssessorOverviewRequest>())).ReturnsAsync(_applicationViewModel);
         }
 
         private AssessorApplicationViewModel GetApplicationViewModel()
@@ -55,7 +54,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
             var contact = new Contact { Email = userId, GivenNames = _controller.User.GivenName(), FamilyName = _controller.User.Surname() };
             var sequences = new List<AssessorSequence>();
 
-            return new AssessorApplicationViewModel(application, contact, sequences, userId) { AssessorType = _assessorType };
+            return new AssessorApplicationViewModel(application, contact, sequences, userId);
         }
 
         [Test]
@@ -106,7 +105,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         public async Task POST_AssessorOutcome_When_MoveToModeration_YES_redirects_to_AssessmentComplete()
         {
             // arrange
-            var command = new SubmitAssessorOutcomeCommand { ApplicationId = _applicationId, AssessorType = _assessorType, MoveToModeration = "YES" };
+            var command = new SubmitAssessorOutcomeCommand { ApplicationId = _applicationId, MoveToModeration = "YES" };
 
             // act
             var result = await _controller.AssessorOutcome(_applicationId, command) as RedirectToActionResult;
@@ -120,7 +119,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         public async Task POST_AssessorOutcome_When_MoveToModeration_NO_redirects_to_Application_Overview()
         {
             // arrange
-            var command = new SubmitAssessorOutcomeCommand { ApplicationId = _applicationId, AssessorType = _assessorType, MoveToModeration = "NO" };
+            var command = new SubmitAssessorOutcomeCommand { ApplicationId = _applicationId, MoveToModeration = "NO" };
 
             // act
             var result = await _controller.AssessorOutcome(_applicationId, command) as RedirectToActionResult;
@@ -134,7 +133,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         public async Task POST_AssessorOutcome_When_MoveToModeration_INVALID_returns_view_with_errors()
         {
             // arrange
-            var command = new SubmitAssessorOutcomeCommand { ApplicationId = _applicationId, AssessorType = _assessorType, MoveToModeration = "INVALID" };
+            var command = new SubmitAssessorOutcomeCommand { ApplicationId = _applicationId, MoveToModeration = "INVALID" };
 
             // act
             var result = await _controller.AssessorOutcome(_applicationId, command) as ViewResult;

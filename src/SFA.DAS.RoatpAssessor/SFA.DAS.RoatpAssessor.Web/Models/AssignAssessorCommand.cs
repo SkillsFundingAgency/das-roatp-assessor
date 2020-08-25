@@ -1,8 +1,8 @@
-﻿namespace SFA.DAS.RoatpAssessor.Web.Domain
+﻿namespace SFA.DAS.RoatpAssessor.Web.Models
 {
-    public class AssignAssessorApplicationRequest
+    public class AssignAssessorCommand
     {
-        public AssignAssessorApplicationRequest(int assessorNumber, string assessorUserId, string assessorName)
+        public AssignAssessorCommand(int assessorNumber, string assessorUserId, string assessorName)
         {
             AssessorNumber = assessorNumber;
             AssessorUserId = assessorUserId;

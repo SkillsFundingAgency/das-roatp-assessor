@@ -10,6 +10,7 @@ using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -29,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
         private Web.Services.SectionReviewOrchestrator _orchestrator;
         private string _assessorPageCaption;
         private string _ukprn;
-        private List<Sector> _chosenSectors;
+        private List<AssessorSector> _chosenSectors;
         private string _organisationName;
         private string _providerRouteName;
         private readonly DateTime _applicationSubmittedOn = DateTime.Today;
@@ -39,7 +40,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
         {
             _assessorPageCaption = "Caption for page";
             var logger = new Mock<ILogger<Web.Services.SectionReviewOrchestrator>>();
-            _chosenSectors = new List<Sector>();
+            _chosenSectors = new List<AssessorSector>();
 
             _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
@@ -56,8 +57,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             int sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
             string pageId = RoatpWorkflowPageIds.YourSectorsAndEmployeesStartingPageId;
             var userId = _user.UserId();
-            _chosenSectors.Add(new Sector { PageId = "1", Title = "page 1 title", Status = "Pass" });
-            _chosenSectors.Add(new Sector { PageId = "2", Title = "page 2 title" });
+            _chosenSectors.Add(new AssessorSector { PageId = "1", Title = "page 1 title", Status = "Pass" });
+            _chosenSectors.Add(new AssessorSector { PageId = "2", Title = "page 2 title" });
             _ukprn = "1234";
             _organisationName = "org name";
             _providerRouteName = "Main";
@@ -87,7 +88,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SectionReviewOrchestrator
             _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);
 
-            _assessorApiClient.Setup(x => x.GetChosenSectors(_applicationId, userId))
+            _assessorApiClient.Setup(x => x.GetAssessorSectors(_applicationId, userId))
                 .ReturnsAsync(_chosenSectors);
 
 

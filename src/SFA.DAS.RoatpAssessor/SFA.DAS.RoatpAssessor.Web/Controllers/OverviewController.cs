@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
@@ -24,7 +24,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         {
             var userId = HttpContext.User.UserId();
 
-            var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, userId));
+            var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetAssessorOverviewRequest(applicationId, userId));
 
             if (viewModel is null)
             {

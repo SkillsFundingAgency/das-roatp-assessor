@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -72,11 +72,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 var userId = HttpContext.User.UserId();
                 var comment = SetupGatewayPageOptionTexts(command);
 
-                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
-                                    (int)command.AssessorType,
+
                                     userId,
                                     command.Status,
                                     comment);
@@ -131,11 +131,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
                 var userId = HttpContext.User.UserId();
                 var comment = SetupGatewayPageOptionTexts(command);
 
-                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageOutcome(command.ApplicationId,
+                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                                     SequenceIds.DeliveringApprenticeshipTraining,
                           SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
                                     command.PageId,
-                                    (int)command.AssessorType,
                                     userId,
                                     command.Status,
                                     comment);

@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
+namespace SFA.DAS.RoatpAssessor.Web.Models
 {
-    public class GetApplicationOverviewRequest
+    public class GetAssessorOverviewRequest
     {
         public Guid ApplicationId { get; }
         public string UserId { get; }
 
-        public GetApplicationOverviewRequest(Guid applicationId, string userId)
+        public GetAssessorOverviewRequest(Guid applicationId, string userId)
         {
             ApplicationId = applicationId;
             UserId = userId;

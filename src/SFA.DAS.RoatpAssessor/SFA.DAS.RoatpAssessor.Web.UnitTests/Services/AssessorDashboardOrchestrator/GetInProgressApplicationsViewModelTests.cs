@@ -7,7 +7,8 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -29,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
             _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_applicationApiClient.Object, _assessorApiClient.Object);
 
-            _applicationApiClient.Setup(x => x.GetInProgressApplications(_user.UserId())).ReturnsAsync(new List<RoatpAssessorApplicationSummary>());
+            _applicationApiClient.Setup(x => x.GetInProgressApplications(_user.UserId())).ReturnsAsync(new List<AssessorApplicationSummary>());
             _applicationApiClient.Setup(x => x.GetApplicationCounts(_user.UserId())).ReturnsAsync(new ApplicationCounts());
         }
 
@@ -53,10 +54,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
         public async Task When_getting_in_progress_applications_the_applications_for_the_user_are_returned()
         {
             var userId = _user.UserId();
-            var applications = new List<RoatpAssessorApplicationSummary>
+            var applications = new List<AssessorApplicationSummary>
             {
-                new RoatpAssessorApplicationSummary { ApplicationReferenceNumber = "sdjfs", Assessor1Name = "sdjfghdfgd", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), Assessor1UserId = "flggfdg" },
-                new RoatpAssessorApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), Assessor1UserId = "fbvkjghb", Assessor2UserId = "fdkgjgfdh" }
+                new AssessorApplicationSummary { ApplicationReferenceNumber = "sdjfs", Assessor1Name = "sdjfghdfgd", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), Assessor1UserId = "flggfdg" },
+                new AssessorApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), Assessor1UserId = "fbvkjghb", Assessor2UserId = "fdkgjgfdh" }
             };
 
             _applicationApiClient.Setup(x => x.GetInProgressApplications(userId)).ReturnsAsync(applications);
@@ -68,7 +69,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
             AssertApplicationsMatch(applications.Last(), response.Applications.Last());
         }
 
-        private void AssertApplicationsMatch(RoatpAssessorApplicationSummary expected, ApplicationViewModel actual)
+        private void AssertApplicationsMatch(AssessorApplicationSummary expected, ApplicationViewModel actual)
         {
             Assert.AreEqual(expected.ApplicationId, actual.ApplicationId);
             Assert.AreEqual(expected.OrganisationName, actual.OrganisationName);

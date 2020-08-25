@@ -6,8 +6,9 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using SFA.DAS.AdminService.Common.Infrastructure;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
@@ -23,20 +24,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<ApplicationCounts>($"Assessor/Applications/{userId}");
         }
 
-        public async Task<List<RoatpAssessorApplicationSummary>> GetNewApplications(string userId)
+        public async Task<List<AssessorApplicationSummary>> GetNewApplications(string userId)
         {
-            return await Get<List<RoatpAssessorApplicationSummary>>($"Assessor/Applications/{userId}/New");
+            return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/New");
         }
 
-        public async Task<List<RoatpAssessorApplicationSummary>> GetInProgressApplications(string userId)
+        public async Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId)
         {
-            return await Get<List<RoatpAssessorApplicationSummary>>($"Assessor/Applications/{userId}/InProgress");
+            return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/InProgress");
         }
 
-        public async Task<List<RoatpModerationApplicationSummary>> GetModerationApplications(string userId)
+        public async Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId)
         {
-            // Note: might be a good idea to filter by userId on the end point
-            return await Get<List<RoatpModerationApplicationSummary>>($"Assessor/Applications/Moderation");
+            return await Get<List<ModerationApplicationSummary>>($"Assessor/Applications/{userId}/InModeration");
         }
 
         public async Task<Apply> GetApplication(Guid applicationId)

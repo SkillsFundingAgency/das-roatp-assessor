@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
 using SFA.DAS.AdminService.Common.Extensions;
@@ -11,6 +10,8 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+using SFA.DAS.RoatpAssessor.Web.Models;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Overview
 {
@@ -34,7 +35,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Overview
             };
 
             _applicationViewModel = GetApplicationViewModel();
-            _assessorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetApplicationOverviewRequest>())).ReturnsAsync(_applicationViewModel);
+            _assessorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetAssessorOverviewRequest>())).ReturnsAsync(_applicationViewModel);
         }
 
         private AssessorApplicationViewModel GetApplicationViewModel()
@@ -44,7 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Overview
             var contact = new Contact { Email = userId, GivenNames = _controller.User.GivenName(), FamilyName = _controller.User.Surname() };
             var sequences = new List<AssessorSequence>();
 
-            return new AssessorApplicationViewModel(application, contact, sequences, userId) { AssessorType = AssessorType.FirstAssessor };
+            return new AssessorApplicationViewModel(application, contact, sequences, userId);
         }
 
         [Test]

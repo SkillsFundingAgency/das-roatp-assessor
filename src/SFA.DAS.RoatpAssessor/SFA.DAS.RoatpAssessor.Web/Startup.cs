@@ -15,14 +15,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Extensions.Http;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.AdminService.Common;
 using SFA.DAS.AdminService.Common.Extensions;
+using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Settings;
 using SFA.DAS.RoatpAssessor.Web.Validators;
-using SFA.DAS.AdminService.Common;
 
 namespace SFA.DAS.RoatpAssessor.Web
 {
@@ -168,6 +168,7 @@ namespace SFA.DAS.RoatpAssessor.Web
                 x.GetService<IRoatpApplicationTokenService>()));
 
             services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
+            services.AddTransient<IModeratorOverviewOrchestrator, ModeratorOverviewOrchestrator>();
 
             services.AddTransient<ISupplementaryInformationService, SupplementaryInformationService>();
             services.AddTransient<ISectionReviewOrchestrator, SectionReviewOrchestrator>();

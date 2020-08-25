@@ -1,4 +1,4 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 
@@ -15,7 +15,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
         public string OptionInProgressText { get; set; }
-        public AssessorType AssessorType { get; set; }
         public string Heading { get; set; }
 
         public SubmitAssessorPageAnswerCommand()
@@ -34,7 +33,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
             OptionPassText = viewModel.OptionPassText;
             OptionFailText = viewModel.OptionFailText;
             OptionInProgressText = viewModel.OptionInProgressText;
-            AssessorType = viewModel.AssessorType;
             Heading = viewModel.Heading;
         }
     }

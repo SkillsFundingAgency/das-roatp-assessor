@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -34,7 +33,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         {
             var userId = HttpContext.User.UserId();
 
-            var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, userId));
+            var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetAssessorOverviewRequest(applicationId, userId));
 
             if (viewModel is null || viewModel.IsAssessorApproved)
             {
@@ -71,7 +70,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             // submit if validation passed and user specified to do so
             if (ModelState.IsValid && submitForModeration)
             {
-                var submittedSuccessfully = await _assessorApiClient.UpdateAssessorReviewStatus(command.ApplicationId, (int)command.AssessorType, userId, AssessorReviewStatus.Approved);
+                var submittedSuccessfully = await _assessorApiClient.UpdateAssessorReviewStatus(command.ApplicationId, userId, AssessorReviewStatus.Approved);
 
                 if (!submittedSuccessfully)
                 {
@@ -82,7 +81,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             // redirect
             if (!ModelState.IsValid)
             {
-                var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, userId));
+                var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetAssessorOverviewRequest(applicationId, userId));
                 return View("~/Views/AssessorOutcome/AssessorOutcome.cshtml", viewModel);
             }
             else if (!submitForModeration)
@@ -100,7 +99,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         {
             var userId = HttpContext.User.UserId();
 
-            var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetApplicationOverviewRequest(applicationId, userId));
+            var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetAssessorOverviewRequest(applicationId, userId));
 
             if (viewModel is null || !viewModel.IsAssessorApproved)
             {

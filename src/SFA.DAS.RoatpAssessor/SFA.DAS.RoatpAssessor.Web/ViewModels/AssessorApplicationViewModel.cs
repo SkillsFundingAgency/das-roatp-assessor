@@ -1,6 +1,5 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.Helpers;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +13,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 
         public string ApplicationStatus { get; }
         public string AssessorReviewStatus { get; set; }
-        public AssessorType AssessorType { get; set; }
 
         public bool IsAssessorApproved { get; set; }
 
@@ -46,17 +44,15 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 
         private void SetAssessorReviewStatus(Apply application, string userId)
         {
-            AssessorType = AssessorReviewHelper.SetAssessorType(application, userId);
-
-            if (AssessorType == AssessorType.FirstAssessor)
+            if (application.Assessor1UserId == userId)
             {
                 AssessorReviewStatus = application.Assessor1ReviewStatus;
-                IsAssessorApproved = application.Assessor1ReviewStatus == ApplyTypes.AssessorReviewStatus.Approved;
+                IsAssessorApproved = application.Assessor1ReviewStatus == ApplyTypes.Apply.AssessorReviewStatus.Approved;
             }
-            else if (AssessorType == AssessorType.SecondAssessor)
+            else if (application.Assessor2UserId == userId)
             {
                 AssessorReviewStatus = application.Assessor2ReviewStatus;
-                IsAssessorApproved = application.Assessor2ReviewStatus == ApplyTypes.AssessorReviewStatus.Approved;
+                IsAssessorApproved = application.Assessor2ReviewStatus == ApplyTypes.Apply.AssessorReviewStatus.Approved;
             }
         }
 
