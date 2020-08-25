@@ -7,15 +7,15 @@ using SFA.DAS.RoatpAssessor.Web.Validators;
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class RoatpAssessorOutcomeValidatorTests
+    public class AssessorOutcomeValidatorTests
     {
-        private RoatpAssessorOutcomeValidator _validator;
+        private AssessorOutcomeValidator _validator;
         private SubmitAssessorOutcomeCommand _command;
 
         [SetUp]
         public void SetUp()
         {
-            _validator = new RoatpAssessorOutcomeValidator();
+            _validator = new AssessorOutcomeValidator();
             _command = new SubmitAssessorOutcomeCommand();
         }
 

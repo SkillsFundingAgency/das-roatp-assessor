@@ -9,15 +9,15 @@ using SFA.DAS.RoatpAssessor.Web.Validators;
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
 {
     [TestFixture]
-    public class RoatpAssessorPageValidatorTests
+    public class AssessorPageValidatorTests
     {
-        private RoatpAssessorPageValidator _validator;
+        private AssessorPageValidator _validator;
         private SubmitAssessorPageAnswerCommand _command;
 
         [SetUp]
         public void SetUp()
         {
-            _validator = new RoatpAssessorPageValidator();
+            _validator = new AssessorPageValidator();
             _command = new SubmitAssessorPageAnswerCommand { Heading = "heading" };
         }
 

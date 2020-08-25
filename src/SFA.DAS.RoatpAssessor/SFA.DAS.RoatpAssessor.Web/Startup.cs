@@ -172,8 +172,8 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddTransient<ISupplementaryInformationService, SupplementaryInformationService>();
             services.AddTransient<ISectionReviewOrchestrator, SectionReviewOrchestrator>();
-            services.AddTransient<IRoatpAssessorPageValidator, RoatpAssessorPageValidator>();
-            services.AddTransient<IRoatpAssessorOutcomeValidator, RoatpAssessorOutcomeValidator>();
+            services.AddTransient<IAssessorPageValidator, AssessorPageValidator>();
+            services.AddTransient<IAssessorOutcomeValidator, AssessorOutcomeValidator>();
 
             DependencyInjection.ConfigureDependencyInjection(services);
         }

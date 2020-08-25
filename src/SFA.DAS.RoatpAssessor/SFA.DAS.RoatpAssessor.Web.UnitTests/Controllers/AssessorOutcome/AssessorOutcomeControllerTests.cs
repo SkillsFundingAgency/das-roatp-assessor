@@ -24,7 +24,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
 
         private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Mock<IAssessorOverviewOrchestrator> _assessorOverviewOrchestrator;
-        private IRoatpAssessorOutcomeValidator _assessorOutcomeValidator;
+        private IAssessorOutcomeValidator _assessorOutcomeValidator;
 
         private AssessorOutcomeController _controller;
         private AssessorApplicationViewModel _applicationViewModel;
@@ -33,7 +33,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         public void SetUp()
         {
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
-            _assessorOutcomeValidator = new RoatpAssessorOutcomeValidator();
+            _assessorOutcomeValidator = new AssessorOutcomeValidator();
             _assessorOverviewOrchestrator = new Mock<IAssessorOverviewOrchestrator>();
 
             _controller = new AssessorOutcomeController(_assessorApiClient.Object, _assessorOverviewOrchestrator.Object, _assessorOutcomeValidator)

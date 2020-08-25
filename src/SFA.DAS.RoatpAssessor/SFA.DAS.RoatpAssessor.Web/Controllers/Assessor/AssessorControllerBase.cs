@@ -20,14 +20,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
     {
         protected readonly IRoatpAssessorApiClient _assessorApiClient;
         protected readonly ILogger<T> _logger;
-        protected readonly IRoatpAssessorPageValidator AssessorPageValidator;
+        protected readonly IAssessorPageValidator _assessorPageValidator;
 
         public AssessorControllerBase(IRoatpAssessorApiClient assessorApiClient,
-                                           ILogger<T> logger, IRoatpAssessorPageValidator assessorPageValidator)
+                                           ILogger<T> logger, IAssessorPageValidator assessorPageValidator)
         {
             _assessorApiClient = assessorApiClient;
             _logger = logger;
-            AssessorPageValidator = assessorPageValidator;
+            _assessorPageValidator = assessorPageValidator;
         }
 
         public string SetupGatewayPageOptionTexts(SubmitAssessorPageAnswerCommand command)
@@ -55,7 +55,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                                                           string errorView) where T : ReviewAnswersViewModel
         {
             // TODO: Split function into two actions. One for validating and one for updating page answer
-            var validationResponse = await AssessorPageValidator.Validate(command);
+            var validationResponse = await _assessorPageValidator.Validate(command);
 
             if (validationResponse.Errors.Any())
             {
@@ -114,7 +114,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                                                     string errorView) where T : SectorViewModel
         {
             // TODO: Split function into two actions. One for validating and one for updating page answer
-            var validationResponse = await AssessorPageValidator.Validate(command);
+            var validationResponse = await _assessorPageValidator.Validate(command);
 
             if (validationResponse.Errors.Any())
             {

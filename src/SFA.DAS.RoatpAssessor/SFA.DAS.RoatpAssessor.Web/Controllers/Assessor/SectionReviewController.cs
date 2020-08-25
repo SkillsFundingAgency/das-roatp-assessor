@@ -19,7 +19,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
     {
         private readonly ISectionReviewOrchestrator _sectionReviewOrchestrator;
         public SectionReviewController(IRoatpAssessorApiClient assessorApiClient,
-                                       IRoatpAssessorPageValidator assessorPageValidator,
+                                       IAssessorPageValidator assessorPageValidator,
                                        ISectionReviewOrchestrator sectionReviewOrchestrator,
                                        ILogger<SectionReviewController> logger) : base(assessorApiClient, logger, assessorPageValidator)
         {

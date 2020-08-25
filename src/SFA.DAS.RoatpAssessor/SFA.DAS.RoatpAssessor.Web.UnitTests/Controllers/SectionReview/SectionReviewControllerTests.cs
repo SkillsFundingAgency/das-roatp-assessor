@@ -26,7 +26,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
         private readonly Guid _applicationId = Guid.NewGuid();
 
         private Mock<IRoatpAssessorApiClient> _assessorApiClient;
-        private Mock<IRoatpAssessorPageValidator> _assessorPageValidator;
+        private Mock<IAssessorPageValidator> _assessorPageValidator;
         private Mock<ISectionReviewOrchestrator> _sectionReviewOrchestrator;
 
         private SectionReviewController _controller;
@@ -36,7 +36,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.SectionReview
         public void SetUp()
         {
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
-            _assessorPageValidator = new Mock<IRoatpAssessorPageValidator>();
+            _assessorPageValidator = new Mock<IAssessorPageValidator>();
             _sectionReviewOrchestrator = new Mock<ISectionReviewOrchestrator>();
 
             var logger = Mock.Of<ILogger<SectionReviewController>>();

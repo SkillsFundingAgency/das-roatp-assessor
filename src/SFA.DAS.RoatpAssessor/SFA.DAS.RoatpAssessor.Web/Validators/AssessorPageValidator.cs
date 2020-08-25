@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.Validators
 {
-    public class RoatpAssessorPageValidator : IRoatpAssessorPageValidator
+    public class AssessorPageValidator : IAssessorPageValidator
     {
         private const int RequiredMinimumWordsCount = 1;
         private const int MaxWordsCount = 150;
@@ -86,7 +86,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
         }
     }
 
-    public interface IRoatpAssessorPageValidator
+    public interface IAssessorPageValidator
     {
         Task<ValidationResponse> Validate(SubmitAssessorPageAnswerCommand command);
     }

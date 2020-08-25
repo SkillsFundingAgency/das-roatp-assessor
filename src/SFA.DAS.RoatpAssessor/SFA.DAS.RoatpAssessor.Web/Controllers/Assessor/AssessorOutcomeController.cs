@@ -19,9 +19,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
     {
         private readonly IRoatpAssessorApiClient _assessorApiClient;
         private readonly IAssessorOverviewOrchestrator _overviewOrchestrator;
-        private readonly IRoatpAssessorOutcomeValidator _assessorOutcomeValidator;
+        private readonly IAssessorOutcomeValidator _assessorOutcomeValidator;
 
-        public AssessorOutcomeController(IRoatpAssessorApiClient assessorApiClient, IAssessorOverviewOrchestrator overviewOrchestrator, IRoatpAssessorOutcomeValidator assessorOutcomeValidator)
+        public AssessorOutcomeController(IRoatpAssessorApiClient assessorApiClient, IAssessorOverviewOrchestrator overviewOrchestrator, IAssessorOutcomeValidator assessorOutcomeValidator)
         {
             _assessorApiClient = assessorApiClient;
             _overviewOrchestrator = overviewOrchestrator;

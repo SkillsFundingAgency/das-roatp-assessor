@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.Validators
 {
-    public class RoatpAssessorOutcomeValidator : IRoatpAssessorOutcomeValidator
+    public class AssessorOutcomeValidator : IAssessorOutcomeValidator
     {
         public Task<ValidationResponse> Validate(SubmitAssessorOutcomeCommand command)
         {
@@ -35,7 +35,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
         }
     }
 
-    public interface IRoatpAssessorOutcomeValidator
+    public interface IAssessorOutcomeValidator
     {
         Task<ValidationResponse> Validate(SubmitAssessorOutcomeCommand command);
     }
