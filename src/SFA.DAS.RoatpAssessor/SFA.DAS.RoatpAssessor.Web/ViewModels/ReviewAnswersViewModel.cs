@@ -5,12 +5,7 @@ using System.Collections.Generic;
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
     public class ReviewAnswersViewModel : ApplicationSummaryAndBreadcrumbViewModel
-    {
-
-        public string ApplicantEmailAddress { get; set; }
-
-
-        // It seems that we will need them for grouping statuses
+    {      
         public int SequenceNumber { get; set; }
         public int SectionNumber { get; set; }
         public string PageId { get; set; }
