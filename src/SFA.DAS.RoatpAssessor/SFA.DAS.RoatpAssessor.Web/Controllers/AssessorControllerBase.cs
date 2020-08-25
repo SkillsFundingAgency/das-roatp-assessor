@@ -16,13 +16,13 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
-    public class RoatpAssessorControllerBase<T> : Controller
+    public class AssessorControllerBase<T> : Controller
     {
         protected readonly IRoatpAssessorApiClient _assessorApiClient;
         protected readonly ILogger<T> _logger;
         protected readonly IRoatpAssessorPageValidator AssessorPageValidator;
 
-        public RoatpAssessorControllerBase(IRoatpAssessorApiClient assessorApiClient,
+        public AssessorControllerBase(IRoatpAssessorApiClient assessorApiClient,
                                            ILogger<T> logger, IRoatpAssessorPageValidator assessorPageValidator)
         {
             _assessorApiClient = assessorApiClient;
