@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common
 {
-    public class AssessorOption
+    public class Option
     {
-        public List<AssessorQuestion> FurtherQuestions { get; set; }
+        public IEnumerable<Question> FurtherQuestions { get; set; }
         public string Value { get; set; }
         public string Label { get; set; }
         public string HintText { get; set; }

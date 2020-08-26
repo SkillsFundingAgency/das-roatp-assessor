@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common
 {
-    public class AssessorSupplementaryInformation
+    public class SupplementaryInformation
     {
         // Note this is needed when a page requires to pull information from different pages
         public Guid ApplicationId { get; set; }
@@ -13,8 +13,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
 
         public string PageId { get; set; }
 
-        public AssessorQuestion Question { get; set; }
+        public Question Question { get; set; }
 
-        public AssessorAnswer Answer { get; set; }
+        public Answer Answer { get; set; }
     }
 }

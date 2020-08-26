@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor
 {
-    public class AssessorApplicationSummary : ApplicationSummary
+    public class AssessorPage : Page
     {
     }
 }

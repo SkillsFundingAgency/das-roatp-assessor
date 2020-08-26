@@ -2,8 +2,7 @@
 
 namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator
 {
-    public class ModerationApplicationSummary : ApplicationSummary
+    public class ModeratorPage : Page
     {
-        public string ModerationStatus { get; set; }
     }
 }

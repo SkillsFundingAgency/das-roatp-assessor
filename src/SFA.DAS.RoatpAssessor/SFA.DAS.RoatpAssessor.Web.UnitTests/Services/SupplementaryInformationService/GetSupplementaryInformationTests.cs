@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using System;
@@ -48,13 +49,13 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
             var assessorPage = new AssessorPage
             {
                 ApplicationId = _applicationId,
-                Questions = new List<AssessorQuestion>
+                Questions = new List<Question>
                 {
-                    new AssessorQuestion { QuestionId = "Q1" }
+                    new Question { QuestionId = "Q1" }
                 },
-                Answers = new List<AssessorAnswer>
+                Answers = new List<Answer>
                 {
-                    new AssessorAnswer { QuestionId = "Q1", Value = "value" }
+                    new Answer { QuestionId = "Q1", Value = "value" }
                 }
             };
 

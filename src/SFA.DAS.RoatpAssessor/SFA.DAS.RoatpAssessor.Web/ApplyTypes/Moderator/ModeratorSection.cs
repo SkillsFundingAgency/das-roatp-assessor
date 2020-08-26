@@ -1,9 +1,8 @@
-﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
+
+namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator
 {
-    public class ModeratorSection
+    public class ModeratorSection : Section
     {
-        public int SectionNumber { get; set; }
-        public string LinkTitle { get; set; }
-        public string Status { get; set; }
     }
 }

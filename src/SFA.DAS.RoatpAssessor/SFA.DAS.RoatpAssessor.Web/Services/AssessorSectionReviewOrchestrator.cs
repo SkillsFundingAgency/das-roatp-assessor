@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
 using SFA.DAS.RoatpAssessor.Web.Domain;
@@ -60,10 +60,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 Caption = assessorPage.Caption,
                 Heading = assessorPage.Heading,
 
-                GuidanceInformation = assessorPage.GuidanceInformation,
+                GuidanceInformation = assessorPage.GuidanceInformation != null ? new List<string>(assessorPage.GuidanceInformation) : new List<string>(),
 
-                Questions = assessorPage.Questions != null ? new List<AssessorQuestion>(assessorPage.Questions) : new List<AssessorQuestion>(),
-                Answers = assessorPage.Answers != null ? new List<AssessorAnswer>(assessorPage.Answers) : new List<AssessorAnswer>(),
+                Questions = assessorPage.Questions != null ? new List<Question>(assessorPage.Questions) : new List<Question>(),
+                Answers = assessorPage.Answers != null ? new List<Answer>(assessorPage.Answers) : new List<Answer>(),
                 TabularData = GetTabularDataFromQuestionsAndAnswers(assessorPage.Questions, assessorPage.Answers),
                 SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, assessorPage.PageId)
             };
@@ -82,6 +82,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<ApplicationSectorsViewModel> GetSectorsViewModel(GetSectorsRequest request)
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
+
             var assessorPage = await _assessorApiClient.GetAssessorPage(
                 request.ApplicationId,
                 SequenceIds.DeliveringApprenticeshipTraining,
@@ -92,6 +93,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 return null;
             }
+
+            var selectedSectors = await _assessorApiClient.GetAssessorSectors(request.ApplicationId, request.UserId);
+
             var viewModel = new ApplicationSectorsViewModel
             {
                 ApplicationId = application.ApplicationId,
@@ -102,7 +106,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
                 Caption = assessorPage.Caption,
                 Heading = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesHeading,
-                SelectedSectors = await _assessorApiClient.GetAssessorSectors(request.ApplicationId, request.UserId)
+                SelectedSectors = selectedSectors
             };
 
             return viewModel;
@@ -144,7 +148,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewModel;
         }
 
-        private List<TabularData> GetTabularDataFromQuestionsAndAnswers(List<AssessorQuestion> questions, List<AssessorAnswer> answers)
+        private List<TabularData> GetTabularDataFromQuestionsAndAnswers(IEnumerable<Question> questions, IEnumerable<Answer> answers)
         {
             var tabularDataList = new List<TabularData>();
 

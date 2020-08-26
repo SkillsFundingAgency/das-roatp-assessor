@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 
@@ -17,9 +17,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             _assessorApiClient = assessorApiClient;
         }
 
-        public async Task<List<AssessorSupplementaryInformation>> GetSupplementaryInformation(Guid applicationId, string pageId)
+        public async Task<List<SupplementaryInformation>> GetSupplementaryInformation(Guid applicationId, string pageId)
         {
-            var supplementaryInformation = new List<AssessorSupplementaryInformation>();
+            var supplementaryInformation = new List<SupplementaryInformation>();
 
             if (pageId == RoatpWorkflowPageIds.SafeguardingPolicyIncludesPreventDutyPolicy)
             {
@@ -34,14 +34,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return supplementaryInformation;
         }
 
-        private async Task<AssessorSupplementaryInformation> GetSafeguardingPolicySupplementaryInformation(Guid applicationId)
+        private async Task<SupplementaryInformation> GetSafeguardingPolicySupplementaryInformation(Guid applicationId)
         {
             const int safegaurdingPolicySequenceNumber = 4;
             const int safegaurdingPolicySectionNumber = 4;
             const string safegaurdingPolicyPageId = RoatpWorkflowPageIds.SafeguardingPolicy;
             const string safegaurdingPolicyLabel = "Safeguarding policy";
 
-            AssessorSupplementaryInformation supplementaryInformation = null;
+            SupplementaryInformation supplementaryInformation = null;
 
             var page = await _assessorApiClient.GetAssessorPage(applicationId, safegaurdingPolicySequenceNumber, safegaurdingPolicySectionNumber, safegaurdingPolicyPageId);
 
@@ -49,7 +49,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 var questionId = page.Questions.First().QuestionId;
 
-                supplementaryInformation = new AssessorSupplementaryInformation
+                supplementaryInformation = new SupplementaryInformation
                 {
                     ApplicationId = page.ApplicationId,
                     SequenceNumber = page.SequenceNumber,

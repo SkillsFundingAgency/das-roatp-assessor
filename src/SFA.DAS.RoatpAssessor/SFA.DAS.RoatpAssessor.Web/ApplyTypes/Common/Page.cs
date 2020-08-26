@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common
 {
-    public class AssessorPage
+    public class Page
     {
         public Guid ApplicationId { get; set; }
 
@@ -23,10 +23,10 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
         public string Title { get; set; }
         public string BodyText { get; set; }
 
-        public List<AssessorQuestion> Questions { get; set; }
+        public IEnumerable<Question> Questions { get; set; }
 
-        public List<AssessorAnswer> Answers { get; set; }
+        public IEnumerable<Answer> Answers { get; set; }
 
-        public List<string> GuidanceInformation { get; set; }
+        public IEnumerable<string> GuidanceInformation { get; set; }
     }
 }

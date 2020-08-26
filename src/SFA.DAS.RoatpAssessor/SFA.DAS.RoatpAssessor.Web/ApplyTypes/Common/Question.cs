@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common
 {
-    public class AssessorQuestion
+    public class Question
     {
         public string QuestionId { get; set; }
         public string Label { get; set; }
@@ -11,6 +11,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
         public string InputPrefix { get; set; }
         public string InputSuffix { get; set; }
 
-        public List<AssessorOption> Options { get; set; }
+        public IEnumerable<Option> Options { get; set; }
     }
 }

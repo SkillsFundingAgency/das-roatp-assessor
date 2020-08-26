@@ -1,6 +1,6 @@
-﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes
+﻿namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common
 {
-    public class AssessorAnswer
+    public class Answer
     {
         public string QuestionId { get; set; }
         public string Value { get; set; }
