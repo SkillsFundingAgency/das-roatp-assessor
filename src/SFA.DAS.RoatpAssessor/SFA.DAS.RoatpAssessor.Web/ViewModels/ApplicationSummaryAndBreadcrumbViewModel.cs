@@ -17,6 +17,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
+        public string OptionFailExternalText { get; set; }
         public string OptionInProgressText { get; set; }
 
         public string ApplicantEmailAddress { get; set; }

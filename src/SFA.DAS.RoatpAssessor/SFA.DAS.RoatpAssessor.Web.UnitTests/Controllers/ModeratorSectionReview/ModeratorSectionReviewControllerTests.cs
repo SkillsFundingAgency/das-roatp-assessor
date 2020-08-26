@@ -5,9 +5,9 @@ using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
-using SFA.DAS.RoatpAssessor.Web.Controllers.Assessor;
+using SFA.DAS.RoatpAssessor.Web.Controllers.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -18,30 +18,30 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
+namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
 {
     [TestFixture]
-    public class AssessorSectionReviewControllerTests
+    public class ModeratorSectionReviewControllerTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
 
-        private Mock<IRoatpAssessorApiClient> _assessorApiClient;
-        private Mock<IAssessorPageValidator> _assessorPageValidator;
-        private Mock<IAssessorSectionReviewOrchestrator> _sectionReviewOrchestrator;
+        private Mock<IRoatpModerationApiClient> _moderationApiClient;
+        private Mock<IModeratorPageValidator> _moderatorPageValidator;
+        private Mock<IModeratorSectionReviewOrchestrator> _sectionReviewOrchestrator;
 
-        private AssessorSectionReviewController _controller;
+        private ModeratorSectionReviewController _controller;
 
 
         [SetUp]
         public void SetUp()
         {
-            _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
-            _assessorPageValidator = new Mock<IAssessorPageValidator>();
-            _sectionReviewOrchestrator = new Mock<IAssessorSectionReviewOrchestrator>();
+            _moderationApiClient = new Mock<IRoatpModerationApiClient>();
+            _moderatorPageValidator = new Mock<IModeratorPageValidator>();
+            _sectionReviewOrchestrator = new Mock<IModeratorSectionReviewOrchestrator>();
 
-            var logger = Mock.Of<ILogger<AssessorSectionReviewController>>();
+            var logger = Mock.Of<ILogger<ModeratorSectionReviewController>>();
 
-            _controller = new AssessorSectionReviewController(_assessorApiClient.Object, _assessorPageValidator.Object, _sectionReviewOrchestrator.Object, logger)
+            _controller = new ModeratorSectionReviewController(_moderationApiClient.Object, _moderatorPageValidator.Object, _sectionReviewOrchestrator.Object, logger)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
@@ -54,7 +54,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
             int sectionNumber = 2;
             string pageId = "4200";
 
-            var viewModel = new AssessorReviewAnswersViewModel
+            var viewModel = new ModeratorReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
                 SequenceNumber = sequenceNumber,
@@ -80,10 +80,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
         {
             var sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining;
             var sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
-            var chosenSectors = new List<AssessorSector>
+            var chosenSectors = new List<ModeratorSector>
             {
-                new AssessorSector {PageId = "1", Title = "Page 1"},
-                new AssessorSector {PageId = "2", Title = "Page 2"}
+                new ModeratorSector {PageId = "1", Title = "Page 1"},
+                new ModeratorSector {PageId = "2", Title = "Page 2"}
             };
 
             var viewModel = new ApplicationSectorsViewModel
@@ -110,7 +110,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
             string pageId = "4200";
             string nextPageId = "4210";
 
-            var viewModel = new AssessorReviewAnswersViewModel
+            var viewModel = new ModeratorReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
                 SequenceNumber = sequenceNumber,
@@ -132,77 +132,79 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
         }
 
         [Test]
-        public async Task POST_ReviewPageAnswers_When_Valid_submits_AssessorPageReviewOutcome()
+        public async Task POST_ReviewPageAnswers_When_Valid_submits_ModeratorPageReviewOutcome()
         {
             int sequenceNumber = 4;
             int sectionNumber = 2;
             string pageId = "4200";
 
-            var viewModel = new AssessorReviewAnswersViewModel
+            var viewModel = new ModeratorReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
                 SequenceNumber = sequenceNumber,
                 SectionNumber = sectionNumber,
                 PageId = pageId,
-                Status = AssessorPageReviewStatus.Pass,
+                Status = ModeratorPageReviewStatus.Pass,
                 OptionPassText = "test"
             };
 
-            var command = new SubmitAssessorPageAnswerCommand(viewModel);
+            var command = new SubmitModeratorPageAnswerCommand(viewModel);
 
             _sectionReviewOrchestrator.Setup(x => x.GetReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
 
             var validationResponse = new ValidationResponse();
-            _assessorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
+            _moderatorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
-            _assessorApiClient.Setup(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
+            _moderationApiClient.Setup(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
                                     _controller.User.UserId(),
                                     command.Status,
-                                    command.ReviewComment)).ReturnsAsync(true);
+                                    command.ReviewComment,
+                                    command.ExternalReviewComment)).ReturnsAsync(true);
 
             // act
             var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;
 
             // assert
-            Assert.AreEqual("AssessorOverview", result.ControllerName);
+            Assert.AreEqual("ModeratorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
 
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
+            _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId,
                         command.SequenceNumber,
                         command.SectionNumber,
                         command.PageId,
                         _controller.User.UserId(),
                         command.Status,
-                        command.ReviewComment), Times.Once);
+                        command.ReviewComment,
+                        command.ExternalReviewComment), Times.Once);
         }
 
         [Test]
-        public async Task POST_ReviewPageAnswers_When_Invalid_does_not_submit_AssessorPageReviewOutcome()
+        public async Task POST_ReviewPageAnswers_When_Invalid_does_not_submit_ModeratorPageReviewOutcome()
         {
             int sequenceNumber = 4;
             int sectionNumber = 2;
             string pageId = "4200";
 
-            var viewModel = new AssessorReviewAnswersViewModel
+            var viewModel = new ModeratorReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
                 SequenceNumber = sequenceNumber,
                 SectionNumber = sectionNumber,
                 PageId = pageId,
-                Status = AssessorPageReviewStatus.Pass,
+                Status = ModeratorPageReviewStatus.Pass,
                 OptionPassText = "test"
             };
 
-            var command = new SubmitAssessorPageAnswerCommand(viewModel);
+            var command = new SubmitModeratorPageAnswerCommand(viewModel);
 
             _sectionReviewOrchestrator.Setup(x => x.GetReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
 
             var error = new ValidationErrorDetail { Field = "Status", ErrorMessage = "Error" };
             var validationResponse = new ValidationResponse { Errors = new List<ValidationErrorDetail> { error } };
-            _assessorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
+            _moderatorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
             // act
             var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as ViewResult;
@@ -213,13 +215,14 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
             Assert.That(actualViewModel, Is.Not.Null);
             Assert.That(actualViewModel, Is.SameAs(viewModel));
 
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
+            _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId,
                         command.SequenceNumber,
                         command.SectionNumber,
                         command.PageId,
                         _controller.User.UserId(),
                         command.Status,
-                        command.ReviewComment), Times.Never);
+                        command.ReviewComment,
+                        command.ExternalReviewComment), Times.Never);
         }
     }
 }
