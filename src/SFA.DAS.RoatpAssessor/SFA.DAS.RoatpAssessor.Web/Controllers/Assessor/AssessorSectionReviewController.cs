@@ -61,7 +61,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
         {
             var userId = HttpContext.User.UserId();
 
-            Func<Task<ReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
+            Func<Task<AssessorReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
             return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/AssessorSectionReview/ReviewAnswers.cshtml");
         }
 
@@ -69,7 +69,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
         public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId)
         {
             var userId = HttpContext.User.UserId();
-            var viewModel = await _sectionReviewOrchestrator.GetSectorViewModel(new GetSectorDetailsRequest(applicationId, pageId, userId));
+            var viewModel = await _sectionReviewOrchestrator.GetSectorDetailsViewModel(new GetSectorDetailsRequest(applicationId, pageId, userId));
             return View("~/Views/AssessorSectionReview/ReviewSectorAnswers.cshtml", viewModel);
         }
 
@@ -77,7 +77,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
         public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId, SubmitAssessorPageAnswerCommand command)
         {
             var userId = HttpContext.User.UserId();
-            Func<Task<SectorViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetSectorViewModel(new GetSectorDetailsRequest(command.ApplicationId, command.PageId, userId));
+            Func<Task<AssessorSectorDetailsViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetSectorDetailsViewModel(new GetSectorDetailsRequest(command.ApplicationId, command.PageId, userId));
 
             return await ValidateAndUpdateSectorPageAnswer(command, viewModelBuilder, $"~/Views/AssessorSectionReview/ReviewSectorAnswers.cshtml");
         }

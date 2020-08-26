@@ -54,7 +54,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
             int sectionNumber = 2;
             string pageId = "4200";
 
-            var viewModel = new ReviewAnswersViewModel
+            var viewModel = new AssessorReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
                 SequenceNumber = sequenceNumber,
@@ -110,7 +110,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
             string pageId = "4200";
             string nextPageId = "4210";
 
-            var viewModel = new ReviewAnswersViewModel
+            var viewModel = new AssessorReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
                 SequenceNumber = sequenceNumber,
@@ -138,7 +138,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
             int sectionNumber = 2;
             string pageId = "4200";
 
-            var viewModel = new ReviewAnswersViewModel
+            var viewModel = new AssessorReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
                 SequenceNumber = sequenceNumber,
@@ -186,7 +186,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
             int sectionNumber = 2;
             string pageId = "4200";
 
-            var viewModel = new ReviewAnswersViewModel
+            var viewModel = new AssessorReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
                 SequenceNumber = sequenceNumber,

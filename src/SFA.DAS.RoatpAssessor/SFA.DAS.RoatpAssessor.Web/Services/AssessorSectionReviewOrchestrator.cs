@@ -31,7 +31,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             _supplementaryInformationService = supplementaryInformationService;
         }
 
-        public async Task<ReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request)
+        public async Task<AssessorReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request)
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
@@ -42,7 +42,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            var viewModel = new ReviewAnswersViewModel
+            var viewModel = new AssessorReviewAnswersViewModel
             {
                 ApplicationId = application.ApplicationId,
 
@@ -113,7 +113,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         }
 
-        public async Task<SectorViewModel> GetSectorViewModel(GetSectorDetailsRequest request)
+        public async Task<AssessorSectorDetailsViewModel> GetSectorDetailsViewModel(GetSectorDetailsRequest request)
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var assessorPage = await _assessorApiClient.GetAssessorPage(
@@ -129,7 +129,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var sectorDetails = await _assessorApiClient.GetAssessorSectorDetails(request.ApplicationId, request.PageId);
 
-            var viewModel = new SectorViewModel
+            var viewModel = new AssessorSectorDetailsViewModel
             {
                 ApplicationId = application.ApplicationId,
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN,
@@ -184,7 +184,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return tabularDataList;
         }
 
-        private async Task ProcessAllAssessorPagesForSection(GetReviewAnswersRequest request, ReviewAnswersViewModel viewModel)
+        private async Task ProcessAllAssessorPagesForSection(GetReviewAnswersRequest request, AssessorReviewAnswersViewModel viewModel)
         {
             var assessorReviewOutcomesPerSection = await _assessorApiClient.GetAssessorPageReviewOutcomesForSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.UserId);
             if (assessorReviewOutcomesPerSection is null || !assessorReviewOutcomesPerSection.Any())
@@ -231,7 +231,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return string.Empty;
         }
 
-        private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, SectorViewModel viewModel)
+        private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, AssessorSectorDetailsViewModel viewModel)
         {
             var pageReviewOutcome = await _assessorApiClient.GetAssessorPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
                 SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
@@ -257,7 +257,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         }
 
 
-        private async Task SetPageReviewOutcome(GetReviewAnswersRequest request, ReviewAnswersViewModel viewModel)
+        private async Task SetPageReviewOutcome(GetReviewAnswersRequest request, AssessorReviewAnswersViewModel viewModel)
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
             var pageReviewOutcome = await _assessorApiClient.GetAssessorPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, request.UserId);

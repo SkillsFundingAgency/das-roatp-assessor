@@ -6,9 +6,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 {
     public interface IAssessorSectionReviewOrchestrator
     {
-        Task<ReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request);
+        Task<AssessorReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request);
+
         Task<ApplicationSectorsViewModel> GetSectorsViewModel(GetSectorsRequest request);
 
-        Task<SectorViewModel> GetSectorViewModel(GetSectorDetailsRequest request);
+        Task<AssessorSectorDetailsViewModel> GetSectorDetailsViewModel(GetSectorDetailsRequest request);
     }
 }

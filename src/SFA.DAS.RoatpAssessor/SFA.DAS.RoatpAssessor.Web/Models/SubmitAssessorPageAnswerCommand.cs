@@ -49,7 +49,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
                 
         }
 
-        public SubmitAssessorPageAnswerCommand(ReviewAnswersViewModel viewModel)
+        public SubmitAssessorPageAnswerCommand(AssessorReviewAnswersViewModel viewModel)
         {
             ApplicationId = viewModel.ApplicationId;
             PageId = viewModel.PageId;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
-    public class ReviewAnswersViewModel : ApplicationSummaryAndBreadcrumbViewModel
+    public abstract class ReviewAnswersViewModel : ApplicationSummaryAndBreadcrumbViewModel
     {      
         public int SequenceNumber { get; set; }
         public int SectionNumber { get; set; }

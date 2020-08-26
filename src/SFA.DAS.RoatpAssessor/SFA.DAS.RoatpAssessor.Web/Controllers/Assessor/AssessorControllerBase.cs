@@ -30,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
 
         protected async Task<IActionResult> ValidateAndUpdatePageAnswer<RAVM>(SubmitAssessorPageAnswerCommand command,
                                                           Func<Task<RAVM>> viewModelBuilder,
-                                                          string errorView) where RAVM : ReviewAnswersViewModel
+                                                          string errorView) where RAVM : AssessorReviewAnswersViewModel
         {
             var validationResponse = await _assessorPageValidator.Validate(command);
 
@@ -84,7 +84,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
 
         protected async Task<IActionResult> ValidateAndUpdateSectorPageAnswer<SVM>(SubmitAssessorPageAnswerCommand command,
                                                     Func<Task<SVM>> viewModelBuilder,
-                                                    string errorView) where SVM : SectorViewModel
+                                                    string errorView) where SVM : AssessorSectorDetailsViewModel
         {
             var validationResponse = await _assessorPageValidator.Validate(command);
 
