@@ -56,16 +56,21 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         [TestCase(AssessorPageReviewStatus.InProgress)]
         public void GetSectionStatus_Single_PageReviewOutcome(string status)
         {
+            const int sequenceNumber = 1;
+            const int sectionNumber = 1;
+
             List<AssessorPageReviewOutcome> sectionPageReviewOutcomes = new List<AssessorPageReviewOutcome>
             {
                 new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
                     Status = status
                 }
             };
 
-            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes);
+            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
             Assert.AreSame(status, sectionStatus);
         }
 
@@ -93,26 +98,35 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, "3 " + AssessorSectionStatus.FailsOutOf + " 3")]
         public void GetSectionStatus_Multiple_PageReviewOutcomes(string statusOne, string statusTwo, string statusThree, string statusExpected)
         {
+            const int sequenceNumber = 1;
+            const int sectionNumber = 1;
+
             List<AssessorPageReviewOutcome> sectionPageReviewOutcomes = new List<AssessorPageReviewOutcome>
             {
                 new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
                     Status = statusOne
                 },
                 new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
                     Status = statusTwo
                 },
                 new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
                     Status = statusThree
                 }
             };
 
-            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes);
+            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
             Assert.AreEqual(statusExpected, sectionStatus);
         }
 
@@ -140,26 +154,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail, AssessorSectionStatus.Fail)]
         public void GetSectorsSectionStatus(string statusOne, string statusTwo, string statusThree, string statusExpected)
         {
-            const string firstSectorPageId = "1";
-            const string secondSectorPageId = "2";
-            const string thirdSectorPageId = "3";
-
-            List<AssessorSector> sectorsChosen = new List<AssessorSector>
-            {
-                new AssessorSector
-                {
-                    PageId = firstSectorPageId
-                },
-                new AssessorSector
-                {
-                    PageId = secondSectorPageId
-                },
-                new AssessorSector
-                {
-                    PageId = thirdSectorPageId
-                }
-            };
-
             List<AssessorPageReviewOutcome> sectionPageReviewOutcomes = new List<AssessorPageReviewOutcome>
             {
                 new AssessorPageReviewOutcome
@@ -167,28 +161,25 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
                     ApplicationId = _applicationId,
                     Status = statusOne,
                     SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                    PageId = firstSectorPageId
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
                 },
                 new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusTwo,
                     SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                    PageId = secondSectorPageId
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
                 },
                 new AssessorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusThree,
                     SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                    PageId = thirdSectorPageId
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
                 }
             };
 
-            var sectionStatus = _orchestrator.GetSectorsSectionStatus(sectorsChosen, sectionPageReviewOutcomes);
+            var sectionStatus = _orchestrator.GetSectorsSectionStatus(sectionPageReviewOutcomes);
             Assert.AreEqual(statusExpected, sectionStatus);
         }
 

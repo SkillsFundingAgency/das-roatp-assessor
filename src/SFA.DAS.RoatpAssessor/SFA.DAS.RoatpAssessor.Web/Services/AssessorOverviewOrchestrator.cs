@@ -51,16 +51,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         {
                             if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
                             {
-                                var sectorsChosen = await _assessorApiClient.GetAssessorSectors(request.ApplicationId, request.UserId);
-                                section.Status = GetSectorsSectionStatus(sectorsChosen, savedOutcomes);
+                                section.Status = GetSectorsSectionStatus(savedOutcomes);
                             }
                             else
                             {
-                                var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
-                                    p.SequenceNumber == sequence.SequenceNumber &&
-                                    p.SectionNumber == section.SectionNumber).ToList();
-
-                                section.Status = GetSectionStatus(sectionPageReviewOutcomes);
+                                section.Status = GetSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
                             }
                         }
                     }
@@ -72,9 +67,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string GetSectionStatus(List<AssessorPageReviewOutcome> sectionPageReviewOutcomes)
+        public string GetSectionStatus(List<AssessorPageReviewOutcome> pageReviewOutcomes, int sequenceNumber, int sectionNumber)
         {
+            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
+                p.SequenceNumber == sequenceNumber &&
+                p.SectionNumber == sectionNumber).ToList();
+
             var sectionStatus = string.Empty;
+
             if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
                 if (sectionPageReviewOutcomes.Count.Equals(1))
@@ -111,13 +111,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return sectionStatus;
         }
 
-        public string GetSectorsSectionStatus(IEnumerable<AssessorSector> sectorsChosen, IEnumerable<AssessorPageReviewOutcome> savedOutcomes)
+        public string GetSectorsSectionStatus(List<AssessorPageReviewOutcome> pageReviewOutcomes)
         {
-            var sectionPageReviewOutcomes = savedOutcomes?.Where(p =>
+            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
                 p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
                 p.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees).ToList();
 
             var sectionStatus = string.Empty;
+
             if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
                 if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
