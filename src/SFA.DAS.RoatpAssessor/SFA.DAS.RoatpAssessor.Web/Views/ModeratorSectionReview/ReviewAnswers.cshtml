@@ -151,7 +151,9 @@
         </div>
     }
 
-    <partial name="~/Views/ModeratorSectionReview/Pages/_BlindAssessmentOutcome.cshtml" for="@Model.BlindAssessmentOutcome" />
+    <div class="govuk-grid-row">
+        <partial name="~/Views/ModeratorSectionReview/Pages/_BlindAssessmentOutcome.cshtml" for="@Model.BlindAssessmentOutcome" />
+    </div>
 
     @if (Model.ApplicationId != Guid.Empty)
     {
