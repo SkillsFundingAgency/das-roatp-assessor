@@ -40,8 +40,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
             else
             {
-                // TODO: Can this be part of ModeratorApplicationViewModel rather than injecting things outside?
-                // Inject the statuses into viewmodel
+                // POTENTIAL TECH DEBT: Decide if processing of sequences should be contained within ModeratorApplicationViewModel rather than modifying this from outside.
+                // This would result in better encapsulation of the logic but may cause issues if we need to inspect other sources
                 foreach (var sequence in viewmodel.Sequences)
                 {
                     foreach (var section in sequence.Sections)
