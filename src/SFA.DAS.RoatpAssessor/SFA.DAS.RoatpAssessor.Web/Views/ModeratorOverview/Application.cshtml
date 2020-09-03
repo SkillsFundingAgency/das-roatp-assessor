@@ -60,18 +60,18 @@
                     }
                     <li>
                         <h2 class="app-task-list__section">
-                            <span class="app-task-list__section-number">6. </span>Assessor outcome
+                            <span class="app-task-list__section-number">6. </span>Moderation outcome
                         </h2>
                         <ul class="app-task-list__items">
                             <li class="app-task-list__item">
                                 <span class="app-task-list__task-name app-task-list__task-name--inactive">
                                     @if (Model.IsReadyForModeratorConfirmation)
                                     {
-                                        <a asp-controller="ModeratorOutcome" asp-action="ModeratorOutcome" asp-route-applicationId="@Model.ApplicationId">Confirm assessor outcome</a>
+                                        <a asp-controller="ModeratorOutcome" asp-action="ModeratorOutcome" asp-route-applicationId="@Model.ApplicationId">Confirm moderation outcome</a>
                                     }
                                     else
                                     {
-                                        <text>Confirm assessor outcome</text>
+                                        <text>Confirm moderation outcome</text>
                                     }
                                 </span>
                             </li>
