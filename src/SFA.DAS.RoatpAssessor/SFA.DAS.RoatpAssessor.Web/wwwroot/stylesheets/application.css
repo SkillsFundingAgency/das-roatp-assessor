@@ -129,53 +129,21 @@
     }
 }
 
-.app-task-list__task-completed,
-.app-task-list__task-inprogress,
-.app-task-list__task-notrequired,
-.app-task-list__task-pass,
-.app-task-list__task-fail,
-.app-task-list__task-inactive,
-.app-task-list__task-next {
+.app-task-list__tag {
     margin-top: 10px;
     margin-bottom: 5px;
 }
 
 @media (min-width: 28.125em) {
-    .app-task-list__task-completed,
-    .app-task-list__task-inprogress,
-    .app-task-list__task-notrequired,
-    .app-task-list__task-pass,
-    .app-task-list__task-fail,
-    .app-task-list__task-inactive,
-    .app-task-list__task-next {
+    .app-task-list__tag {
         float: right;
         margin-top: 0;
         margin-bottom: 0;
     }
 }
 
-/* Task list - custom */
-
-.app-task-list__task-pass {
-    background-color: #00703c;
-}
-
-.app-task-list__task-fail {
-    background-color: #d4351c;
-}
-
-.app-task-list__task-notrequired,
-.app-task-list__task-inactive {
+.das-tag--solid-grey {
     background-color: #6f777b;
-}
-
-.app-task-list__task-next {
-    background-color: #ffbf47;
-    color: #000;
-}
-
-.app-task-list__task-hidden {
-    display: none;
 }
 
 /* Wide - responsive table*/

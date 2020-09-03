@@ -38,15 +38,15 @@
                                 </span>
                                 @if(sector.Status== AssessorPageReviewStatus.InProgress)
                                 {
-                                 <strong class="govuk-tag app-task-list__task-inprogress das-no-wrap" id="pageid-@sector.PageId">In progress</strong> 
+                                 <strong class="app-task-list__tag das-tag das-no-wrap" id="pageid-@sector.PageId">In progress</strong> 
                                 }
                                 @if (sector.Status == AssessorPageReviewStatus.Pass)
                                 {
-                                    <strong class="govuk-tag app-task-list__task-pass" id="pageid-@sector.PageId">Pass</strong>
+                                    <strong class="app-task-list__tag das-tag das-tag--solid-green" id="pageid-@sector.PageId">Pass</strong>
                                 }
                                 @if (sector.Status == AssessorPageReviewStatus.Fail)
                                 {
-                                    <strong class="govuk-tag app-task-list__task-fail" id="pageid-@sector.PageId">Fail</strong>
+                                    <strong class="app-task-list__tag das-tag das-tag--solid-red" id="pageid-@sector.PageId">Fail</strong>
                                 }
                             </li>
                         }
