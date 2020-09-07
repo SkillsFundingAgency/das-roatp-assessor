@@ -153,7 +153,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(ModeratorSectionStatus.Pass) &&
                                                    !section.Status.Equals(ModeratorSectionStatus.Fail) &&
                                                    !section.Status.Equals(ModeratorSectionStatus.NotRequired) &&
-                                                   !section.Status.Contains(ModeratorSectionStatus.FailOutOf)))
+                                                   !section.Status.Contains(ModeratorSectionStatus.FailOutOf) &&
+                                                   !section.Status.Contains(ModeratorSectionStatus.FailsOutOf)))
                     {
                         isReadyForModeratorConfirmation = false;
                         break;
