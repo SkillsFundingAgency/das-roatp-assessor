@@ -54,7 +54,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
                 switch (Status)
                 {
                     case ModeratorPageReviewStatus.Fail:
-                        externalReviewComment = OptionFailText;
+                        externalReviewComment = OptionFailExternalText;
                         break;
                     default:
                         externalReviewComment = null;
