@@ -1,9 +1,9 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 
 namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator
 {
-    public class ModerationApplicationSummary : AssessorApplicationSummary
+    public class ModerationApplicationSummary : ApplicationSummary
     {
-        public string Status { get; set; }
+        public string ModerationStatus { get; set; }
     }
 }

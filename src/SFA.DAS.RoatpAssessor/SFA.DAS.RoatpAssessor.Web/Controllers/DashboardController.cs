@@ -36,7 +36,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
             await _assessorOrchestrator.AssignApplicationToAssessor(applicationId, assessorNumber, userId, userName);
 
-            return RedirectToAction("ViewApplication", "Overview", new { applicationId });
+            return RedirectToAction("ViewApplication", "AssessorOverview", new { applicationId });
         }
 
         [HttpGet("/Dashboard/InProgress")]

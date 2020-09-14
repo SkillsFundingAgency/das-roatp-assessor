@@ -45,7 +45,7 @@
                                         <td class="govuk-table__cell" data-label="Organisation name">
                                             @if (item.Assessor1UserId == Model.CurrentUser || item.Assessor2UserId == Model.CurrentUser)
                                             {
-                                                <a class="govuk-link" asp-action="ViewApplication" asp-controller="Overview" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>
+                                                <a class="govuk-link" asp-action="ViewApplication" asp-controller="AssessorOverview" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>
                                             }
                                             else
                                             {

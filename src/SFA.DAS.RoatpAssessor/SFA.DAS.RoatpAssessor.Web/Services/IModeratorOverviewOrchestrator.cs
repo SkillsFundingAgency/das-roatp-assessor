@@ -9,7 +9,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
     public interface IModeratorOverviewOrchestrator
     {
         Task<ModeratorApplicationViewModel> GetOverviewViewModel(GetModeratorOverviewRequest request);
-        string GetSectionStatus(List<ModeratorPageReviewOutcome> sectionPageReviewOutcomes);
-        string GetSectorsSectionStatus(IEnumerable<ModeratorSector> sectorsChosen, IEnumerable<ModeratorPageReviewOutcome> savedOutcomes);
+        string GetSectionStatus(List<ModeratorPageReviewOutcome> pageReviewOutcomes, int sequenceNumber, int sectionNumber);
+        string GetSectorsSectionStatus(List<ModeratorPageReviewOutcome> pageReviewOutcomes);
     }
 }

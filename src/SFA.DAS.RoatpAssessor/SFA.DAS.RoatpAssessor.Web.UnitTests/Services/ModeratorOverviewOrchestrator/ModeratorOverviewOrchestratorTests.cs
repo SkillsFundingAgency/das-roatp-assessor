@@ -2,9 +2,7 @@
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -70,16 +68,21 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
         [TestCase(ModeratorPageReviewStatus.InProgress)]
         public void GetSectionStatus_Single_PageReviewOutcome(string status)
         {
+            const int sequenceNumber = 1;
+            const int sectionNumber = 1;
+
             List<ModeratorPageReviewOutcome> sectionPageReviewOutcomes = new List<ModeratorPageReviewOutcome>
             {
                 new ModeratorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
                     Status = status
                 }
             };
 
-            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes);
+            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
             Assert.AreSame(status, sectionStatus);
         }
 
@@ -107,26 +110,35 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
         [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, "3 " + ModeratorSectionStatus.FailsOutOf + " 3")]
         public void GetSectionStatus_Multiple_PageReviewOutcomes(string statusOne, string statusTwo, string statusThree, string statusExpected)
         {
+            const int sequenceNumber = 1;
+            const int sectionNumber = 1;
+
             List<ModeratorPageReviewOutcome> sectionPageReviewOutcomes = new List<ModeratorPageReviewOutcome>
             {
                 new ModeratorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
                     Status = statusOne
                 },
                 new ModeratorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
                     Status = statusTwo
                 },
                 new ModeratorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
                     Status = statusThree
                 }
             };
 
-            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes);
+            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
             Assert.AreEqual(statusExpected, sectionStatus);
         }
 
@@ -154,26 +166,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
         [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorSectionStatus.Fail)]
         public void GetSectorsSectionStatus(string statusOne, string statusTwo, string statusThree, string statusExpected)
         {
-            const string firstSectorPageId = "1";
-            const string secondSectorPageId = "2";
-            const string thirdSectorPageId = "3";
-
-            List<ModeratorSector> sectorsChosen = new List<ModeratorSector>
-            {
-                new ModeratorSector
-                {
-                    PageId = firstSectorPageId
-                },
-                new ModeratorSector
-                {
-                    PageId = secondSectorPageId
-                },
-                new ModeratorSector
-                {
-                    PageId = thirdSectorPageId
-                }
-            };
-
             List<ModeratorPageReviewOutcome> sectionPageReviewOutcomes = new List<ModeratorPageReviewOutcome>
             {
                 new ModeratorPageReviewOutcome
@@ -181,28 +173,25 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
                     ApplicationId = _applicationId,
                     Status = statusOne,
                     SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                    PageId = firstSectorPageId
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
                 },
                 new ModeratorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusTwo,
                     SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                    PageId = secondSectorPageId
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
                 },
                 new ModeratorPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusThree,
                     SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                    PageId = thirdSectorPageId
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
                 }
             };
 
-            var sectionStatus = _orchestrator.GetSectorsSectionStatus(sectorsChosen, sectionPageReviewOutcomes);
+            var sectionStatus = _orchestrator.GetSectorsSectionStatus(sectionPageReviewOutcomes);
             Assert.AreEqual(statusExpected, sectionStatus);
         }
 

@@ -63,13 +63,13 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 case null:
                     return string.Empty;
                 case string a when a.Equals("pass", StringComparison.InvariantCultureIgnoreCase):
-                    return "app-task-list__task-pass";
+                    return "app-task-list__tag das-tag das-tag--solid-green";
                 case string b when b.Contains("fail", StringComparison.InvariantCultureIgnoreCase):
-                    return "app-task-list__task-fail";
+                    return "app-task-list__tag das-tag das-tag--solid-red";
                 case string c when c.Equals("in progress", StringComparison.InvariantCultureIgnoreCase):
-                    return "app-task-list__task-inprogress";
+                    return "app-task-list__tag das-tag";
                 case string d when d.Equals("not required", StringComparison.InvariantCultureIgnoreCase):
-                    return "app-task-list__task-inactive";
+                    return "app-task-list__tag das-tag das-tag--solid-grey ";
                 default:
                     return string.Empty;
             }

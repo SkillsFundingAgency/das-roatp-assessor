@@ -2,6 +2,6 @@
 {
     public class ModerationApplicationViewModel : ApplicationViewModel
     {
-        public string Status { get; set; }
+        public string ModerationStatus { get; set; }
     }
 }

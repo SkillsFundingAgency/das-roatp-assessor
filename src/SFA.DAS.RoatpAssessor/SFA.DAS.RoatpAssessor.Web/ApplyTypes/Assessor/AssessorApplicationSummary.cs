@@ -1,18 +1,8 @@
-﻿using System;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 
 namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor
 {
-    public class AssessorApplicationSummary
+    public class AssessorApplicationSummary : ApplicationSummary
     {
-        public Guid ApplicationId { get; set; }
-        public string OrganisationName { get; set; }
-        public string Ukprn { get; set; }
-        public string ApplicationReferenceNumber { get; set; }
-        public string ProviderRoute { get; set; }
-        public DateTime SubmittedDate { get; set; }
-        public string Assessor1Name { get; set; }
-        public string Assessor2Name { get; set; }
-        public string Assessor1UserId { get; set; }
-        public string Assessor2UserId { get; set; }
     }
 }

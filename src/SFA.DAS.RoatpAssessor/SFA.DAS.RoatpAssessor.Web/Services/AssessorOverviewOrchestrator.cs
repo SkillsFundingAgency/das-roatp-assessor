@@ -41,8 +41,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
             else
             {
-                // TODO: Can this be part of AssessorApplicationViewModel rather than injecting things outside?
-                // Inject the statuses into viewmodel
+                // POTENTIAL TECH DEBT: Decide if processing of sequences should be contained within AssessorApplicationViewModel rather than modifying this from outside.
+                // This would result in better encapsulation of the logic but may cause issues if we need to inspect other sources
                 foreach (var sequence in viewmodel.Sequences)
                 {
                     foreach (var section in sequence.Sections)
@@ -51,16 +51,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         {
                             if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
                             {
-                                var sectorsChosen = await _assessorApiClient.GetAssessorSectors(request.ApplicationId, request.UserId);
-                                section.Status = GetSectorsSectionStatus(sectorsChosen, savedOutcomes);
+                                section.Status = GetSectorsSectionStatus(savedOutcomes);
                             }
                             else
                             {
-                                var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
-                                    p.SequenceNumber == sequence.SequenceNumber &&
-                                    p.SectionNumber == section.SectionNumber).ToList();
-
-                                section.Status = GetSectionStatus(sectionPageReviewOutcomes);
+                                section.Status = GetSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
                             }
                         }
                     }
@@ -72,9 +67,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string GetSectionStatus(List<AssessorPageReviewOutcome> sectionPageReviewOutcomes)
+        public string GetSectionStatus(List<AssessorPageReviewOutcome> pageReviewOutcomes, int sequenceNumber, int sectionNumber)
         {
+            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
+                p.SequenceNumber == sequenceNumber &&
+                p.SectionNumber == sectionNumber).ToList();
+
             var sectionStatus = string.Empty;
+
             if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
                 if (sectionPageReviewOutcomes.Count.Equals(1))
@@ -111,13 +111,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return sectionStatus;
         }
 
-        public string GetSectorsSectionStatus(IEnumerable<AssessorSector> sectorsChosen, IEnumerable<AssessorPageReviewOutcome> savedOutcomes)
+        public string GetSectorsSectionStatus(List<AssessorPageReviewOutcome> pageReviewOutcomes)
         {
-            var sectionPageReviewOutcomes = savedOutcomes?.Where(p =>
+            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
                 p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
                 p.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees).ToList();
 
             var sectionStatus = string.Empty;
+
             if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
                 if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
@@ -153,7 +154,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(AssessorSectionStatus.Pass) &&
                                                    !section.Status.Equals(AssessorSectionStatus.Fail) &&
                                                    !section.Status.Equals(AssessorSectionStatus.NotRequired) &&
-                                                   !section.Status.Contains(AssessorSectionStatus.FailOutOf)))
+                                                   !section.Status.Contains(AssessorSectionStatus.FailOutOf) &&
+                                                   !section.Status.Contains(AssessorSectionStatus.FailsOutOf)))
                     {
                         isReadyForModeration = false;
                         break;

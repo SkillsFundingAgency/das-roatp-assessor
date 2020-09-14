@@ -1,0 +1,147 @@
+﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.AssessorSectorDetailsViewModel;
+
+@{
+    ViewBag.Title = $"Assessor - {@Model.Heading}";
+    Layout = "_Layout";
+}
+
+<partial name="~/Views/AssessorSectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
+
+            <span class="govuk-caption-xl">
+                @Model.Caption
+            </span>
+
+            <h1 class="govuk-heading-xl">@Model.Heading</h1>
+
+            <partial name="~/Views/AssessorSectionReview/Pages/_ApplicationSummary.cshtml" for="@Model" />
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @{ 
+                <table class="govuk-table govuk-!-margin-bottom-9">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Application question</th>
+                            <th class="govuk-table__header das-no-wrap" scope="col">Applicant's answer</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Full name</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.FullName))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Job role</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.JobRole))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Time in role</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.TimeInRole))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">What's their experience of delivering training in this sector?</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.ExperienceOfDelivering))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Where did they gain this experience?</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.WhereDidTheyGainThisExperience))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Do they have any qualifications relating to this sector?</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.DoTheyHaveQualifications))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Tell us what qualifications they have</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.WhatQualificationsDoTheyHave))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Are they approved by awarding bodies to deliver training?</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.ApprovedByAwardingBodies))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Names of awarding bodies</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.NamesOfAwardingBodies))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Do they have sector or trade body memberships?</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.DoTheyHaveTradeBodyMemberships))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Names of sector or trade bodies</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.NamesOfTradeBodyMemberships))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">What type of apprenticeship training have they delivered?</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.WhatTypeOfTrainingDelivered))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">How have they delivered training to apprentices?</th>
+                            <td class="govuk-table__cell">
+                                @if (Model?.SectorDetails?.HowIsTrainingDelivered == null)
+                                {
+                                    @Html.Raw("Not applicable");
+                                }
+                                else
+                                {
+                                    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+                                        @foreach (var item in Model.SectorDetails.HowIsTrainingDelivered)
+                                        {
+                                            <li>@Html.Raw(item)</li>
+                                        }
+                                    </ul>
+                                }
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">What's their experience of delivering training to apprentices?</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.ExperienceOfDeliveringTraining))</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">What's the typical duration of training they have delivered to apprentices?</th>
+                            <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model.SectorDetails?.TypicalDurationOfTraining))</td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    @if (Model.ApplicationId != Guid.Empty)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <form class="js-disable-on-submit" method="post" asp-action="ReviewSectorAnswers" asp-controller="AssessorSectionReview">
+                    <input type="hidden" asp-for="ApplicationId" />
+                    <input type="hidden" asp-for="PageId" />
+                    <input type="hidden" asp-for="Heading" />
+
+                    <partial name="~/Views/AssessorSectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
+
+                    <button class="govuk-button" type="submit">Save and continue</button>
+                </form>
+
+
+            </div>
+        </div>
+    }
+
+</main>
+
+
+@functions {
+    private string DecorateWithNotApplicable(string detail)
+    {
+        if (string.IsNullOrEmpty(detail))
+            return "Not applicable";
+
+        return detail;
+    }
+}

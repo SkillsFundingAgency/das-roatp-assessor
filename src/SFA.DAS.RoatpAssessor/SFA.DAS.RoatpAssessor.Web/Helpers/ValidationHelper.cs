@@ -1,13 +1,13 @@
 ﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
-using SFA.DAS.RoatpAssessor.Web.Models;
+using System;
 
 namespace SFA.DAS.RoatpAssessor.Web.Helpers
 {
     public static class ValidationHelper
     {
-        public static string MandatoryValidationMessage(SubmitAssessorPageAnswerCommand command)
+        public static string StatusMandatoryValidationMessage(string pageId, string defaultHeadingText)
         {
-            switch (command.PageId)
+            switch (pageId)
             {
                 case RoatpWorkflowPageIds.HowTeamWorkedWithOtherOrganisationsToDevelopAndDeliverTraining:
                     {
@@ -27,9 +27,22 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
                     }
                 default:
                     {
-                        return $"Select the outcome for {command.Heading.ToLower()}";
+                        return $"Select the outcome for {defaultHeadingText?.ToLower()}";
                     }
             }
+        }
+
+        public static int GetWordCount(string text)
+        {
+            int wordCount = 0;
+
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                wordCount = text.Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries)
+                            .Length;
+            }
+
+            return wordCount;
         }
     }
 }

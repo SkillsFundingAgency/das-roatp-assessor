@@ -5,7 +5,7 @@ using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
-using SFA.DAS.RoatpAssessor.Web.Controllers;
+using SFA.DAS.RoatpAssessor.Web.Controllers.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
@@ -24,7 +24,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
 
         private Mock<IRoatpAssessorApiClient> _assessorApiClient;
         private Mock<IAssessorOverviewOrchestrator> _assessorOverviewOrchestrator;
-        private IRoatpAssessorOutcomeValidator _assessorOutcomeValidator;
+        private IAssessorOutcomeValidator _assessorOutcomeValidator;
 
         private AssessorOutcomeController _controller;
         private AssessorApplicationViewModel _applicationViewModel;
@@ -33,7 +33,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
         public void SetUp()
         {
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
-            _assessorOutcomeValidator = new RoatpAssessorOutcomeValidator();
+            _assessorOutcomeValidator = new AssessorOutcomeValidator();
             _assessorOverviewOrchestrator = new Mock<IAssessorOverviewOrchestrator>();
 
             _controller = new AssessorOutcomeController(_assessorApiClient.Object, _assessorOverviewOrchestrator.Object, _assessorOutcomeValidator)
@@ -83,7 +83,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
             var result = await _controller.AssessorOutcome(_applicationId) as RedirectToActionResult;
 
             // assert
-            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("AssessorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
         }
 
@@ -125,7 +125,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
             var result = await _controller.AssessorOutcome(_applicationId, command) as RedirectToActionResult;
 
             // assert
-            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("AssessorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
         }
 
@@ -174,7 +174,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
             var result = await _controller.AssessmentComplete(_applicationId) as RedirectToActionResult;
 
             // assert
-            Assert.AreEqual("Overview", result.ControllerName);
+            Assert.AreEqual("AssessorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
         }
     }

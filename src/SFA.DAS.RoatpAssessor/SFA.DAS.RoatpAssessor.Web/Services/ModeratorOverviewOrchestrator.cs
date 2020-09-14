@@ -40,8 +40,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
             else
             {
-                // TODO: Can this be part of ModeratorApplicationViewModel rather than injecting things outside?
-                // Inject the statuses into viewmodel
+                // POTENTIAL TECH DEBT: Decide if processing of sequences should be contained within ModeratorApplicationViewModel rather than modifying this from outside.
+                // This would result in better encapsulation of the logic but may cause issues if we need to inspect other sources
                 foreach (var sequence in viewmodel.Sequences)
                 {
                     foreach (var section in sequence.Sections)
@@ -50,16 +50,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         {
                             if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
                             {
-                                var sectorsChosen = await _moderationApiClient.GetModeratorSectors(request.ApplicationId, request.UserId);
-                                section.Status = GetSectorsSectionStatus(sectorsChosen, savedOutcomes);
+                                section.Status = GetSectorsSectionStatus(savedOutcomes);
                             }
                             else
                             {
-                                var sectionPageReviewOutcomes = savedOutcomes.Where(p =>
-                                    p.SequenceNumber == sequence.SequenceNumber &&
-                                    p.SectionNumber == section.SectionNumber).ToList();
-
-                                section.Status = GetSectionStatus(sectionPageReviewOutcomes);
+                                section.Status = GetSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
                             }
                         }
                     }
@@ -71,8 +66,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string GetSectionStatus(List<ModeratorPageReviewOutcome> sectionPageReviewOutcomes)
+        public string GetSectionStatus(List<ModeratorPageReviewOutcome> pageReviewOutcomes, int sequenceNumber, int sectionNumber)
         {
+            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
+                p.SequenceNumber == sequenceNumber &&
+                p.SectionNumber == sectionNumber).ToList();
+
             var sectionStatus = string.Empty;
 
             if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
@@ -111,9 +110,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return sectionStatus;
         }
 
-        public string GetSectorsSectionStatus(IEnumerable<ModeratorSector> sectorsChosen, IEnumerable<ModeratorPageReviewOutcome> savedOutcomes)
+        public string GetSectorsSectionStatus(List<ModeratorPageReviewOutcome> pageReviewOutcomes)
         {
-            var sectionPageReviewOutcomes = savedOutcomes?.Where(p =>
+            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
                 p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
                 p.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees).ToList();
 
@@ -154,7 +153,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(ModeratorSectionStatus.Pass) &&
                                                    !section.Status.Equals(ModeratorSectionStatus.Fail) &&
                                                    !section.Status.Equals(ModeratorSectionStatus.NotRequired) &&
-                                                   !section.Status.Contains(ModeratorSectionStatus.FailOutOf)))
+                                                   !section.Status.Contains(ModeratorSectionStatus.FailOutOf) &&
+                                                   !section.Status.Contains(ModeratorSectionStatus.FailsOutOf)))
                     {
                         isReadyForModeratorConfirmation = false;
                         break;

@@ -54,8 +54,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
             var userId = _user.UserId();
             var applications = new List<ModerationApplicationSummary>
             {
-                new ModerationApplicationSummary { ApplicationReferenceNumber = "sdjfs", Assessor1Name = "sdjfghdfgd", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), Assessor1UserId = "flggfdg", Status = ModerationStatus.InModeration },
-                new ModerationApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), Assessor1UserId = "fbvkjghb", Assessor2UserId = "fdkgjgfdh", Status = ModerationStatus.New }
+                new ModerationApplicationSummary { ApplicationReferenceNumber = "sdjfs", Assessor1Name = "sdjfghdfgd", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), Assessor1UserId = "flggfdg", ModerationStatus = ModerationStatus.InModeration },
+                new ModerationApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), Assessor1UserId = "fbvkjghb", Assessor2UserId = "fdkgjgfdh", ModerationStatus = ModerationStatus.New }
             };
 
             _applicationApiClient.Setup(x => x.GetInModerationApplications(userId)).ReturnsAsync(applications);
@@ -79,7 +79,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
             Assert.AreEqual(expected.ProviderRoute, actual.ProviderRoute);
             Assert.AreEqual(expected.SubmittedDate, actual.SubmittedDate);
             Assert.AreEqual(expected.Ukprn, actual.Ukprn);
-            Assert.AreEqual(expected.Status, actual.Status);
+            Assert.AreEqual(expected.ModerationStatus, actual.ModerationStatus);
         }
     }
 }
