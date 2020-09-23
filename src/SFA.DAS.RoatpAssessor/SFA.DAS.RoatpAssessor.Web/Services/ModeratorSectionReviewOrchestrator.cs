@@ -70,12 +70,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 BlindAssessmentOutcome = await _moderationApiClient.GetBlindAssessmentOutcome(application.ApplicationId, moderatorPage.SequenceNumber, moderatorPage.SectionNumber, moderatorPage.PageId)
             };
 
-            //TODO: Explain why all of this is required? We're getting the viewmodel but I'm seeing stuff being submitted
-            if (string.IsNullOrEmpty(request.PageId))
-            {
-                await ProcessAllAssessorPagesForSection(request, viewModel);
-            }
-
             await SetPageReviewOutcome(request, viewModel);
 
             return viewModel;
@@ -112,7 +106,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             };
 
             return viewModel;
-
         }
 
         public async Task<ModeratorSectorDetailsViewModel> GetSectorDetailsViewModel(GetSectorDetailsRequest request)
@@ -147,7 +140,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 SectorDetails = sectorDetails,
                 BlindAssessmentOutcome = blindAssessmentOutcome
             };
-
 
             await SetSectorReviewOutcome(request, viewModel);
             return viewModel;
@@ -189,60 +181,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return tabularDataList;
         }
 
-        private async Task ProcessAllAssessorPagesForSection(GetReviewAnswersRequest request, ModeratorReviewAnswersViewModel viewModel)
-        {
-            var moderatorReviewOutcomesPerSection = await _moderationApiClient.GetModeratorPageReviewOutcomesForSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.UserId);
-            if (moderatorReviewOutcomesPerSection is null || !moderatorReviewOutcomesPerSection.Any())
-            {
-                // Start processing all subsequent pages and create record in ModeratorPageReviewOutcome with emty status for each and every active page
-                // Make a record for the first page
-                await _moderationApiClient.SubmitModeratorPageReviewOutcome(request.ApplicationId,
-                                                    request.SequenceNumber,
-                                                    request.SectionNumber,
-                                                    viewModel.PageId,
-                                                    request.UserId,
-                                                    null,
-                                                    null,
-                                                    null);
-
-                // TODO: Explain why you're checking NextPageId in the viewmodel and submitting the outcome
-                if (!string.IsNullOrEmpty(viewModel.NextPageId)) // We have multiple pages
-                {
-                    var nextPageId = viewModel.NextPageId;
-                    while (!string.IsNullOrEmpty(nextPageId))
-                    {
-                        await _moderationApiClient.SubmitModeratorPageReviewOutcome(request.ApplicationId,
-                                                                           request.SequenceNumber,
-                                                                           request.SectionNumber,
-                                                                           nextPageId,
-                                                                           request.UserId,
-                                                                           null,
-                                                                           null,
-                                                                           null);
-
-                        nextPageId = await GetNextPageId(request.ApplicationId, request.SequenceNumber, request.SectionNumber, nextPageId);
-                    }
-                }
-            }
-        }
-
-
-        private async Task<string> GetNextPageId(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
-        {
-            var moderatorPage = await _moderationApiClient.GetModeratorPage(applicationId, sequenceNumber, sectionNumber, pageId);
-            if (!string.IsNullOrEmpty(moderatorPage?.NextPageId))
-            {
-                return moderatorPage.NextPageId;
-            }
-
-            return string.Empty;
-        }
-
         private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, ModeratorSectorDetailsViewModel viewModel)
         {
+            // TODO: To think about... could we move this into Apply Service? It's really part of getting the moderator page back from the service
             var pageReviewOutcome = await _moderationApiClient.GetModeratorPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
-                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                viewModel.PageId, request.UserId);
+                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, viewModel.PageId, request.UserId);
+
             if (pageReviewOutcome != null)
             {
                 viewModel.Status = pageReviewOutcome.Status;
@@ -269,6 +213,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the moderator page back from the service
             var pageReviewOutcome = await _moderationApiClient.GetModeratorPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, request.UserId);
+
             if (pageReviewOutcome != null)
             {
                 viewModel.Status = pageReviewOutcome.Status;
