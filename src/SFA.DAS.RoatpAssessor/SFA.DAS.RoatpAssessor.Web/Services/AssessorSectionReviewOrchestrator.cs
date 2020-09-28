@@ -68,12 +68,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, assessorPage.PageId)
             };
 
-            //TODO: Explain why all of this is required? We're getting the viewmodel but I'm seeing stuff being submitted
-            if (string.IsNullOrEmpty(request.PageId))
-            {
-                await ProcessAllAssessorPagesForSection(request, viewModel);
-            }
-
             await SetPageReviewOutcome(request, viewModel);
 
             return viewModel;
@@ -143,7 +137,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 SectorDetails = sectorDetails
             };
 
-
             await SetSectorReviewOutcome(request, viewModel);
             return viewModel;
         }
@@ -184,58 +177,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return tabularDataList;
         }
 
-        private async Task ProcessAllAssessorPagesForSection(GetReviewAnswersRequest request, AssessorReviewAnswersViewModel viewModel)
-        {
-            var assessorReviewOutcomesPerSection = await _assessorApiClient.GetAssessorPageReviewOutcomesForSection(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.UserId);
-            if (assessorReviewOutcomesPerSection is null || !assessorReviewOutcomesPerSection.Any())
-            {
-                // Start processing all subsequent pages and create record in AssessorPageReviewOutcome with emty status for each and every active page
-                // Make a record for the first page
-                await _assessorApiClient.SubmitAssessorPageReviewOutcome(request.ApplicationId,
-                                                    request.SequenceNumber,
-                                                    request.SectionNumber,
-                                                    viewModel.PageId,
-                                                    request.UserId,
-                                                    null,
-                                                    null);
-
-                // TODO: Explain why you're checking NextPageId in the viewmodel and submitting the outcome
-                if (!string.IsNullOrEmpty(viewModel.NextPageId)) // We have multiple pages
-                {
-                    var nextPageId = viewModel.NextPageId;
-                    while (!string.IsNullOrEmpty(nextPageId))
-                    {
-                        await _assessorApiClient.SubmitAssessorPageReviewOutcome(request.ApplicationId,
-                                                                           request.SequenceNumber,
-                                                                           request.SectionNumber,
-                                                                           nextPageId,
-                                                                           request.UserId,
-                                                                           null,
-                                                                           null);
-
-                        nextPageId = await GetNextPageId(request.ApplicationId, request.SequenceNumber, request.SectionNumber, nextPageId);
-                    }
-                }
-            }
-        }
-
-
-        private async Task<string> GetNextPageId(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
-        {
-            var assessorPage = await _assessorApiClient.GetAssessorPage(applicationId, sequenceNumber, sectionNumber, pageId);
-            if (!string.IsNullOrEmpty(assessorPage?.NextPageId))
-            {
-                return assessorPage.NextPageId;
-            }
-
-            return string.Empty;
-        }
-
         private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, AssessorSectorDetailsViewModel viewModel)
         {
+            // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
             var pageReviewOutcome = await _assessorApiClient.GetAssessorPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
-                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                viewModel.PageId, request.UserId);
+                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, viewModel.PageId, request.UserId);
+
             if (pageReviewOutcome != null)
             {
                 viewModel.Status = pageReviewOutcome.Status;
@@ -261,6 +208,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
             var pageReviewOutcome = await _assessorApiClient.GetAssessorPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, request.UserId);
+
             if (pageReviewOutcome != null)
             {
                 viewModel.Status = pageReviewOutcome.Status;

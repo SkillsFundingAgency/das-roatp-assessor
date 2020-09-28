@@ -122,36 +122,5 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorSectionReviewOrc
             CollectionAssert.IsNotEmpty(result.Questions);
             CollectionAssert.IsNotEmpty(result.Answers);
         }
-
-        [Test]
-        public async Task When_there_is_no_page_id_provided_and_there_are_no_existing_outcomes_then_outcomes_are_submitted()
-        {
-            _moderationApiClient.Setup(x => x.GetModeratorPage(_applicationId, _sequenceNumber, _sectionNumber, null)).ReturnsAsync(_moderatorPage);
-            _moderationApiClient.Setup(x => x.GetModeratorPageReviewOutcomesForSection(_applicationId, _sequenceNumber, _sectionNumber, _userId)).ReturnsAsync((List<ModeratorPageReviewOutcome>)null);
-
-            _request = new GetReviewAnswersRequest(_applicationId, _userId, _sequenceNumber, _sectionNumber, null, null);
-            await _orchestrator.GetReviewAnswersViewModel(_request);
-
-            _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId, _userId, null, null, null));
-        }
-
-        [Test]
-        public async Task When_there_is_no_page_id_provided_and_there_are_no_existing_outcomes_then_outcomes_are_submitted_for_next_pages()
-        {
-            _moderatorPage.NextPageId = "NP01";
-            _moderationApiClient.Setup(x => x.GetModeratorPage(_applicationId, _sequenceNumber, _sectionNumber, null)).ReturnsAsync(_moderatorPage);
-            _moderationApiClient.Setup(x => x.GetModeratorPageReviewOutcomesForSection(_applicationId, _sequenceNumber, _sectionNumber, _userId)).ReturnsAsync((List<ModeratorPageReviewOutcome>)null);
-
-            var nextPage = new ModeratorPage { NextPageId = "NP02" };
-            _moderationApiClient.Setup(x => x.GetModeratorPage(_applicationId, _sequenceNumber, _sectionNumber, _moderatorPage.NextPageId)).ReturnsAsync(nextPage);
-
-            _moderationApiClient.Setup(x => x.GetModeratorPage(_applicationId, _sequenceNumber, _sectionNumber, nextPage.NextPageId)).ReturnsAsync(new ModeratorPage());
-
-            _request = new GetReviewAnswersRequest(_applicationId, _userId, _sequenceNumber, _sectionNumber, null, null);
-            await _orchestrator.GetReviewAnswersViewModel(_request);
-
-            _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, _moderatorPage.NextPageId, _userId, null, null, null));
-            _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, nextPage.NextPageId, _userId, null, null, null));
-        }
     }
 }

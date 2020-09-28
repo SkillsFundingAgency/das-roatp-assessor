@@ -122,36 +122,5 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrch
             CollectionAssert.IsNotEmpty(result.Questions);
             CollectionAssert.IsNotEmpty(result.Answers);
         }
-
-        [Test]
-        public async Task When_there_is_no_page_id_provided_and_there_are_no_existing_outcomes_then_outcomes_are_submitted()
-        {
-            _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, _sequenceNumber, _sectionNumber, null)).ReturnsAsync(_assessorPage);
-            _assessorApiClient.Setup(x => x.GetAssessorPageReviewOutcomesForSection(_applicationId, _sequenceNumber, _sectionNumber, _userId)).ReturnsAsync((List<AssessorPageReviewOutcome>)null);
-
-            _request = new GetReviewAnswersRequest(_applicationId, _userId, _sequenceNumber, _sectionNumber, null, null);
-            await _orchestrator.GetReviewAnswersViewModel(_request);
-
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId, _userId, null, null));
-        }
-
-        [Test]
-        public async Task When_there_is_no_page_id_provided_and_there_are_no_existing_outcomes_then_outcomes_are_submitted_for_next_pages()
-        {
-            _assessorPage.NextPageId = "NP01";
-            _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, _sequenceNumber, _sectionNumber, null)).ReturnsAsync(_assessorPage);
-            _assessorApiClient.Setup(x => x.GetAssessorPageReviewOutcomesForSection(_applicationId, _sequenceNumber, _sectionNumber, _userId)).ReturnsAsync((List<AssessorPageReviewOutcome>)null);
-
-            var nextPage = new AssessorPage { NextPageId = "NP02" };
-            _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, _sequenceNumber, _sectionNumber, _assessorPage.NextPageId)).ReturnsAsync(nextPage);
-
-            _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, _sequenceNumber, _sectionNumber, nextPage.NextPageId)).ReturnsAsync(new AssessorPage());
-
-            _request = new GetReviewAnswersRequest(_applicationId, _userId, _sequenceNumber, _sectionNumber, null, null);
-            await _orchestrator.GetReviewAnswersViewModel(_request);
-
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, _assessorPage.NextPageId, _userId, null, null));
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, nextPage.NextPageId, _userId, null, null));
-        }
     }
 }
