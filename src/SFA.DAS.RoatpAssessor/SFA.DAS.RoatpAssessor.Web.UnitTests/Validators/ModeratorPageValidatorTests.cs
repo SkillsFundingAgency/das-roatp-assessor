@@ -50,7 +50,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
         {
             _command.Status = ModeratorPageReviewStatus.Fail;
             _command.OptionFailText = string.Concat(Enumerable.Repeat("test ", 151));
-            _command.OptionFailExternalText = "external comment";
 
             var response = await _validator.Validate(_command);
 
@@ -64,41 +63,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
         {
             _command.Status = ModeratorPageReviewStatus.Fail;
             _command.OptionFailText = "";
-            _command.OptionFailExternalText = "external comment";
 
             var response = await _validator.Validate(_command);
 
             Assert.IsFalse(response.IsValid);
             Assert.AreEqual("Enter internal comments", response.Errors.First().ErrorMessage);
             Assert.AreEqual("OptionFailText", response.Errors.First().Field);
-        }
-
-        [Test]
-        public async Task When_status_is_fail_and_external_word_count_exceeds_maximum_then_an_error_is_returned()
-        {
-            _command.Status = ModeratorPageReviewStatus.Fail;
-            _command.OptionFailText = "internal comment";
-            _command.OptionFailExternalText = string.Concat(Enumerable.Repeat("test ", 151));
-
-            var response = await _validator.Validate(_command);
-
-            Assert.IsFalse(response.IsValid);
-            Assert.AreEqual("External comments must be 150 words or less", response.Errors.First().ErrorMessage);
-            Assert.AreEqual("OptionFailExternalText", response.Errors.First().Field);
-        }
-
-        [Test]
-        public async Task When_status_is_fail_and_external_word_count_is_below_minimum_then_an_error_is_returned()
-        {
-            _command.Status = ModeratorPageReviewStatus.Fail;
-            _command.OptionFailText = "internal comment";
-            _command.OptionFailExternalText = "";
-
-            var response = await _validator.Validate(_command);
-
-            Assert.IsFalse(response.IsValid);
-            Assert.AreEqual("Enter external comments", response.Errors.First().ErrorMessage);
-            Assert.AreEqual("OptionFailExternalText", response.Errors.First().Field);
         }
 
         [Test]
@@ -119,18 +89,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
         {
             _command.Status = ModeratorPageReviewStatus.Pass;
             _command.OptionPassText = string.Concat(Enumerable.Repeat("test ", 150));
-
-            var response = await _validator.Validate(_command);
-
-            Assert.IsTrue(response.IsValid);
-        }
-
-        [Test]
-        public async Task When_status_is_fail_and_both_word_counts_are_below_maximum_then_no_error_is_returned()
-        {
-            _command.Status = ModeratorPageReviewStatus.Fail;
-            _command.OptionFailText = string.Concat(Enumerable.Repeat("test ", 150));
-            _command.OptionFailExternalText = string.Concat(Enumerable.Repeat("test ", 150));
 
             var response = await _validator.Validate(_command);
 

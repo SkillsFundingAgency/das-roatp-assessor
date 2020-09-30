@@ -54,8 +54,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
                                     command.PageId,
                                     userId,
                                     command.Status,
-                                    command.ReviewComment,
-                                    command.ExternalReviewComment);
+                                    command.ReviewComment);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
@@ -67,7 +66,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
             {
                 var viewModel = await viewModelBuilder.Invoke();
                 viewModel.Status = command.Status;
-                viewModel.OptionFailExternalText = command.OptionFailExternalText;
                 viewModel.OptionFailText = command.OptionFailText;
                 viewModel.OptionInProgressText = command.OptionInProgressText;
                 viewModel.OptionPassText = command.OptionPassText;
@@ -110,8 +108,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
                                     command.PageId,
                                     userId,
                                     command.Status,
-                                    command.ReviewComment,
-                                    command.ExternalReviewComment);
+                                    command.ReviewComment);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
@@ -123,7 +120,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
             {
                 var viewModel = await viewModelBuilder.Invoke();
                 viewModel.Status = command.Status;
-                viewModel.OptionFailExternalText = command.OptionFailExternalText;
                 viewModel.OptionFailText = command.OptionFailText;
                 viewModel.OptionInProgressText = command.OptionInProgressText;
                 viewModel.OptionPassText = command.OptionPassText;

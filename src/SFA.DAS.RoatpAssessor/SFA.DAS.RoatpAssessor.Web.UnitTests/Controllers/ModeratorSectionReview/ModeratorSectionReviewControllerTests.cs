@@ -161,8 +161,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
                                     command.PageId,
                                     _controller.User.UserId(),
                                     command.Status,
-                                    command.ReviewComment,
-                                    command.ExternalReviewComment)).ReturnsAsync(true);
+                                    command.ReviewComment)).ReturnsAsync(true);
 
             // act
             var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;
@@ -177,8 +176,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
                         command.PageId,
                         _controller.User.UserId(),
                         command.Status,
-                        command.ReviewComment,
-                        command.ExternalReviewComment), Times.Once);
+                        command.ReviewComment), Times.Once);
         }
 
         [Test]
@@ -221,8 +219,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
                         command.PageId,
                         _controller.User.UserId(),
                         command.Status,
-                        command.ReviewComment,
-                        command.ExternalReviewComment), Times.Never);
+                        command.ReviewComment), Times.Never);
         }
     }
 }
