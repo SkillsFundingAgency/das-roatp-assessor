@@ -59,7 +59,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         }
 
         public async Task<bool> SubmitModeratorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId,
-                                                    string userId, string status, string comment, string externalComment)
+                                                    string userId, string status, string comment)
         {
             var result = await Post($"/Moderator/Applications/{applicationId}/SubmitPageReviewOutcome", new SubmitModeratorPageReviewOutcomeCommand
             {
@@ -68,8 +68,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
                 PageId = pageId,
                 UserId = userId,
                 Status = status,
-                Comment = comment,
-                ExternalComment = externalComment
+                Comment = comment
             });
 
             return result == HttpStatusCode.OK;

@@ -196,7 +196,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         viewModel.OptionPassText = pageReviewOutcome.Comment;
                         break;
                     case ModeratorPageReviewStatus.Fail:
-                        viewModel.OptionFailExternalText = pageReviewOutcome.ExternalComment;
                         viewModel.OptionFailText = pageReviewOutcome.Comment;
                         break;
                     case ModeratorPageReviewStatus.InProgress:
@@ -223,7 +222,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         viewModel.OptionPassText = pageReviewOutcome.Comment;
                         break;
                     case ModeratorPageReviewStatus.Fail:
-                        viewModel.OptionFailExternalText = pageReviewOutcome.ExternalComment;
                         viewModel.OptionFailText = pageReviewOutcome.Comment;
                         break;
                     case ModeratorPageReviewStatus.InProgress:

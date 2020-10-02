@@ -14,8 +14,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
         private const string TooManyWords = "Your comments must be 150 words or less";
         private const string FailCommentRequired = "Enter internal comments";
         private const string FailTooManyWords = "Internal comments must be 150 words or less";
-        private const string FailExternalCommentRequired = "Enter external comments";
-        private const string FailExternalTooManyWords = "External comments must be 150 words or less";
 
         public async Task<ValidationResponse> Validate(SubmitModeratorPageAnswerCommand command)
         {
@@ -52,16 +50,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                             else if (wordCount > MaxWordsCount)
                             {
                                 validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionFailText), FailTooManyWords));
-                            }
-
-                            var wordCountExternal = ValidationHelper.GetWordCount(command.OptionFailExternalText);
-                            if (wordCountExternal < RequiredMinimumWordsCount)
-                            {
-                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionFailExternalText), FailExternalCommentRequired));
-                            }
-                            else if (wordCountExternal > MaxWordsCount)
-                            {
-                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionFailExternalText), FailExternalTooManyWords));
                             }
 
                             break;

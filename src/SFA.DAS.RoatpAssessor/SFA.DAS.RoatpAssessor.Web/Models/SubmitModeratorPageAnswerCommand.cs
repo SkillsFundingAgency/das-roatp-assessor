@@ -15,7 +15,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
         public string Status { get; set; }
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
-        public string OptionFailExternalText { get; set; }
         public string OptionInProgressText { get; set; }
         public string Heading { get; set; }
 
@@ -45,27 +44,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
             }
         }
 
-        public string ExternalReviewComment
-        {
-            get
-            {
-                string externalReviewComment;
-
-                switch (Status)
-                {
-                    case ModeratorPageReviewStatus.Fail:
-                        externalReviewComment = OptionFailExternalText;
-                        break;
-                    default:
-                        externalReviewComment = null;
-                        break;
-                }
-
-                return externalReviewComment;
-            }
-        }
-
-
         public SubmitModeratorPageAnswerCommand()
         {
                 
@@ -81,7 +59,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
             Status = viewModel.Status;
             OptionPassText = viewModel.OptionPassText;
             OptionFailText = viewModel.OptionFailText;
-            OptionFailExternalText = viewModel.OptionFailExternalText;
             OptionInProgressText = viewModel.OptionInProgressText;
             Heading = viewModel.Heading;
         }
