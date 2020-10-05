@@ -31,7 +31,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
             {
                 return RedirectToAction("Index", "Home");
             }
-            else if (viewModel.ModerationStatus == ModerationStatus.Complete)
+            else if (viewModel.ModerationStatus == ModerationStatus.Pass || viewModel.ModerationStatus == ModerationStatus.Fail)
             {
                 return RedirectToAction("AssessmentComplete", "ModeratorOutcome", new { applicationId });
             }
