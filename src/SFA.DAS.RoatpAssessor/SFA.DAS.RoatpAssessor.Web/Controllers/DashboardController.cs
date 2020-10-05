@@ -13,11 +13,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
     {
         private readonly IAssessorDashboardOrchestrator _assessorOrchestrator;
         private readonly IModeratorDashboardOrchestrator _moderatorOrchestrator;
+        private readonly IClarificationDashboardOrchestrator _clarificationOrchestrator;
 
-        public DashboardController(IAssessorDashboardOrchestrator orchestrator, IModeratorDashboardOrchestrator moderatorOrchestrator)
+        public DashboardController(IAssessorDashboardOrchestrator orchestrator, IModeratorDashboardOrchestrator moderatorOrchestrator, IClarificationDashboardOrchestrator clarificationOrchestrator)
         {
             _assessorOrchestrator = orchestrator;
             _moderatorOrchestrator = moderatorOrchestrator;
+            _clarificationOrchestrator = clarificationOrchestrator;
         }
 
         [HttpGet("/Dashboard/New")]
@@ -52,6 +54,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         {
             var userId = HttpContext.User.UserId();
             var vm = await _moderatorOrchestrator.GetInModerationApplicationsViewModel(userId);
+            return View(vm);
+        }
+
+        [HttpGet("/Dashboard/InClarification")]
+        public async Task<ViewResult> InClarificationApplications()
+        {
+            var userId = HttpContext.User.UserId();
+            var vm = await _clarificationOrchestrator.GetInClarificationApplicationsViewModel(userId);
             return View(vm);
         }
     }

@@ -16,6 +16,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
     {
         private Mock<IAssessorDashboardOrchestrator> _assessorOrchestrator;
         private Mock<IModeratorDashboardOrchestrator> _moderatorOrchestrator;
+        private Mock<IClarificationDashboardOrchestrator> _clarificationOrchestrator;
 
         private DashboardController _controller;
         private string _dashboardUrl;
@@ -27,7 +28,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
 
             _assessorOrchestrator = new Mock<IAssessorDashboardOrchestrator>();
             _moderatorOrchestrator = new Mock<IModeratorDashboardOrchestrator>();
-            _controller = new DashboardController(_assessorOrchestrator.Object, _moderatorOrchestrator.Object)
+            _clarificationOrchestrator = new Mock<IClarificationDashboardOrchestrator>();
+            _controller = new DashboardController(_assessorOrchestrator.Object, _moderatorOrchestrator.Object, _clarificationOrchestrator.Object)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
@@ -58,13 +60,25 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         }
 
         [Test]
-        public async Task When_getting_in_progress_moderation_the_applications_are_returned()
+        public async Task When_getting_in_moderation_applications_the_applications_are_returned()
         {
             var userId = _controller.User.UserId();
             var expectedViewModel = new InModerationApplicationsViewModel(userId, 1, 2, 3, 4);
             _moderatorOrchestrator.Setup(x => x.GetInModerationApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
 
             var result = await _controller.InModerationApplications();
+
+            Assert.AreSame(expectedViewModel, result.Model);
+        }
+
+        [Test]
+        public async Task When_getting_in_clarification_applications_the_applications_are_returned()
+        {
+            var userId = _controller.User.UserId();
+            var expectedViewModel = new InClarificationApplicationsViewModel(userId, 1, 2, 3, 4);
+            _clarificationOrchestrator.Setup(x => x.GetInClarificationApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
+
+            var result = await _controller.InClarificationApplications();
 
             Assert.AreSame(expectedViewModel, result.Model);
         }

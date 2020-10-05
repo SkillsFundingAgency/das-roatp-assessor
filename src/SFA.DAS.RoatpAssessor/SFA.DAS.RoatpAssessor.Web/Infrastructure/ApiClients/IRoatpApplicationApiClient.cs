@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
@@ -15,6 +16,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<List<AssessorApplicationSummary>> GetNewApplications(string userId);
         Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId);
         Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId);
+        Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId);
 
         Task<Apply> GetApplication(Guid applicationId);
 
