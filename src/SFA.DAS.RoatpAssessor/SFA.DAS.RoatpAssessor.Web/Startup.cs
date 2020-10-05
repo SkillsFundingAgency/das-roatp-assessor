@@ -169,7 +169,7 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
             services.AddTransient<IModeratorOverviewOrchestrator, ModeratorOverviewOrchestrator>();
-
+            services.AddTransient<IModeratorOutcomeOrchestrator, ModeratorOutcomeOrchestrator>();
             services.AddTransient<ISupplementaryInformationService, SupplementaryInformationService>();
 
             services.AddTransient<IAssessorSectionReviewOrchestrator, AssessorSectionReviewOrchestrator>();
