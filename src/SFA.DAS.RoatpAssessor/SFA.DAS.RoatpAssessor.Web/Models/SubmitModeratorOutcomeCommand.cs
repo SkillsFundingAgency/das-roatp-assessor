@@ -1,22 +1,16 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+﻿using System;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
 
 namespace SFA.DAS.RoatpAssessor.Web.Models
 {
-    public class SubmitModeratorPageAnswerCommand
+    public class SubmitModeratorOutcomeCommand
     {
         public Guid ApplicationId { get; set; }
-        public int SequenceNumber { get; set; }
-        public int SectionNumber { get; set; }
-        public string PageId { get; set; }
-        public string NextPageId { get; set; }
         public string Status { get; set; }
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
-        public string OptionInProgressText { get; set; }
-        public string Heading { get; set; }
+        public string OptionAskForClarificationText { get; set; }
 
         public string ReviewComment
         {
@@ -32,8 +26,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
                     case ModeratorPageReviewStatus.Fail:
                         reviewComment = OptionFailText;
                         break;
-                    case ModeratorPageReviewStatus.InProgress:
-                        reviewComment = OptionInProgressText;
+                    case ModeratorPageReviewStatus.AskForClarification:
+                        reviewComment = OptionAskForClarificationText;
                         break;
                     default:
                         reviewComment = null;
@@ -44,23 +38,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
             }
         }
 
-        public SubmitModeratorPageAnswerCommand()
+
+        public SubmitModeratorOutcomeCommand()
         {
-                
+
         }
 
-        public SubmitModeratorPageAnswerCommand(ModeratorReviewAnswersViewModel viewModel)
+        public SubmitModeratorOutcomeCommand(ModeratorOutcomeViewModel viewModel)
         {
             ApplicationId = viewModel.ApplicationId;
-            PageId = viewModel.PageId;
-            NextPageId = viewModel.NextPageId;
-            SequenceNumber = viewModel.SequenceNumber;
-            SectionNumber = viewModel.SectionNumber;
             Status = viewModel.Status;
             OptionPassText = viewModel.OptionPassText;
             OptionFailText = viewModel.OptionFailText;
-            OptionInProgressText = viewModel.OptionInProgressText;
-            Heading = viewModel.Heading;
+            OptionAskForClarificationText = viewModel.OptionAskForClarificationText;
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
@@ -29,11 +32,38 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var viewmodel = new ModeratorOutcomeViewModel(application, request.UserId);
 
-            viewmodel.PassCount = 87;
-            viewmodel.FailCount = 0;
+            var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, request.UserId);
+
+            if (!savedOutcomes.Any()) return viewmodel;
+         
+            viewmodel.PassCount = savedOutcomes.Count(x => x.Status == ModeratorPageReviewStatus.Pass);
+            viewmodel.FailCount = savedOutcomes.Count(x => x.Status == ModeratorPageReviewStatus.Fail);
 
             return viewmodel;
         }
 
+        public async Task<ModeratorOutcomeReviewViewModel> GetInModerationOutcomeReviewViewModel(ReviewModeratorOutcomeRequest request)
+        {
+            var viewModel = new ModeratorOutcomeReviewViewModel
+            {
+                Status = request.Status, ReviewComment = request.ReviewComment
+            };
+            var application = await _applicationApiClient.GetApplication(request.ApplicationId);
+            if (application is null)
+            {
+                return null;
+            }
+
+            if (application.ApplyData?.ApplyDetails != null)
+            {
+                viewModel.ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName;
+                viewModel.Ukprn = application.ApplyData.ApplyDetails.UKPRN;
+                viewModel.ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName;
+                viewModel.SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn;
+            }
+
+            return viewModel;
+
+        }
     }
 }

@@ -25,9 +25,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
             Id = application.Id;
             ApplicationId = application.ApplicationId;
             OrgId = application.OrganisationId;
-
-
-
+            PassCount = 0;
+            FailCount = 0;
             ApplicationStatus = application.ApplicationStatus;
             ModerationStatus = application.ModerationStatus;
 

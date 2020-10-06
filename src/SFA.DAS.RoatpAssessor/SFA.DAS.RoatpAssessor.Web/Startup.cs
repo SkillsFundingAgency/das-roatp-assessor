@@ -178,6 +178,7 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddTransient<IModeratorSectionReviewOrchestrator, ModeratorSectionReviewOrchestrator>();
             services.AddTransient<IModeratorPageValidator, ModeratorPageValidator>();
+            services.AddTransient<IModeratorOutcomeValidator, ModeratorOutcomeValidator>();
 
             DependencyInjection.ConfigureDependencyInjection(services);
         }

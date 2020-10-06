@@ -7,5 +7,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
     public interface IModeratorOutcomeOrchestrator
     {
         Task<ModeratorOutcomeViewModel> GetInModerationOutcomeViewModel(GetModeratorOutcomeRequest request);
+        Task<ModeratorOutcomeReviewViewModel> GetInModerationOutcomeReviewViewModel(ReviewModeratorOutcomeRequest request);
     }
 }
