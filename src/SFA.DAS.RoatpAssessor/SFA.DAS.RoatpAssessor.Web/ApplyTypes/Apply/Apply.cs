@@ -18,6 +18,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public string Assessor2UserId { get; set; }
         public string Assessor2Name { get; set; }
         public string Assessor2ReviewStatus { get; set; }
+        public string ModeratorName { get; set; }
 
         public ApplyData ApplyData { get; set; }
 
@@ -47,6 +48,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public string ProviderRouteName { get; set; }
         public DateTime? ApplicationSubmittedOn { get; set; }
         public Guid? ApplicationSubmittedBy { get; set; }
+        public DateTime? ClarificationRequestedDate { get; set; }
     }
 
     public class ApplySequence
