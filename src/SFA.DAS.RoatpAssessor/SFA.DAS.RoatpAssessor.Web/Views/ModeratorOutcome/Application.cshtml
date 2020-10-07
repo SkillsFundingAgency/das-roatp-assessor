@@ -31,11 +31,19 @@
                 </thead>
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">Pass</td>
+                    <td class="govuk-table__cell">
+                        <span class="govuk-tag das-tag--solid-green">
+                            Pass
+                        </span>
+                    </td>
                     <td class="govuk-table__cell">@Model.PassCount</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell  govuk-tag app-task-list__tag das-tag das-tag--solid-red">Fail</td>
+                    <td class="govuk-table__cell">
+                        <span class="govuk-tag das-tag--solid-red">
+                            Fail
+                        </span>
+                    </td>
                     <td class="govuk-table__cell">@Model.FailCount</td>
                 </tr>
                 </tbody>
