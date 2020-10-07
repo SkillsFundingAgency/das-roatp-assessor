@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -56,9 +54,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
-            var sequences = await _moderationApiClient.GetModeratorSequences(request.ApplicationId);
 
-            if (application is null || contact is null || sequences is null)
+
+            if (application is null || contact is null)
             {
                 return null;
             }
@@ -66,6 +64,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var viewmodel = new ModeratorOutcomeViewModel(application, request.UserId);
 
             var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, request.UserId);
+
+            var unsetOutcomesCount = savedOutcomes.Count(x =>
+                x.Status != ModeratorPageReviewStatus.Pass && x.Status != ModeratorPageReviewStatus.Fail);
+
+            if (unsetOutcomesCount > 0)
+            {
+                return null;
+            }
 
             if (!savedOutcomes.Any()) return viewmodel;
          
@@ -98,10 +104,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
 
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
-            if (application is null)
+            var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
+
+            if (application is null || contact is null)
             {
                 return null;
             }
+
+            viewModel.ApplicantEmailAddress = contact.Email;
 
             if (application.ApplyData?.ApplyDetails != null)
             {

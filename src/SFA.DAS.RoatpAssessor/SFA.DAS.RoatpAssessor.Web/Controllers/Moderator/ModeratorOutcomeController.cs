@@ -35,7 +35,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 
             if (viewModel is null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("ViewApplication", "ModeratorOverview");
             }
             else if (viewModel.ModerationStatus == ModerationStatus.Complete)
             {
@@ -48,7 +48,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 
 
         [HttpPost("ModeratorOutcome/{applicationId}")]
-        public async Task<IActionResult> SubmitOutcome(Guid applicationId, SubmitModeratorOutcomeCommand command)
+        public async Task<IActionResult> SubmitOutcome(Guid applicationId, SubmitModeratorOutcomeCommand command)   //MFCMFC RENAME THIS
         {
             var validationResponse = await _validator.Validate(command);
             if (validationResponse.Errors.Any())
