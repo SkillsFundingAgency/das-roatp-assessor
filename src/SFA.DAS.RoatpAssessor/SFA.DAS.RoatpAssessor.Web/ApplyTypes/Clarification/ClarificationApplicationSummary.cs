@@ -6,6 +6,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification
     public class ClarificationApplicationSummary : ApplicationSummary
     {
         public string ModeratorName { get; set; }
-        public DateTime ClarificationRequestedDate { get; set; }
+        public DateTime ClarificationRequestedOn { get; set; }
     }
 }

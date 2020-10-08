@@ -18,7 +18,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public string Assessor2UserId { get; set; }
         public string Assessor2Name { get; set; }
         public string Assessor2ReviewStatus { get; set; }
-        public string ModeratorName { get; set; }
 
         public ApplyData ApplyData { get; set; }
 
@@ -36,6 +35,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
     {
         public ApplyDetails ApplyDetails { get; set; }
         public List<ApplySequence> Sequences { get; set; }
+        public ModeratorReviewDetails ModeratorReviewDetails { get; set; }
     }
 
     public class ApplyDetails
@@ -47,8 +47,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public int ProviderRoute { get; set; }
         public string ProviderRouteName { get; set; }
         public DateTime? ApplicationSubmittedOn { get; set; }
-        public Guid? ApplicationSubmittedBy { get; set; }
-        public DateTime? ModeratorClarificationRequestedOn { get; set; }
+        public Guid? ApplicationSubmittedBy { get; set; }        
     }
 
     public class ApplySequence
@@ -69,5 +68,13 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public int SectionNo { get; set; }
         public string Status { get; set; }
         public bool NotRequired { get; set; }
+    }
+
+    public class ModeratorReviewDetails
+    {
+        public string ModeratorName { get; set; }
+        public string ModeratorUserId { get; set; }
+        public DateTime? GradedDateTime { get; set; }
+        public DateTime? ClarificationRequestedOn { get; set; }
     }
 }

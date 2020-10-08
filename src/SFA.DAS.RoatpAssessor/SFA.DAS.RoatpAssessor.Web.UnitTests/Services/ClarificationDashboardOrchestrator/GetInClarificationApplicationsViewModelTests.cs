@@ -54,8 +54,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationDashboardOrc
             var userId = _user.UserId();
             var applications = new List<ClarificationApplicationSummary>
             {
-                new ClarificationApplicationSummary { ApplicationReferenceNumber = "sdjfs", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), ModeratorName = "flggfdg", ClarificationRequestedDate = DateTime.UtcNow },
-                new ClarificationApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), ModeratorName = "fbvkjghb", ClarificationRequestedDate = DateTime.UtcNow }
+                new ClarificationApplicationSummary { ApplicationReferenceNumber = "sdjfs", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), ModeratorName = "flggfdg", ClarificationRequestedOn = DateTime.UtcNow },
+                new ClarificationApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), ModeratorName = "fbvkjghb", ClarificationRequestedOn = DateTime.UtcNow }
             };
 
             _applicationApiClient.Setup(x => x.GetInClarificationApplications(userId)).ReturnsAsync(applications);
@@ -80,7 +80,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationDashboardOrc
             Assert.AreEqual(expected.SubmittedDate, actual.SubmittedDate);
             Assert.AreEqual(expected.Ukprn, actual.Ukprn);
             Assert.AreEqual(expected.ModeratorName, actual.ModeratorName);
-            Assert.AreEqual(expected.ClarificationRequestedDate, actual.ClarificationRequestedDate);
+            Assert.AreEqual(expected.ClarificationRequestedOn, actual.ClarificationRequestedDate);
         }
     }
 }

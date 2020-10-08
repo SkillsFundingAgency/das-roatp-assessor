@@ -45,7 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             viewModel.Ukprn = application.Ukprn;
             viewModel.SubmittedDate = application.SubmittedDate;
             viewModel.ModeratorName = application.ModeratorName;
-            viewModel.ClarificationRequestedDate = application.ClarificationRequestedDate;
+            viewModel.ClarificationRequestedDate = application.ClarificationRequestedOn;
 
             return viewModel;
         }
