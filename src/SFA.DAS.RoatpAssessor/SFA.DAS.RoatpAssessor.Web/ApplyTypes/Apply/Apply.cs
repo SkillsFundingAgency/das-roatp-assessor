@@ -74,7 +74,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
     {
         public string ModeratorName { get; set; }
         public string ModeratorUserId { get; set; }
-        public DateTime? GradedDateTime { get; set; }
+        public DateTime? OutcomeDateTime { get; set; }
         public DateTime? ClarificationRequestedOn { get; set; }
     }
 }
