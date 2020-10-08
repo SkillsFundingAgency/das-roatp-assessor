@@ -14,12 +14,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         private readonly IAssessorDashboardOrchestrator _assessorOrchestrator;
         private readonly IModeratorDashboardOrchestrator _moderatorOrchestrator;
         private readonly IClarificationDashboardOrchestrator _clarificationOrchestrator;
+        private readonly IOutcomeDashboardOrchestrator _outcomeOrchestrator;
 
-        public DashboardController(IAssessorDashboardOrchestrator orchestrator, IModeratorDashboardOrchestrator moderatorOrchestrator, IClarificationDashboardOrchestrator clarificationOrchestrator)
+        public DashboardController(IAssessorDashboardOrchestrator orchestrator, IModeratorDashboardOrchestrator moderatorOrchestrator, IClarificationDashboardOrchestrator clarificationOrchestrator, IOutcomeDashboardOrchestrator outcomeOrchestrator)
         {
             _assessorOrchestrator = orchestrator;
             _moderatorOrchestrator = moderatorOrchestrator;
             _clarificationOrchestrator = clarificationOrchestrator;
+            _outcomeOrchestrator = outcomeOrchestrator;
         }
 
         [HttpGet("/Dashboard/New")]
@@ -62,6 +64,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         {
             var userId = HttpContext.User.UserId();
             var vm = await _clarificationOrchestrator.GetInClarificationApplicationsViewModel(userId);
+            return View(vm);
+        }
+
+        [HttpGet("/Dashboard/Outcome")]
+        public async Task<ViewResult> ClosedApplications()
+        {
+            var userId = HttpContext.User.UserId();
+            var vm = await _outcomeOrchestrator.GetClosedApplicationsViewModel(userId);
             return View(vm);
         }
     }

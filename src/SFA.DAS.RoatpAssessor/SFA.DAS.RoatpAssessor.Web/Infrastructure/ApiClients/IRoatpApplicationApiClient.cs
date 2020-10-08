@@ -6,6 +6,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Outcome;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
@@ -17,6 +18,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId);
         Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId);
         Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId);
+        Task<List<ClosedApplicationSummary>> GetClosedApplications(string userId);
 
         Task<Apply> GetApplication(Guid applicationId);
 
