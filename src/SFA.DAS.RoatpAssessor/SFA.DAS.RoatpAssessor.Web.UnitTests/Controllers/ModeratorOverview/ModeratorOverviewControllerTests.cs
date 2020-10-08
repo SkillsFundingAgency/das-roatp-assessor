@@ -76,10 +76,24 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOverview
         }
 
         [Test]
-        public async Task ViewApplication_when_application_has_been_assessed_redirects_to_AssessmentComplete()
+        public async Task ViewApplication_when_application_has_been_passed_redirects_to_AssessmentComplete()
         {
             // arrange
-            _applicationViewModel.ModerationStatus = ModerationStatus.Complete;
+            _applicationViewModel.ModerationStatus = ModerationStatus.Pass;
+
+            // act
+            var result = await _controller.ViewApplication(_applicationId) as RedirectToActionResult;
+
+            // assert
+            Assert.AreEqual("ModeratorOutcome", result.ControllerName);
+            Assert.AreEqual("AssessmentComplete", result.ActionName);
+        }
+
+        [Test]
+        public async Task ViewApplication_when_application_has_been_failed_redirects_to_AssessmentComplete()
+        {
+            // arrange
+            _applicationViewModel.ModerationStatus = ModerationStatus.Fail;
 
             // act
             var result = await _controller.ViewApplication(_applicationId) as RedirectToActionResult;

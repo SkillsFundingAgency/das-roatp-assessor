@@ -71,9 +71,13 @@
                                             {
                                                 <strong class="das-tag das-tag--solid-green">New</strong>
                                             }
-                                            else
+                                            else if (item.ModerationStatus == ModerationStatus.InProgress)
                                             {
                                                 <strong class="das-tag das-tag">In moderation</strong>
+                                            }
+                                            else
+                                            {
+                                                <strong class="das-tag das-tag">@item.ModerationStatus</strong>
                                             }
                                         </td>
                                     </tr>

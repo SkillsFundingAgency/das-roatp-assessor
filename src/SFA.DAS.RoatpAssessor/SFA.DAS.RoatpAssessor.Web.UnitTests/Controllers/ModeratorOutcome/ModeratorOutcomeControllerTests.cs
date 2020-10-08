@@ -49,7 +49,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
         public async Task ViewOutcome_returns_view_with_expected_viewmodel()
         {
             // arrange
-            _outcomeViewModel.ModerationStatus = ModerationStatus.InModeration;
+            _outcomeViewModel.ModerationStatus = ModerationStatus.InProgress;
 
             // act
             var result = await _controller.ViewOutcome(_applicationId) as ViewResult;
@@ -62,10 +62,25 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
         }
 
         [Test]
-        public async Task ViewOutcome_when_application_has_been_picked_that_is_complete()
+        public async Task ViewOutcome_when_application_has_been_picked_that_is_pass()
         {
             // arrange
-            _outcomeViewModel.ModerationStatus = ModerationStatus.Complete;
+            _outcomeViewModel.ModerationStatus = ModerationStatus.Pass;
+
+            // act
+            var result = await _controller.ViewOutcome(_applicationId) as RedirectToActionResult;
+
+            // assert
+            Assert.AreEqual("ModeratorOutcome", result.ControllerName);
+            Assert.AreEqual("AssessmentComplete", result.ActionName);
+        }
+
+
+        [Test]
+        public async Task ViewOutcome_when_application_has_been_picked_that_is_fail()
+        {
+            // arrange
+            _outcomeViewModel.ModerationStatus = ModerationStatus.Fail;
 
             // act
             var result = await _controller.ViewOutcome(_applicationId) as RedirectToActionResult;
@@ -79,7 +94,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
         public async Task ViewOutcome_when_application_has_been_picked_that_is_not_completed()
         {
             // arrange
-            _outcomeViewModel.ModerationStatus = ModerationStatus.Complete;
+            _outcomeViewModel.ModerationStatus = ModerationStatus.InProgress;
             _mockOrchestrator.Setup(x => x.GetInModerationOutcomeViewModel(It.IsAny<GetModeratorOutcomeRequest>()))
                 .ReturnsAsync((ModeratorOutcomeViewModel)null);
             // act
