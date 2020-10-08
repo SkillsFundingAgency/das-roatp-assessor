@@ -48,7 +48,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public string ProviderRouteName { get; set; }
         public DateTime? ApplicationSubmittedOn { get; set; }
         public Guid? ApplicationSubmittedBy { get; set; }
-        public DateTime? ClarificationRequestedDate { get; set; }
+        public DateTime? ModeratorClarificationRequestedOn { get; set; }
     }
 
     public class ApplySequence
