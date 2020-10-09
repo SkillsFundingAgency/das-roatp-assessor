@@ -20,21 +20,21 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
         private readonly Guid _applicationId = Guid.NewGuid();
         private readonly ClaimsPrincipal _user = MockedUser.Setup();
 
-        private Mock<IRoatpApplicationApiClient> _applicationApiClient;
-        private Mock<IRoatpModerationApiClient> _moderationApiClient;
-        private Web.Services.ModeratorOutcomeOrchestrator _orchestrator;
         private string _userId => _user.UserId();
         private string _userDisplayName => _user.UserDisplayName();
+
         private Apply _application;
         private Contact _contact;
         private List<ModeratorPageReviewOutcome> _outcomes;
         private GetModeratorOutcomeRequest _request;
-        private string ApplicationRouteName => "Main";
-        private string Ukprn => "23456789";
-        private string OrganisationName => "Emporium Glorium";
-        private DateTime ApplicationSubmittedOn => new DateTime(2020, 09, 30);
-        private string Email => "email@address.com";
+
         private ModeratorOutcomeViewModel _expectedOutcomeViewModel;
+
+        private Mock<IRoatpApplicationApiClient> _applicationApiClient;
+        private Mock<IRoatpModerationApiClient> _moderationApiClient;
+
+        private Web.Services.ModeratorOutcomeOrchestrator _orchestrator;
+
         [SetUp]
         public void SetUp()
         {
@@ -51,26 +51,27 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
                 Assessor2ReviewStatus = AssessorReviewStatus.Approved,
                 Assessor2UserId = $"{ _userId }-2",
                 Assessor2Name = $"{ _userDisplayName }-2",
+
                 ApplyData = new ApplyData
                 {
                     ApplyDetails = new ApplyDetails
                     {
-                        ProviderRouteName = ApplicationRouteName,
-                        UKPRN = Ukprn,
-                        OrganisationName = OrganisationName,
-                        ApplicationSubmittedOn = ApplicationSubmittedOn
+                        ProviderRouteName = "Main",
+                        UKPRN = "23456789",
+                        OrganisationName = "Emporium Glorium",
+                        ApplicationSubmittedOn = DateTime.UtcNow
                     }
                 }
             };
 
             _outcomes = new List<ModeratorPageReviewOutcome>();
-            _contact = new Contact { Email = Email};
+            _contact = new Contact { Email = "email@address.com" };
             _request = new GetModeratorOutcomeRequest(_applicationId,_userId);
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
 
-            _expectedOutcomeViewModel = new ModeratorOutcomeViewModel(_application,_userId);
+            _expectedOutcomeViewModel = new ModeratorOutcomeViewModel(_application, _outcomes);
         }
 
 

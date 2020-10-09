@@ -10,7 +10,6 @@ using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Validators;
-using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 {
@@ -19,12 +18,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
     {
         private readonly IModeratorOutcomeOrchestrator _outcomeOrchestrator;
         protected readonly IModeratorOutcomeValidator _validator;
+
         public ModeratorOutcomeController(IModeratorOutcomeOrchestrator outcomeOrchestrator, IModeratorOutcomeValidator validator)
         {
             _outcomeOrchestrator = outcomeOrchestrator;
             _validator = validator;
         }
-
 
         [HttpGet("ModeratorOutcome/{applicationId}")]
         public async Task<IActionResult> ViewOutcome(Guid applicationId)
@@ -35,22 +34,23 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 
             if (viewModel is null)
             {
-                return RedirectToAction("ViewApplication", "ModeratorOverview");
+                return RedirectToAction("Index", "Home");
             }
-            
-            if (viewModel.ModerationStatus == ModerationStatus.Pass || viewModel.ModerationStatus== ModerationStatus.Fail)
+            else if (viewModel.ModerationStatus == ModerationStatus.Pass || viewModel.ModerationStatus == ModerationStatus.Fail)
             {
+                // This is in case the user presses the browser back button on AssessmentComplete
                 return RedirectToAction("AssessmentComplete", "ModeratorOutcome", new { applicationId });
             }
-
-            return View("~/Views/ModeratorOutcome/Application.cshtml", viewModel);
+            else
+            {
+                return View("~/Views/ModeratorOutcome/Application.cshtml", viewModel);
+            }
         }
-
-
 
         [HttpPost("ModeratorOutcome/{applicationId}")]
         public async Task<IActionResult> SubmitOutcome(Guid applicationId, SubmitModeratorOutcomeCommand command)   //MFCMFC RENAME THIS
         {
+            // validate
             var validationResponse = await _validator.Validate(command);
             if (validationResponse.Errors.Any())
             {
@@ -61,23 +61,25 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
             }
 
             var userId = HttpContext.User.UserId();
+
             if (!ModelState.IsValid)
             {
-             
-                var viewModelOutcome = await _outcomeOrchestrator.GetInModerationOutcomeViewModel(new GetModeratorOutcomeRequest(applicationId, userId));
-                viewModelOutcome.OptionPassText = command.OptionPassText;
-                viewModelOutcome.OptionFailText = command.OptionFailText;
-                viewModelOutcome.OptionAskForClarificationText = command.OptionAskForClarificationText;
-                viewModelOutcome.Status = command.Status;
-                return View("~/Views/ModeratorOutcome/Application.cshtml", viewModelOutcome);
+                var viewModel = await _outcomeOrchestrator.GetInModerationOutcomeViewModel(new GetModeratorOutcomeRequest(applicationId, userId));
+                viewModel.OptionPassText = command.OptionPassText;
+                viewModel.OptionFailText = command.OptionFailText;
+                viewModel.OptionAskForClarificationText = command.OptionAskForClarificationText;
+                viewModel.Status = command.Status;
+
+                return View("~/Views/ModeratorOutcome/Application.cshtml", viewModel);
             }
+            else
+            {
+                var request =
+                    new ReviewModeratorOutcomeRequest(applicationId, userId, command.Status, command.ReviewComment);
+                var viewModel = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(request);
 
-            var request =
-                new ReviewModeratorOutcomeRequest(applicationId, userId, command.Status, command.ReviewComment);
-            var viewModel = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(request);
-
-            return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", viewModel);
-
+                return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", viewModel);
+            }
         }
     }
 }

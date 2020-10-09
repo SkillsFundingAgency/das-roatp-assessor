@@ -23,11 +23,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
     public class ModeratorOutcomeControllerTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
+        private ModeratorOutcomeViewModel _outcomeViewModel;
 
         private Mock<IModeratorOutcomeOrchestrator> _mockOrchestrator;
-        private ModeratorOutcomeController _controller;
-        private ModeratorOutcomeViewModel _outcomeViewModel;
         private Mock<IModeratorOutcomeValidator> _mockValidator;
+
+        private ModeratorOutcomeController _controller;
 
         [SetUp]
         public void SetUp()
@@ -101,8 +102,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
             var result = await _controller.ViewOutcome(_applicationId) as RedirectToActionResult;
 
             // assert
-            Assert.AreEqual("ModeratorOverview", result.ControllerName);
-            Assert.AreEqual("ViewApplication", result.ActionName);
+            Assert.AreEqual("Home", result.ControllerName);
+            Assert.AreEqual("Index", result.ActionName);
         }
 
 
@@ -165,11 +166,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
                 Assessor2Name = assessor2DisplayName
             };
 
-            var contact = new Contact
-                { Email = userId, GivenNames = _controller.User.GivenName(), FamilyName = _controller.User.Surname() };
-            var sequences = new List<ModeratorSequence>();
+            var outcomes = new List<ModeratorPageReviewOutcome>();
 
-            return new ModeratorOutcomeViewModel(application, userId);
+            return new ModeratorOutcomeViewModel(application, outcomes);
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
@@ -20,15 +23,17 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string OptionFailText { get; set; }
         public string OptionAskForClarificationText { get; set; }
 
-        public ModeratorOutcomeViewModel(Apply application, string userId)
+        public ModeratorOutcomeViewModel(Apply application, List<ModeratorPageReviewOutcome> outcomes)
         {
             Id = application.Id;
             ApplicationId = application.ApplicationId;
             OrgId = application.OrganisationId;
-            PassCount = 0;
-            FailCount = 0;
+
             ApplicationStatus = application.ApplicationStatus;
             ModerationStatus = application.ModerationStatus;
+
+            PassCount = outcomes?.Count(o => o.Status == ModeratorPageReviewStatus.Pass) ?? 0;
+            FailCount = outcomes?.Count(o => o.Status == ModeratorPageReviewStatus.Fail) ?? 0;
 
             if (application.ApplyData?.ApplyDetails != null)
             {

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -23,18 +21,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<ModeratorOutcomeViewModel> GetInModerationOutcomeViewModel(GetModeratorOutcomeRequest request)
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
-            var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
+            var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId); // TODO: Is this needed?
+            var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, request.UserId);
 
-
-            if (application is null || contact is null)
+            if (application is null || contact is null || savedOutcomes is null)
             {
                 return null;
             }
 
-            var viewmodel = new ModeratorOutcomeViewModel(application, request.UserId);
-
-            var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, request.UserId);
-
+            // Not sure if this check is required. You're going to have Clarification ones in here soon
             var unsetOutcomesCount = savedOutcomes.Count(x =>
                 x.Status != ModeratorPageReviewStatus.Pass && x.Status != ModeratorPageReviewStatus.Fail);
 
@@ -43,12 +38,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            if (!savedOutcomes.Any()) return viewmodel;
-         
-            viewmodel.PassCount = savedOutcomes.Count(x => x.Status == ModeratorPageReviewStatus.Pass);
-            viewmodel.FailCount = savedOutcomes.Count(x => x.Status == ModeratorPageReviewStatus.Fail);
-
-            return viewmodel;
+            return new ModeratorOutcomeViewModel(application, savedOutcomes);
         }
 
         public async Task<ModeratorOutcomeReviewViewModel> GetInModerationOutcomeReviewViewModel(ReviewModeratorOutcomeRequest request)
