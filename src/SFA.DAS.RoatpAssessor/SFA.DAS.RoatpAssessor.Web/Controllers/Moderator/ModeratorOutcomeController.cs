@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Extensions;
@@ -9,7 +8,6 @@ using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Validators;
-using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -86,6 +84,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
             if (command.Status == ModerationStatus.Pass)
                 return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", viewModelConfirmation);
 
+            // this will be removed once APR-1720 and APR-1721 are done
             return View("~/Views/ModeratorOutcome/AreYouSureHoldingPage.cshtml", viewModelConfirmation);
 
         }
@@ -94,12 +93,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
         public async Task<IActionResult> SubmitModeratorOutcomeConfirmation(Guid applicationId, string confirmStatus, string reviewComment, string status)
         {
 
-           
-            // put in a validator that takes the pass/fail/askforclarifiction status)
-            if (string.IsNullOrEmpty(confirmStatus))
+            var validationResponse = await _validator.Validate(new SubmitModeratorOutcomeConfirmationCommand(status, confirmStatus));
+            if (validationResponse.Errors.Any())
             {
-                if (status == ModerationStatus.Pass)
-                    ModelState.AddModelError("ConfirmStatus", "Select if you're sure you want to pass this application");
+                foreach (var error in validationResponse.Errors)
+                {
+                    ModelState.AddModelError(error.Field, error.ErrorMessage);
+                }
             }
 
             var userId = HttpContext.User.UserId();
@@ -123,6 +123,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 
             if (!submitSuccessful)
             {
+                _logger.LogInformation($"Unable to save moderation outcome for applicationId: [{applicationId}]");
                 ModelState.AddModelError(string.Empty, "Unable to save moderation outcome as this time");
                 return await GoToErrorView(applicationId, reviewComment, status, userId);
             }
@@ -135,13 +136,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 
         private async Task<IActionResult> GoToErrorView(Guid applicationId, string reviewComment, string status, string userId)
         {
-            var vm = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(
-                new ReviewModeratorOutcomeRequest(applicationId, userId, status, reviewComment));
+
 
             if (status == "Pass")
-                return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", vm);
-
-
+            {
+                var viewModelPass = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(
+                    new ReviewModeratorOutcomeRequest(applicationId, userId, status, reviewComment));
+                return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", viewModelPass);
+            }
 
             var viewModel =
                 await _outcomeOrchestrator.GetInModerationOutcomeViewModel(

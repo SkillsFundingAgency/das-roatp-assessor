@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using SFA.DAS.RoatpAssessor.Web.Helpers;
@@ -15,6 +16,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
         private const string TooManyWords = "Internal comments must be 150 words or less";
         private const string FailCommentRequired = "Enter internal comments";
         private const string FailTooManyWords = "Internal comments must be 150 words or less";
+
+        private const string EnterAPassConfirmation = "Select if you're sure you want to pass this application";
 
         public async Task<ValidationResponse> Validate(SubmitModeratorOutcomeCommand command)
         {
@@ -70,6 +73,28 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
 
             return await Task.FromResult(validationResponse);
         }
+
+        public async Task<ValidationResponse> Validate(SubmitModeratorOutcomeConfirmationCommand command)
+        {
+            var validationResponse = new ValidationResponse
+            {
+                Errors = new List<ValidationErrorDetail>()
+            };
+
+            if (string.IsNullOrEmpty(command.ConfirmStatus))
+            {
+                if (command.Status == ModerationStatus.Pass)
+                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), EnterAPassConfirmation));
+                else
+                {
+                    // will be removed once APR-1720 and APR-1721 are complete
+                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), "Pick a choice"));
+
+                }
+            }
+
+            return await Task.FromResult(validationResponse);
+        }
     }
     
 
@@ -78,5 +103,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
     public interface IModeratorOutcomeValidator
     {
         Task<ValidationResponse> Validate(SubmitModeratorOutcomeCommand command);
+        Task<ValidationResponse> Validate(SubmitModeratorOutcomeConfirmationCommand command);
     }
 }

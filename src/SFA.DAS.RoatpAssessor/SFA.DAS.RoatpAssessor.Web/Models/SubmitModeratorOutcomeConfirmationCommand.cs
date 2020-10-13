@@ -14,7 +14,6 @@
         {
             Status = status;
             ConfirmStatus = confirmStatus;
-
         }
     }
 }
