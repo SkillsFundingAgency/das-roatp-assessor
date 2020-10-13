@@ -1,28 +1,34 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Validators;
+using SFA.DAS.RoatpAssessor.Web.ViewModels;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 {
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
-    public class ModeratorOutcomeController: Controller
+    public class ModeratorOutcomeController : Controller
     {
         private readonly IModeratorOutcomeOrchestrator _outcomeOrchestrator;
         protected readonly IModeratorOutcomeValidator _validator;
-
-        public ModeratorOutcomeController(IModeratorOutcomeOrchestrator outcomeOrchestrator, IModeratorOutcomeValidator validator)
+        protected readonly IRoatpModerationApiClient _moderationApiClient;
+        protected readonly ILogger<ModeratorOutcomeController> _logger;
+        public ModeratorOutcomeController(IModeratorOutcomeOrchestrator outcomeOrchestrator, IModeratorOutcomeValidator validator, IRoatpModerationApiClient moderationApiClient, ILogger<ModeratorOutcomeController> logger)
         {
             _outcomeOrchestrator = outcomeOrchestrator;
             _validator = validator;
+            _moderationApiClient = moderationApiClient;
+            _logger = logger;
         }
 
         [HttpGet("ModeratorOutcome/{applicationId}")]
@@ -48,7 +54,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
         }
 
         [HttpPost("ModeratorOutcome/{applicationId}")]
-        public async Task<IActionResult> SubmitOutcome(Guid applicationId, SubmitModeratorOutcomeCommand command)   //MFCMFC RENAME THIS
+        public async Task<IActionResult> SubmitModeratorOutcome(Guid applicationId, SubmitModeratorOutcomeCommand command)   //MFCMFC RENAME THIS
         {
             // validate
             var validationResponse = await _validator.Validate(command);
@@ -72,14 +78,76 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 
                 return View("~/Views/ModeratorOutcome/Application.cshtml", viewModel);
             }
-            else
-            {
-                var request =
-                    new ReviewModeratorOutcomeRequest(applicationId, userId, command.Status, command.ReviewComment);
-                var viewModel = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(request);
 
-                return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", viewModel);
+
+            var viewModelConfirmation = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(
+                new ReviewModeratorOutcomeRequest(applicationId, userId, command.Status, command.ReviewComment));
+
+            if (command.Status == ModerationStatus.Pass)
+                return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", viewModelConfirmation);
+
+            return View("~/Views/ModeratorOutcome/AreYouSureHoldingPage.cshtml", viewModelConfirmation);
+
+        }
+
+        [HttpPost("ModeratorOutcomeConfirmation/{applicationId}")]
+        public async Task<IActionResult> SubmitModeratorOutcomeConfirmation(Guid applicationId, string confirmStatus, string reviewComment, string status)
+        {
+
+           
+            // put in a validator that takes the pass/fail/askforclarifiction status)
+            if (string.IsNullOrEmpty(confirmStatus))
+            {
+                if (status == ModerationStatus.Pass)
+                    ModelState.AddModelError("ConfirmStatus", "Select if you're sure you want to pass this application");
             }
+
+            var userId = HttpContext.User.UserId();
+
+            if (!ModelState.IsValid)
+            {
+                return await GoToErrorView(applicationId, reviewComment, status, userId);
+            }
+
+            if (confirmStatus == "No")
+            {
+                var viewModel = await _outcomeOrchestrator.GetInModerationOutcomeViewModel(new GetModeratorOutcomeRequest(applicationId, userId));
+                viewModel.Status = status;   
+                viewModel.OptionPassText = reviewComment;
+                return View("~/Views/ModeratorOutcome/Application.cshtml", viewModel);
+            }
+
+            var userName = HttpContext.User.UserDisplayName();
+
+            var submitSuccessful = await _moderationApiClient.SubmitModerationOutcome(applicationId, userId, userName, status, reviewComment);
+
+            if (!submitSuccessful)
+            {
+                ModelState.AddModelError(string.Empty, "Unable to save moderation outcome as this time");
+                return await GoToErrorView(applicationId, reviewComment, status, userId);
+            }
+
+            var viewModelModerationOutcomeSaved = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(
+                new ReviewModeratorOutcomeRequest(applicationId, userId, status, reviewComment));
+            return View("~/Views/ModeratorOutcome/ModerationCompleted.cshtml", viewModelModerationOutcomeSaved);
+            
+        }
+
+        private async Task<IActionResult> GoToErrorView(Guid applicationId, string reviewComment, string status, string userId)
+        {
+            var vm = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(
+                new ReviewModeratorOutcomeRequest(applicationId, userId, status, reviewComment));
+
+            if (status == "Pass")
+                return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", vm);
+
+
+
+            var viewModel =
+                await _outcomeOrchestrator.GetInModerationOutcomeViewModel(
+                    new GetModeratorOutcomeRequest(applicationId, userId));
+
+            return View("~/Views/ModeratorOutcome/Application.cshtml", viewModel);
         }
     }
 }

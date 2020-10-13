@@ -45,7 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         {
             var viewModel = new ModeratorOutcomeReviewViewModel
             {
-                Status = request.Status, ReviewComment = request.ReviewComment
+                Status = request.Status, ReviewComment = request.ReviewComment, ApplicationId =  request.ApplicationId
             };
 
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);

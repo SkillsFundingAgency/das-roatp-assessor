@@ -1,17 +1,43 @@
-﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorOutcomeReviewViewModel
+﻿@using Microsoft.AspNetCore.Authorization.Infrastructure
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorOutcomeReviewViewModel
+@{
+    ViewBag.Title = "Moderation outcome";
+    Layout = "_Layout";
+}
 
-
+<partial name="~/Views/ModeratorOutcome/_Breadcrumb.cshtml" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
-<div class="govuk-grid-row">
-<div class="govuk-grid-column-two-thirds">
-    HOLDING PAGE
-</div>
-<br/>
-<div>
-    Status: @Model.Status<br/>
-    Comments: @Model.ReviewComment
-</div>
-</div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
+            
+            @if (Model.Status == "Pass")
+            {
+                <h1 class="govuk-heading-xl">Are you sure you want to pass this application?</h1>
+            }
+            else
+            {
+                <h1 class="govuk-heading-xl">Are you sure you want to [@Model.Status] this application?</h1>
+            }
+
+            <partial name="~/Views/ModeratorOutcome/_ApplicationSummary.cshtml" for="@Model" />
+        </div>
+    </div>
+    
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <form class="js-disable-on-submit" method="post" asp-action="SubmitModeratorOutcomeConfirmation" asp-controller="ModeratorOutcome">
+                    <input type="hidden" asp-for="ApplicationId" />
+                    <input type="hidden" asp-for="ReviewComment"/>
+                    <input type="hidden" asp-for="Status"/>
+                    <partial name="~/Views/ModeratorOutcome/_ApprovalSectionPass.cshtml" for="@Model" />
+
+                    <button class="govuk-button" type="submit">Save and continue</button>
+                </form>
+            </div>
+        </div>
+    
 </main>

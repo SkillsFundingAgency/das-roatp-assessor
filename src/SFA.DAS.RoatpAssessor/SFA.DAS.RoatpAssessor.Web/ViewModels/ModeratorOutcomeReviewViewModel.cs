@@ -2,16 +2,13 @@
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
-    public class ModeratorOutcomeReviewViewModel
+    public class ModeratorOutcomeReviewViewModel: OrganisationDetailsViewModel
     {
-        public string ApplicationRoute { get; set; }
+        public Guid ApplicationId { get; set; }
 
-        public string Ukprn { get; set; }
-        public string ApplyLegalName { get; set; }
-        public DateTime? SubmittedDate { get; set; }
         public string Status { get; set; }
 
         public string ReviewComment { get; set; }
-        public string ApplicantEmailAddress { get; set; }
+        public string ConfirmStatus { get; set; }
     }
 }

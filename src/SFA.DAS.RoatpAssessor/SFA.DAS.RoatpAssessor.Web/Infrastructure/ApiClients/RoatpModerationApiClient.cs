@@ -95,6 +95,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             });
         }
 
+        public async Task<bool> SubmitModerationOutcome(Guid applicationId, string userId, string username, string status, string comment)
+        {
+            var result = await Post($"/Moderator/Applications/{applicationId}/SubmitOutcome", new SubmitOutcomeCommand
+            {
+                UserId = userId,
+                UserName = username,
+                Status =status,
+                Comment = comment
+            });
+
+            return result == HttpStatusCode.OK;
+        }
+
         public async Task<List<ModeratorPageReviewOutcome>> GetAllModeratorPageReviewOutcomes(Guid applicationId, string userId)
         {
             return await Post<GetAllModeratorPageReviewOutcomesRequest, List<ModeratorPageReviewOutcome>>($"/Moderator/Applications/{applicationId}/GetAllPageReviewOutcomes", new GetAllModeratorPageReviewOutcomesRequest

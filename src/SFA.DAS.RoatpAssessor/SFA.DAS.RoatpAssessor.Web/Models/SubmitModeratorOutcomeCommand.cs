@@ -41,7 +41,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
 
         public SubmitModeratorOutcomeCommand()
         {
-
         }
 
         public SubmitModeratorOutcomeCommand(ModeratorOutcomeViewModel viewModel)

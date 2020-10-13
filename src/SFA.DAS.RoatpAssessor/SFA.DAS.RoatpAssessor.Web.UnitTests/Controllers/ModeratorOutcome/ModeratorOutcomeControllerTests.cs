@@ -120,7 +120,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
                     }}
                 );
 
-            var result = await _controller.SubmitOutcome(_applicationId, command) as ViewResult;
+            var result = await _controller.SubmitModeratorOutcome(_applicationId, command) as ViewResult;
             Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
             _mockOrchestrator.Verify(x=>x.GetInModerationOutcomeViewModel(It.IsAny<GetModeratorOutcomeRequest>()),Times.Once);
         }
@@ -142,7 +142,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
             _mockOrchestrator
                 .Setup(x => x.GetInModerationOutcomeReviewViewModel(It.IsAny<ReviewModeratorOutcomeRequest>()))
                 .ReturnsAsync(outcomeReviewViewModel);
-            var result = await _controller.SubmitOutcome(_applicationId, command) as ViewResult;
+            var result = await _controller.SubmitModeratorOutcome(_applicationId, command) as ViewResult;
             Assert.That(result.Model, Is.SameAs(outcomeReviewViewModel));
             _mockOrchestrator.Verify(x => x.GetInModerationOutcomeReviewViewModel(It.IsAny<ReviewModeratorOutcomeRequest>()), Times.Once);
         }
