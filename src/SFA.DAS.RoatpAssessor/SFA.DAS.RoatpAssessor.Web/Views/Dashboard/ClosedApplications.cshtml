@@ -36,6 +36,7 @@
                                     <th class="govuk-table__header" scope="col">Provider route</th>
                                     <th class="govuk-table__header" scope="col">Application submitted</th>
                                     <th class="govuk-table__header" scope="col">Outcome made date</th>
+                                    <th class="govuk-table__header" scope="col">Moderator</th>
                                     <th class="govuk-table__header" scope="col">Outcome</th>
                                 </tr>
                             </thead>
@@ -61,11 +62,14 @@
                                     <td class="govuk-table__cell" data-label="Outcome made date">
                                         @item.OutcomeDate.ToSfaShortDateString()
                                     </td>
+                                    <td class="govuk-table__cell" data-label="Moderator">
+                                        @item.ModeratorName
+                                    </td>
                                     <td class="govuk-table__cell" data-label="Outcome">
                                         @{
                                             var cssModifierClassName = string.Empty;
 
-                                            if("pass".Equals(item.OutcomeStatus, StringComparison.InvariantCultureIgnoreCase))
+                                            if ("pass".Equals(item.OutcomeStatus, StringComparison.InvariantCultureIgnoreCase))
                                             {
                                                 cssModifierClassName = "app-task-list__tag das-tag das-tag--solid-green";
                                             }
