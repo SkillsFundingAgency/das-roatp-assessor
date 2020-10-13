@@ -90,10 +90,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
         }
 
         [HttpPost("ModeratorOutcomeConfirmation/{applicationId}")]
-        public async Task<IActionResult> SubmitModeratorOutcomeConfirmation(Guid applicationId, string confirmStatus, string reviewComment, string status)
+        public async Task<IActionResult> SubmitModeratorOutcomeConfirmation(Guid applicationId,  string reviewComment, SubmitModeratorOutcomeConfirmationCommand command)
         {
 
-            var validationResponse = await _validator.Validate(new SubmitModeratorOutcomeConfirmationCommand(status, confirmStatus));
+            var validationResponse = await _validator.Validate(command);
             if (validationResponse.Errors.Any())
             {
                 foreach (var error in validationResponse.Errors)
@@ -106,30 +106,30 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 
             if (!ModelState.IsValid)
             {
-                return await GoToErrorView(applicationId, reviewComment, status, userId);
+                return await GoToErrorView(applicationId, reviewComment, command.Status, userId);
             }
 
-            if (confirmStatus == "No")
+            if (command.ConfirmStatus == "No")
             {
                 var viewModel = await _outcomeOrchestrator.GetInModerationOutcomeViewModel(new GetModeratorOutcomeRequest(applicationId, userId));
-                viewModel.Status = status;   
+                viewModel.Status = command.Status;   
                 viewModel.OptionPassText = reviewComment;
                 return View("~/Views/ModeratorOutcome/Application.cshtml", viewModel);
             }
 
             var userName = HttpContext.User.UserDisplayName();
 
-            var submitSuccessful = await _moderationApiClient.SubmitModerationOutcome(applicationId, userId, userName, status, reviewComment);
+            var submitSuccessful = await _moderationApiClient.SubmitModerationOutcome(applicationId, userId, userName, command.Status, reviewComment);
 
             if (!submitSuccessful)
             {
                 _logger.LogInformation($"Unable to save moderation outcome for applicationId: [{applicationId}]");
                 ModelState.AddModelError(string.Empty, "Unable to save moderation outcome as this time");
-                return await GoToErrorView(applicationId, reviewComment, status, userId);
+                return await GoToErrorView(applicationId, reviewComment, command.Status, userId);
             }
 
             var viewModelModerationOutcomeSaved = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(
-                new ReviewModeratorOutcomeRequest(applicationId, userId, status, reviewComment));
+                new ReviewModeratorOutcomeRequest(applicationId, userId, command.Status, reviewComment));
             return View("~/Views/ModeratorOutcome/ModerationCompleted.cshtml", viewModelModerationOutcomeSaved);
             
         }

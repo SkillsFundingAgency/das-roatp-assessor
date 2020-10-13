@@ -78,6 +78,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
 
             _expectedViewModel = new ModeratorOutcomeReviewViewModel
             {
+                ApplicationId = _applicationId,
                 Status = Status,
                 ApplicantEmailAddress = Email,
                 Ukprn = Ukprn,
