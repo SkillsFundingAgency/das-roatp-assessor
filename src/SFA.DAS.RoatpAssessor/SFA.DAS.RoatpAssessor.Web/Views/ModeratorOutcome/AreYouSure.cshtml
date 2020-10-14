@@ -12,10 +12,14 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
-            
+
             @if (Model.Status == "Pass")
             {
                 <h1 class="govuk-heading-xl">Are you sure you want to pass this application?</h1>
+            }
+            else if (Model.Status == "Fail")
+            {
+                <h1 class="govuk-heading-xl">Are you sure you want to fail this application?</h1>
             }
             else
             {
@@ -33,7 +37,7 @@
                     <input type="hidden" asp-for="ApplicationId" />
                     <input type="hidden" asp-for="ReviewComment"/>
                     <input type="hidden" asp-for="Status"/>
-                    <partial name="~/Views/ModeratorOutcome/_ApprovalSectionPass.cshtml" for="@Model" />
+                    <partial name="~/Views/ModeratorOutcome/_ApprovalSectionYesNo.cshtml" for="@Model" />
 
                     <button class="govuk-button" type="submit">Save and continue</button>
                 </form>

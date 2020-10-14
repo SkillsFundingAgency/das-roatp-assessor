@@ -11,6 +11,7 @@ using SFA.DAS.RoatpAssessor.Web.Validators;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 {
@@ -81,7 +82,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
             var viewModelConfirmation = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(
                 new ReviewModeratorOutcomeRequest(applicationId, userId, command.Status, command.ReviewComment));
 
-            if (command.Status == ModerationStatus.Pass)
+            if (command.Status == ModerationStatus.Pass || command.Status == ModerationStatus.Fail)
                 return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", viewModelConfirmation);
 
             // this will be removed once APR-1720 and APR-1721 are done
@@ -113,7 +114,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
             {
                 var viewModel = await _outcomeOrchestrator.GetInModerationOutcomeViewModel(new GetModeratorOutcomeRequest(applicationId, userId));
                 viewModel.Status = command.Status;   
-                viewModel.OptionPassText = reviewComment;
+                switch (command.Status)
+                {
+                    case "Pass":
+                        viewModel.OptionPassText = reviewComment;
+                        break;
+                    case "Fail":
+                        viewModel.OptionFailText = reviewComment;
+                        break;
+                }
+
                 return View("~/Views/ModeratorOutcome/Application.cshtml", viewModel);
             }
 
