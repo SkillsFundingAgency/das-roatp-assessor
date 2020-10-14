@@ -167,11 +167,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
             _mockOrchestrator.Verify(x => x.GetInModerationOutcomeViewModel(It.IsAny<GetModeratorOutcomeRequest>()), Times.Once);
         }
 
-
         [Test]
         public async Task Outcome_confirmation_redirect_back_to_application_when_confirm_status_is_No()
         {
-            var command = new SubmitModeratorOutcomeConfirmationCommand("", "No");
+            var command = new SubmitModeratorOutcomeConfirmationCommand(string.Empty, "No");
             _mockValidator.Setup(x => x.Validate(command))
                 .ReturnsAsync(new ValidationResponse()
                 );
@@ -181,11 +180,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
             _mockOrchestrator.Verify(x => x.GetInModerationOutcomeViewModel(It.IsAny<GetModeratorOutcomeRequest>()), Times.Once);
         }
 
-
         [Test]
         public async Task Outcome_confirmation_redirect_back_to_application_when_save_is_unsuccessful()
         {
-            var command = new SubmitModeratorOutcomeConfirmationCommand("", "Yes");
+            var command = new SubmitModeratorOutcomeConfirmationCommand(string.Empty, "Yes");
             _mockValidator.Setup(x => x.Validate(command))
                 .ReturnsAsync(new ValidationResponse()
                 );
@@ -204,7 +202,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
         [Test]
         public async Task Outcome_confirmation_directs_to_saved_page_when_save_is_successful()
         {
-            var command = new SubmitModeratorOutcomeConfirmationCommand("", "Yes");
+            var command = new SubmitModeratorOutcomeConfirmationCommand(string.Empty, "Yes");
             _mockValidator.Setup(x => x.Validate(command))
                 .ReturnsAsync(new ValidationResponse()
                 );

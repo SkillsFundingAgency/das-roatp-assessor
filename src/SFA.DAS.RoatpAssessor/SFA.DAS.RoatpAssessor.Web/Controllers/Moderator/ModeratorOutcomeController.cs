@@ -123,7 +123,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 
             if (!submitSuccessful)
             {
-                _logger.LogInformation($"Unable to save moderation outcome for applicationId: [{applicationId}]");
+                _logger.LogError($"Unable to save moderation outcome for applicationId: [{applicationId}]");
                 ModelState.AddModelError(string.Empty, "Unable to save moderation outcome as this time");
                 return await GoToErrorView(applicationId, reviewComment, command.Status, userId);
             }
