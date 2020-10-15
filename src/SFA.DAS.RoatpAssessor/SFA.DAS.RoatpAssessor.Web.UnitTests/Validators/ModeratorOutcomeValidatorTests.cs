@@ -123,7 +123,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
         }
 
         [Test]
-        public async Task When_confirm_status_is_not_provided_then_an_error_is_returned()
+        public async Task When_confirm_status_is_not_provided_and_status_not_provided_then_an_error_is_returned()
         {
             _outcomeConfirmationCommand.ConfirmStatus = "";
 
@@ -131,6 +131,30 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
 
             Assert.IsFalse(response.IsValid);
             Assert.AreEqual("Pick a choice", response.Errors.First().ErrorMessage);
+            Assert.AreEqual("ConfirmStatus", response.Errors.First().Field);
+        }
+
+        [Test]
+        public async Task When_confirm_status_is_not_provided_and_status_is_fail_then_an_error_is_returned()
+        {
+            _outcomeConfirmationCommand.ConfirmStatus = "";
+            _outcomeConfirmationCommand.Status = ModerationConfirmationStatus.Fail;
+            var response = await _validator.Validate(_outcomeConfirmationCommand);
+
+            Assert.IsFalse(response.IsValid);
+            Assert.AreEqual("Select if you're sure you want to fail this application", response.Errors.First().ErrorMessage);
+            Assert.AreEqual("ConfirmStatus", response.Errors.First().Field);
+        }
+
+        [Test]
+        public async Task When_confirm_status_is_not_provided_and_status_is_ask_for_clarification_then_an_error_is_returned()
+        {
+            _outcomeConfirmationCommand.ConfirmStatus = "";
+            _outcomeConfirmationCommand.Status = ModerationConfirmationStatus.AskForClarification;
+            var response = await _validator.Validate(_outcomeConfirmationCommand);
+
+            Assert.IsFalse(response.IsValid);
+            Assert.AreEqual("Select if you're sure you want to ask for clarification", response.Errors.First().ErrorMessage);
             Assert.AreEqual("ConfirmStatus", response.Errors.First().Field);
         }
 

@@ -169,7 +169,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
         [Test]
         public async Task Outcome_confirmation_redirect_back_to_application_when_status_is_pass_and_confirm_status_is_No()
         {
-            var command = new SubmitModeratorOutcomeConfirmationCommand("Pass", "No");
+            var command = new SubmitModeratorOutcomeConfirmationCommand(ModerationConfirmationStatus.Pass, "No");
             _mockValidator.Setup(x => x.Validate(command))
                 .ReturnsAsync(new ValidationResponse()
                 );
@@ -184,7 +184,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
         [Test]
         public async Task Outcome_confirmation_redirect_back_to_application_when_status_is_fail_and_confirm_status_is_No()
         {
-            var command = new SubmitModeratorOutcomeConfirmationCommand("Fail", "No");
+            var command = new SubmitModeratorOutcomeConfirmationCommand(ModerationConfirmationStatus.Fail, "No");
             _mockValidator.Setup(x => x.Validate(command))
                 .ReturnsAsync(new ValidationResponse()
                 );
@@ -192,6 +192,21 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
             var reviewComment = "comment goes here";
             var result = await _controller.SubmitModeratorOutcomeConfirmation(_applicationId, reviewComment, command) as ViewResult;
             _outcomeViewModel.OptionFailText = reviewComment;
+            Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
+            _mockOrchestrator.Verify(x => x.GetInModerationOutcomeViewModel(It.IsAny<GetModeratorOutcomeRequest>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Outcome_confirmation_redirect_back_to_application_when_status_is_ask_for_clarification_and_confirm_status_is_No()
+        {
+            var command = new SubmitModeratorOutcomeConfirmationCommand(ModerationConfirmationStatus.AskForClarification, "No");
+            _mockValidator.Setup(x => x.Validate(command))
+                .ReturnsAsync(new ValidationResponse()
+                );
+
+            var reviewComment = "comment goes here";
+            var result = await _controller.SubmitModeratorOutcomeConfirmation(_applicationId, reviewComment, command) as ViewResult;
+            _outcomeViewModel.OptionAskForClarificationText = reviewComment;
             Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
             _mockOrchestrator.Verify(x => x.GetInModerationOutcomeViewModel(It.IsAny<GetModeratorOutcomeRequest>()), Times.Once);
         }

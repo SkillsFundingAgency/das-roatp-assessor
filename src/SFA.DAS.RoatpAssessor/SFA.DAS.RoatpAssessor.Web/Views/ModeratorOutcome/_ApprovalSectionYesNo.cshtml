@@ -1,16 +1,21 @@
-﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorOutcomeReviewViewModel
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorOutcomeReviewViewModel
 
 <div class="govuk-warning-text">
     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
     <strong class="govuk-warning-text__text">
         <span class="govuk-warning-text__assistive">Warning</span>
-        @if (Model.Status == "Pass")
+        @if (Model.Status == ModerationConfirmationStatus.Pass)
         {
             @Html.Raw("This application will pass and go to governance")
         }
-        @if (Model.Status == "Fail")
+        @if (Model.Status == ModerationConfirmationStatus.Fail)
         {
             @Html.Raw("This application will fail and go to governance")
+        }
+        @if (Model.Status == ModerationConfirmationStatus.AskForClarification)
+        {
+            @Html.Raw("Email <a href='mailto:" + @Model.ApplicantEmailAddress + "'>" + @Model.ApplicantEmailAddress + "</a> to ask for clarification.");
         }
         </strong>
 </div>

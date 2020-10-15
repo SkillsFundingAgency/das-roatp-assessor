@@ -18,7 +18,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
         private const string FailTooManyWords = "Internal comments must be 150 words or less";
 
         private const string EnterAPassConfirmation = "Select if you're sure you want to pass this application";
-
+        private const string EnterAFailConfirmation = "Select if you're sure you want to fail this application";
+        private const string EnterAnAskForClarificationConfirmation = "Select if you're sure you want to ask for clarification";
         public async Task<ValidationResponse> Validate(SubmitModeratorOutcomeCommand command)
         {
             var validationResponse = new ValidationResponse
@@ -81,16 +82,22 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                 Errors = new List<ValidationErrorDetail>()
             };
 
-            if (string.IsNullOrEmpty(command.ConfirmStatus))
-            {
-                if (command.Status == ModerationStatus.Pass)
-                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), EnterAPassConfirmation));
-                else
-                {
-                    // will be removed once APR-1720 and APR-1721 are complete
-                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), "Pick a choice"));
+            if (!string.IsNullOrEmpty(command.ConfirmStatus)) return await Task.FromResult(validationResponse);
 
-                }
+            switch (command.Status)
+            {
+                case ModerationConfirmationStatus.Pass:
+                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), EnterAPassConfirmation));
+                    break;
+                case ModerationConfirmationStatus.Fail:
+                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), EnterAFailConfirmation));
+                    break;
+                case ModerationConfirmationStatus.AskForClarification:
+                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), EnterAnAskForClarificationConfirmation));
+                    break;
+                default:
+                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), "Pick a choice"));
+                    break;
             }
 
             return await Task.FromResult(validationResponse);

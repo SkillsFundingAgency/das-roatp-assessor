@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Authorization.Infrastructure
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorOutcomeReviewViewModel
 @{
     ViewBag.Title = "Moderation outcome";
@@ -13,17 +14,19 @@
         <div class="govuk-grid-column-two-thirds">
             <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
 
-            @if (Model.Status == "Pass")
+            @if (Model.Status == ModerationConfirmationStatus.Pass)
             {
                 <h1 class="govuk-heading-xl">Are you sure you want to pass this application?</h1>
             }
-            else if (Model.Status == "Fail")
+            
+            @if (Model.Status == ModerationConfirmationStatus.Fail)
             {
                 <h1 class="govuk-heading-xl">Are you sure you want to fail this application?</h1>
             }
-            else
+            
+            @if (Model.Status == ModerationConfirmationStatus.AskForClarification)
             {
-                <h1 class="govuk-heading-xl">Are you sure you want to [@Model.Status] this application?</h1>
+                <h1 class="govuk-heading-xl">Are you sure you want to ask for clarification?</h1>
             }
 
             <partial name="~/Views/ModeratorOutcome/_ApplicationSummary.cshtml" for="@Model" />

@@ -82,11 +82,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
             var viewModelConfirmation = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(
                 new ReviewModeratorOutcomeRequest(applicationId, userId, command.Status, command.ReviewComment));
 
-            if (command.Status == ModerationStatus.Pass || command.Status == ModerationStatus.Fail)
-                return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", viewModelConfirmation);
-
-            // this will be removed once APR-1720 and APR-1721 are done
-            return View("~/Views/ModeratorOutcome/AreYouSureHoldingPage.cshtml", viewModelConfirmation);
+            return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", viewModelConfirmation);
 
         }
 
@@ -116,11 +112,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
                 viewModel.Status = command.Status;   
                 switch (command.Status)
                 {
-                    case "Pass":
+                    case ModerationConfirmationStatus.Pass:
                         viewModel.OptionPassText = reviewComment;
                         break;
-                    case "Fail":
+                    case ModerationConfirmationStatus.Fail:
                         viewModel.OptionFailText = reviewComment;
+                        break;
+                    case ModerationConfirmationStatus.AskForClarification:
+                        viewModel.OptionAskForClarificationText = reviewComment;
                         break;
                 }
 
@@ -129,7 +128,22 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 
             var userName = HttpContext.User.UserDisplayName();
 
-            var submitSuccessful = await _moderationApiClient.SubmitModerationOutcome(applicationId, userId, userName, command.Status, reviewComment);
+            var submittedStatus = ModerationStatus.InProgress;
+
+            switch (command.Status)
+            {
+                case ModerationConfirmationStatus.Pass:
+                    submittedStatus = ModerationStatus.Pass;
+                    break;
+                case ModerationConfirmationStatus.Fail:
+                    submittedStatus = ModerationStatus.Fail;
+                    break;
+                case ModerationConfirmationStatus.AskForClarification:
+                    submittedStatus = ModerationStatus.ClarificationSent;
+                    break;
+            }
+
+            var submitSuccessful = await _moderationApiClient.SubmitModerationOutcome(applicationId, userId, userName, submittedStatus, reviewComment);
 
             if (!submitSuccessful)
             {
@@ -148,7 +162,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
         {
 
 
-            if (status == "Pass")
+            if (status == ModerationConfirmationStatus.Pass || status == ModerationConfirmationStatus.Fail || status == ModerationConfirmationStatus.AskForClarification)
             {
                 var viewModelPass = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(
                     new ReviewModeratorOutcomeRequest(applicationId, userId, status, reviewComment));
