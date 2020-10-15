@@ -36,16 +36,17 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationDashboardOrc
         public async Task When_getting_in_clarification_applications_then_the_application_summary_is_returned()
         {
             var userId = _user.UserId();
-            var summary = new ApplicationCounts { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6 };
+            var summary = new ApplicationCounts { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6, ClosedApplications = 1 };
 
             _applicationApiClient.Setup(x => x.GetApplicationCounts(userId)).ReturnsAsync(summary);
 
             var response = await _orchestrator.GetInClarificationApplicationsViewModel(userId);
 
             Assert.AreEqual(summary.NewApplications, response.NewApplications);
+            Assert.AreEqual(summary.InProgressApplications, response.InProgressApplications);
             Assert.AreEqual(summary.ModerationApplications, response.ModerationApplications);
             Assert.AreEqual(summary.ClarificationApplications, response.ClarificationApplications);
-            Assert.AreEqual(summary.InProgressApplications, response.InProgressApplications);
+            Assert.AreEqual(summary.ClosedApplications, response.ClosedApplications);
         }
 
         [Test]

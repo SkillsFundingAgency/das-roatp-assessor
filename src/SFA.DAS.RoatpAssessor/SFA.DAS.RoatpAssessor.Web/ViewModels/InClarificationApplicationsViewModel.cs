@@ -4,7 +4,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
     public class InClarificationApplicationsViewModel : DashboardViewModel
     {
-        public InClarificationApplicationsViewModel(string currentUser, int newApplications, int inProgressApplications, int moderationApplications, int clarificationApplications) : base("InClarificationApplications", newApplications, inProgressApplications, moderationApplications, clarificationApplications)
+        public InClarificationApplicationsViewModel(string currentUser, int newApplications, int inProgressApplications, int moderationApplications, int clarificationApplications, int closedApplications)
+            : base("InClarificationApplications", newApplications, inProgressApplications, moderationApplications, clarificationApplications, closedApplications)
         {
             CurrentUser = currentUser;
             Applications = new List<ClarificationApplicationViewModel>();

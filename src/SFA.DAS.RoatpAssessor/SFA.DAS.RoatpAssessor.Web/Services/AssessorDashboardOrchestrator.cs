@@ -24,7 +24,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
             var applications = await _applicationApiClient.GetNewApplications(userId);
 
-            var viewModel = new NewApplicationsViewModel(applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
+            var viewModel = new NewApplicationsViewModel(applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications);
             AddApplicationsToViewModel(viewModel, applications);
             return viewModel;
         }
@@ -39,7 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
             var applications = await _applicationApiClient.GetInProgressApplications(userId);
 
-            var viewModel = new InProgressApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
+            var viewModel = new InProgressApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications);
             AddApplicationsToViewModel(viewModel, applications);
             return viewModel;
         }
