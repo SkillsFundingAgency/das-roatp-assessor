@@ -2,13 +2,14 @@
 {
     public abstract class DashboardViewModel
     {
-        protected DashboardViewModel(string currentPage, int newApplications, int inProgressApplications, int moderationApplications, int clarificationApplications)
+        protected DashboardViewModel(string currentPage, int newApplications, int inProgressApplications, int moderationApplications, int clarificationApplications, int closedApplications)
         {
             CurrentPage = currentPage;
             NewApplications = newApplications;
             InProgressApplications = inProgressApplications;
             ModerationApplications = moderationApplications;
             ClarificationApplications = clarificationApplications;
+            ClosedApplications = closedApplications;
         }
 
         public string CurrentPage { get; }
@@ -16,5 +17,6 @@
         public int InProgressApplications { get; }
         public int ModerationApplications { get; }
         public int ClarificationApplications { get; }
+        public int ClosedApplications { get; }
     }
 }
