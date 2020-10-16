@@ -1,0 +1,96 @@
+﻿@using SFA.DAS.AdminService.Common.Extensions
+
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ClosedApplicationsViewModel
+@{
+    ViewBag.Title = "Applications - Assessor";
+    Layout = "_Layout";
+}
+
+<partial name="~/Views/Dashboard/_Breadcrumb.cshtml" />
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl">
+                RoATP assessor applications
+            </h1>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-tabs">
+
+                @{ await Html.RenderPartialAsync("DashboardNavigation.cshtml"); }
+
+                <div class="govuk-tabs__panel">
+                    @if (Model.Applications != null && Model.Applications.Any())
+                    {
+                        <h2 class="govuk-heading-l">Outcome</h2>
+                        <table class="govuk-table das-table--condensed das-table--responsive-wide">
+                            <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col">Organisation name</th>
+                                    <th class="govuk-table__header" scope="col">UKPRN</th>
+                                    <th class="govuk-table__header" scope="col">Application reference number</th>
+                                    <th class="govuk-table__header" scope="col">Provider route</th>
+                                    <th class="govuk-table__header" scope="col">Application submitted date</th>
+                                    <th class="govuk-table__header" scope="col">Outcome made date</th>
+                                    <th class="govuk-table__header" scope="col">Moderator</th>
+                                    <th class="govuk-table__header" scope="col">Outcome</th>
+                                </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                                @foreach (var item in Model.Applications)
+                                {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell" data-label="Organisation name">
+                                        <a class="govuk-link" asp-action="ViewApplication" asp-controller="ClosedOverview" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>
+                                    </td>
+                                    <td class="govuk-table__cell" data-label="UKPRN">
+                                        @item.Ukprn
+                                    </td>
+                                    <td class="govuk-table__cell" data-label="Application reference number">
+                                        @item.ApplicationReferenceNumber
+                                    </td>
+                                    <td class="govuk-table__cell" data-label="Provider route">
+                                        @item.ProviderRoute
+                                    </td>
+                                    <td class="govuk-table__cell" data-label="Application submitted date">
+                                        @item.SubmittedDate.ToSfaShortDateString()
+                                    </td>
+                                    <td class="govuk-table__cell" data-label="Outcome made date">
+                                        @item.OutcomeDate.ToSfaShortDateString()
+                                    </td>
+                                    <td class="govuk-table__cell" data-label="Moderator">
+                                        @item.ModeratorName
+                                    </td>
+                                    <td class="govuk-table__cell" data-label="Outcome">
+                                        @{
+                                            var cssModifierClassName = string.Empty;
+
+                                            if ("pass".Equals(item.OutcomeStatus, StringComparison.InvariantCultureIgnoreCase))
+                                            {
+                                                cssModifierClassName = "app-task-list__tag das-tag das-tag--solid-green";
+                                            }
+                                            else if ("fail".Equals(item.OutcomeStatus, StringComparison.InvariantCultureIgnoreCase))
+                                            {
+                                                cssModifierClassName = "app-task-list__tag das-tag das-tag--solid-red";
+                                            }
+                                        }
+                                        <strong class="govuk-tag @cssModifierClassName das-no-wrap">@item.OutcomeStatus</strong>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="govuk-body-l">No applications to assess.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

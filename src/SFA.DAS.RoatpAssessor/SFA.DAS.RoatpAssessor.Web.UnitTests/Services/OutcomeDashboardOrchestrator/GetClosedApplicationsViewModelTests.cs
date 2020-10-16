@@ -8,39 +8,39 @@ using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Outcome;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
-namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchestrator
+namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeDashboardOrchestrator
 {
     [TestFixture]
-    public class GetInModerationApplicationsViewModelTests
+    public class GetClosedApplicationsViewModelTests
     {
         private readonly ClaimsPrincipal _user = MockedUser.Setup();
 
         private Mock<IRoatpApplicationApiClient> _applicationApiClient;
-        private Web.Services.ModeratorDashboardOrchestrator _orchestrator;
+        private Web.Services.OutcomeDashboardOrchestrator _orchestrator;
 
         [SetUp]
         public void SetUp()
         {
             _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
-            _orchestrator = new Web.Services.ModeratorDashboardOrchestrator(_applicationApiClient.Object);
+            _orchestrator = new Web.Services.OutcomeDashboardOrchestrator(_applicationApiClient.Object);
 
-            _applicationApiClient.Setup(x => x.GetInModerationApplications(_user.UserId())).ReturnsAsync(new List<ModerationApplicationSummary>());
+            _applicationApiClient.Setup(x => x.GetClosedApplications(_user.UserId())).ReturnsAsync(new List<ClosedApplicationSummary>());
             _applicationApiClient.Setup(x => x.GetApplicationCounts(_user.UserId())).ReturnsAsync(new ApplicationCounts());
         }
 
         [Test]
-        public async Task When_getting_in_moderation_applications_then_the_application_summary_is_returned()
+        public async Task When_getting_in_closed_applications_then_the_application_summary_is_returned()
         {
             var userId = _user.UserId();
             var summary = new ApplicationCounts { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6, ClosedApplications = 1 };
 
             _applicationApiClient.Setup(x => x.GetApplicationCounts(userId)).ReturnsAsync(summary);
 
-            var response = await _orchestrator.GetInModerationApplicationsViewModel(userId);
+            var response = await _orchestrator.GetClosedApplicationsViewModel(userId);
 
             Assert.AreEqual(summary.NewApplications, response.NewApplications);
             Assert.AreEqual(summary.InProgressApplications, response.InProgressApplications);
@@ -50,25 +50,25 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
         }
 
         [Test]
-        public async Task When_getting_in_moderation_applications_the_applications__are_returned()
+        public async Task When_getting_closed_applications_the_applications__are_returned()
         {
             var userId = _user.UserId();
-            var applications = new List<ModerationApplicationSummary>
+            var applications = new List<ClosedApplicationSummary>
             {
-                new ModerationApplicationSummary { ApplicationReferenceNumber = "sdjfs", Assessor1Name = "sdjfghdfgd", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), Assessor1UserId = "flggfdg", ModerationStatus = ModerationStatus.InProgress },
-                new ModerationApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), Assessor1UserId = "fbvkjghb", Assessor2UserId = "fdkgjgfdh", ModerationStatus = ModerationStatus.New }
+                new ClosedApplicationSummary { ApplicationReferenceNumber = "sdjfs", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), ModeratorName = "flggfdg", OutcomeStatus = ModerationStatus.Pass, OutcomeDate = DateTime.UtcNow },
+                new ClosedApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), ModeratorName = "fbvkjghb", OutcomeStatus = ModerationStatus.Fail, OutcomeDate = DateTime.UtcNow  }
             };
 
-            _applicationApiClient.Setup(x => x.GetInModerationApplications(userId)).ReturnsAsync(applications);
+            _applicationApiClient.Setup(x => x.GetClosedApplications(userId)).ReturnsAsync(applications);
 
-            var response = await _orchestrator.GetInModerationApplicationsViewModel(userId);
+            var response = await _orchestrator.GetClosedApplicationsViewModel(userId);
 
             Assert.AreEqual(applications.Count, response.Applications.Count);
             AssertApplicationsMatch(applications.First(), response.Applications.First());
             AssertApplicationsMatch(applications.Last(), response.Applications.Last());
         }
 
-        private void AssertApplicationsMatch(ModerationApplicationSummary expected, ModerationApplicationViewModel actual)
+        private void AssertApplicationsMatch(ClosedApplicationSummary expected, ClosedApplicationViewModel actual)
         {
             Assert.AreEqual(expected.ApplicationId, actual.ApplicationId);
             Assert.AreEqual(expected.OrganisationName, actual.OrganisationName);
@@ -80,7 +80,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
             Assert.AreEqual(expected.ProviderRoute, actual.ProviderRoute);
             Assert.AreEqual(expected.SubmittedDate, actual.SubmittedDate);
             Assert.AreEqual(expected.Ukprn, actual.Ukprn);
-            Assert.AreEqual(expected.ModerationStatus, actual.ModerationStatus);
+            Assert.AreEqual(expected.ModeratorName, actual.ModeratorName);
+            Assert.AreEqual(expected.OutcomeStatus, actual.OutcomeStatus);
+            Assert.AreEqual(expected.OutcomeDate, actual.OutcomeDate);
         }
     }
 }
