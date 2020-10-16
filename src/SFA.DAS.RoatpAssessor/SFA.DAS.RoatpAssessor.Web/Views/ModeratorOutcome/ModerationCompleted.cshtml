@@ -1,9 +1,17 @@
-﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorOutcomeReviewViewModel
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorOutcomeReviewViewModel
 @*Holding page until APR-1722 delivered*@
 
 @{
     ViewBag.Title = "Moderation outcome";
     Layout = "_Layout";
+
+    var status = Model.Status;
+
+    if (status == ModerationConfirmationStatus.AskForClarification)
+    {
+        status = "Clarification";
+    }
 }
 
 <partial name="~/Views/ModeratorOutcome/_Breadcrumb.cshtml" />
@@ -15,7 +23,7 @@
 
 
             <h1 class="govuk-heading-xl">Outcome saved as:</h1>
-            <h1 class="govuk-heading-xl">@Model.Status</h1>
+            <h1 class="govuk-heading-xl">@status</h1>
 
         </div>
     </div>
