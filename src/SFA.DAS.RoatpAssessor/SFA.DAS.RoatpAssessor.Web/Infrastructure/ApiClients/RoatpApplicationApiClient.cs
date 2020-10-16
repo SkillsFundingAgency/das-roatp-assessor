@@ -9,6 +9,8 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Outcome;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
@@ -37,6 +39,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         public async Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId)
         {
             return await Get<List<ModerationApplicationSummary>>($"Assessor/Applications/{userId}/InModeration");
+        }
+
+        public async Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId)
+        {
+            return await Get<List<ClarificationApplicationSummary>>($"Assessor/Applications/{userId}/InClarification");
+        }
+
+        public async Task<List<ClosedApplicationSummary>> GetClosedApplications(string userId)
+        {
+            return await Get<List<ClosedApplicationSummary>>($"Assessor/Applications/{userId}/Closed");
         }
 
         public async Task<Apply> GetApplication(Guid applicationId)
