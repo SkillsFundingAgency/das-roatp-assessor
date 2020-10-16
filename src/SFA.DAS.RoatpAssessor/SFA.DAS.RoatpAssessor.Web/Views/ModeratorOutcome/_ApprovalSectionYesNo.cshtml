@@ -9,23 +9,23 @@
         {
             @Html.Raw("This application will pass and go to governance")
         }
-        @if (Model.Status == ModerationConfirmationStatus.Fail)
+            @if (Model.Status == ModerationConfirmationStatus.Fail)
         {
             @Html.Raw("This application will fail and go to governance")
         }
-        @if (Model.Status == ModerationConfirmationStatus.AskForClarification)
+            @if (Model.Status == ModerationConfirmationStatus.AskForClarification)
         {
-            @Html.Raw("Email <a href='mailto:" + @Model.ApplicantEmailAddress + "'>" + @Model.ApplicantEmailAddress + "</a> to ask for clarification.");
+            @Html.Raw("Email <a class='govuk-link' href='mailto:" + @Model.ApplicantEmailAddress + "'>" + @Model.ApplicantEmailAddress + "</a> to ask for clarification.");
         }
         </strong>
-</div>
+    </div>
 
-<div class="govuk-form-group" sfa-anyvalidationerror-class="govuk-form-group--error">
-    <fieldset class="govuk-fieldset">
-        <span id="Status" class="govuk-error-message" asp-validation-for="Status"></span>
+    <div class="govuk-form-group" sfa-anyvalidationerror-class="govuk-form-group--error">
+        <fieldset class="govuk-fieldset">
+            <span id="Status" class="govuk-error-message" asp-validation-for="Status"></span>
 
-        <div class="govuk-radios govuk-radios--conditional" data-module="radios">
-            @{
+            <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+                @{
                 var radioCheckedYes = Model.ConfirmStatus == "Pass" ? "checked" : "";
                 var radioCheckedNo = Model.ConfirmStatus == "Fail" ? "checked" : "";
             }

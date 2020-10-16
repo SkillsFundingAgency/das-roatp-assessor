@@ -3,7 +3,7 @@
 @*Holding page until APR-1722 delivered*@
 
 @{
-    ViewBag.Title = "Moderation outcome";
+    ViewBag.Title = "Assessor outcome saved";
     Layout = "_Layout";
 
     var status = Model.Status;
@@ -16,19 +16,23 @@
 
 <partial name="~/Views/ModeratorOutcome/_Breadcrumb.cshtml" />
 
-<main class="govuk-main-wrapper " id="main-content" role="main">
-
+<main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-panel govuk-panel--confirmation">
+                <h1 class="govuk-panel__title">
+                    Assessor outcome saved
+                </h1>
+                <div class="govuk-panel__body">
+                    Outcome saved as:<br><strong>@status</strong>
+                </div>
+            </div>
 
+            <partial name="~/Views/ModeratorOutcome/_ApplicationSummary.cshtml" for="@Model" />
 
-            <h1 class="govuk-heading-xl">Outcome saved as:</h1>
-            <h1 class="govuk-heading-xl">@status</h1>
-
+            <p class="govuk-body">
+                <a class="govuk-link" asp-action="Index" asp-controller="Home">Go to RoATP assessor applications</a>
+            </p>
         </div>
     </div>
-    <partial name="~/Views/ModeratorOutcome/_ApplicationSummary.cshtml" for="@Model" />
-
-
-    <a class="govuk-breadcrumbs__link" asp-action="Index" asp-controller="Home">Go to RoATP assessor applications</a>
 </main>
