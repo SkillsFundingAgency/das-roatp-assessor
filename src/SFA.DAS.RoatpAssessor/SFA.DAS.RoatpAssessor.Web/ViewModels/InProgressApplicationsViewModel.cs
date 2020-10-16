@@ -2,7 +2,8 @@
 {
     public class InProgressApplicationsViewModel : AssessorDashboardViewModel
     {
-        public InProgressApplicationsViewModel(string currentUser, int newApplications, int inProgressApplications, int moderationApplications, int clarificationApplications) : base("InProgressApplications", newApplications, inProgressApplications, moderationApplications, clarificationApplications)
+        public InProgressApplicationsViewModel(string currentUser, int newApplications, int inProgressApplications, int moderationApplications, int clarificationApplications, int closedApplications)
+            : base("InProgressApplications", newApplications, inProgressApplications, moderationApplications, clarificationApplications, closedApplications)
         {
             CurrentUser = currentUser;
         }

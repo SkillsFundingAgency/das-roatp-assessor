@@ -16,14 +16,14 @@
             Moderation (@Model.ModerationApplications)
         </a>
     </li>
-    <li class="govuk-tabs__list-item @(Model.CurrentPage == "ClarificationApplications" ? "govuk-tabs__list-item--selected" : "")">
-        <a class="govuk-tabs__tab" asp-action="ClarificationApplications" asp-controller="Dashboard">
+    <li class="govuk-tabs__list-item @(Model.CurrentPage == "InClarificationApplications" ? "govuk-tabs__list-item--selected" : "")">
+        <a class="govuk-tabs__tab" asp-action="InClarificationApplications" asp-controller="Dashboard">
             Clarification (@Model.ClarificationApplications)
         </a>
     </li>
     <li class="govuk-tabs__list-item @(Model.CurrentPage == "ClosedApplications" ? "govuk-tabs__list-item--selected" : "")">
         <a class="govuk-tabs__tab" asp-action="ClosedApplications" asp-controller="Dashboard">
-            Outcome
+            Outcome (@Model.ClosedApplications)
         </a>
     </li>
 </ul>
