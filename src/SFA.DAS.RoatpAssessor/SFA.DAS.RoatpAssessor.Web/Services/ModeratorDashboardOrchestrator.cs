@@ -20,7 +20,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
             var applications = await _applicationApiClient.GetInModerationApplications(userId);
 
-            var viewModel = new InModerationApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications);
+            var viewModel = new InModerationApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications);
             AddApplicationsToViewModel(viewModel, applications);
             return viewModel;
         }

@@ -33,7 +33,7 @@
                                     <th class="govuk-table__header" scope="col">UKPRN</th>
                                     <th class="govuk-table__header" scope="col">Application reference number</th>
                                     <th class="govuk-table__header" scope="col">Provider route</th>
-                                    <th class="govuk-table__header" scope="col">Application submitted</th>
+                                    <th class="govuk-table__header" scope="col">Application submitted date</th>
                                     <th class="govuk-table__header das-no-wrap" scope="col">Assessor 1</th>
                                     <th class="govuk-table__header das-no-wrap" scope="col">Assessor 2</th>
                                 </tr>
@@ -61,7 +61,7 @@
                                         <td class="govuk-table__cell" data-label="Provider route">
                                             @item.ProviderRoute
                                         </td>
-                                        <td class="govuk-table__cell" data-label="Application submitted">
+                                        <td class="govuk-table__cell" data-label="Application submitted date">
                                             @item.SubmittedDate.ToSfaShortDateString()
                                         </td>
                                         <td class="govuk-table__cell" data-label="Assessor 1">
