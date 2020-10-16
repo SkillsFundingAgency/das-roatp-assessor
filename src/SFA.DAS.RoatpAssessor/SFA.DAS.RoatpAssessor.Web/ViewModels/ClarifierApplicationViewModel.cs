@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
-    public class ModeratorApplicationViewModel : OrganisationDetailsViewModel
+    public class ClarifierApplicationViewModel : OrganisationDetailsViewModel
     {
         public Guid Id { get; }
         public Guid ApplicationId { get; }
@@ -17,10 +17,13 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string Assessor1Name { get; set; }
         public string Assessor2Name { get; set; }
 
-        public List<ModeratorSequence> Sequences { get; }
-        public bool IsReadyForModeratorConfirmation { get; set; }
+        public string ModeratorName { get; set; }
+        public DateTime? ClarificationRequestedDate { get; set; }
 
-        public ModeratorApplicationViewModel(Apply application, Contact contact, List<ModeratorSequence> sequences, string userId)
+        public List<ModeratorSequence> Sequences { get; }
+        public bool IsReadyForClarificationConfirmation { get; set; }
+
+        public ClarifierApplicationViewModel(Apply application, Contact contact, List<ModeratorSequence> sequences, string userId)
         {
             Id = application.Id;
             ApplicationId = application.ApplicationId;
@@ -43,6 +46,12 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn;
             }
 
+            if (application.ApplyData?.ModeratorReviewDetails != null)
+            {
+                ClarificationRequestedDate = application.ApplyData.ModeratorReviewDetails.ClarificationRequestedOn;
+                ModeratorName = application.ApplyData.ModeratorReviewDetails.ModeratorName;
+            }
+
             Sequences = sequences;
         }
 
@@ -54,11 +63,12 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                     return string.Empty;
                 case string a when a.Equals(ModeratorSectionStatus.Pass, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-green";
-                case string b when b.Contains(ModeratorSectionStatus.Fail, StringComparison.InvariantCultureIgnoreCase):
+                case string b when b.Equals(ModeratorSectionStatus.Fail, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-red";
-                case string c when c.Equals(ModeratorSectionStatus.InProgress, StringComparison.InvariantCultureIgnoreCase):
+                case string c when c.Equals(ModeratorSectionStatus.Clarification, StringComparison.InvariantCultureIgnoreCase):
+                case string d when d.Equals(ModeratorSectionStatus.InProgress, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag";
-                case string d when d.Equals(ModeratorSectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase):
+                case string e when e.Equals(ModeratorSectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-grey";
                 default:
                     return string.Empty;

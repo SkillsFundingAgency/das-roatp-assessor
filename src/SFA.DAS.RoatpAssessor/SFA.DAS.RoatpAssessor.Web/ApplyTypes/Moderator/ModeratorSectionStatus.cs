@@ -8,7 +8,7 @@
         public const string FailOutOf = "Fail Out Of";
         public const string FailsOutOf = "Fails Out Of";
         public const string NotRequired = "Not Required";
-
+        public const string Clarification = "Clarification";
         public const string Unknown = "Unknown";
     }
 }
