@@ -169,6 +169,11 @@ namespace SFA.DAS.RoatpAssessor.Web
                 x.GetService<ILogger<RoatpModerationApiClient>>(),
                 x.GetService<IRoatpApplicationTokenService>()));
 
+            services.AddTransient<IRoatpClarificationApiClient>(x => new RoatpClarificationApiClient(
+                ApplicationConfiguration.RoatpApplicationApiAuthentication.ApiBaseAddress,
+                x.GetService<ILogger<RoatpClarificationApiClient>>(),
+                x.GetService<IRoatpApplicationTokenService>()));
+
             services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
             services.AddTransient<IModeratorOverviewOrchestrator, ModeratorOverviewOrchestrator>();
             services.AddTransient<IClarificationOverviewOrchestrator, ClarificationOverviewOrchestrator>();

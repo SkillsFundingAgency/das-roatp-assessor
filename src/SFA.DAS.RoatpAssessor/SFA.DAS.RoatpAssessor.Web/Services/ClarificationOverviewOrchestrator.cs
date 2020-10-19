@@ -1,4 +1,4 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -12,19 +12,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
     public class ClarificationOverviewOrchestrator : IClarificationOverviewOrchestrator
     {
         private readonly IRoatpApplicationApiClient _applicationApiClient;
-        private readonly IRoatpModerationApiClient _moderationApiClient;
+        private readonly IRoatpClarificationApiClient _clarificationApiClient;
 
-        public ClarificationOverviewOrchestrator(IRoatpApplicationApiClient applicationApiClient, IRoatpModerationApiClient moderationApiClient)
+        public ClarificationOverviewOrchestrator(IRoatpApplicationApiClient applicationApiClient, IRoatpClarificationApiClient clarificationApiClient)
         {
             _applicationApiClient = applicationApiClient;
-            _moderationApiClient = moderationApiClient;
+            _clarificationApiClient = clarificationApiClient;
         }
 
         public async Task<ClarifierApplicationViewModel> GetOverviewViewModel(GetClarificationOverviewRequest request)
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
-            var sequences = await _moderationApiClient.GetModeratorSequences(request.ApplicationId);
+            var sequences = await _clarificationApiClient.GetClarificationSequences(request.ApplicationId);
 
             if (application is null || contact is null || sequences is null)
             {
@@ -33,7 +33,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var viewmodel = new ClarifierApplicationViewModel(application, contact, sequences, request.UserId);
 
-            var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, request.UserId);
+            var savedOutcomes = await _clarificationApiClient.GetAllClarificationPageReviewOutcomes(request.ApplicationId, request.UserId);
             if (savedOutcomes is null || !savedOutcomes.Any())
             {
                 viewmodel.IsReadyForClarificationConfirmation = false;
@@ -66,7 +66,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string GetSectionStatus(List<ModeratorPageReviewOutcome> pageReviewOutcomes, int sequenceNumber, int sectionNumber)
+        public string GetSectionStatus(List<ClarificationPageReviewOutcome> pageReviewOutcomes, int sequenceNumber, int sectionNumber)
         {
             var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
                 p.SequenceNumber == sequenceNumber &&
@@ -76,33 +76,29 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
-                if (sectionPageReviewOutcomes.Any(p => p.Status == ModeratorPageReviewStatus.InProgress))
+                if (sectionPageReviewOutcomes.All(x => x.Status == ClarificationPageReviewStatus.Pass))
                 {
-                    sectionStatus = ModeratorSectionStatus.InProgress;
-                }
-                else if (sectionPageReviewOutcomes.Any(p => p.Status == ModeratorPageReviewStatus.Clarification))
-                {
-                    sectionStatus = ModeratorSectionStatus.Clarification;
-                }
-                else if (sectionPageReviewOutcomes.All(x => x.Status == ModeratorPageReviewStatus.Pass))
-                {
-                    sectionStatus = ModeratorSectionStatus.Pass;
+                    sectionStatus = ClarificationSectionStatus.Pass;
                 }
                 else if (sectionPageReviewOutcomes.All(p =>
-                    p.Status == ModeratorPageReviewStatus.Pass || p.Status == ModeratorPageReviewStatus.Fail))
+                    p.Status == ClarificationPageReviewStatus.Pass || p.Status == ClarificationPageReviewStatus.Fail))
                 {
-                    sectionStatus = ModeratorPageReviewStatus.Fail;
+                    sectionStatus = ClarificationSectionStatus.Fail;
+                }
+                else if (sectionPageReviewOutcomes.Any(p => p.Status == ClarificationPageReviewStatus.InProgress))
+                {
+                    sectionStatus = ClarificationSectionStatus.InProgress;
                 }
                 else
                 {
-                    sectionStatus = ModeratorSectionStatus.InProgress;
+                    sectionStatus = ClarificationSectionStatus.Clarification;
                 }
             }
 
             return sectionStatus;
         }
 
-        public string GetSectorsSectionStatus(List<ModeratorPageReviewOutcome> pageReviewOutcomes)
+        public string GetSectorsSectionStatus(List<ClarificationPageReviewOutcome> pageReviewOutcomes)
         {
             var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
                 p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
@@ -112,26 +108,22 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
             {
-                if (sectionPageReviewOutcomes.Any(p => p.Status == ModeratorPageReviewStatus.InProgress))
+                if (sectionPageReviewOutcomes.All(x => x.Status == ClarificationPageReviewStatus.Pass))
                 {
-                    sectionStatus = ModeratorSectionStatus.InProgress;
-                }
-                else if(sectionPageReviewOutcomes.Any(p => p.Status == ModeratorPageReviewStatus.Clarification))
-                {
-                    sectionStatus = ModeratorSectionStatus.Clarification;
-                }
-                else if (sectionPageReviewOutcomes.All(p => p.Status == ModeratorPageReviewStatus.Pass))
-                {
-                    sectionStatus = ModeratorSectionStatus.Pass;
+                    sectionStatus = ClarificationSectionStatus.Pass;
                 }
                 else if (sectionPageReviewOutcomes.All(p =>
-                            p.Status == ModeratorPageReviewStatus.Pass || p.Status == ModeratorPageReviewStatus.Fail))
+                    p.Status == ClarificationPageReviewStatus.Pass || p.Status == ClarificationPageReviewStatus.Fail))
                 {
-                    sectionStatus = ModeratorSectionStatus.Fail;
+                    sectionStatus = ClarificationSectionStatus.Fail;
+                }
+                else if (sectionPageReviewOutcomes.Any(p => p.Status == ClarificationPageReviewStatus.InProgress))
+                {
+                    sectionStatus = ClarificationSectionStatus.InProgress;
                 }
                 else
                 {
-                    sectionStatus = ModeratorSectionStatus.InProgress;
+                    sectionStatus = ClarificationSectionStatus.Clarification;
                 }
             }
 
@@ -146,9 +138,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 foreach (var section in sequence.Sections)
                 {
-                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(ModeratorSectionStatus.Pass) &&
-                                                   !section.Status.Equals(ModeratorSectionStatus.Fail) &&
-                                                   !section.Status.Equals(ModeratorSectionStatus.NotRequired)))
+                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(ClarificationSectionStatus.Pass) &&
+                                                   !section.Status.Equals(ClarificationSectionStatus.Fail) &&
+                                                   !section.Status.Equals(ClarificationSectionStatus.NotRequired)))
                     {
                         isReadyForClarificationConfirmation = false;
                         break;

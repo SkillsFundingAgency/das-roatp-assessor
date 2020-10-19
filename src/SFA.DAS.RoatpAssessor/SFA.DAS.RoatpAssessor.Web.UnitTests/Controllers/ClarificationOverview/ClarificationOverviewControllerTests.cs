@@ -2,7 +2,6 @@
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.Controllers.Assessor;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
@@ -12,7 +11,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Controllers.Clarification;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOverview
 {
@@ -68,7 +67,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOverview
             };
 
             var contact = new Contact { Email = userId, GivenNames = _controller.User.GivenName(), FamilyName = _controller.User.Surname() };
-            var sequences = new List<ModeratorSequence>();
+            var sequences = new List<ClarificationSequence>();
 
             return new ClarifierApplicationViewModel(application, contact, sequences, userId);
         }
