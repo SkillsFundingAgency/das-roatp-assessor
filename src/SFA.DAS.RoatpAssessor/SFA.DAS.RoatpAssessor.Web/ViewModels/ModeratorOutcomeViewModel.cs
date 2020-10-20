@@ -23,6 +23,10 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string OptionFailText { get; set; }
         public string OptionAskForClarificationText { get; set; }
 
+        public ModeratorOutcomeViewModel(Guid applicationId)
+        {
+            ApplicationId = applicationId;
+        }
         public ModeratorOutcomeViewModel(Apply application, List<ModeratorPageReviewOutcome> outcomes)
         {
             Id = application.Id;
