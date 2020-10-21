@@ -67,7 +67,7 @@
                                 <span class="app-task-list__task-name app-task-list__task-name--inactive">
                                     @if (Model.IsReadyForModeratorConfirmation)
                                     {
-                                        <a asp-controller="ModeratorOutcome" asp-action="ModeratorOutcome" asp-route-applicationId="@Model.ApplicationId">Confirm moderation outcome</a>
+                                        <a asp-controller="ModeratorOutcome" asp-action="ViewOutcome" asp-route-applicationId="@Model.ApplicationId">Confirm moderation outcome</a>
                                     }
                                     else
                                     {

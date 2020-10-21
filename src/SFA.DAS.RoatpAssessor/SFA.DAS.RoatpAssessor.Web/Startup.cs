@@ -176,8 +176,9 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
             services.AddTransient<IModeratorOverviewOrchestrator, ModeratorOverviewOrchestrator>();
+            services.AddTransient<IModeratorOutcomeOrchestrator, ModeratorOutcomeOrchestrator>();
             services.AddTransient<IClarificationOverviewOrchestrator, ClarificationOverviewOrchestrator>();
-
+            
             services.AddTransient<ISupplementaryInformationService, SupplementaryInformationService>();
 
             services.AddTransient<IAssessorSectionReviewOrchestrator, AssessorSectionReviewOrchestrator>();
@@ -186,6 +187,7 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddTransient<IModeratorSectionReviewOrchestrator, ModeratorSectionReviewOrchestrator>();
             services.AddTransient<IModeratorPageValidator, ModeratorPageValidator>();
+            services.AddTransient<IModeratorOutcomeValidator, ModeratorOutcomeValidator>();
 
             DependencyInjection.ConfigureDependencyInjection(services);
         }

@@ -21,9 +21,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="govuk-tabs">
-
-                @{ await Html.RenderPartialAsync("DashboardNavigation.cshtml"); }
-
+                <partial name="DashboardNavigation.cshtml" />
                 <div class="govuk-tabs__panel">
                     @if (Model.Applications != null && Model.Applications.Any())
                     {
@@ -73,11 +71,11 @@
                                             }
                                             else if (item.ModerationStatus == ModerationStatus.InProgress)
                                             {
-                                                <strong class="das-tag das-tag">In moderation</strong>
+                                                <strong class="das-tag das-no-wrap">In moderation</strong>
                                             }
                                             else
                                             {
-                                                <strong class="das-tag das-tag">@item.ModerationStatus</strong>
+                                                <strong class="das-tag das-no-wrap">@item.ModerationStatus</strong>
                                             }
                                         </td>
                                     </tr>

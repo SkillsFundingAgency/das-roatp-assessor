@@ -1,0 +1,35 @@
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorOutcomeReviewViewModel
+@*Holding page until APR-1722 delivered*@
+
+@{
+    ViewBag.Title = "Assessor outcome saved";
+    Layout = "_Layout";
+
+    var status = Model.Status;
+
+    if (status == ModerationConfirmationStatus.AskForClarification)
+    {
+        status = "Clarification";
+    }
+}
+
+<partial name="~/Views/ModeratorOutcome/_BreadcrumbSaved.cshtml" />
+
+<main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-panel govuk-panel--confirmation">
+                <div class="govuk-panel__body">
+                    Outcome saved as:<br><strong>@status</strong>
+                </div>
+            </div>
+
+            <partial name="~/Views/ModeratorOutcome/_ApplicationSummary.cshtml" for="@Model" />
+
+            <p class="govuk-body">
+                <a class="govuk-link" asp-action="Index" asp-controller="Home">Go to RoATP assessor applications</a>
+            </p>
+        </div>
+    </div>
+</main>
