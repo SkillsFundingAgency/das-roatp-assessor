@@ -5,5 +5,6 @@
         public const string InProgress = "In progress";
         public const string Pass = "Pass";
         public const string Fail = "Fail";
+        public const string AskForClarification = "Ask for clarification";
     }
 }

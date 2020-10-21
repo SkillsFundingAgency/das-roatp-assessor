@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 
@@ -22,5 +23,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<List<ModeratorPageReviewOutcome>> GetAllModeratorPageReviewOutcomes(Guid applicationId, string userId);
         Task<ModeratorPageReviewOutcome> GetModeratorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId);
         Task<List<ModeratorPageReviewOutcome>> GetModeratorPageReviewOutcomesForSection(Guid applicationId, int sequenceNumber, int sectionNumber, string userId);
+        Task<bool> SubmitModerationOutcome(Guid applicationId, string userId, string username, string status, string comment);
     }
 }
