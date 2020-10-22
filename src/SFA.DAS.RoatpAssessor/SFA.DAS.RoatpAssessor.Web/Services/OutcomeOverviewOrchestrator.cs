@@ -1,9 +1,7 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+﻿using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,7 +55,5 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             return viewmodel;
         }
-
-      
     }
 }

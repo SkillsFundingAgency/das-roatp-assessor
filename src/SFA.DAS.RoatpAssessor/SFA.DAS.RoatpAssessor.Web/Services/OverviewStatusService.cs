@@ -19,12 +19,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 if (sectionPageReviewOutcomes.Count.Equals(1))
                 {
-                    // The section only has 1 question
                     sectionStatus = sectionPageReviewOutcomes[0].Status;
                 }
                 else
                 {
-                    // The section contains multiple question
                     if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
                     {
                         sectionStatus = null;
