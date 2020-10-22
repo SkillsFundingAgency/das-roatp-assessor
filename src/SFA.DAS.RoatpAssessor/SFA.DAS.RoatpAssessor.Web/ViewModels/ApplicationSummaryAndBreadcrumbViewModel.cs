@@ -13,12 +13,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string ApplicationRoute { get; set; }
         public DateTime? SubmittedDate { get; set; }
 
-        public string Status { get; set; }
-
-        public string OptionPassText { get; set; }
-        public string OptionFailText { get; set; }
-        public string OptionInProgressText { get; set; }
-
         public string ApplicantEmailAddress { get; set; }
 
         public string ApplicationRouteShortText
@@ -38,5 +32,19 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
             }
         }
 
+        // TODO: Future Tech Debt - split the regions below into appropriate base classes.
+        // The reason they are here is because different VMs inherit from it and this base class used a as a common type in several views
+        // Note that it also affects ModelState & validation on the views
+        #region Approval Section
+        public string Status { get; set; }
+
+        public string OptionPassText { get; set; }
+        public string OptionFailText { get; set; }
+        public string OptionInProgressText { get; set; }
+        #endregion
+
+        #region Clarified Answer
+        public string ClarificationResponse { get; set; }
+        #endregion
     }
 }
