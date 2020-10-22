@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -16,14 +15,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Outcome
     public class OutcomeOverviewController: Controller
     {
         private readonly IOutcomeOverviewOrchestrator _outcomeOrchestrator;
-        protected readonly IRoatpModerationApiClient _moderationApiClient;
-        protected readonly ILogger<OutcomeOverviewController> _logger;
 
-        public OutcomeOverviewController(IOutcomeOverviewOrchestrator outcomeOrchestrator, IRoatpModerationApiClient moderationApiClient, ILogger<OutcomeOverviewController> logger)
+
+        public OutcomeOverviewController(IOutcomeOverviewOrchestrator outcomeOrchestrator)
         {
             _outcomeOrchestrator = outcomeOrchestrator;
-            _moderationApiClient = moderationApiClient;
-            _logger = logger;
         }
 
 

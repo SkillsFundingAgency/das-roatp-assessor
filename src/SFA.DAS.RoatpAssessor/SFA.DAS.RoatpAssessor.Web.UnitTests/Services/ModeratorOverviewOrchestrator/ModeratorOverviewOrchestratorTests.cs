@@ -83,7 +83,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
                 }
             };
 
-            var sectionStatus = OverviewStatusService.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
+            var sectionStatus = Web.Services.OverviewStatusService.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
             Assert.AreSame(status, sectionStatus);
         }
 
@@ -139,7 +139,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
                 }
             };
 
-            var sectionStatus = OverviewStatusService.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
+            var sectionStatus = Web.Services.OverviewStatusService.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
             Assert.AreEqual(statusExpected, sectionStatus);
         }
 
@@ -192,7 +192,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
                 }
             };
 
-            var sectionStatus = OverviewStatusService.GetSectorsSectionStatus(sectionPageReviewOutcomes);
+            var sectionStatus = Web.Services.OverviewStatusService.GetSectorsSectionStatus(sectionPageReviewOutcomes);
             Assert.AreEqual(statusExpected, sectionStatus);
         }
 
