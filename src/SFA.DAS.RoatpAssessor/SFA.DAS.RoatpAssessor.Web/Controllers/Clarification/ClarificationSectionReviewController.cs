@@ -59,10 +59,21 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
         [HttpPost("ClarificationSectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}")]
         public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, SubmitClarificationPageAnswerCommand command)
         {
-            var userId = HttpContext.User.UserId();
+            if(command.ClarificationRequired)
+            {
+                var userId = HttpContext.User.UserId();
+                Func<Task<ClarifierReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
 
-            Func<Task<ClarifierReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
-            return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/ClarificationSectionReview/ReviewAnswers.cshtml");
+                return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/ClarificationSectionReview/ReviewAnswers.cshtml");
+            }
+            else if(string.IsNullOrEmpty(command.NextPageId))
+            {
+                return RedirectToAction("ViewApplication", "ClarificationOverview", new { applicationId = command.ApplicationId }, $"sequence-{command.SequenceNumber}");
+            }
+            else
+            {
+                return RedirectToAction("ReviewPageAnswers", "ClarificationSectionReview", new { applicationId = command.ApplicationId, sequenceNumber = command.SequenceNumber, sectionNumber = command.SectionNumber, pageId = command.NextPageId });
+            }
         }
 
         [HttpGet("ClarificationSectionReview/{applicationId}/Sector/{PageId}")]
@@ -76,10 +87,22 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
         [HttpPost("ClarificationSectionReview/{applicationId}/Sector/{PageId}")]
         public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId, SubmitClarificationPageAnswerCommand command)
         {
-            var userId = HttpContext.User.UserId();
-            Func<Task<ClarifierSectorDetailsViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetSectorDetailsViewModel(new GetSectorDetailsRequest(command.ApplicationId, command.PageId, userId));
+            if (command.ClarificationRequired)
+            {
+                var userId = HttpContext.User.UserId();
+                Func<Task<ClarifierSectorDetailsViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetSectorDetailsViewModel(new GetSectorDetailsRequest(command.ApplicationId, command.PageId, userId));
 
-            return await ValidateAndUpdateSectorPageAnswer(command, viewModelBuilder, $"~/Views/ClarificationSectionReview/ReviewSectorAnswers.cshtml");
+                return await ValidateAndUpdateSectorPageAnswer(command, viewModelBuilder, $"~/Views/ClarificationSectionReview/ReviewSectorAnswers.cshtml");
+            }
+            else
+            {
+                return RedirectToAction("ReviewPageAnswers", "ClarificationSectionReview", new
+                {
+                    applicationId = command.ApplicationId,
+                    sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                    sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
+                });
+            }
         }
     }
 }

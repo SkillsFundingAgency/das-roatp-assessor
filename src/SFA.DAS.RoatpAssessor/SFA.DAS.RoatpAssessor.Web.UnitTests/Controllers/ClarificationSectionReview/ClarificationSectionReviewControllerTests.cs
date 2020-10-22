@@ -226,5 +226,48 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
                         command.Status,
                         command.ReviewComment), Times.Never);
         }
+
+
+        [Test]
+        public async Task POST_ReviewPageAnswers_When_ClarificationRequired_is_false_redirects_to_NextPage()
+        {
+            int sequenceNumber = 4;
+            int sectionNumber = 2;
+            string pageId = "4200";
+            string nextPageId = "4210";
+
+            var viewModel = new ClarifierReviewAnswersViewModel
+            {
+                ApplicationId = _applicationId,
+                SequenceNumber = sequenceNumber,
+                SectionNumber = sectionNumber,
+                PageId = pageId,
+                Status = ClarificationPageReviewStatus.Pass,
+                OptionPassText = "test",
+                ClarificationResponse = "All good",
+                NextPageId = nextPageId
+            };
+
+            var command = new SubmitClarificationPageAnswerCommand(viewModel);
+            command.ClarificationRequired = false;
+
+            _sectionReviewOrchestrator.Setup(x => x.GetReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
+
+            // act
+            var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;
+
+            // assert
+            Assert.AreEqual("ClarificationSectionReview", result.ControllerName);
+            Assert.AreEqual("ReviewPageAnswers", result.ActionName);
+
+            _clarificationApiClient.Verify(x => x.SubmitClarificationPageReviewOutcome(command.ApplicationId,
+                        command.SequenceNumber,
+                        command.SectionNumber,
+                        command.PageId,
+                        _controller.User.UserId(),
+                        command.ClarificationResponse,
+                        command.Status,
+                        command.ReviewComment), Times.Never);
+        }
     }
 }

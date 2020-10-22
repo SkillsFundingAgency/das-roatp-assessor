@@ -12,6 +12,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
         public string PageId { get; set; }
         public string NextPageId { get; set; }
         public string Status { get; set; }
+        public bool ClarificationRequired { get; set; }
         public string ClarificationResponse { get; set; }
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
@@ -57,6 +58,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
             SequenceNumber = viewModel.SequenceNumber;
             SectionNumber = viewModel.SectionNumber;
             Status = viewModel.Status;
+            ClarificationRequired = viewModel.ClarificationRequired;
             ClarificationResponse = viewModel.ClarificationResponse;
             OptionPassText = viewModel.OptionPassText;
             OptionFailText = viewModel.OptionFailText;

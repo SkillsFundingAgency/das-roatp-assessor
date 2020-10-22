@@ -124,14 +124,20 @@
                     <input type="hidden" asp-for="ApplicationId" />
                     <input type="hidden" asp-for="PageId" />
                     <input type="hidden" asp-for="Heading" />
+                    <input type="hidden" asp-for="ClarificationRequired" />
 
-                    <partial name="~/Views/ClarificationSectionReview/Pages/_ClarifiedAnswer.cshtml" for="@Model" />
-                    <partial name="~/Views/ClarificationSectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
+                    @if (Model.ClarificationRequired)
+                    {
+                        <partial name="~/Views/ClarificationSectionReview/Pages/_ClarifiedAnswer.cshtml" for="@Model" />
+                        <partial name="~/Views/ClarificationSectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
 
-                    <button class="govuk-button" type="submit">Save and continue</button>
+                        <button class="govuk-button" type="submit">Save and continue</button>
+                    }
+                    else
+                    {
+                        <button class="govuk-button" type="submit">Continue</button>
+                    }
                 </form>
-
-
             </div>
         </div>
     }
