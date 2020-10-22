@@ -13,12 +13,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.Services;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestrator
 {
     [TestFixture]
-    public class OutcomeOverviewOrchestratorTests
+    public class ModeratorOverviewOrchestratorTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
         private readonly ClaimsPrincipal _user = MockedUser.Setup();
@@ -83,7 +82,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
                 }
             };
 
-            var sectionStatus = Web.Services.OverviewStatusService.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
+            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
             Assert.AreSame(status, sectionStatus);
         }
 
@@ -139,7 +138,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
                 }
             };
 
-            var sectionStatus = Web.Services.OverviewStatusService.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
+            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
             Assert.AreEqual(statusExpected, sectionStatus);
         }
 
@@ -192,7 +191,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
                 }
             };
 
-            var sectionStatus = Web.Services.OverviewStatusService.GetSectorsSectionStatus(sectionPageReviewOutcomes);
+            var sectionStatus = _orchestrator.GetSectorsSectionStatus(sectionPageReviewOutcomes);
             Assert.AreEqual(statusExpected, sectionStatus);
         }
 
