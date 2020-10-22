@@ -94,5 +94,58 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
             var expectedStatus = Web.Services.OverviewStatusService.GetSectorsSectionStatus(outcomes);
             Assert.AreEqual(expectedStatus, ModeratorSectionStatus.InProgress);
         }
+
+
+
+
+        [TestCase(null, null, null, null)]
+        [TestCase(ModeratorPageReviewStatus.Pass, null, null, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.InProgress, null, null, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.Fail, null, null, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.InProgress, ModeratorPageReviewStatus.Pass, null, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.InProgress, ModeratorPageReviewStatus.Fail, null, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, null, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, null, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, null, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, null, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
+        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorSectionStatus.Pass)]
+        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorSectionStatus.Fail)]
+        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorSectionStatus.Fail)]
+        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorSectionStatus.Fail)]
+        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorSectionStatus.Fail)]
+        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorSectionStatus.Fail)]
+        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorSectionStatus.Fail)]
+        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorSectionStatus.Fail)]
+        public void GetSectorsSectionStatus(string statusOne, string statusTwo, string statusThree, string statusExpected)
+        {
+            List<ModeratorPageReviewOutcome> sectionPageReviewOutcomes = new List<ModeratorPageReviewOutcome>
+            {
+                new ModeratorPageReviewOutcome
+                {
+                    Status = statusOne,
+                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
+                },
+                new ModeratorPageReviewOutcome
+                {
+                    Status = statusTwo,
+                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
+                },
+                new ModeratorPageReviewOutcome
+                {
+                    Status = statusThree,
+                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
+                }
+            };
+
+            var sectionStatus = Web.Services.OverviewStatusService.GetSectorsSectionStatus(sectionPageReviewOutcomes);
+            Assert.AreEqual(statusExpected, sectionStatus);
+        }
     }
 }
