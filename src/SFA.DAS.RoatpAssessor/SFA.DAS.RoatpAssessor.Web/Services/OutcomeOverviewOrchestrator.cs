@@ -36,8 +36,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, request.UserId);
             if (!(savedOutcomes is null) && savedOutcomes.Any())
             {
-                // POTENTIAL TECH DEBT: Decide if processing of sequences should be contained within ModeratorApplicationViewModel rather than modifying this from outside.
-                // This would result in better encapsulation of the logic but may cause issues if we need to inspect other sources
                 foreach (var sequence in viewmodel.Sequences)
                 {
                     foreach (var section in sequence.Sections)
@@ -46,100 +44,20 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         {
                             if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
                             {
-                                section.Status = GetSectorsSectionStatus(savedOutcomes);
+                                section.Status = OverviewStatusService.GetSectorsSectionStatus(savedOutcomes);
                             }
                             else
                             {
-                                section.Status = GetSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
+                                section.Status = OverviewStatusService.GetSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
                             }
                         }
                     }
                 }
-
-                //viewmodel.IsReadyForModeratorConfirmation = IsReadyForModeratorConfirmation(viewmodel);
-            }
-            else
-            {
-                // viewmodel.IsReadyForModeratorConfirmation = false;
             }
 
             return viewmodel;
         }
 
-        public string GetSectionStatus(List<ModeratorPageReviewOutcome> pageReviewOutcomes, int sequenceNumber, int sectionNumber)
-        {
-            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
-                p.SequenceNumber == sequenceNumber &&
-                p.SectionNumber == sectionNumber).ToList();
-
-            var sectionStatus = string.Empty;
-
-            if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
-            {
-                if (sectionPageReviewOutcomes.Count.Equals(1))
-                {
-                    // The section only has 1 question
-                    sectionStatus = sectionPageReviewOutcomes[0].Status;
-                }
-                else
-                {
-                    // The section contains multiple question
-                    if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
-                    {
-                        sectionStatus = null;
-                    }
-                    else if (sectionPageReviewOutcomes.All(x => x.Status == ModeratorPageReviewStatus.Pass))
-                    {
-                        sectionStatus = ModeratorSectionStatus.Pass;
-                    }
-                    else if (sectionPageReviewOutcomes.All(p =>
-                        p.Status == ModeratorPageReviewStatus.Pass || p.Status == ModeratorPageReviewStatus.Fail))
-                    {
-                        var failStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == ModeratorPageReviewStatus.Fail);
-                        var pluarlisedFailsOutOf = failStatusesCount == 1 ? ModeratorSectionStatus.FailOutOf : ModeratorSectionStatus.FailsOutOf;
-
-                        sectionStatus = $"{failStatusesCount} {pluarlisedFailsOutOf} {sectionPageReviewOutcomes.Count}";
-                    }
-                    else
-                    {
-                        sectionStatus = ModeratorSectionStatus.InProgress;
-                    }
-                }
-            }
-
-            return sectionStatus;
-        }
-
-        public string GetSectorsSectionStatus(List<ModeratorPageReviewOutcome> pageReviewOutcomes)
-        {
-            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
-                p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
-                p.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees).ToList();
-
-            var sectionStatus = string.Empty;
-
-            if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
-            {
-                if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
-                {
-                    sectionStatus = null;
-                }
-                else if (sectionPageReviewOutcomes.All(p => p.Status == ModeratorPageReviewStatus.Pass))
-                {
-                    sectionStatus = ModeratorSectionStatus.Pass;
-                }
-                else if (sectionPageReviewOutcomes.All(p =>
-                            p.Status == ModeratorPageReviewStatus.Pass || p.Status == ModeratorPageReviewStatus.Fail))
-                {
-                    sectionStatus = ModeratorSectionStatus.Fail;
-                }
-                else
-                {
-                    sectionStatus = ModeratorSectionStatus.InProgress;
-                }
-            }
-
-            return sectionStatus;
-        }
+      
     }
 }

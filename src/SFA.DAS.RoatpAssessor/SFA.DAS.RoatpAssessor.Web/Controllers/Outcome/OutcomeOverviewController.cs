@@ -39,9 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Outcome
             {
                 return RedirectToAction("Index", "Home");
             }
-
-                return View("~/Views/OutcomeOverview/Application.cshtml", viewModel);
-            
+            return View("~/Views/OutcomeOverview/Application.cshtml", viewModel);
         }
     }
 }

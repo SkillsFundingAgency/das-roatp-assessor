@@ -15,7 +15,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.Services;
 
-namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestrator
+namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeDashboardOrchestrator
 {
     [TestFixture]
     public class OutcomeOverviewOrchestratorTests
@@ -25,7 +25,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
 
         private Mock<IRoatpApplicationApiClient> _applicationApiClient;
         private Mock<IRoatpModerationApiClient> _moderationApiClient;
-        private Web.Services.ModeratorOverviewOrchestrator _orchestrator;
+        private Web.Services.OutcomeOverviewOrchestrator _orchestrator;
         private string _userId => _user.UserId();
         private string _userDisplayName => _user.UserDisplayName();
         private Apply _application;
@@ -39,7 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
         {
             _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
             _moderationApiClient = new Mock<IRoatpModerationApiClient>();
-            _orchestrator = new Web.Services.ModeratorOverviewOrchestrator(_applicationApiClient.Object, _moderationApiClient.Object);
+            _orchestrator = new OutcomeOverviewOrchestrator(_applicationApiClient.Object, _moderationApiClient.Object);
 
             _application = new Apply
             {
@@ -202,7 +202,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
             var applicationId = Guid.NewGuid();
             _applicationApiClient.Setup(x => x.GetApplication(applicationId)).ReturnsAsync((Apply)null);
 
-            var result = await _orchestrator.GetOverviewViewModel(new GetModeratorOverviewRequest(applicationId, "userId"));
+            var result = await _orchestrator.GetOverviewViewModel(new GetOutcomeOverviewRequest(applicationId, "userId"));
 
             Assert.IsNull(result);
         }
@@ -214,7 +214,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
             _applicationApiClient.Setup(x => x.GetApplication(applicationId)).ReturnsAsync(new Apply { ApplicationId = applicationId });
             _applicationApiClient.Setup(x => x.GetContactForApplication(applicationId)).ReturnsAsync((Contact)null);
 
-            var result = await _orchestrator.GetOverviewViewModel(new GetModeratorOverviewRequest(applicationId, "userId"));
+            var result = await _orchestrator.GetOverviewViewModel(new GetOutcomeOverviewRequest(applicationId, "userId"));
 
             Assert.IsNull(result);
         }
@@ -227,21 +227,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
             _applicationApiClient.Setup(x => x.GetContactForApplication(applicationId)).ReturnsAsync(new Contact());
             _moderationApiClient.Setup(x => x.GetModeratorSequences(applicationId)).ReturnsAsync((List<ModeratorSequence>)null);
 
-            var result = await _orchestrator.GetOverviewViewModel(new GetModeratorOverviewRequest(applicationId, "userId"));
+            var result = await _orchestrator.GetOverviewViewModel(new GetOutcomeOverviewRequest(applicationId, "userId"));
 
             Assert.IsNull(result);
         }
 
-        [Test]
-        public async Task GetOverviewViewModel_WhenThereAreNoSavedOutcomes_ThenTheApplicationIsNotReadyForModerationConfirmation()
-        {
-            var result = await _orchestrator.GetOverviewViewModel(new GetModeratorOverviewRequest(_applicationId, _userId));
-
-            AssertCommonProperties(result);
-            Assert.IsFalse(result.IsReadyForModeratorConfirmation);
-        }
-
-        private void AssertCommonProperties(ModeratorApplicationViewModel result)
+        private void AssertCommonProperties(OutcomeApplicationViewModel result)
         {
             Assert.AreEqual(_application.Id, result.Id);
             Assert.AreEqual(_application.ApplicationId, result.ApplicationId);
@@ -255,31 +246,16 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
         }
 
         [Test]
-        public async Task GetOverviewViewModel_WhenThereAreSavedOutcomesAndTheyAllPass_ThenTheOutcomesAreReturnedAndTheApplicationIsReadyForModerationConfirmation()
+        public async Task GetOverviewViewModel_WhenThereAreSavedOutcomesAndTheyAllPass_ThenTheOutcomesAreReturned()
         {
             var expectedStatus = ModeratorSectionStatus.Pass;
             _sequences.Add(new ModeratorSequence { SequenceNumber = 1, Sections = new List<ModeratorSection> { new ModeratorSection { SectionNumber = 2 } } });
             _outcomes.Add(new ModeratorPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
 
-            var result = await _orchestrator.GetOverviewViewModel(new GetModeratorOverviewRequest(_applicationId, _userId));
+            var result = await _orchestrator.GetOverviewViewModel(new GetOutcomeOverviewRequest(_applicationId, _userId));
 
             AssertCommonProperties(result);
             Assert.AreEqual(result.Sequences.First().Sections.First().Status, expectedStatus);
-            Assert.IsTrue(result.IsReadyForModeratorConfirmation);
-        }
-
-        [Test]
-        public async Task GetOverviewViewModel_WhenThereAreSavedOutcomesAndTheyHaveNoStatus_ThenTheOutcomesAreReturnedAndTheApplicationIsNotReadyForModerationConfirmation()
-        {
-            var expectedStatus = "";
-            _sequences.Add(new ModeratorSequence { SequenceNumber = 1, Sections = new List<ModeratorSection> { new ModeratorSection { SectionNumber = 2 } } });
-            _outcomes.Add(new ModeratorPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
-
-            var result = await _orchestrator.GetOverviewViewModel(new GetModeratorOverviewRequest(_applicationId, _userId));
-
-            AssertCommonProperties(result);
-            Assert.AreEqual(result.Sequences.First().Sections.First().Status, expectedStatus);
-            Assert.IsFalse(result.IsReadyForModeratorConfirmation);
         }
     }
 }
