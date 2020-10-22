@@ -57,7 +57,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 PageId = clarificationPage.PageId,
                 NextPageId = clarificationPage.NextPageId,
 
-                Caption = clarificationPage.Caption,
+                Caption = $"{clarificationPage.Caption} checks",
                 Heading = clarificationPage.Heading,
 
                 GuidanceInformation = clarificationPage.GuidanceInformation != null ? new List<string>(clarificationPage.GuidanceInformation) : new List<string>(),
@@ -100,7 +100,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
                 ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
-                Caption = clarificationPage.Caption,
+                Caption = $"{clarificationPage.Caption} checks",
                 Heading = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployeesHeading,
                 SelectedSectors = selectedSectors
             };
@@ -135,7 +135,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName,
                 ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName,
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
-                Caption = clarificationPage.Caption,
+                Caption = $"{clarificationPage.Caption} checks",
                 Heading = $"Delivering training in '{sectorDetails?.SectorName}' sector",
                 SectorDetails = sectorDetails,
                 ModerationOutcome = moderationOutcome
