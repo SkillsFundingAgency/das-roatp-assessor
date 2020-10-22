@@ -118,6 +118,29 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
             Assert.AreEqual(expectedStatus, ModeratorSectionStatus.InProgress);
         }
 
+        [TestCase(null)]
+        [TestCase(ModeratorPageReviewStatus.Pass)]
+        [TestCase(ModeratorPageReviewStatus.Fail)]
+        [TestCase(ModeratorPageReviewStatus.InProgress)]
+        public void GetSectionStatus_Single_PageReviewOutcome(string status)
+        {
+            const int sequenceNumber = 1;
+            const int sectionNumber = 1;
+
+            List<ModeratorPageReviewOutcome> sectionPageReviewOutcomes = new List<ModeratorPageReviewOutcome>
+            {
+                new ModeratorPageReviewOutcome
+                {
+                    SequenceNumber = sequenceNumber,
+                    SectionNumber = sectionNumber,
+                    Status = status
+                }
+            };
+
+            var sectionStatus = Web.Services.OverviewStatusService.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
+            Assert.AreSame(status, sectionStatus);
+        }
+
         [TestCase(null, null, null, null)]
         [TestCase(ModeratorPageReviewStatus.Pass, null, null, ModeratorSectionStatus.InProgress)]
         [TestCase(ModeratorPageReviewStatus.InProgress, null, null, ModeratorSectionStatus.InProgress)]
