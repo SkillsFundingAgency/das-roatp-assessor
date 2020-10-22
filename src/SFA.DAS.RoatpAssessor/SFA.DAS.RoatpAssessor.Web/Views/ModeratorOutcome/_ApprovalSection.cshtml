@@ -1,8 +1,6 @@
-﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorOutcomeViewModel
-@{
-    var askForClarification = "Ask for clarification";
-}
+
 <div class="govuk-form-group" sfa-anyvalidationerror-class="govuk-form-group--error">
     <fieldset class="govuk-fieldset">
 
@@ -16,9 +14,9 @@
 
         <div class="govuk-radios govuk-radios--conditional" data-module="radios">
             @{
-                var radioCheckedPassed = Model.Status == AssessorPageReviewStatus.Pass ? "checked" : "";
-                var radioCheckedFailed = Model.Status == AssessorPageReviewStatus.Fail ? "checked" : "";
-                var radioCheckedAskForClarification = Model.Status == askForClarification ? "checked" : "";
+                var radioCheckedPassed = Model.Status == ModeratorPageReviewStatus.Pass ? "checked" : "";
+                var radioCheckedFailed = Model.Status == ModeratorPageReviewStatus.Fail ? "checked" : "";
+                var radioCheckedAskForClarification = Model.Status == ModeratorPageReviewStatus.AskForClarification ? "checked" : "";
             }
 
             <!-- PASS -->
@@ -27,7 +25,7 @@
                        type="radio"
                        id="OptionPass"
                        name="Status"
-                       value="Pass"
+                       value="@ModeratorPageReviewStatus.Pass"
                        data-aria-controls="conditional-OptionPass"
                        @radioCheckedPassed />
                 <label class="govuk-label govuk-radios__label" for="OptionPass">
@@ -63,7 +61,7 @@
                        type="radio"
                        id="OptionFail"
                        name="Status"
-                       value="Fail"
+                       value="@ModeratorPageReviewStatus.Fail"
                        data-aria-controls="conditional-OptionFail"
                        @radioCheckedFailed />
                 <label class="govuk-label govuk-radios__label" for="OptionFail">
@@ -100,7 +98,7 @@
                            type="radio"
                            id="AskForClarification"
                            name="Status"
-                           value="Ask for clarification"
+                           value="@ModeratorPageReviewStatus.AskForClarification"
                            data-aria-controls="conditional-AskForClarification"
                            @radioCheckedAskForClarification/>
                     <label class="govuk-label govuk-radios__label" for="AskForClarification">
