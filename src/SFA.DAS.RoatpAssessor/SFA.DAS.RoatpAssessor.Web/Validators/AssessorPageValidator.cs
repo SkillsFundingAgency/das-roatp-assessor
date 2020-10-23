@@ -23,7 +23,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
 
             if (string.IsNullOrWhiteSpace(command.Status))
             {
-                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.Status), ValidationHelper.StatusMandatoryValidationMessage(command.PageId, command.Heading)));
+                validationResponse.Errors.Add(new ValidationErrorDetail("OptionPass", ValidationHelper.StatusMandatoryValidationMessage(command.PageId, command.Heading)));
             }
             else
             {
