@@ -151,9 +151,7 @@
         </div>
     }
 
-    <div class="govuk-grid-row">
-        <partial name="~/Views/ClarificationSectionReview/Pages/_ModerationOutcome.cshtml" for="@Model.ModerationOutcome" />
-    </div>
+    <partial name="~/Views/ClarificationSectionReview/Pages/_ModerationOutcome.cshtml" for="@Model.ModerationOutcome" />
 
     @if (Model.ApplicationId != Guid.Empty)
     {
@@ -172,7 +170,6 @@
                     {
                         <partial name="~/Views/ClarificationSectionReview/Pages/_ClarifiedAnswer.cshtml" for="@Model" />
                         <partial name="~/Views/ClarificationSectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
-
                         <button class="govuk-button" type="submit">Save and continue</button>
                     }
                     else
