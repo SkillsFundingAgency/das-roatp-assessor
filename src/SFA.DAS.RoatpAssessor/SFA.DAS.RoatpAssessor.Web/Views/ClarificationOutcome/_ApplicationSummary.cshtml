@@ -1,0 +1,105 @@
+﻿@using SFA.DAS.AdminService.Common.Extensions;
+
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ClarificationApplicationViewModel
+
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+    @if (!string.IsNullOrWhiteSpace(Model.Ukprn))
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                UKPRN
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.Ukprn
+            </dd>
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.ApplyLegalName))
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Legal name
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ApplyLegalName
+            </dd>
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.ApplicationRoute))
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Provider route
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ApplicationRouteShortText
+            </dd>
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.ApplicantEmailAddress))
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Applicant's email address
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ApplicantEmailAddress
+            </dd>
+        </div>
+    }
+    @if (Model.SubmittedDate.HasValue)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Application submitted date
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.SubmittedDate.ToSfaShortDateString()
+            </dd>
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.Assessor1Name))
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Assessor 1
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.Assessor1Name
+            </dd>
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.Assessor2Name))
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Assessor 2
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.Assessor2Name
+            </dd>
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.ModeratorName))
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Moderator
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ModeratorName
+            </dd>
+        </div>
+    }
+    @if (Model.ClarificationRequestedDate.HasValue)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Clarification requested date
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ClarificationRequestedDate.ToSfaShortDateString()
+            </dd>
+        </div>
+    }
+</dl>

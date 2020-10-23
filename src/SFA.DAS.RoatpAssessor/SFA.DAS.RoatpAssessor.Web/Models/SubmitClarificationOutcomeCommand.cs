@@ -1,17 +1,16 @@
 ﻿using System;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Models
 {
-    public class SubmitModeratorOutcomeCommand
+    public class SubmitClarificationOutcomeCommand
     {
         public Guid ApplicationId { get; set; }
         public string Status { get; set; }
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
-        public string OptionAskForClarificationText { get; set; }
+        public string OptionInProgressText { get; set; }
 
         public string ReviewComment
         {
@@ -21,14 +20,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
 
                 switch (Status)
                 {
-                    case ModeratorPageReviewStatus.Pass:
+                    case ClarificationPageReviewStatus.Pass:
                         reviewComment = OptionPassText;
                         break;
-                    case ModeratorPageReviewStatus.Fail:
+                    case ClarificationPageReviewStatus.Fail:
                         reviewComment = OptionFailText;
                         break;
-                    case ModeratorPageReviewStatus.AskForClarification:
-                        reviewComment = OptionAskForClarificationText;
+                    case ClarificationPageReviewStatus.InProgress:
+                        reviewComment = OptionInProgressText;
                         break;
                     default:
                         reviewComment = null;
@@ -39,18 +38,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
             }
         }
 
-        public SubmitModeratorOutcomeCommand()
+        public SubmitClarificationOutcomeCommand()
         {
 
         }
 
-        public SubmitModeratorOutcomeCommand(ModeratorOutcomeViewModel viewModel)
+        public SubmitClarificationOutcomeCommand(ClarificationOutcomeViewModel viewModel)
         {
             ApplicationId = viewModel.ApplicationId;
             Status = viewModel.Status;
             OptionPassText = viewModel.OptionPassText;
             OptionFailText = viewModel.OptionFailText;
-            OptionAskForClarificationText = viewModel.OptionAskForClarificationText;
+            OptionInProgressText = viewModel.OptionInProgressText;
         }
     }
 }
