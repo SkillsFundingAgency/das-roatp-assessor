@@ -1,0 +1,66 @@
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor
+
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.OutcomeApplicationViewModel
+
+@{
+    ViewBag.Title = "Moderator evaluation";
+    Layout = "_Layout";
+}
+
+<partial name="~/Views/OutcomeOverview/_Breadcrumb.cshtml" />
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+           
+
+            <h1 class="govuk-heading-xl">Application moderation overview</h1>
+
+            <partial name="~/Views/OutcomeOverview/_ApplicationSummary.cshtml" for="@Model" />
+        </div>
+    </div>
+
+    @if (Model.Sequences.Any())
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <ol class="app-task-list">
+                    @{ var index = 0; }
+                    @foreach (var sequence in Model.Sequences)
+                    {
+                        index++;
+                        <li>
+                            <h2 class="app-task-list__section">
+                                <span id="sequence-@sequence.SequenceNumber" class="app-task-list__section-number">@index. </span>@sequence.SequenceTitle
+                            </h2>
+                            <ul class="app-task-list__items">
+                                @foreach (var currentSection in sequence.Sections)
+                                {
+                                    <li class="app-task-list__item">
+                                        <span id="section-@sequence.SequenceNumber.@currentSection.SectionNumber" class="app-task-list__task-name app-task-list__task-name--inactive">
+                                            @if (currentSection.Status != null && currentSection.Status.Equals(AssessorSectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase))
+                                            {
+                                                @currentSection.LinkTitle
+                                            }
+                                            else
+                                            {
+                                                @*<a asp-controller="ModeratorSectionReview" asp-action="ReviewPageAnswers" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@sequence.SequenceNumber" asp-route-sectionNumber="@currentSection.SectionNumber" class="govuk-link">@currentSection.LinkTitle</a>*@
+                                                <a href="#" class="govuk-link">@currentSection.LinkTitle</a>
+                                            }
+                                        </span>
+                                        @if (!string.IsNullOrWhiteSpace(currentSection.Status))
+                                        {
+                                            var cssModifierClassName = Model.GetStatusCss(currentSection.Status);
+                                            <strong class="govuk-tag @cssModifierClassName das-no-wrap">@currentSection.Status</strong>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+    }
+</main>
