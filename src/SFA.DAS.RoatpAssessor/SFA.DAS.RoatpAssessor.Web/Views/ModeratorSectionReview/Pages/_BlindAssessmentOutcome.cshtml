@@ -6,27 +6,29 @@
     var assessor2CssModifierClassName = AssessorPageReviewStatus.Pass.Equals(Model.Assessor2ReviewStatus) ? "das-tag--solid-green" : "das-tag--solid-red";
 }
 
-<div class="govuk-grid-column-full govuk-!-margin-bottom-9">
-    <table class="govuk-table">
-        <caption class="govuk-table__caption govuk-heading-m">Outcome of blind assessment</caption>
-        <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header das-!-width-one-fifth"></th>
-                <th class="govuk-table__header das-!-width-two-fifths">@Model.Assessor1Name</th>
-                <th class="govuk-table__header das-!-width-two-fifths">@Model.Assessor2Name</th>
-            </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header">Outcome</th>
-                <td class="govuk-table__cell"><strong class="das-tag @assessor1CssModifierClassName">@Model.Assessor1ReviewStatus</strong></td>
-                <td class="govuk-table__cell"><strong class="das-tag @assessor2CssModifierClassName">@Model.Assessor2ReviewStatus</strong></td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header">Comments</th>
-                <td class="govuk-table__cell">@Model.Assessor1ReviewComment</td>
-                <td class="govuk-table__cell">@Model.Assessor2ReviewComment</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <table class="govuk-table govuk-!-margin-bottom-9">
+            <caption class="govuk-table__caption govuk-heading-m">Outcome of blind assessment</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header das-!-width-one-fifth"></th>
+                    <th class="govuk-table__header das-!-width-two-fifths">@Model.Assessor1Name</th>
+                    <th class="govuk-table__header das-!-width-two-fifths">@Model.Assessor2Name</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Outcome</th>
+                    <td class="govuk-table__cell"><strong class="das-tag @assessor1CssModifierClassName">@Model.Assessor1ReviewStatus</strong></td>
+                    <td class="govuk-table__cell"><strong class="das-tag @assessor2CssModifierClassName">@Model.Assessor2ReviewStatus</strong></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Comments</th>
+                    <td class="govuk-table__cell">@Model.Assessor1ReviewComment</td>
+                    <td class="govuk-table__cell">@Model.Assessor2ReviewComment</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

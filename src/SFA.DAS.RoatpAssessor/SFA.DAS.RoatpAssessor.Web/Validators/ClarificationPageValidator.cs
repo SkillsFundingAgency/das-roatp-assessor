@@ -11,13 +11,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
     {
         private const int RequiredMinimumWordsCount = 1;
         private const int MaxWordsCount = 150;
+        private const int ClarificationResponseMaxWordsCount = 300;
+        private const string ClarificationResponseRequired = "Enter clarification response";
+        private const string ClarificationResponseTooManyWords = "Clarification response must be 300 words or less";
+
         private const string TooManyWords = "Your comments must be 150 words or less";
         private const string FailCommentRequired = "Enter internal comments";
         private const string FailTooManyWords = "Internal comments must be 150 words or less";
 
-        private const int ClarificationResponseMaxWordsCount = 300;
-        private const string ClarificationResponseRequired = "Enter clarification response";
-        private const string ClarificationResponseTooManyWords = "Clarification response must be 300 words or less";
 
         public async Task<ValidationResponse> Validate(SubmitClarificationPageAnswerCommand command)
         {
@@ -26,9 +27,22 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                 Errors = new List<ValidationErrorDetail>()
             };
 
+            if (string.IsNullOrWhiteSpace(command.ClarificationResponse))
+            {
+                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ClarificationResponse), ClarificationResponseRequired));
+            }
+            else
+            {
+                var wordCount = ValidationHelper.GetWordCount(command.ClarificationResponse);
+                if (wordCount > ClarificationResponseMaxWordsCount)
+                {
+                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ClarificationResponse), ClarificationResponseTooManyWords));
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(command.Status))
             {
-                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.Status), ValidationHelper.StatusMandatoryValidationMessage(command.PageId, command.Heading)));
+                validationResponse.Errors.Add(new ValidationErrorDetail("OptionPass", ValidationHelper.StatusMandatoryValidationMessage(command.PageId, command.Heading)));
             }
             else
             {
@@ -71,18 +85,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                 }
             }
 
-            if (string.IsNullOrWhiteSpace(command.ClarificationResponse))
-            {
-                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ClarificationResponse), ClarificationResponseRequired));
-            }
-            else
-            {
-                var wordCount = ValidationHelper.GetWordCount(command.ClarificationResponse);
-                if (wordCount > ClarificationResponseMaxWordsCount)
-                {
-                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ClarificationResponse), ClarificationResponseTooManyWords));
-                }
-            }
+            
 
             return await Task.FromResult(validationResponse);
         }
