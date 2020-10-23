@@ -46,9 +46,36 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         }
 
-        public Task<ModeratorOutcomeReviewViewModel> GetClarificationutcomeReviewViewModel(ReviewClarificationOutcomeRequest request)
+        public async Task<ClarificationOutcomeReviewViewModel> GetClarificationOutcomeReviewViewModel(ReviewClarificationOutcomeRequest request)
         {
-            throw new NotImplementedException();
+            var viewModel = new ClarificationOutcomeReviewViewModel
+            {
+                Status = request.Status,
+                ReviewComment = request.ReviewComment,
+                ApplicationId = request.ApplicationId
+            };
+
+            var application = await _applicationApiClient.GetApplication(request.ApplicationId);
+            var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
+
+            if (application is null || contact is null)
+            {
+                return null;
+            }
+
+            viewModel.ApplicantEmailAddress = contact.Email;
+
+            if (application.ApplyData?.ApplyDetails != null)
+            {
+                viewModel.ApplicationRoute = application.ApplyData.ApplyDetails.ProviderRouteName;
+                viewModel.Ukprn = application.ApplyData.ApplyDetails.UKPRN;
+                viewModel.ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName;
+                viewModel.SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn;
+            }
+
+            return viewModel;
+
         }
     }
-}
+    }
+

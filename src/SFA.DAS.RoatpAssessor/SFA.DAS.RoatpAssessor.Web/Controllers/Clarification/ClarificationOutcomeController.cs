@@ -76,17 +76,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
                 var viewModel = await _outcomeOrchestrator.GetClarificationOutcomeViewModel(new GetClarificationOutcomeRequest(applicationId, userId));
                 viewModel.OptionPassText = command.OptionPassText;
                 viewModel.OptionFailText = command.OptionFailText;
-                viewModel.OptionInProgressText = command.OptionInProgressText;
                 viewModel.Status = command.Status;
 
                 return View("~/Views/ClarificationOutcome/Application.cshtml", viewModel);
             }
 
-            return null;
-            //var viewModelConfirmation = await _outcomeOrchestrator.GetClarifictionOutcomeReviewViewModel(
-            //    new ReviewModeratorOutcomeRequest(applicationId, userId, command.Status, command.ReviewComment));
+            var viewModelConfirmation = await _outcomeOrchestrator.GetClarificationOutcomeReviewViewModel(
+                new ReviewClarificationOutcomeRequest(applicationId, userId, command.Status, command.ReviewComment));
 
-            //return View("~/Views/ModeratorOutcome/AreYouSure.cshtml", viewModelConfirmation);
+            return View("~/Views/ClarificationOutcome/AreYouSure.cshtml", viewModelConfirmation);
 
         }
     }

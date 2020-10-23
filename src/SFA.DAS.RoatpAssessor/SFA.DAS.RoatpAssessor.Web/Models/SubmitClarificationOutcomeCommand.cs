@@ -10,7 +10,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
         public string Status { get; set; }
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
-        public string OptionInProgressText { get; set; }
 
         public string ReviewComment
         {
@@ -25,9 +24,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
                         break;
                     case ClarificationPageReviewStatus.Fail:
                         reviewComment = OptionFailText;
-                        break;
-                    case ClarificationPageReviewStatus.InProgress:
-                        reviewComment = OptionInProgressText;
                         break;
                     default:
                         reviewComment = null;
@@ -49,7 +45,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
             Status = viewModel.Status;
             OptionPassText = viewModel.OptionPassText;
             OptionFailText = viewModel.OptionFailText;
-            OptionInProgressText = viewModel.OptionInProgressText;
         }
     }
 }

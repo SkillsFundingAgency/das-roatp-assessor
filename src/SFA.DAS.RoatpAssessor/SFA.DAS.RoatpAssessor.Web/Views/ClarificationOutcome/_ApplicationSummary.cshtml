@@ -1,6 +1,6 @@
 ﻿@using SFA.DAS.AdminService.Common.Extensions;
 
-@model SFA.DAS.RoatpAssessor.Web.ViewModels.ClarificationApplicationViewModel
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.OrganisationDetailsViewModel
 
 <dl class="govuk-summary-list govuk-!-margin-bottom-9">
     @if (!string.IsNullOrWhiteSpace(Model.Ukprn))
@@ -36,17 +36,7 @@
             </dd>
         </div>
     }
-    @if (!string.IsNullOrWhiteSpace(Model.ApplicantEmailAddress))
-    {
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Applicant's email address
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @Model.ApplicantEmailAddress
-            </dd>
-        </div>
-    }
+
     @if (Model.SubmittedDate.HasValue)
     {
         <div class="govuk-summary-list__row">
@@ -55,50 +45,6 @@
             </dt>
             <dd class="govuk-summary-list__value">
                 @Model.SubmittedDate.ToSfaShortDateString()
-            </dd>
-        </div>
-    }
-    @if (!string.IsNullOrWhiteSpace(Model.Assessor1Name))
-    {
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Assessor 1
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @Model.Assessor1Name
-            </dd>
-        </div>
-    }
-    @if (!string.IsNullOrWhiteSpace(Model.Assessor2Name))
-    {
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Assessor 2
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @Model.Assessor2Name
-            </dd>
-        </div>
-    }
-    @if (!string.IsNullOrWhiteSpace(Model.ModeratorName))
-    {
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Moderator
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @Model.ModeratorName
-            </dd>
-        </div>
-    }
-    @if (Model.ClarificationRequestedDate.HasValue)
-    {
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Clarification requested date
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @Model.ClarificationRequestedDate.ToSfaShortDateString()
             </dd>
         </div>
     }

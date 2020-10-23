@@ -22,7 +22,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
-        public string OptionInProgressText { get; set; }
 
         public ClarificationOutcomeViewModel(Guid applicationId)
         {
@@ -37,8 +36,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
             ApplicationStatus = application.ApplicationStatus;
             ModerationStatus = application.ModerationStatus;
 
-            PassCount = outcomes?.Count(o => o.Status == ModeratorPageReviewStatus.Pass) ?? 0;
-            FailCount = outcomes?.Count(o => o.Status == ModeratorPageReviewStatus.Fail) ?? 0;
+            PassCount = outcomes?.Count(o => o.Status == ClarificationPageReviewStatus.Pass) ?? 0;
+            FailCount = outcomes?.Count(o => o.Status == ClarificationPageReviewStatus.Fail) ?? 0;
 
             if (application.ApplyData?.ApplyDetails != null)
             {

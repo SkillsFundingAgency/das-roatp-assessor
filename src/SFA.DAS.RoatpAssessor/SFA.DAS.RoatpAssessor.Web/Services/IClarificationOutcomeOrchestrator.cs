@@ -7,6 +7,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
     public interface IClarificationOutcomeOrchestrator
     {
         Task<ClarificationOutcomeViewModel> GetClarificationOutcomeViewModel(GetClarificationOutcomeRequest request);
-        Task<ModeratorOutcomeReviewViewModel> GetClarificationutcomeReviewViewModel(ReviewClarificationOutcomeRequest request);
+        Task<ClarificationOutcomeReviewViewModel> GetClarificationOutcomeReviewViewModel(ReviewClarificationOutcomeRequest request);
     }
 }

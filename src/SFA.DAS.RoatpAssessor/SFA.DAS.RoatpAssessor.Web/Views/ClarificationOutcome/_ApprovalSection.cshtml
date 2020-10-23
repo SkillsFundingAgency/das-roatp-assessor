@@ -105,26 +105,6 @@
                         Ask for clarification
                     </label>
                 </div>
-                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-AskForClarification">
-                    <div class="govuk-character-count" data-module="govuk-character-count" data-maxwords="150">
-                        <div class="govuk-form-group">
-                            <label for="OptionAskForClarificationText" class="govuk-label">
-                                Add internal comments (optional)
-                            </label>
-                            <span class="govuk-error-message" asp-validation-for="OptionInProgressText"></span>
-                            <textarea class="govuk-textarea govuk-js-character-count"
-                                  asp-for="OptionInProgressText"
-                                  sfa-validation-for="OptionInProgressText"
-                                  sfa-validationerror-class="govuk-textarea--error-override"
-                                  rows="5"
-                                  aria-describedby="OptionAskForClarificationText-info"
-                                  maxlength="10000"></textarea>
-                        </div>
-                        <span id="OptionAskForClarificationText-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-                            You can enter up to 150 words
-                        </span>
-                    </div>
-                </div>
             }
             <!-- /ASK FOR Clarification -->
         </div>

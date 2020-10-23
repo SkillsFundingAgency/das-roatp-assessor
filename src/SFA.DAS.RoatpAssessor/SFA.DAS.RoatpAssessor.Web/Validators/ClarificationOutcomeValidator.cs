@@ -62,17 +62,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
 
                                 break;
                             }
-                    case ModeratorPageReviewStatus.InProgress:
-                        {
-                            var wordCount = ValidationHelper.GetWordCount(command.OptionInProgressText);
-                            if (wordCount > MaxWordsCount)
-                            {
-                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionInProgressText), TooManyWords));
-                            }
-
-                            break;
-                        }
-                }
+                    }
                 }
 
                 return await Task.FromResult(validationResponse);
