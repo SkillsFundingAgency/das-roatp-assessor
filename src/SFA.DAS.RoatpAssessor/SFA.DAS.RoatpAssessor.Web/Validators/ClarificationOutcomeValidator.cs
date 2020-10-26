@@ -20,9 +20,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
             private const string FailCommentRequired = "Enter internal comments";
             private const string FailTooManyWords = "Internal comments must be 150 words or less";
 
-            private const string EnterAPassConfirmation = "Select if you're sure you want to pass this application";
-            private const string EnterAFailConfirmation = "Select if you're sure you want to fail this application";
-            private const string EnterAnAskForClarificationConfirmation = "Select if you're sure you want to ask for clarification";
             public async Task<ValidationResponse> Validate(SubmitClarificationOutcomeCommand command)
             {
                 var validationResponse = new ValidationResponse
@@ -68,38 +65,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                 return await Task.FromResult(validationResponse);
             }
 
-            public async Task<ValidationResponse> Validate(SubmitClarificationOutcomeConfirmationCommand command)
-            {
-                var validationResponse = new ValidationResponse
-                {
-                    Errors = new List<ValidationErrorDetail>()
-                };
-
-                if (!string.IsNullOrEmpty(command.ConfirmStatus)) return await Task.FromResult(validationResponse);
-
-                switch (command.Status)
-                {
-                    case ClarificationPageReviewStatus.Pass:
-                        validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), EnterAPassConfirmation));
-                        break;
-                    case ClarificationPageReviewStatus.Fail:
-                        validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), EnterAFailConfirmation));
-                        break;
-                    default:
-                        validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ConfirmStatus), "Pick a choice"));
-                        break;
-                }
-
-                return await Task.FromResult(validationResponse);
-            }
         }
-
-
-
 
         public interface IClarificationOutcomeValidator
         {
             Task<ValidationResponse> Validate(SubmitClarificationOutcomeCommand command);
-            Task<ValidationResponse> Validate(SubmitClarificationOutcomeConfirmationCommand command);
         }
     }

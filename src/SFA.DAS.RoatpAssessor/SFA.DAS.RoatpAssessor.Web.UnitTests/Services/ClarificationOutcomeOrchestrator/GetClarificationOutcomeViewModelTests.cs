@@ -7,12 +7,13 @@ using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
-namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestrator
+namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrchestrator
 {
     [TestFixture]
     public class GetClarificationOutcomeViewModelTests
@@ -25,22 +26,22 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
 
         private Apply _application;
         private Contact _contact;
-        private List<ModeratorPageReviewOutcome> _outcomes;
-        private GetModeratorOutcomeRequest _request;
+        private List<ClarificationPageReviewOutcome> _outcomes;
+        private GetClarificationOutcomeRequest _request;
 
-        private ModeratorOutcomeViewModel _expectedOutcomeViewModel;
+        private ClarificationOutcomeViewModel _expectedOutcomeViewModel;
 
         private Mock<IRoatpApplicationApiClient> _applicationApiClient;
-        private Mock<IRoatpModerationApiClient> _moderationApiClient;
+        private Mock<IRoatpClarificationApiClient> _clarificationApiClient;
 
-        private Web.Services.ModeratorOutcomeOrchestrator _orchestrator;
+        private Web.Services.ClarificationOutcomeOrchestrator _orchestrator;
 
         [SetUp]
         public void SetUp()
         {
             _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
-            _moderationApiClient = new Mock<IRoatpModerationApiClient>();
-            _orchestrator = new Web.Services.ModeratorOutcomeOrchestrator(_applicationApiClient.Object, _moderationApiClient.Object);
+            _clarificationApiClient = new Mock<IRoatpClarificationApiClient>();
+            _orchestrator = new Web.Services.ClarificationOutcomeOrchestrator(_applicationApiClient.Object, _clarificationApiClient.Object);
             _application = new Apply
             {
                 ApplicationId = _applicationId,
@@ -64,14 +65,14 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
                 }
             };
 
-            _outcomes = new List<ModeratorPageReviewOutcome>();
+            _outcomes = new List<ClarificationPageReviewOutcome>();
             _contact = new Contact { Email = "email@address.com" };
-            _request = new GetModeratorOutcomeRequest(_applicationId,_userId);
+            _request = new GetClarificationOutcomeRequest(_applicationId,_userId);
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
-            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
 
-            _expectedOutcomeViewModel = new ModeratorOutcomeViewModel(_application, _outcomes);
+            _expectedOutcomeViewModel = new ClarificationOutcomeViewModel(_application, _outcomes);
         }
 
 
@@ -79,7 +80,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
         public void Return_null_view_model_if_no_application()
         {
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync((Apply)null);
-            var result =  _orchestrator.GetInModerationOutcomeViewModel(_request);
+            var result =  _orchestrator.GetClarificationOutcomeViewModel(_request);
             Assert.IsNull(result.Result);
         }
 
@@ -87,28 +88,26 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
         public void Return_null_view_model_if_no_contact()
         {
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync((Contact)null);
-            var result = _orchestrator.GetInModerationOutcomeViewModel(_request);
+            var result = _orchestrator.GetClarificationOutcomeViewModel(_request);
             Assert.IsNull(result.Result);
         }
-
-
 
         [Test]
         public void Return_null_view_model_if_more_than_one_outcome_not_pass_or_fail()
         {
-            _outcomes = new List<ModeratorPageReviewOutcome>();
-            _outcomes.Add(new ModeratorPageReviewOutcome {ApplicationId = _applicationId, Status = "not pass or fail"});
-            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
-            var result = _orchestrator.GetInModerationOutcomeViewModel(_request);
+            _outcomes = new List<ClarificationPageReviewOutcome>();
+            _outcomes.Add(new ClarificationPageReviewOutcome { ApplicationId = _applicationId, Status = "not pass or fail" });
+            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            var result = _orchestrator.GetClarificationOutcomeViewModel(_request);
             Assert.IsNull(result.Result);
         }
 
         [Test]
         public void Return_view_model_with_pass_and_fail_counts_as_zero_if_no_outcomes_added()
         {
-            _outcomes = new List<ModeratorPageReviewOutcome>(); 
-            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
-            var result = _orchestrator.GetInModerationOutcomeViewModel(_request);
+            _outcomes = new List<ClarificationPageReviewOutcome>();
+            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            var result = _orchestrator.GetClarificationOutcomeViewModel(_request);
             var actualViewModel = result?.Result;
 
             Assert.AreEqual(JsonConvert.SerializeObject(actualViewModel), JsonConvert.SerializeObject(_expectedOutcomeViewModel));
@@ -117,17 +116,17 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
         [Test]
         public void Return_view_model_with_pass_and_fail_counts_as_expected_if_outcomes_added()
         {
-            _outcomes = new List<ModeratorPageReviewOutcome>();
-            _outcomes.Add(new ModeratorPageReviewOutcome {Status="Pass"});
-            _outcomes.Add(new ModeratorPageReviewOutcome { Status = "Pass" });
-            _outcomes.Add(new ModeratorPageReviewOutcome { Status = "Fail" });
+            _outcomes = new List<ClarificationPageReviewOutcome>();
+            _outcomes.Add(new ClarificationPageReviewOutcome { Status = "Pass" });
+            _outcomes.Add(new ClarificationPageReviewOutcome { Status = "Fail" });
+            _outcomes.Add(new ClarificationPageReviewOutcome { Status = "Fail" });
 
-            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
-            var result = _orchestrator.GetInModerationOutcomeViewModel(_request);
+            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            var result = _orchestrator.GetClarificationOutcomeViewModel(_request);
             var actualViewModel = result?.Result;
 
-            _expectedOutcomeViewModel.FailCount = 1;
-            _expectedOutcomeViewModel.PassCount = 2;
+            _expectedOutcomeViewModel.FailCount = 2;
+            _expectedOutcomeViewModel.PassCount = 1;
             Assert.AreEqual(JsonConvert.SerializeObject(actualViewModel), JsonConvert.SerializeObject(_expectedOutcomeViewModel));
         }
     }
