@@ -19,7 +19,7 @@
                 @Model.Caption
             </span>
             <h1 class="govuk-heading-xl">@Model.Heading</h1>
-
+            
             <partial name="~/Views/ClarificationSectionReview/Pages/_ApplicationSummary.cshtml" for="@Model" />
         </div>
     </div>
@@ -37,12 +37,14 @@
             <div class="govuk-grid-column-full">
                 @{
                     var tableSpacingCssClass = Model.GuidanceInformation != null && Model.GuidanceInformation.Any() ? "" : "govuk-!-margin-bottom-9";
+
+                    <h2>Original answer</h2>
                     <table class="govuk-table @tableSpacingCssClass">
                         <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="col">Application question</th>
-                                <th class="govuk-table__header das-no-wrap" scope="col">Applicant's answer</th>
-                            </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Application question</th>
+                            <th class="govuk-table__header das-no-wrap" scope="col">Applicant's answer</th>
+                        </tr>
                         </thead>
                         <tbody class="govuk-table__body">
                             @foreach (var question in Model.Questions)
