@@ -30,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
 
             Assert.IsFalse(response.IsValid);
             Assert.AreEqual($"Select the outcome for {_command.Heading.ToLower()}", response.Errors.First().ErrorMessage);
-            Assert.AreEqual("Status", response.Errors.First().Field);
+            Assert.AreEqual("OptionPass", response.Errors.First().Field);
         }
 
         [Test]
