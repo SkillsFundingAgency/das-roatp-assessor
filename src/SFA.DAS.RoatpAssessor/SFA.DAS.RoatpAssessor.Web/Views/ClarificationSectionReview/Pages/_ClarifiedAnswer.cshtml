@@ -11,18 +11,18 @@
 
         <div class="govuk-character-count govuk-!-margin-bottom-0" data-module="govuk-character-count" data-maxwords="300">
             <div class="govuk-form-group">
-                <label class="govuk-label" for="Response">
+                <label class="govuk-label" asp-for="ClarificationResponse">
                     Enter clarification response
                 </label>
                 <span class="govuk-error-message" asp-validation-for="ClarificationResponse"></span>
-                <textarea 
-                    class="govuk-textarea govuk-js-character-count"
-                    asp-for="ClarificationResponse"
-                    sfa-validation-for="ClarificationResponse"
-                    sfa-validationerror-class="govuk-textarea--error-override"
-                    rows="5"
-                    aria-describedby="ClarificationResponse-info"
-                    maxlength="10000"></textarea>
+                <textarea
+                          class="govuk-textarea govuk-js-character-count"
+                          asp-for="ClarificationResponse"
+                          sfa-validation-for="ClarificationResponse"
+                          sfa-validationerror-class="govuk-textarea--error-override"
+                          rows="5"
+                          aria-describedby="ClarificationResponse-info"
+                          maxlength="10000"></textarea>
             </div>
             <span id="ClarificationResponse-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
                 You can enter up to 300 words
