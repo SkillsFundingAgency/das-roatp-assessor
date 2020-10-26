@@ -38,8 +38,10 @@
                 @{
                     var tableSpacingCssClass = Model.GuidanceInformation != null && Model.GuidanceInformation.Any() ? "" : "govuk-!-margin-bottom-9";
 
-                    <h2>Original answer</h2>
                     <table class="govuk-table @tableSpacingCssClass">
+                        <caption class="govuk-table__caption govuk-heading-m">
+                            Original answer
+                        </caption>
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="col">Application question</th>
