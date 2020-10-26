@@ -1,5 +1,4 @@
 ﻿using System;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 

@@ -15,7 +15,7 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestrator
 {
     [TestFixture]
-    public class GetClarificationOutcomeViewModelTests
+    public class GetInModerationOutcomeViewModelTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
         private readonly ClaimsPrincipal _user = MockedUser.Setup();
