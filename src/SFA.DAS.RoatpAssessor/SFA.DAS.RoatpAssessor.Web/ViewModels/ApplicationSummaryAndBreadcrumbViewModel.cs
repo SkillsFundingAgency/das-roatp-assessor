@@ -32,6 +32,10 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
             }
         }
 
+        #region Clarified Answer
+        public string ClarificationResponse { get; set; }
+        #endregion
+
         // TODO: Future Tech Debt - split the regions below into appropriate base classes.
         // The reason they are here is because different VMs inherit from it and this base class used a as a common type in several views
         // Note that it also affects ModelState & validation on the views
@@ -41,10 +45,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
         public string OptionInProgressText { get; set; }
-        #endregion
-
-        #region Clarified Answer
-        public string ClarificationResponse { get; set; }
         #endregion
     }
 }
