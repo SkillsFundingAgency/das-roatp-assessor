@@ -160,7 +160,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
         {
 
 
-            if (status == ModerationConfirmationStatus.Pass || status == ModerationConfirmationStatus.Fail || status == ModerationConfirmationStatus.AskForClarification)
+            if (status == ClarificationConfirmationStatus.Pass || status == ClarificationConfirmationStatus.Fail)
             {
                 var viewModelPass = await _outcomeOrchestrator.GetClarificationOutcomeReviewViewModel(
                     new ReviewClarificationOutcomeRequest(applicationId, userId, status, reviewComment));
