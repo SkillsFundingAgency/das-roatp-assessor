@@ -89,24 +89,6 @@
                 </div>
             </div>
             <!-- /FAIL -->
-
-            <!-- IN Ask for Clarification -->
-            @if (Model.FailCount > 0)
-            {
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input"
-                           type="radio"
-                           id="AskForClarification"
-                           name="Status"
-                           value="@ModeratorPageReviewStatus.AskForClarification"
-                           data-aria-controls="conditional-AskForClarification"
-                           @radioCheckedAskForClarification/>
-                    <label class="govuk-label govuk-radios__label" for="AskForClarification">
-                        Ask for clarification
-                    </label>
-                </div>
-            }
-            <!-- /ASK FOR Clarification -->
         </div>
     </fieldset>
 </div>

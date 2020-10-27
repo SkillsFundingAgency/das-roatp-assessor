@@ -77,5 +77,5 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         }
     }
-    }
+}
 

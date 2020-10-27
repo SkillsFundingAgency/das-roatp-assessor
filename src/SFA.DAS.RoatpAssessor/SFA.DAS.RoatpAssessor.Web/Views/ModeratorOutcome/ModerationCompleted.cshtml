@@ -6,12 +6,6 @@
     ViewBag.Title = "Assessor outcome saved";
     Layout = "_Layout";
 
-    var status = Model.Status;
-
-    if (status == ModerationConfirmationStatus.AskForClarification)
-    {
-        status = "Clarification";
-    }
 }
 
 <partial name="~/Views/ModeratorOutcome/_BreadcrumbSaved.cshtml" />
@@ -21,7 +15,7 @@
         <div class="govuk-grid-column-two-thirds">
             <div class="govuk-panel govuk-panel--confirmation">
                 <div class="govuk-panel__body">
-                    Outcome saved as:<br><strong>@status</strong>
+                    Outcome saved as:<br><strong>@Model.Status</strong>
                 </div>
             </div>
 
