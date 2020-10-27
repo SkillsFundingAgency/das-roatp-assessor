@@ -41,7 +41,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
             var response = await _validator.Validate(_command);
 
             Assert.IsFalse(response.IsValid);
-            Assert.AreEqual("Your comments must be 150 words or less", response.Errors.First().ErrorMessage);
+            Assert.AreEqual("Internal comments must be 150 words or less", response.Errors.First().ErrorMessage);
             Assert.AreEqual("OptionPassText", response.Errors.First().Field);
         }
 
@@ -80,7 +80,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
             var response = await _validator.Validate(_command);
 
             Assert.IsFalse(response.IsValid);
-            Assert.AreEqual("Your comments must be 150 words or less", response.Errors.First().ErrorMessage);
+            Assert.AreEqual("Internal comments must be 150 words or less", response.Errors.First().ErrorMessage);
             Assert.AreEqual("OptionInProgressText", response.Errors.First().Field);
         }
 

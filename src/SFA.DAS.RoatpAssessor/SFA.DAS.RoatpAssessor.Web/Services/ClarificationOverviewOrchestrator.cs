@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -89,9 +90,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 {
                     sectionStatus = ClarificationSectionStatus.InProgress;
                 }
-                else
+                else if (sectionPageReviewOutcomes.Where(p => p.ModeratorReviewStatus == ModeratorPageReviewStatus.Fail).All(p => string.IsNullOrEmpty(p.Status)))
                 {
                     sectionStatus = ClarificationSectionStatus.Clarification;
+                }
+                else
+                {
+                    sectionStatus = ClarificationSectionStatus.InProgress;
                 }
             }
 
@@ -121,9 +126,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 {
                     sectionStatus = ClarificationSectionStatus.InProgress;
                 }
-                else
+                else if (sectionPageReviewOutcomes.Where(p => p.ModeratorReviewStatus == ModeratorPageReviewStatus.Fail).All(p => string.IsNullOrEmpty(p.Status)))
                 {
                     sectionStatus = ClarificationSectionStatus.Clarification;
+                }
+                else
+                {
+                    sectionStatus = ClarificationSectionStatus.InProgress;
                 }
             }
 

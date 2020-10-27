@@ -4,6 +4,7 @@ using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -96,8 +97,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
 
         [TestCase(null, null, null, ClarificationSectionStatus.Clarification)]
         [TestCase(null, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.Clarification)]
-        [TestCase(null, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.Clarification)]
-        [TestCase(null, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.Clarification)]
+        [TestCase(null, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
+        [TestCase(null, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
         [TestCase(null, ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
         [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.InProgress)]
         [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
@@ -118,21 +119,24 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
                     ApplicationId = _applicationId,
                     SequenceNumber = sequenceNumber,
                     SectionNumber = sectionNumber,
-                    Status = statusOne
+                    Status = statusOne,
+                    ModeratorReviewStatus = statusOne == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
                 },
                 new ClarificationPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     SequenceNumber = sequenceNumber,
                     SectionNumber = sectionNumber,
-                    Status = statusTwo
+                    Status = statusTwo,
+                    ModeratorReviewStatus = statusTwo == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
                 },
                 new ClarificationPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     SequenceNumber = sequenceNumber,
                     SectionNumber = sectionNumber,
-                    Status = statusThree
+                    Status = statusThree,
+                    ModeratorReviewStatus = statusThree == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
                 }
             };
 
@@ -142,8 +146,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
 
         [TestCase(null, null, null, ClarificationSectionStatus.Clarification)]
         [TestCase(null, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.Clarification)]
-        [TestCase(null, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.Clarification)]
-        [TestCase(null, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.Clarification)]
+        [TestCase(null, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
+        [TestCase(null, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
         [TestCase(null, ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
         [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.InProgress)]
         [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
@@ -161,21 +165,24 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
                     ApplicationId = _applicationId,
                     Status = statusOne,
                     SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                    ModeratorReviewStatus = statusOne == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
                 },
                 new ClarificationPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusTwo,
                     SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                    ModeratorReviewStatus = statusTwo == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
                 },
                 new ClarificationPageReviewOutcome
                 {
                     ApplicationId = _applicationId,
                     Status = statusThree,
                     SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                    ModeratorReviewStatus = statusThree == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
                 }
             };
 
