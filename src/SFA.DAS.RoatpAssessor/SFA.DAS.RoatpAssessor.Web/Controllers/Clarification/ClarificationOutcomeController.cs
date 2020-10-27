@@ -153,18 +153,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
             var viewModelClarificationOutcomeSaved = await _outcomeOrchestrator.GetClarificationOutcomeReviewViewModel(
                 new ReviewClarificationOutcomeRequest(applicationId, userId, command.Status, reviewComment));
 
-            var viewModelModerationOutcomeSaved = new ModeratorOutcomeReviewViewModel
-            {
-                ApplicationId = viewModelClarificationOutcomeSaved.ApplicationId,
-                Status = viewModelClarificationOutcomeSaved.Status,
-                ApplicantEmailAddress = viewModelClarificationOutcomeSaved.ApplicantEmailAddress,
-                ConfirmStatus = viewModelClarificationOutcomeSaved.ConfirmStatus,
-                ReviewComment = viewModelClarificationOutcomeSaved.ReviewComment
-            };
-
-
-            return View("~/Views/ModeratorOutcome/ModerationCompleted.cshtml", viewModelModerationOutcomeSaved);
-
+            return View("~/Views/ModeratorOutcome/ModerationCompleted.cshtml", viewModelClarificationOutcomeSaved);
         }
 
         private async Task<IActionResult> GoToErrorView(Guid applicationId, string reviewComment, string status, string userId)
