@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationSectorsViewModel
 @{
     ViewBag.Title = $"Clarification - {@Model.Heading}";
@@ -30,25 +30,29 @@
                     <ul class="app-task-list__items govuk-!-padding-left-0">
                         @foreach (var sector in Model.SelectedSectors)
                         {
-                            <li class="app-task-list__item">
-                                <span class="app-task-list__task-name">
-                                    <a asp-action="ReviewSectorAnswers" asp-controller="ClarificationSectionReview" asp-route-applicationId="@Model.ApplicationId" asp-route-pageId="@sector.PageId" class="govuk-link" aria-describedby="pageid-@sector.PageId">
-                                        @Html.Raw(sector.Title)
-                                    </a>
-                                </span>
-                                @if(sector.Status== ModeratorPageReviewStatus.InProgress)
-                                {
-                                 <strong class="app-task-list__tag das-tag das-no-wrap" id="pageid-@sector.PageId">In progress</strong> 
-                                }
-                                @if (sector.Status == ModeratorPageReviewStatus.Pass)
-                                {
-                                    <strong class="app-task-list__tag das-tag das-tag--solid-green" id="pageid-@sector.PageId">Pass</strong>
-                                }
-                                @if (sector.Status == ModeratorPageReviewStatus.Fail)
-                                {
-                                    <strong class="app-task-list__tag das-tag das-tag--solid-red" id="pageid-@sector.PageId">Fail</strong>
-                                }
-                            </li>
+                        <li class="app-task-list__item">
+                            <span class="app-task-list__task-name">
+                                <a asp-action="ReviewSectorAnswers" asp-controller="ClarificationSectionReview" asp-route-applicationId="@Model.ApplicationId" asp-route-pageId="@sector.PageId" class="govuk-link" aria-describedby="pageid-@sector.PageId">
+                                    @Html.Raw(sector.Title)
+                                </a>
+                            </span>
+                            @if (sector.Status == ClarificationPageReviewStatus.InProgress)
+                            {
+                                <strong class="app-task-list__tag das-tag das-no-wrap" id="pageid-@sector.PageId">In progress</strong>
+                            }
+                            else if (sector.Status == ClarificationPageReviewStatus.Pass)
+                            {
+                                <strong class="app-task-list__tag das-tag das-tag--solid-green" id="pageid-@sector.PageId">Pass</strong>
+                            }
+                            else if (sector.Status == ClarificationPageReviewStatus.Fail)
+                            {
+                                <strong class="app-task-list__tag das-tag das-tag--solid-red" id="pageid-@sector.PageId">Fail</strong>
+                            }
+                            else
+                            {
+                                <strong class="app-task-list__tag das-tag das-no-wrap" id="pageid-@sector.PageId">Clarification</strong>
+                            }
+                        </li>
                         }
                     </ul>
                 </li>
