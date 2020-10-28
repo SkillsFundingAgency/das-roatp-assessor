@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Internal;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -128,6 +130,60 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
             Assert.IsFalse(response.IsValid);
             Assert.AreEqual("Clarification response must be 300 words or less", response.Errors.First().ErrorMessage);
             Assert.AreEqual("ClarificationResponse", response.Errors.First().Field);
+        }
+
+        [Test]
+        public async Task When_FilesToUpload_has_file_that_exceeds_maximum_filesize_then_an_error_is_returned()
+        {
+            const int maxFileSize = 5 * 1048576;
+
+            _command.FilesToUpload = new FormFileCollection
+            {
+                GenerateClarificationFile("ClarificationFile.pdf", true, maxFileSize + 1)
+            };
+
+            var response = await _validator.Validate(_command);
+
+            Assert.IsFalse(response.IsValid);
+            Assert.AreEqual("The selected file must be smaller than 5MB", response.Errors.First().ErrorMessage);
+            Assert.AreEqual("ClarificationFile", response.Errors.First().Field);
+        }
+
+        [Test]
+        public async Task When_FilesToUpload_has_file_that_is_not_a_pdf_then_an_error_is_returned()
+        {
+            _command.FilesToUpload = new FormFileCollection
+            {
+                GenerateClarificationFile("ClarificationFile.txt", false, 10)
+            };
+
+            var response = await _validator.Validate(_command);
+
+            Assert.IsFalse(response.IsValid);
+            Assert.AreEqual("The selected file must be a PDF", response.Errors.First().ErrorMessage);
+            Assert.AreEqual("ClarificationFile", response.Errors.First().Field);
+        }
+
+        private static FormFile GenerateClarificationFile(string fileName, bool hasPdfHeader, int length)
+        {
+            var pdfHeader = new byte[] { 0x89, 0x50, 0x4E, 0x47 };
+
+            MemoryStream fileContent = new MemoryStream();
+
+            if(hasPdfHeader)
+            {
+                fileContent.Write(pdfHeader);
+            }
+
+            var remainingContentToGenerate = length - (int)fileContent.Length;
+
+            if (remainingContentToGenerate > 0)
+            {
+                var contentToGenerate = Enumerable.Repeat((byte)0x20, remainingContentToGenerate);
+                fileContent.Write(contentToGenerate.ToArray());
+            }
+
+            return new FormFile(fileContent, 0, fileContent.Length, fileName, fileName);
         }
     }
 }

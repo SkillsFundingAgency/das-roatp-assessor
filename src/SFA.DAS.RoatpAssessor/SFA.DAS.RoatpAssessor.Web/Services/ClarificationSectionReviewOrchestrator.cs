@@ -206,6 +206,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
 
                 viewModel.ClarificationResponse = pageReviewOutcome.ClarificationResponse;
+                viewModel.ClarificationFile = pageReviewOutcome.ClarificationFile;
             }
         }
 
@@ -234,6 +235,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 }
 
                 viewModel.ClarificationResponse = pageReviewOutcome.ClarificationResponse;
+                viewModel.ClarificationFile = pageReviewOutcome.ClarificationFile;
             }
         }
     }

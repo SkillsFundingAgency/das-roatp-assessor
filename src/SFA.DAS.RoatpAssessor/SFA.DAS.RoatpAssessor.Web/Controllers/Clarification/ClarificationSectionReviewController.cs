@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Extensions;
@@ -57,11 +58,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
 
         [HttpPost("ClarificationSectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}")]
         [HttpPost("ClarificationSectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}")]
-        public async Task<IActionResult> ReviewPageAnswers(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, SubmitClarificationPageAnswerCommand command)
+        public async Task<IActionResult> ReviewPageAnswers(SubmitClarificationPageAnswerCommand command)
         {
             if(command.ClarificationRequired)
             {
                 var userId = HttpContext.User.UserId();
+                command.FilesToUpload = HttpContext.Request.Form.Files;
+
                 Func<Task<ClarifierReviewAnswersViewModel>> viewModelBuilder = () => _sectionReviewOrchestrator.GetReviewAnswersViewModel(new GetReviewAnswersRequest(command.ApplicationId, userId, command.SequenceNumber, command.SectionNumber, command.PageId, command.NextPageId));
 
                 return await ValidateAndUpdatePageAnswer(command, viewModelBuilder, $"~/Views/ClarificationSectionReview/ReviewAnswers.cshtml");
@@ -76,7 +79,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
             }
         }
 
-        [HttpGet("ClarificationSectionReview/{applicationId}/Sector/{PageId}")]
+        [HttpGet("ClarificationSectionReview/{applicationId}/Sector/{pageId}")]
         public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId)
         {
             var userId = HttpContext.User.UserId();
@@ -84,8 +87,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
             return View("~/Views/ClarificationSectionReview/ReviewSectorAnswers.cshtml", viewModel);
         }
 
-        [HttpPost("ClarificationSectionReview/{applicationId}/Sector/{PageId}")]
-        public async Task<IActionResult> ReviewSectorAnswers(Guid applicationId, string pageId, SubmitClarificationPageAnswerCommand command)
+        [HttpPost("ClarificationSectionReview/{applicationId}/Sector/{pageId}")]
+        public async Task<IActionResult> ReviewSectorAnswers(SubmitClarificationPageAnswerCommand command)
         {
             if (command.ClarificationRequired)
             {
@@ -103,6 +106,30 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
                     sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
                 });
             }
+        }
+
+
+        [HttpGet("ClarificationSectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}/Download/{fileName}")]
+        public async Task<IActionResult> DownloadClarificationFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string fileName)
+        {
+            var response = await _clarificationApiClient.DownloadFile(applicationId, sequenceNumber, sectionNumber, pageId, fileName);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var fileStream = await response.Content.ReadAsStreamAsync();
+
+                return File(fileStream, response.Content.Headers.ContentType.MediaType, fileName);
+            }
+
+            return NotFound();
+        }
+
+        [HttpGet("ClarificationSectionReview/{applicationId}/Sequence/{sequenceNumber}/Section/{sectionNumber}/Page/{pageId}/Delete/{fileName}")]
+        public async Task<IActionResult> DeleteClarificationFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string fileName)
+        {
+            await _clarificationApiClient.DeleteFile(applicationId, sequenceNumber, sectionNumber, pageId, fileName);
+
+            return RedirectToAction("ReviewPageAnswers", "ClarificationSectionReview", new { applicationId, sequenceNumber, sectionNumber, pageId });
         }
     }
 }

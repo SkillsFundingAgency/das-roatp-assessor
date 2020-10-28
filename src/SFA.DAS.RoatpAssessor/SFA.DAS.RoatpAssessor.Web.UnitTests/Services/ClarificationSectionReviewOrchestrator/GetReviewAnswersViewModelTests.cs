@@ -132,6 +132,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationSectionRevie
             Assert.That(result.PageId, Is.EqualTo(_clarificationPage.PageId));
             Assert.That(result.Status, Is.EqualTo(_pageReviewOutcome.Status));
             Assert.That(result.ClarificationResponse, Is.EqualTo(_pageReviewOutcome.ClarificationResponse));
+            Assert.That(result.ClarificationFile, Is.EqualTo(_pageReviewOutcome.ClarificationFile));
             Assert.That(result.ModerationOutcome.ModeratorUserId, Is.EqualTo(_moderationOutcome.ModeratorUserId));
             Assert.That(result.ModerationOutcome.ModeratorReviewStatus, Is.EqualTo(_moderationOutcome.ModeratorReviewStatus));
             Assert.That(result.ModerationOutcome.ModeratorReviewComment, Is.EqualTo(_moderationOutcome.ModeratorReviewComment));

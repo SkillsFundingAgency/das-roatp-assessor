@@ -55,7 +55,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
                                     userId,
                                     command.ClarificationResponse,
                                     command.Status,
-                                    command.ReviewComment);
+                                    command.ReviewComment,
+                                    command.FilesToUpload);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
@@ -112,7 +113,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
                                     userId,
                                     command.ClarificationResponse,
                                     command.Status,
-                                    command.ReviewComment);
+                                    command.ReviewComment,
+                                    null);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {

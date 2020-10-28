@@ -1,4 +1,5 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+﻿using Microsoft.AspNetCore.Http;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 
@@ -44,6 +45,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
                 return reviewComment;
             }
         }
+
+        public IFormFileCollection FilesToUpload { get; set; }
 
         public SubmitClarificationPageAnswerCommand()
         {
