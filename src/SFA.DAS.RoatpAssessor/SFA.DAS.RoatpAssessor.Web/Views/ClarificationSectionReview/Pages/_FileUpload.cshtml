@@ -13,7 +13,7 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell govuk-table__cell--break-word" scope="row">
-                        <a class="govuk-link" href="@Url.Action("Download", "Application" , new
+                        <a class="govuk-link" href="@Url.Action("DownloadClarificationFile", "ClarificationSectionReview" , new
                         {
                             ApplicationId = Model.ApplicationId,
                             SequenceNumber = Model.SequenceNumber,
@@ -25,7 +25,7 @@
                         </a>
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <a class="govuk-link" href="@Url.Action("Delete", "Application", new
+                        <a class="govuk-link" href="@Url.Action("DeleteClarificationFile", "ClarificationSectionReview", new
                         {
                             ApplicationId = Model.ApplicationId,
                             SequenceNumber = Model.SequenceNumber,
