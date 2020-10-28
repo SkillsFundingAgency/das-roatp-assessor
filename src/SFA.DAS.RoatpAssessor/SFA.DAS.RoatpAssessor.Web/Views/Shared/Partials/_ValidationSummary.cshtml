@@ -6,9 +6,9 @@
         </h2>
         <div class="govuk-error-summary__body">
             <ul class="govuk-list govuk-error-summary__list">
-                @foreach (var item in ViewContext.ViewData.ModelState)
+                @foreach (var item in ViewContext.ViewData.ModelState.OrderByDescending(x => "ClarificationResponse".Equals(x.Key)))
                 {
-                    foreach(var error in item.Value.Errors)
+                    foreach (var error in item.Value.Errors)
                     {
                         <li><a href="#@item.Key">@error.ErrorMessage</a></li>
                     }

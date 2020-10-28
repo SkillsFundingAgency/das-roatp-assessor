@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationSummaryAndBreadcrumbViewModel
 
 <div class="govuk-form-group" sfa-anyvalidationerror-class="govuk-form-group--error">
@@ -14,9 +14,9 @@
 
         <div class="govuk-radios govuk-radios--conditional" data-module="radios">
             @{
-                var radioCheckedPassed = Model.Status == AssessorPageReviewStatus.Pass ? "checked" : "";
-                var radioCheckedFailed = Model.Status == AssessorPageReviewStatus.Fail ? "checked" : "";
-                var radioCheckedInProgress = Model.Status == AssessorPageReviewStatus.InProgress ? "checked" : "";
+                var radioCheckedPassed = Model.Status == ModeratorPageReviewStatus.Pass ? "checked" : "";
+                var radioCheckedFailed = Model.Status == ModeratorPageReviewStatus.Fail ? "checked" : "";
+                var radioCheckedInProgress = Model.Status == ModeratorPageReviewStatus.InProgress ? "checked" : "";
             }
 
             <!-- PASS -->
@@ -25,7 +25,7 @@
                        type="radio"
                        id="OptionPass"
                        name="Status"
-                       value="Pass"
+                       value="@ModeratorPageReviewStatus.Pass"
                        data-aria-controls="conditional-OptionPass"
                        @radioCheckedPassed />
                 <label class="govuk-label govuk-radios__label" for="OptionPass">
@@ -61,7 +61,7 @@
                        type="radio"
                        id="OptionFail"
                        name="Status"
-                       value="Fail"
+                       value="@ModeratorPageReviewStatus.Fail"
                        data-aria-controls="conditional-OptionFail"
                        @radioCheckedFailed />
                 <label class="govuk-label govuk-radios__label" for="OptionFail">
@@ -98,7 +98,7 @@
                        type="radio"
                        id="InProgress"
                        name="Status"
-                       value="In progress"
+                       value="@ModeratorPageReviewStatus.InProgress"
                        data-aria-controls="conditional-InProgress"
                        @radioCheckedInProgress />
                 <label class="govuk-label govuk-radios__label" for="InProgress">

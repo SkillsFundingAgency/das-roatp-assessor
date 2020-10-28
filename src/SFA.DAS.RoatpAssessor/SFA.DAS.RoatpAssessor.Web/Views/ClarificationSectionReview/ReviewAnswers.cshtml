@@ -1,13 +1,13 @@
 ﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
 
-@model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorReviewAnswersViewModel
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ClarifierReviewAnswersViewModel
 
 @{
-    ViewBag.Title = $"Moderator - {@Model.Heading}";
+    ViewBag.Title = $"Clarification - {@Model.Heading}";
     Layout = "_Layout";
 }
 
-<partial name="~/Views/ModeratorSectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
+<partial name="~/Views/ClarificationSectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
@@ -19,8 +19,8 @@
                 @Model.Caption
             </span>
             <h1 class="govuk-heading-xl">@Model.Heading</h1>
-
-            <partial name="~/Views/ModeratorSectionReview/Pages/_ApplicationSummary.cshtml" for="@Model" />
+            
+            <partial name="~/Views/ClarificationSectionReview/Pages/_ApplicationSummary.cshtml" for="@Model" />
         </div>
     </div>
 
@@ -28,7 +28,7 @@
     {
         foreach (var item in Model.TabularData)
         {
-            <partial name="~/Views/ModeratorSectionReview/Pages/_TabularData.cshtml" for="@item" />
+            <partial name="~/Views/ClarificationSectionReview/Pages/_TabularData.cshtml" for="@item" />
         }
     }
     else
@@ -37,12 +37,16 @@
             <div class="govuk-grid-column-full">
                 @{
                     var tableSpacingCssClass = Model.GuidanceInformation != null && Model.GuidanceInformation.Any() ? "" : "govuk-!-margin-bottom-9";
+
                     <table class="govuk-table @tableSpacingCssClass">
+                        <caption class="govuk-table__caption govuk-heading-m">
+                            Original answer
+                        </caption>
                         <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="col">Application question</th>
-                                <th class="govuk-table__header das-no-wrap" scope="col">Applicant's answer</th>
-                            </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Application question</th>
+                            <th class="govuk-table__header das-no-wrap" scope="col">Applicant's answer</th>
+                        </tr>
                         </thead>
                         <tbody class="govuk-table__body">
                             @foreach (var question in Model.Questions)
@@ -151,23 +155,31 @@
         </div>
     }
 
-    <partial name="~/Views/ModeratorSectionReview/Pages/_BlindAssessmentOutcome.cshtml" for="@Model.BlindAssessmentOutcome" />
+    <partial name="~/Views/ClarificationSectionReview/Pages/_ModerationOutcome.cshtml" for="@Model.ModerationOutcome" />
 
     @if (Model.ApplicationId != Guid.Empty)
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <form class="js-disable-on-submit" method="post" asp-action="ReviewPageAnswers" asp-controller="ModeratorSectionReview">
+                <form class="js-disable-on-submit" method="post" asp-action="ReviewPageAnswers" asp-controller="ClarificationSectionReview">
                     <input type="hidden" asp-for="ApplicationId" />
                     <input type="hidden" asp-for="SequenceNumber" />
                     <input type="hidden" asp-for="SectionNumber" />
                     <input type="hidden" asp-for="PageId" />
                     <input type="hidden" asp-for="NextPageId" />
                     <input type="hidden" asp-for="Heading" />
+                    <input type="hidden" asp-for="ClarificationRequired" />
 
-                    <partial name="~/Views/ModeratorSectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
-
-                    <button class="govuk-button" type="submit">Save and continue</button>
+                    @if (Model.ClarificationRequired)
+                    {
+                        <partial name="~/Views/ClarificationSectionReview/Pages/_ClarifiedAnswer.cshtml" for="@Model" />
+                        <partial name="~/Views/ClarificationSectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
+                        <button class="govuk-button" type="submit">Save and continue</button>
+                    }
+                    else
+                    {
+                        <button class="govuk-button" type="submit">Continue</button>
+                    }
                 </form>
             </div>
         </div>
