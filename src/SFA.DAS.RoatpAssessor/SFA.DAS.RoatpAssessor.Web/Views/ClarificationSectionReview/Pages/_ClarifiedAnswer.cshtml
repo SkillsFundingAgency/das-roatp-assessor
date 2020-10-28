@@ -1,4 +1,4 @@
-﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationSummaryAndBreadcrumbViewModel
+﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationReviewViewModel
 
 <div class="govuk-form-group" sfa-validation-for-list="ClarificationResponse" sfa-validationerror-class="govuk-form-group--error">
     <fieldset class="govuk-fieldset">
@@ -28,5 +28,10 @@
                 You can enter up to 300 words
             </span>
         </div>
+
+        @if (Model is SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel)
+        {
+            <partial name="~/Views/ClarificationSectionReview/Pages/_FileUpload.cshtml" for="@Model" />
+        }
     </fieldset>
 </div>

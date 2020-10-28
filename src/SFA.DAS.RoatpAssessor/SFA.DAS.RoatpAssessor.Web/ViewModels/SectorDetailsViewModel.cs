@@ -2,9 +2,8 @@
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
-    public abstract class SectorDetailsViewModel : ApplicationSummaryAndBreadcrumbViewModel
+    public abstract class SectorDetailsViewModel : ApplicationReviewViewModel
     {
-        public string PageId { get; set; }
         public SectorDetails SectorDetails { get; set; }
     }
 }
