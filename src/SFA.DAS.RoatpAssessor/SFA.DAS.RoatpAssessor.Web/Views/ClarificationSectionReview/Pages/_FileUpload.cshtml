@@ -1,6 +1,6 @@
 ﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
 
-<div class="govuk-form-group">
+<div class="govuk-form-group" sfa-validation-for="ClarificationFile" sfa-validationerror-class="govuk-form-group--error">
     @if (!string.IsNullOrWhiteSpace(Model.ClarificationFile))
     {
         <table class="govuk-table">
