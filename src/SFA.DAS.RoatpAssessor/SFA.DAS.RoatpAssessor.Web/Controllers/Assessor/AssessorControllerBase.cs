@@ -47,14 +47,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             if (ModelState.IsValid)
             {
                 var userId = HttpContext.User.UserId();
-                var userDisplayName = HttpContext.User.UserDisplayName();
+                var userName = HttpContext.User.UserDisplayName();
 
                 submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
                                     userId,
-                                    userDisplayName,
+                                    userName,
                                     command.Status,
                                     command.ReviewComment);
 
@@ -103,14 +103,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             if (ModelState.IsValid)
             {
                 var userId = HttpContext.User.UserId();
-                var userDisplayName = HttpContext.User.UserDisplayName();
+                var userName = HttpContext.User.UserDisplayName();
 
                 submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
                                     SequenceIds.DeliveringApprenticeshipTraining,
                           SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
                                     command.PageId,
                                     userId,
-                                    userDisplayName,
+                                    userName,
                                     command.Status,
                                     command.ReviewComment);
 

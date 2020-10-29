@@ -59,7 +59,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         }
 
         public async Task<bool> SubmitModeratorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId,
-                                                    string userDisplayName, string status, string comment)
+                                                    string userName, string status, string comment)
         {
             var result = await Post($"/Moderator/Applications/{applicationId}/SubmitPageReviewOutcome", new SubmitModeratorPageReviewOutcomeCommand
             {
@@ -67,7 +67,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
                 SectionNumber = sectionNumber,
                 PageId = pageId,
                 UserId = userId,
-                UserDisplayName = userDisplayName,
+                UserName = userName,
                 Status = status,
                 Comment = comment
             });
