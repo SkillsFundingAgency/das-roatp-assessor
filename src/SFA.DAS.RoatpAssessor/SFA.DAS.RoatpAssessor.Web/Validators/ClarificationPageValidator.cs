@@ -112,7 +112,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
 
         private static bool FileContentIsValidForPdfFile(IFormFile file)
         {
-            var pdfHeader = new byte[] { 0x89, 0x50, 0x4E, 0x47 };
+            var pdfHeader = new byte[] { 0x25, 0x50, 0x44, 0x46 };
 
             using (var fileContents = file.OpenReadStream())
             {
