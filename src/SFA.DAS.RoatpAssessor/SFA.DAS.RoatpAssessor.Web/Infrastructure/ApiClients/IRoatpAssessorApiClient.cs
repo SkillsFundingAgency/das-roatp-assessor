@@ -25,6 +25,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<List<AssessorPageReviewOutcome>> GetAssessorPageReviewOutcomesForSection(Guid applicationId, int sequenceNumber, int sectionNumber, string userId);
         Task<List<AssessorPageReviewOutcome>> GetAllAssessorPageReviewOutcomes(Guid applicationId, string userId);
 
-        Task<bool> UpdateAssessorReviewStatus(Guid applicationId, string userId, string status);
+        Task<bool> UpdateAssessorReviewStatus(Guid applicationId, string userId, string userName, string status);
     }
 }

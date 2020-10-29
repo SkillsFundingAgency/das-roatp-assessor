@@ -41,7 +41,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
                 ControllerContext = MockedControllerContext.Setup()
             };
 
-            _assessorApiClient.Setup(x => x.UpdateAssessorReviewStatus(_applicationId, _controller.User.UserId(), It.IsAny<string>())).ReturnsAsync(true);
+            _assessorApiClient.Setup(x => x.UpdateAssessorReviewStatus(_applicationId, _controller.User.UserId(), _controller.User.UserDisplayName(), It.IsAny<string>())).ReturnsAsync(true);
 
             _applicationViewModel = GetApplicationViewModel();
             _assessorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetAssessorOverviewRequest>())).ReturnsAsync(_applicationViewModel);

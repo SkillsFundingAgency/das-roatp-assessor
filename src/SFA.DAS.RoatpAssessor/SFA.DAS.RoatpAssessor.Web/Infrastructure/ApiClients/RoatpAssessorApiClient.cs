@@ -109,11 +109,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             });
         }
 
-        public async Task<bool> UpdateAssessorReviewStatus(Guid applicationId, string userId, string status)
+        public async Task<bool> UpdateAssessorReviewStatus(Guid applicationId, string userId, string userName, string status)
         {
             var result = await Post($"/Assessor/Applications/{applicationId}/UpdateAssessorReviewStatus", new UpdateAssessorReviewStatusCommand
             {
                 UserId = userId,
+                UserName = userName,
                 Status = status
             });
 
