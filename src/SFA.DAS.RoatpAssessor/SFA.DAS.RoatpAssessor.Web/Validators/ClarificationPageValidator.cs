@@ -15,9 +15,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
         private const string ClarificationResponseRequired = "Enter clarification response";
         private const string ClarificationResponseTooManyWords = "Clarification response must be 300 words or less";
 
-        private const string TooManyWords = "Your comments must be 150 words or less";
-        private const string FailCommentRequired = "Enter internal comments";
-        private const string FailTooManyWords = "Internal comments must be 150 words or less";
+        private const string TooManyWords = "Internal comments must be 150 words or less";
+        private const string CommentRequired = "Enter internal comments";
 
 
         public async Task<ValidationResponse> Validate(SubmitClarificationPageAnswerCommand command)
@@ -63,11 +62,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                             var wordCount = ValidationHelper.GetWordCount(command.OptionFailText);
                             if (wordCount < RequiredMinimumWordsCount)
                             {
-                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionFailText), FailCommentRequired));
+                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionFailText), CommentRequired));
                             }
                             else if (wordCount > MaxWordsCount)
                             {
-                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionFailText), FailTooManyWords));
+                                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.OptionFailText), TooManyWords));
                             }
 
                             break;
