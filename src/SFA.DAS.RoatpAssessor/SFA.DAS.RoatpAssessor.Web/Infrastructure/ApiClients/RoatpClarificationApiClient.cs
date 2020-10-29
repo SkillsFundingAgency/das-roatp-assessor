@@ -60,8 +60,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<ModerationOutcome>($"/Clarification/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/ModerationOutcome");
         }
 
-        public async Task<bool> SubmitClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId,
-                                                    string userId, string clarificationResponse, string status, string comment, IFormFileCollection clarificationFiles)
+        public async Task<bool> SubmitClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId,
+                                                    string userDisplayName, string clarificationResponse, string status, string comment, IFormFileCollection clarificationFiles)
         {
             var content = new MultipartFormDataContent();
 
@@ -69,6 +69,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             content.Add(new StringContent(sectionNumber.ToString()), "SectionNumber");
             content.Add(new StringContent(pageId), "PageId");
             content.Add(new StringContent(userId), "UserId");
+            content.Add(new StringContent(userDisplayName), "UserDisplayName");
             content.Add(new StringContent(status), "Status");
             content.Add(new StringContent(comment), "Comment");
             content.Add(new StringContent(clarificationResponse), "ClarificationResponse");
