@@ -1,14 +1,7 @@
-﻿using System;
-
-namespace SFA.DAS.RoatpAssessor.Web.ViewModels
+﻿namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
-    public class ClarificationOutcomeReviewViewModel : OrganisationDetailsViewModel
+
+    public class ClarificationOutcomeReviewViewModel : OutcomeReviewViewModel
     {
-        public Guid ApplicationId { get; set; }
-
-        public string Status { get; set; }
-
-        public string ReviewComment { get; set; }
-        public string ConfirmStatus { get; set; }
     }
 }

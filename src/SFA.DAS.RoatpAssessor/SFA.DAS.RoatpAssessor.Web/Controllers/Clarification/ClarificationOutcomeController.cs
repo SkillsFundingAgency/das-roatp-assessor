@@ -12,6 +12,7 @@ using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Validators;
+using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
 {
@@ -86,6 +87,91 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
 
             return View("~/Views/ClarificationOutcome/AreYouSure.cshtml", viewModelConfirmation);
 
+        }
+
+
+        [HttpPost("ClarificationOutcomeConfirmation/{applicationId}")]
+        public async Task<IActionResult> SubmitClarificationOutcomeConfirmation(Guid applicationId, string reviewComment, SubmitClarificationOutcomeConfirmationCommand command)
+        {
+
+            var validationResponse = await _validator.Validate(command);
+            if (validationResponse.Errors.Any())
+            {
+                foreach (var error in validationResponse.Errors)
+                {
+                    ModelState.AddModelError(error.Field, error.ErrorMessage);
+                }
+            }
+
+            var userId = HttpContext.User.UserId();
+
+            if (!ModelState.IsValid)
+            {
+                return await GoToErrorView(applicationId, reviewComment, command.Status, userId);
+            }
+
+            if (command.ConfirmStatus == "No")
+            {
+                var viewModel = await _outcomeOrchestrator.GetClarificationOutcomeViewModel(new GetClarificationOutcomeRequest(applicationId, userId));
+                viewModel.Status = command.Status;
+                switch (command.Status)
+                {
+                    case ModerationConfirmationStatus.Pass:
+                        viewModel.OptionPassText = reviewComment;
+                        break;
+                    case ModerationConfirmationStatus.Fail:
+                        viewModel.OptionFailText = reviewComment;
+                        break;
+                }
+
+                return View("~/Views/ClarificationOutcome/Application.cshtml", viewModel);
+            }
+
+            var userName = HttpContext.User.UserDisplayName();
+
+            var submittedStatus = ModerationStatus.InProgress;
+
+            switch (command.Status)
+            {
+                case ClarificationConfirmationStatus.Pass:
+                    submittedStatus = ModerationStatus.Pass;
+                    break;
+                case ClarificationConfirmationStatus.Fail:
+                    submittedStatus = ModerationStatus.Fail;
+                    break;
+            }
+
+            var submitSuccessful = await _moderationApiClient.SubmitModerationOutcome(applicationId, userId, userName, submittedStatus, reviewComment);
+
+            if (!submitSuccessful)
+            {
+                _logger.LogError($"Unable to save moderation outcome for applicationId: [{applicationId}]");
+                ModelState.AddModelError(string.Empty, "Unable to save clarification outcome as this time");
+                return await GoToErrorView(applicationId, reviewComment, command.Status, userId);
+            }
+
+            var viewModelClarificationOutcomeSaved = await _outcomeOrchestrator.GetClarificationOutcomeReviewViewModel(
+                new ReviewClarificationOutcomeRequest(applicationId, userId, command.Status, reviewComment));
+
+            return View("~/Views/ModeratorOutcome/ModerationCompleted.cshtml", viewModelClarificationOutcomeSaved);
+        }
+
+        private async Task<IActionResult> GoToErrorView(Guid applicationId, string reviewComment, string status, string userId)
+        {
+
+
+            if (status == ClarificationConfirmationStatus.Pass || status == ClarificationConfirmationStatus.Fail)
+            {
+                var viewModelPass = await _outcomeOrchestrator.GetClarificationOutcomeReviewViewModel(
+                    new ReviewClarificationOutcomeRequest(applicationId, userId, status, reviewComment));
+                return View("~/Views/ClarificationOutcome/AreYouSure.cshtml", viewModelPass);
+            }
+
+            var viewModel =
+                await _outcomeOrchestrator.GetClarificationOutcomeViewModel(
+                    new GetClarificationOutcomeRequest(applicationId, userId));
+
+            return View("~/Views/ClarificationOutcome/Application.cshtml", viewModel);
         }
     }
 }

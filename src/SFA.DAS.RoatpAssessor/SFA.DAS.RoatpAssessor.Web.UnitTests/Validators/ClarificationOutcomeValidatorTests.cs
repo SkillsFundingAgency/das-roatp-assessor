@@ -3,6 +3,7 @@ using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
@@ -12,6 +13,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
     {
         private ClarificationOutcomeValidator _validator;
         private SubmitClarificationOutcomeCommand _submitClarificationOutcomeCommand;
+        private SubmitClarificationOutcomeConfirmationCommand _outcomeConfirmationCommand;
 
 
         [SetUp]
@@ -19,6 +21,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
         {
             _validator = new ClarificationOutcomeValidator();
             _submitClarificationOutcomeCommand = new SubmitClarificationOutcomeCommand();
+            _outcomeConfirmationCommand = new SubmitClarificationOutcomeConfirmationCommand();
         }
 
         [Test]
@@ -81,6 +84,51 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
             _submitClarificationOutcomeCommand.OptionPassText = "";
 
             var response = await _validator.Validate(_submitClarificationOutcomeCommand);
+
+            Assert.IsTrue(response.IsValid);
+        }
+
+        [Test]
+        public async Task When_confirm_status_is_not_provided_and_status_is_pass_then_an_error_is_returned()
+        {
+            _outcomeConfirmationCommand.ConfirmStatus = "";
+            _outcomeConfirmationCommand.Status = ModerationStatus.Pass;
+            var response = await _validator.Validate(_outcomeConfirmationCommand);
+            Assert.IsFalse(response.IsValid);
+            Assert.AreEqual("Select if you're sure you want to pass this application", response.Errors.First().ErrorMessage);
+            Assert.AreEqual("ConfirmStatus", response.Errors.First().Field);
+        }
+
+        [Test]
+        public async Task When_confirm_status_is_not_provided_and_status_not_provided_then_an_error_is_returned()
+        {
+            _outcomeConfirmationCommand.ConfirmStatus = "";
+
+            var response = await _validator.Validate(_outcomeConfirmationCommand);
+
+            Assert.IsFalse(response.IsValid);
+            Assert.AreEqual("Pick a choice", response.Errors.First().ErrorMessage);
+            Assert.AreEqual("ConfirmStatus", response.Errors.First().Field);
+        }
+
+        [Test]
+        public async Task When_confirm_status_is_not_provided_and_status_is_fail_then_an_error_is_returned()
+        {
+            _outcomeConfirmationCommand.ConfirmStatus = "";
+            _outcomeConfirmationCommand.Status = ClarificationConfirmationStatus.Fail;
+            var response = await _validator.Validate(_outcomeConfirmationCommand);
+
+            Assert.IsFalse(response.IsValid);
+            Assert.AreEqual("Select if you're sure you want to fail this application", response.Errors.First().ErrorMessage);
+            Assert.AreEqual("ConfirmStatus", response.Errors.First().Field);
+        }
+
+        [Test]
+        public async Task When_confirm_status_is_provided_then_no_error_is_returned()
+        {
+            _outcomeConfirmationCommand.ConfirmStatus = "anything";
+
+            var response = await _validator.Validate(_outcomeConfirmationCommand);
 
             Assert.IsTrue(response.IsValid);
         }

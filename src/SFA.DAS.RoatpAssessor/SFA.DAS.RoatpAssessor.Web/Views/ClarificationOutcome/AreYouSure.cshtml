@@ -15,23 +15,40 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
-            
+
             <span class="govuk-caption-xl">
                 Moderation outcome
             </span>
-            <div>
-                Are you sure?
-            </div>
-            <div>
-                Status: @Model.Status
-            </div>
-            <div>
-                Comments: @Model.ReviewComment
-            </div>
+            @if (Model.Status == ClarificationConfirmationStatus.Pass)
+            {
+                <h1 class="govuk-heading-xl">Are you sure you want to pass this application?</h1>
+            }
+
+            @if (Model.Status == ClarificationConfirmationStatus.Fail)
+            {
+                <h1 class="govuk-heading-xl">Are you sure you want to fail this application?</h1>
+            }
+
+            <partial name="~/Views/ClarificationOutcome/_ApplicationSummary.cshtml" for="@Model" />
         </div>
     </div>
-    
 
-       
-    
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form class="js-disable-on-submit" method="post" asp-action="SubmitClarificationOutcomeConfirmation" asp-controller="ClarificationOutcome">
+                <input type="hidden" asp-for="ApplicationId" />
+                <input type="hidden" asp-for="ReviewComment" />
+                <input type="hidden" asp-for="Status" />
+                <partial name="~/Views/ClarificationOutcome/_ApprovalSectionYesNo.cshtml" for="@Model" />
+
+                <button class="govuk-button" type="submit">Save and continue</button>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+
+
 </main>

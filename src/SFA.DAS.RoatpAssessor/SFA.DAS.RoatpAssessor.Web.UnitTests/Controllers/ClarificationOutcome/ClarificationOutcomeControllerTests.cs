@@ -146,6 +146,97 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOutcome
             _mockOrchestrator.Verify(x => x.GetClarificationOutcomeReviewViewModel(It.IsAny<ReviewClarificationOutcomeRequest>()), Times.Once);
         }
 
+        [Test]
+        public async Task Outcome_confirmation_redirect_back_to_outcome_when_error()
+        {
+            var command = new SubmitClarificationOutcomeConfirmationCommand("", "");
+            _mockValidator.Setup(x => x.Validate(command))
+                .ReturnsAsync(new ValidationResponse
+                {
+                    Errors = new List<ValidationErrorDetail>
+                        {
+                            new ValidationErrorDetail {Field="Status", ErrorMessage = "error"}
+
+                        }
+                }
+                );
+
+            var result = await _controller.SubmitClarificationOutcomeConfirmation(_applicationId, string.Empty, command) as ViewResult;
+            Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
+            _mockOrchestrator.Verify(x => x.GetClarificationOutcomeViewModel(It.IsAny<GetClarificationOutcomeRequest>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Outcome_confirmation_redirect_back_to_application_when_status_is_pass_and_confirm_status_is_No()
+        {
+            var command = new SubmitClarificationOutcomeConfirmationCommand(ClarificationConfirmationStatus.Pass, "No");
+            _mockValidator.Setup(x => x.Validate(command))
+                .ReturnsAsync(new ValidationResponse()
+                );
+
+            var reviewComment = "comment goes here";
+            var result = await _controller.SubmitClarificationOutcomeConfirmation(_applicationId, reviewComment, command) as ViewResult;
+            _outcomeViewModel.OptionPassText = reviewComment;
+            Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
+            _mockOrchestrator.Verify(x => x.GetClarificationOutcomeViewModel(It.IsAny<GetClarificationOutcomeRequest>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Outcome_confirmation_redirect_back_to_application_when_status_is_fail_and_confirm_status_is_No()
+        {
+            var command = new SubmitClarificationOutcomeConfirmationCommand(ClarificationConfirmationStatus.Fail, "No");
+            _mockValidator.Setup(x => x.Validate(command))
+                .ReturnsAsync(new ValidationResponse()
+                );
+
+            var reviewComment = "comment goes here";
+            var result = await _controller.SubmitClarificationOutcomeConfirmation(_applicationId, reviewComment, command) as ViewResult;
+            _outcomeViewModel.OptionFailText = reviewComment;
+            Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
+            _mockOrchestrator.Verify(x => x.GetClarificationOutcomeViewModel(It.IsAny<GetClarificationOutcomeRequest>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Outcome_confirmation_redirect_back_to_application_when_save_is_unsuccessful()
+        {
+            var command = new SubmitClarificationOutcomeConfirmationCommand(string.Empty, "Yes");
+            _mockValidator.Setup(x => x.Validate(command))
+                .ReturnsAsync(new ValidationResponse()
+                );
+
+
+            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<string>(),
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(false);
+
+            var result = await _controller.SubmitClarificationOutcomeConfirmation(_applicationId, string.Empty, command) as ViewResult;
+            Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
+            _mockOrchestrator.Verify(x => x.GetClarificationOutcomeViewModel(It.IsAny<GetClarificationOutcomeRequest>()), Times.Once);
+        }
+
+
+        [Test]
+        public async Task Outcome_confirmation_directs_to_saved_page_when_save_is_successful()
+        {
+            var command = new SubmitClarificationOutcomeConfirmationCommand(string.Empty, "Yes");
+            _mockValidator.Setup(x => x.Validate(command))
+                .ReturnsAsync(new ValidationResponse()
+                );
+
+            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<string>(),
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            var outcomeReviewViewModel = new ClarificationOutcomeReviewViewModel();
+            _mockOrchestrator.Setup(x => x.GetClarificationOutcomeReviewViewModel(It.IsAny<ReviewClarificationOutcomeRequest>()))
+                .ReturnsAsync(outcomeReviewViewModel);
+
+            var result = await _controller.SubmitClarificationOutcomeConfirmation(_applicationId, string.Empty, command) as ViewResult;
+            Assert.That(result.Model, Is.SameAs(outcomeReviewViewModel));
+            _mockOrchestrator.Verify(x => x.GetClarificationOutcomeReviewViewModel(It.IsAny<ReviewClarificationOutcomeRequest>()), Times.Once);
+        }
+
+
         private ClarificationOutcomeViewModel GetOutcomeViewModel()
         {
             var userId = _controller.User.UserId();
