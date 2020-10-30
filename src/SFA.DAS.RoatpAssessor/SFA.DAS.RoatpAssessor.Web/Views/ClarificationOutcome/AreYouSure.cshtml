@@ -1,0 +1,37 @@
+﻿@using Microsoft.AspNetCore.Authorization.Infrastructure
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
+@using SFA.DAS.RoatpAssessor.Web.ViewModels
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ClarificationOutcomeReviewViewModel
+@{
+    ViewBag.Title = "Moderation outcome";
+    Layout = "_Layout";
+    var breadcrumbViewModel = new ClarificationOutcomeViewModel(Model.ApplicationId);
+}
+
+<partial name="~/Views/ClarificationOutcome/_Breadcrumb.cshtml" model="breadcrumbViewModel" />
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
+            
+            <span class="govuk-caption-xl">
+                Moderation outcome
+            </span>
+            <div>
+                Are you sure?
+            </div>
+            <div>
+                Status: @Model.Status
+            </div>
+            <div>
+                Comments: @Model.ReviewComment
+            </div>
+        </div>
+    </div>
+    
+
+       
+    
+</main>

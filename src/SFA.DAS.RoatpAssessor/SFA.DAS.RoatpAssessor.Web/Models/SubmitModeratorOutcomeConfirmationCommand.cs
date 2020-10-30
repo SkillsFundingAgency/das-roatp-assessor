@@ -16,4 +16,24 @@
             ConfirmStatus = confirmStatus;
         }
     }
+
+    public class SubmitClarificationOutcomeConfirmationCommand
+    {
+        public string Status { get; set; }
+        public string ConfirmStatus { get; set; }
+
+
+        public SubmitClarificationOutcomeConfirmationCommand()
+        {
+        }
+
+        public SubmitClarificationOutcomeConfirmationCommand(string status, string confirmStatus)
+        {
+            Status = status;
+            ConfirmStatus = confirmStatus;
+        }
+    }
+
+
+    
 }
