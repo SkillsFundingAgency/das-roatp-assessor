@@ -135,11 +135,11 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
         [Test]
         public async Task When_FilesToUpload_has_file_that_exceeds_maximum_filesize_then_an_error_is_returned()
         {
-            const int maxFileSize = 5 * 1048576;
+            const int currentMaxFileSizeInBytes = 5 * 1024 * 1024;
 
             _command.FilesToUpload = new FormFileCollection
             {
-                GenerateClarificationFile("ClarificationFile.pdf", true, maxFileSize + 1)
+                GenerateClarificationFile("ClarificationFile.pdf", true, currentMaxFileSizeInBytes + 1)
             };
 
             var response = await _validator.Validate(_command);
