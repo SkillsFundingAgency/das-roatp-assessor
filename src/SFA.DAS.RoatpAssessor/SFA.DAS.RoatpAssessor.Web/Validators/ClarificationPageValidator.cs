@@ -20,7 +20,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
         private const string ClarificationResponseRequired = "Enter clarification response";
         private const string ClarificationResponseTooManyWords = "Clarification response must be 300 words or less";
 
-        private const long MaxFileSize = 5 * 1048576;
+        private const long MaxFileSizeInBytes = 5 * 1024 * 1024;
         private const string MaxFileSizeExceeded = "The selected file must be smaller than 5MB";
         private const string FileMustBePdf = "The selected file must be a PDF";
 
@@ -99,7 +99,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                         validationResponse.Errors.Add(new ValidationErrorDetail("ClarificationFile", FileMustBePdf));
                         break;
                     }
-                    else if(file.Length > MaxFileSize)
+                    else if(file.Length > MaxFileSizeInBytes)
                     {
                         validationResponse.Errors.Add(new ValidationErrorDetail("ClarificationFile", MaxFileSizeExceeded));
                         break;
