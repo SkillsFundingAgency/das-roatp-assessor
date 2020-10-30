@@ -2,7 +2,6 @@
 
 <div class="govuk-form-group" sfa-validation-for="ClarificationResponse" sfa-validationerror-class="govuk-form-group--error">
     <fieldset class="govuk-fieldset">
-
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
             <h2 class="govuk-fieldset__heading">
                 Clarified answer
@@ -28,10 +27,10 @@
                 You can enter up to 300 words
             </span>
         </div>
-
-        @if (Model is SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel)
-        {
-            <partial name="~/Views/ClarificationSectionReview/Pages/_FileUpload.cshtml" for="@Model" />
-        }
     </fieldset>
 </div>
+
+@if (Model is SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel)
+{
+    <partial name="~/Views/ClarificationSectionReview/Pages/_FileUpload.cshtml" for="@Model" />
+}
