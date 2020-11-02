@@ -158,7 +158,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.AddTransient<IClarificationDashboardOrchestrator, ClarificationDashboardOrchestrator>();
             services.AddTransient<IOutcomeDashboardOrchestrator, OutcomeDashboardOrchestrator>();
             services.AddTransient<IRoatpApplicationTokenService, RoatpApplicationTokenService>();
-
+            services.AddTransient<IClarificationOutcomeOrchestrator, ClarificationOutcomeOrchestrator>();
             services.AddTransient<IRoatpAssessorApiClient>(x => new RoatpAssessorApiClient(
                 ApplicationConfiguration.RoatpApplicationApiAuthentication.ApiBaseAddress,
                 x.GetService<ILogger<RoatpAssessorApiClient>>(),
@@ -191,7 +191,7 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddTransient<IClarificationSectionReviewOrchestrator, ClarificationSectionReviewOrchestrator>();
             services.AddTransient<IClarificationPageValidator, ClarificationPageValidator>();
-
+            services.AddTransient<IClarificationOutcomeValidator, ClarificationOutcomeValidator>();
             DependencyInjection.ConfigureDependencyInjection(services);
         }
 
