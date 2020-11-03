@@ -30,12 +30,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationSectionRevie
         private Contact _contact;
         private ClarificationPage _clarificationPage;
         private ClarificationPageReviewOutcome _pageReviewOutcome;
-        private ModerationOutcome _moderationOutcome;
 
         private readonly int _sequenceNumber = 4;
         private readonly int _sectionNumber = 2;
         private readonly string _pageId = "4200";
         private string _userId;
+        private string _userName;
 
         [SetUp]
         public void SetUp()
@@ -50,6 +50,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationSectionRevie
             _orchestrator = new Web.Services.ClarificationSectionReviewOrchestrator(logger.Object, _applyApiClient.Object, _clarificationApiClient.Object, supplementaryInformationService.Object);
 
             _userId = _user.UserId();
+            _userName = _user.UserDisplayName();
 
             _application = new Apply
             {
@@ -91,15 +92,14 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationSectionRevie
                 SectionNumber = _sectionNumber,
                 PageId = _pageId,
                 UserId = _userId,
+                UserName = _userName,
                 Status = ClarificationPageReviewStatus.Pass,
-                ClarificationResponse = "Response"
-            };
-
-            _moderationOutcome = new ModerationOutcome
-            {
                 ModeratorUserId = _userId,
+                ModeratorUserName = _userName,
                 ModeratorReviewStatus = ApplyTypes.Moderator.ModeratorPageReviewStatus.Fail,
                 ModeratorReviewComment = "Not Good",
+                ClarificationResponse = "Response",
+                ClarificationFile = null
             };
 
             _applyApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
@@ -114,9 +114,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationSectionRevie
 
             _clarificationApiClient.Setup(x => x.GetClarificationPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId, _userId))
                 .ReturnsAsync(_pageReviewOutcome);
-
-            _clarificationApiClient.Setup(x => x.GetModerationOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId))
-                .ReturnsAsync(_moderationOutcome);
         }
 
         [Test]
@@ -133,9 +130,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationSectionRevie
             Assert.That(result.Status, Is.EqualTo(_pageReviewOutcome.Status));
             Assert.That(result.ClarificationResponse, Is.EqualTo(_pageReviewOutcome.ClarificationResponse));
             Assert.That(result.ClarificationFile, Is.EqualTo(_pageReviewOutcome.ClarificationFile));
-            Assert.That(result.ModerationOutcome.ModeratorUserId, Is.EqualTo(_moderationOutcome.ModeratorUserId));
-            Assert.That(result.ModerationOutcome.ModeratorReviewStatus, Is.EqualTo(_moderationOutcome.ModeratorReviewStatus));
-            Assert.That(result.ModerationOutcome.ModeratorReviewComment, Is.EqualTo(_moderationOutcome.ModeratorReviewComment));
+            Assert.That(result.ModerationOutcome.ModeratorUserId, Is.EqualTo(_pageReviewOutcome.ModeratorUserId));
+            Assert.That(result.ModerationOutcome.ModeratorUserName, Is.EqualTo(_pageReviewOutcome.ModeratorUserName));
+            Assert.That(result.ModerationOutcome.ModeratorReviewStatus, Is.EqualTo(_pageReviewOutcome.ModeratorReviewStatus));
+            Assert.That(result.ModerationOutcome.ModeratorReviewComment, Is.EqualTo(_pageReviewOutcome.ModeratorReviewComment));
             CollectionAssert.IsNotEmpty(result.Questions);
             CollectionAssert.IsNotEmpty(result.Answers);
         }
