@@ -12,18 +12,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Outcome
     [Authorize(Roles = Roles.RoatpAssessorTeam)]
     public class OutcomeOverviewController: Controller
     {
-        private readonly IOutcomeOverviewOrchestrator _outcomeOrchestrator;
+        private readonly IOutcomeOverviewOrchestrator _overviewOrchestrator;
 
-        public OutcomeOverviewController(IOutcomeOverviewOrchestrator outcomeOrchestrator)
+        public OutcomeOverviewController(IOutcomeOverviewOrchestrator overviewOrchestrator)
         {
-            _outcomeOrchestrator = outcomeOrchestrator;
+            _overviewOrchestrator = overviewOrchestrator;
         }
 
-        [HttpGet("OutcomeOverviewController/{applicationId}")]
-        public async Task<IActionResult> ViewOutcome(Guid applicationId)
+        [HttpGet("OutcomeOverview/{applicationId}")]
+        public async Task<IActionResult> ViewApplication(Guid applicationId)
         {
             var userId = HttpContext.User.UserId();
-            var viewModel = await _outcomeOrchestrator.GetOverviewViewModel(new GetOutcomeOverviewRequest(applicationId, userId));
+            var viewModel = await _overviewOrchestrator.GetOverviewViewModel(new GetOutcomeOverviewRequest(applicationId, userId));
 
             if (viewModel is null)
             {
