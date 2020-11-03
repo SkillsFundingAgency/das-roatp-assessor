@@ -1,7 +1,7 @@
 ﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationReviewViewModel
 
-<div class="govuk-form-group" sfa-validation-for-list="OptionPass,OptionPassText,OptionFailText,OptionInProgressText" sfa-validationerror-class="govuk-form-group--error">
+<div class="govuk-form-group" sfa-validation-for-list="Status,OptionPass,OptionPassText,OptionFailText,OptionInProgressText" sfa-validationerror-class="govuk-form-group--error">
     <fieldset class="govuk-fieldset">
 
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -11,6 +11,12 @@
         </legend>
 
         <span class="govuk-error-message" asp-validation-for="Status"></span>
+        @{
+            if (ViewContext.ViewData.ModelState.TryGetValue("OptionPass", out var optionPass) && optionPass.Errors.Any())
+            {
+                <span class="govuk-error-message">@optionPass.Errors[0].ErrorMessage</span>
+            }
+        }
 
         <div class="govuk-radios govuk-radios--conditional" data-module="radios">
             @{

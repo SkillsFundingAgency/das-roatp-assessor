@@ -55,11 +55,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<ClarificationSectorDetails>($"/Clarification/Applications/{applicationId}/SectorDetails/{pageId}");
         }
 
-        public async Task<ModerationOutcome> GetModerationOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
-        {
-            return await Get<ModerationOutcome>($"/Clarification/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/ModerationOutcome");
-        }
-
         public async Task<bool> SubmitClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId,
                                                     string userName, string clarificationResponse, string status, string comment, IFormFileCollection clarificationFiles)
         {
@@ -71,7 +66,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             content.Add(new StringContent(userId), "UserId");
             content.Add(new StringContent(userName), "UserName");
             content.Add(new StringContent(status), "Status");
-            content.Add(new StringContent(comment), "Comment");
+            if (!string.IsNullOrEmpty(comment))
+            {
+                content.Add(new StringContent(comment), "Comment");
+            }
             content.Add(new StringContent(clarificationResponse), "ClarificationResponse");
 
             if (clarificationFiles != null && clarificationFiles.Any())

@@ -17,8 +17,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         Task<ClarificationSectorDetails> GetClarificationSectorDetails(Guid applicationId, string pageId);
 
-        Task<ModerationOutcome> GetModerationOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
-
         Task<bool> SubmitClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId, string userName, string clarificationResponse, string status, string comment, IFormFileCollection clarificationFiles);
 
         Task<List<ClarificationPageReviewOutcome>> GetAllClarificationPageReviewOutcomes(Guid applicationId, string userId);
