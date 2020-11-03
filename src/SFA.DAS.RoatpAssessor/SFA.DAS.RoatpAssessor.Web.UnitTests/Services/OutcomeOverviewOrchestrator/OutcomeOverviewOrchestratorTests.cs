@@ -8,8 +8,8 @@ using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
-using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
@@ -60,139 +60,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeOverviewOrchestrat
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _moderationApiClient.Setup(x => x.GetModeratorSequences(_applicationId)).ReturnsAsync(_sequences);
             _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
-        }
-
-        [TestCase(null)]
-        [TestCase(ModeratorPageReviewStatus.Pass)]
-        [TestCase(ModeratorPageReviewStatus.Fail)]
-        [TestCase(ModeratorPageReviewStatus.InProgress)]
-        public void GetSectionStatus_Single_PageReviewOutcome(string status)
-        {
-            const int sequenceNumber = 1;
-            const int sectionNumber = 1;
-
-            List<ModeratorPageReviewOutcome> sectionPageReviewOutcomes = new List<ModeratorPageReviewOutcome>
-            {
-                new ModeratorPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    SequenceNumber = sequenceNumber,
-                    SectionNumber = sectionNumber,
-                    Status = status
-                }
-            };
-
-            var sectionStatus = Web.Services.OverviewStatusService.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
-            Assert.AreSame(status, sectionStatus);
-        }
-
-        [TestCase(null, null, null, null)]
-        [TestCase(ModeratorPageReviewStatus.Pass, null, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.InProgress, null, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Fail, null, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.InProgress, ModeratorPageReviewStatus.Pass, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.InProgress, ModeratorPageReviewStatus.Fail, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorSectionStatus.Pass)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, "1 " + ModeratorSectionStatus.FailOutOf + " 3")]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, "1 " + ModeratorSectionStatus.FailOutOf + " 3")]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, "1 " + ModeratorSectionStatus.FailOutOf + " 3")]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, "2 " + ModeratorSectionStatus.FailsOutOf + " 3")]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, "2 " + ModeratorSectionStatus.FailsOutOf + " 3")]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, "2 " + ModeratorSectionStatus.FailsOutOf + " 3")]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, "3 " + ModeratorSectionStatus.FailsOutOf + " 3")]
-        public void GetSectionStatus_Multiple_PageReviewOutcomes(string statusOne, string statusTwo, string statusThree, string statusExpected)
-        {
-            const int sequenceNumber = 1;
-            const int sectionNumber = 1;
-
-            List<ModeratorPageReviewOutcome> sectionPageReviewOutcomes = new List<ModeratorPageReviewOutcome>
-            {
-                new ModeratorPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    SequenceNumber = sequenceNumber,
-                    SectionNumber = sectionNumber,
-                    Status = statusOne
-                },
-                new ModeratorPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    SequenceNumber = sequenceNumber,
-                    SectionNumber = sectionNumber,
-                    Status = statusTwo
-                },
-                new ModeratorPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    SequenceNumber = sequenceNumber,
-                    SectionNumber = sectionNumber,
-                    Status = statusThree
-                }
-            };
-
-            var sectionStatus = Web.Services.OverviewStatusService.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
-            Assert.AreEqual(statusExpected, sectionStatus);
-        }
-
-        [TestCase(null, null, null, null)]
-        [TestCase(ModeratorPageReviewStatus.Pass, null, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.InProgress, null, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Fail, null, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.InProgress, ModeratorPageReviewStatus.Pass, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.InProgress, ModeratorPageReviewStatus.Fail, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, null, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.InProgress, ModeratorSectionStatus.InProgress)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorSectionStatus.Pass)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorSectionStatus.Fail)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorSectionStatus.Fail)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorSectionStatus.Fail)]
-        [TestCase(ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorSectionStatus.Fail)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorPageReviewStatus.Fail, ModeratorSectionStatus.Fail)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Pass, ModeratorSectionStatus.Fail)]
-        [TestCase(ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorPageReviewStatus.Fail, ModeratorSectionStatus.Fail)]
-        public void GetSectorsSectionStatus(string statusOne, string statusTwo, string statusThree, string statusExpected)
-        {
-            List<ModeratorPageReviewOutcome> sectionPageReviewOutcomes = new List<ModeratorPageReviewOutcome>
-            {
-                new ModeratorPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    Status = statusOne,
-                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
-                },
-                new ModeratorPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    Status = statusTwo,
-                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
-                },
-                new ModeratorPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    Status = statusThree,
-                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
-                }
-            };
-
-            var sectionStatus = Web.Services.OverviewStatusService.GetSectorsSectionStatus(sectionPageReviewOutcomes);
-            Assert.AreEqual(statusExpected, sectionStatus);
         }
 
         [Test]
@@ -256,7 +123,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeOverviewOrchestrat
         [Test]
         public async Task GetOverviewViewModel_WhenThereAreSavedOutcomesAndTheyAllPass_ThenTheOutcomesAreReturnedAndTheApplicationIsReadyForModerationConfirmation()
         {
-            var expectedStatus = ModeratorSectionStatus.Pass;
+            var expectedStatus = SectionStatus.Pass;
             _sequences.Add(new ModeratorSequence { SequenceNumber = 1, Sections = new List<ModeratorSection> { new ModeratorSection { SectionNumber = 2 } } });
             _outcomes.Add(new ModeratorPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
 

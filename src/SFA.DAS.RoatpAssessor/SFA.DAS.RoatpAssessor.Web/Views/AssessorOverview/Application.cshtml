@@ -1,5 +1,4 @@
-@using SFA.DAS.AdminService.Common.Extensions
-@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common
 
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.AssessorApplicationViewModel
 
@@ -40,7 +39,7 @@
                                 {
                                     <li class="app-task-list__item">
                                         <span id="section-@sequence.SequenceNumber.@currentSection.SectionNumber" class="app-task-list__task-name app-task-list__task-name--inactive">
-                                            @if (currentSection.Status != null && currentSection.Status.Equals(AssessorSectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase))
+                                            @if (currentSection.Status != null && currentSection.Status.Equals(SectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase))
                                             {
                                                 @currentSection.LinkTitle
                                             }

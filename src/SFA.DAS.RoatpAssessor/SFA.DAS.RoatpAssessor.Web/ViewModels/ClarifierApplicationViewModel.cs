@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using System;
 using System.Collections.Generic;
 
@@ -61,14 +62,14 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
             {
                 case null:
                     return string.Empty;
-                case string a when a.Equals(ClarificationSectionStatus.Pass, StringComparison.InvariantCultureIgnoreCase):
+                case string a when a.Equals(SectionStatus.Pass, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-green";
-                case string b when b.Equals(ClarificationSectionStatus.Fail, StringComparison.InvariantCultureIgnoreCase):
+                case string b when b.Equals(SectionStatus.Fail, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-red";
-                case string c when c.Equals(ClarificationSectionStatus.Clarification, StringComparison.InvariantCultureIgnoreCase):
-                case string d when d.Equals(ClarificationSectionStatus.InProgress, StringComparison.InvariantCultureIgnoreCase):
+                case string c when c.Equals(SectionStatus.Clarification, StringComparison.InvariantCultureIgnoreCase):
+                case string d when d.Equals(SectionStatus.InProgress, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag";
-                case string e when e.Equals(ClarificationSectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase):
+                case string e when e.Equals(SectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-grey";
                 default:
                     return string.Empty;

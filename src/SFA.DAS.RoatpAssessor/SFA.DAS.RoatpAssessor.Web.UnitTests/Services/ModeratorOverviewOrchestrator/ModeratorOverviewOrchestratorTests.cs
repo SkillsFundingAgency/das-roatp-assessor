@@ -3,6 +3,7 @@ using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -124,7 +125,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
         [Test]
         public async Task GetOverviewViewModel_WhenThereAreSavedOutcomesAndTheyAllPass_ThenTheOutcomesAreReturnedAndTheApplicationIsReadyForModerationConfirmation()
         {
-            var expectedStatus = ModeratorSectionStatus.Pass;
+            var expectedStatus = SectionStatus.Pass;
             _sequences.Add(new ModeratorSequence { SequenceNumber = 1, Sections = new List<ModeratorSection> { new ModeratorSection { SectionNumber = 2 } } });
             _outcomes.Add(new ModeratorPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
 

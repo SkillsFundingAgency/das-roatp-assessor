@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
@@ -17,13 +18,13 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string Assessor1Name { get; set; }
         public string Assessor2Name { get; set; }
 
-        public List<ModeratorSequence> Sequences { get; }
+        public List<ClarificationSequence> Sequences { get; }
         public bool IsReadyForModeratorConfirmation { get; set; }
 
         public string ModeratorName { get; set; }
         public DateTime? OutcomeDate { get; set; }
         public string Outcome { get; set; }
-        public OutcomeApplicationViewModel(Apply application, Contact contact, List<ModeratorSequence> sequences,
+        public OutcomeApplicationViewModel(Apply application, Contact contact, List<ClarificationSequence> sequences,
             string userId)
         {
             Id = application.Id;
@@ -65,13 +66,13 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
             {
                 case null:
                     return string.Empty;
-                case string a when a.Equals("pass", StringComparison.InvariantCultureIgnoreCase):
+                case string a when a.Equals(SectionStatus.Pass, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-green";
-                case string b when b.Contains("fail", StringComparison.InvariantCultureIgnoreCase):
+                case string b when b.Contains(SectionStatus.Fail, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-red";
-                case string c when c.Equals("in progress", StringComparison.InvariantCultureIgnoreCase):
+                case string c when c.Equals(SectionStatus.InProgress, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag";
-                case string d when d.Equals("not required", StringComparison.InvariantCultureIgnoreCase):
+                case string d when d.Equals(SectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-grey";
                 default:
                     return string.Empty;
