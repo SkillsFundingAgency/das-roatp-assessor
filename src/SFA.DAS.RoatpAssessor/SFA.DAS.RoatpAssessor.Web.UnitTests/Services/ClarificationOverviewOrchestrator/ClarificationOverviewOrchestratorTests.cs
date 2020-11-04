@@ -58,7 +58,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
                     {
                         ClarificationRequestedOn = DateTime.Now,
                         ModeratorUserId = _userId,
-                        ModeratorName = _userDisplayName
+                        ModeratorName = _userDisplayName,
+                        ModeratorComments = null
                     }
                 }
             };

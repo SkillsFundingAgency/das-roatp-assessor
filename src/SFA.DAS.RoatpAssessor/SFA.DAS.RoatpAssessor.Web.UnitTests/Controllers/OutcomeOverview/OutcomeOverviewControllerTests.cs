@@ -8,8 +8,6 @@ using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
-using SFA.DAS.RoatpAssessor.Web.Controllers.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Controllers.Outcome;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
@@ -25,9 +23,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeOverview
         private Mock<IOutcomeOverviewOrchestrator> _orchestrator;
         private OutcomeOverviewController _controller;
         private OutcomeApplicationViewModel _applicationViewModel;
-        private readonly string _moderatorName = "James Smith";
-        private readonly string _moderationStatus = "Pass";
-        private DateTime _outcomeDate = DateTime.UtcNow;
 
             [SetUp]
         public void SetUp()
@@ -55,13 +50,15 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeOverview
                                             ApplicationId = _applicationId,
                                             Assessor1ReviewStatus = AssessorReviewStatus.Approved, Assessor1UserId = userId, Assessor1Name = userDisplayName,
                                             Assessor2ReviewStatus = AssessorReviewStatus.Approved, Assessor2UserId = assessor2Id, Assessor2Name = assessor2DisplayName,
-                                            ModerationStatus = _moderationStatus,
+                                            ModerationStatus = ModerationStatus.Pass,
                                             ApplyData =  new ApplyData
                                             {
                                                 ModeratorReviewDetails = new ModeratorReviewDetails
                                                 {
-                                                    ModeratorName = _moderatorName,
-                                                    OutcomeDateTime = _outcomeDate
+                                                    ModeratorUserId = userId,
+                                                    ModeratorName = userDisplayName,
+                                                    ModeratorComments = null,
+                                                    OutcomeDateTime = DateTime.UtcNow
                                                 }
                                             }
             };

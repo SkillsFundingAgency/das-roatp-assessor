@@ -24,6 +24,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string ModeratorName { get; set; }
         public DateTime? OutcomeDate { get; set; }
         public string Outcome { get; set; }
+        public string OutcomeComments { get; set; }
+
         public OutcomeApplicationViewModel(Apply application, Contact contact, List<ClarificationSequence> sequences,
             string userId)
         {
@@ -54,6 +56,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 var moderatorDetails = application.ApplyData.ModeratorReviewDetails;
                 ModeratorName = moderatorDetails.ModeratorName;
                 OutcomeDate = moderatorDetails.OutcomeDateTime;
+                OutcomeComments = moderatorDetails.ModeratorComments;
             }
 
             Sequences = sequences;
