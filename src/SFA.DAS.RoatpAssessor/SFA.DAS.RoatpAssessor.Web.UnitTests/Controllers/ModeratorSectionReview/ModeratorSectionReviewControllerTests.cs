@@ -160,6 +160,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
                                     command.SectionNumber,
                                     command.PageId,
                                     _controller.User.UserId(),
+                                    _controller.User.UserDisplayName(),
                                     command.Status,
                                     command.ReviewComment)).ReturnsAsync(true);
 
@@ -175,6 +176,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
                         command.SectionNumber,
                         command.PageId,
                         _controller.User.UserId(),
+                        _controller.User.UserDisplayName(),
                         command.Status,
                         command.ReviewComment), Times.Once);
         }
@@ -218,6 +220,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
                         command.SectionNumber,
                         command.PageId,
                         _controller.User.UserId(),
+                        _controller.User.UserDisplayName(),
                         command.Status,
                         command.ReviewComment), Times.Never);
         }

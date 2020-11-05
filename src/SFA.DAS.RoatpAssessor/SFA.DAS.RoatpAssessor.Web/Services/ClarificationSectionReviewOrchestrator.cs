@@ -65,9 +65,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 Questions = clarificationPage.Questions != null ? new List<Question>(clarificationPage.Questions) : new List<Question>(),
                 Answers = clarificationPage.Answers != null ? new List<Answer>(clarificationPage.Answers) : new List<Answer>(),
                 TabularData = GetTabularDataFromQuestionsAndAnswers(clarificationPage.Questions, clarificationPage.Answers),
-                SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, clarificationPage.PageId),
-
-                ModerationOutcome = await _clarificationApiClient.GetModerationOutcome(application.ApplicationId, clarificationPage.SequenceNumber, clarificationPage.SectionNumber, clarificationPage.PageId)
+                SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, clarificationPage.PageId)
             };
 
             await SetPageReviewOutcome(request, viewModel);
@@ -123,8 +121,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
 
             var sectorDetails = await _clarificationApiClient.GetClarificationSectorDetails(request.ApplicationId, request.PageId);
-            var moderationOutcome = await _clarificationApiClient.GetModerationOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
-                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, request.PageId);
 
             var viewModel = new ClarifierSectorDetailsViewModel
             {
@@ -137,8 +133,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
                 Caption = clarificationPage.Caption,
                 Heading = $"Delivering training in '{sectorDetails?.SectorName}' sector",
-                SectorDetails = sectorDetails,
-                ModerationOutcome = moderationOutcome
+                SectorDetails = sectorDetails
             };
 
             await SetSectorReviewOutcome(request, viewModel);
@@ -205,7 +200,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         break;
                 }
 
+                viewModel.ModerationOutcome = new ModerationOutcome
+                {
+                    ModeratorUserId = pageReviewOutcome.ModeratorUserId,
+                    ModeratorUserName = pageReviewOutcome.ModeratorUserName,
+                    ModeratorReviewStatus = pageReviewOutcome.ModeratorReviewStatus,
+                    ModeratorReviewComment = pageReviewOutcome.ModeratorReviewComment
+                };
+
                 viewModel.ClarificationResponse = pageReviewOutcome.ClarificationResponse;
+                viewModel.ClarificationFile = pageReviewOutcome.ClarificationFile;
             }
         }
 
@@ -233,7 +237,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         break;
                 }
 
+                viewModel.ModerationOutcome = new ModerationOutcome
+                {
+                    ModeratorUserId = pageReviewOutcome.ModeratorUserId,
+                    ModeratorUserName = pageReviewOutcome.ModeratorUserName,
+                    ModeratorReviewStatus = pageReviewOutcome.ModeratorReviewStatus,
+                    ModeratorReviewComment = pageReviewOutcome.ModeratorReviewComment
+                };
+
                 viewModel.ClarificationResponse = pageReviewOutcome.ClarificationResponse;
+                viewModel.ClarificationFile = pageReviewOutcome.ClarificationFile;
             }
         }
     }

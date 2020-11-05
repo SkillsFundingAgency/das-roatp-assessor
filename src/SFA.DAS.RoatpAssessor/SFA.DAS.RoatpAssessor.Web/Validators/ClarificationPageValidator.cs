@@ -1,8 +1,10 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+﻿using Microsoft.AspNetCore.Http;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using SFA.DAS.RoatpAssessor.Web.Helpers;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.Validators
@@ -11,13 +13,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
     {
         private const int RequiredMinimumWordsCount = 1;
         private const int MaxWordsCount = 150;
+        private const string TooManyWords = "Internal comments must be 150 words or less";
+        private const string CommentRequired = "Enter internal comments";
+
         private const int ClarificationResponseMaxWordsCount = 300;
         private const string ClarificationResponseRequired = "Enter clarification response";
         private const string ClarificationResponseTooManyWords = "Clarification response must be 300 words or less";
 
-        private const string TooManyWords = "Internal comments must be 150 words or less";
-        private const string CommentRequired = "Enter internal comments";
-
+        private const long MaxFileSizeInBytes = 5 * 1024 * 1024;
+        private const string MaxFileSizeExceeded = "The selected file must be smaller than 5MB";
+        private const string FileMustBePdf = "The selected file must be a PDF";
 
         public async Task<ValidationResponse> Validate(SubmitClarificationPageAnswerCommand command)
         {
@@ -84,9 +89,39 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                 }
             }
 
-            
+            if (command.FilesToUpload != null)
+            {
+                foreach (var file in command.FilesToUpload)
+                {
+                    
+                    if (!FileContentIsValidForPdfFile(file))
+                    {
+                        validationResponse.Errors.Add(new ValidationErrorDetail("ClarificationFile", FileMustBePdf));
+                        break;
+                    }
+                    else if(file.Length > MaxFileSizeInBytes)
+                    {
+                        validationResponse.Errors.Add(new ValidationErrorDetail("ClarificationFile", MaxFileSizeExceeded));
+                        break;
+                    }
+                }
+            }
 
             return await Task.FromResult(validationResponse);
+        }
+
+        private static bool FileContentIsValidForPdfFile(IFormFile file)
+        {
+            var pdfHeader = new byte[] { 0x25, 0x50, 0x44, 0x46 };
+
+            using (var fileContents = file.OpenReadStream())
+            {
+                var headerOfActualFile = new byte[pdfHeader.Length];
+                fileContents.Read(headerOfActualFile, 0, headerOfActualFile.Length);
+                fileContents.Position = 0;
+
+                return headerOfActualFile.SequenceEqual(pdfHeader);
+            }
         }
     }
 

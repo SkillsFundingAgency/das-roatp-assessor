@@ -4,6 +4,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Infrastructure;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
@@ -53,26 +55,45 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<ClarificationSectorDetails>($"/Clarification/Applications/{applicationId}/SectorDetails/{pageId}");
         }
 
-        public async Task<ModerationOutcome> GetModerationOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId)
+        public async Task<bool> SubmitClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId,
+                                                    string userName, string clarificationResponse, string status, string comment, IFormFileCollection clarificationFiles)
         {
-            return await Get<ModerationOutcome>($"/Clarification/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/ModerationOutcome");
-        }
+            var content = new MultipartFormDataContent();
 
-        public async Task<bool> SubmitClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId,
-                                                    string userId, string clarificationResponse, string status, string comment)
-        {
-            var result = await Post($"/Clarification/Applications/{applicationId}/SubmitPageReviewOutcome", new SubmitClarificationPageReviewOutcomeCommand
+            content.Add(new StringContent(sequenceNumber.ToString()), "SequenceNumber");
+            content.Add(new StringContent(sectionNumber.ToString()), "SectionNumber");
+            content.Add(new StringContent(pageId), "PageId");
+            content.Add(new StringContent(userId), "UserId");
+            content.Add(new StringContent(userName), "UserName");
+            content.Add(new StringContent(status), "Status");
+            if (!string.IsNullOrEmpty(comment))
             {
-                SequenceNumber = sequenceNumber,
-                SectionNumber = sectionNumber,
-                PageId = pageId,
-                UserId = userId,
-                Status = status,
-                Comment = comment,
-                ClarificationResponse = clarificationResponse
-            });
+                content.Add(new StringContent(comment), "Comment");
+            }
+            content.Add(new StringContent(clarificationResponse), "ClarificationResponse");
 
-            return result == HttpStatusCode.OK;
+            if (clarificationFiles != null && clarificationFiles.Any())
+            {
+                foreach (var file in clarificationFiles)
+                {
+                    var fileContent = new StreamContent(file.OpenReadStream())
+                    { Headers = { ContentLength = file.Length, ContentType = new MediaTypeHeaderValue(file.ContentType) } };
+                    content.Add(fileContent, file.FileName, file.FileName);
+                }
+            }
+
+            try
+            {
+                using (var response = await _httpClient.PostAsync($"/Clarification/Applications/{applicationId}/SubmitPageReviewOutcome", content))
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, $"Error when submitting ClarificationPageReviewOutcome for Application: {applicationId} | Page: {pageId}");
+                return false;
+            }  
         }
 
         public async Task<ClarificationPageReviewOutcome> GetClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId)
@@ -102,6 +123,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             {
                 UserId = userId
             });
+        }
+
+        public async Task<HttpResponseMessage> DownloadFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string fileName)
+        {
+            return await GetResponse($"/Clarification/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/Download/{fileName}");
+        }
+
+        public async Task<HttpResponseMessage> DeleteFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string fileName)
+        {
+            return await DeleteResponse($"/Clarification/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/Delete/{fileName}");
         }
     }
 }

@@ -47,15 +47,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
             if (ModelState.IsValid)
             {
                 var userId = HttpContext.User.UserId();
+                var userName = HttpContext.User.UserDisplayName();
 
                 submittedPageOutcomeSuccessfully = await _clarificationApiClient.SubmitClarificationPageReviewOutcome(command.ApplicationId,
                                     command.SequenceNumber,
                                     command.SectionNumber,
                                     command.PageId,
                                     userId,
+                                    userName,
                                     command.ClarificationResponse,
                                     command.Status,
-                                    command.ReviewComment);
+                                    command.ReviewComment,
+                                    command.FilesToUpload);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
@@ -104,15 +107,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
             if (ModelState.IsValid)
             {
                 var userId = HttpContext.User.UserId();
+                var userName = HttpContext.User.UserDisplayName();
 
                 submittedPageOutcomeSuccessfully = await _clarificationApiClient.SubmitClarificationPageReviewOutcome(command.ApplicationId,
                                     SequenceIds.DeliveringApprenticeshipTraining,
                                     SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
                                     command.PageId,
                                     userId,
+                                    userName,
                                     command.ClarificationResponse,
                                     command.Status,
-                                    command.ReviewComment);
+                                    command.ReviewComment,
+                                    null);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {

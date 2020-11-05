@@ -58,8 +58,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<BlindAssessmentOutcome>($"/Moderator/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/BlindAssessmentOutcome");
         }
 
-        public async Task<bool> SubmitModeratorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId,
-                                                    string userId, string status, string comment)
+        public async Task<bool> SubmitModeratorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId,
+                                                    string userName, string status, string comment)
         {
             var result = await Post($"/Moderator/Applications/{applicationId}/SubmitPageReviewOutcome", new SubmitModeratorPageReviewOutcomeCommand
             {
@@ -67,6 +67,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
                 SectionNumber = sectionNumber,
                 PageId = pageId,
                 UserId = userId,
+                UserName = userName,
                 Status = status,
                 Comment = comment
             });

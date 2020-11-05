@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -16,6 +17,10 @@ using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionReview
@@ -24,6 +29,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
     public class ClarificationSectionReviewControllerTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
+        private const int _sequenceNumber = 4;
+        private const int _sectionNumber = 2;
+        private const string _pageId = "4200";
+        private const string _nextPageId = "4210";
 
         private Mock<IRoatpClarificationApiClient> _clarificationApiClient;
         private Mock<IClarificationPageValidator> _clarificationPageValidator;
@@ -50,22 +59,18 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
         [Test]
         public async Task ReviewPageAnswers_When_FirstPageInSection()
         {
-            int sequenceNumber = 4;
-            int sectionNumber = 2;
-            string pageId = "4200";
-
             var viewModel = new ClarifierReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
-                SequenceNumber = sequenceNumber,
-                SectionNumber = sectionNumber,
-                PageId = pageId
+                SequenceNumber = _sequenceNumber,
+                SectionNumber = _sectionNumber,
+                PageId = _pageId
             };
 
             _sectionReviewOrchestrator.Setup(x => x.GetReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
 
             // act
-            var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, null) as ViewResult;
+            var result = await _controller.ReviewPageAnswers(_applicationId, _sequenceNumber, _sectionNumber, null) as ViewResult;
             var actualViewModel = result?.Model as ReviewAnswersViewModel;
 
             // assert
@@ -105,24 +110,19 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
         [Test]
         public async Task ReviewPageAnswers_When_NotFirstPageInSequence()
         {
-            int sequenceNumber = 4;
-            int sectionNumber = 2;
-            string pageId = "4200";
-            string nextPageId = "4210";
-
             var viewModel = new ClarifierReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
-                SequenceNumber = sequenceNumber,
-                SectionNumber = sectionNumber,
-                PageId = pageId,
-                NextPageId = nextPageId
+                SequenceNumber = _sequenceNumber,
+                SectionNumber = _sectionNumber,
+                PageId = _pageId,
+                NextPageId = _nextPageId
             };
 
             _sectionReviewOrchestrator.Setup(x => x.GetReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
 
             // act
-            var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId) as ViewResult;
+            var result = await _controller.ReviewPageAnswers(_applicationId, _sequenceNumber, _sectionNumber, _pageId) as ViewResult;
             var actualViewModel = result?.Model as ReviewAnswersViewModel;
 
             // assert
@@ -134,16 +134,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
         [Test]
         public async Task POST_ReviewPageAnswers_When_Valid_submits_ClarificationPageReviewOutcome()
         {
-            int sequenceNumber = 4;
-            int sectionNumber = 2;
-            string pageId = "4200";
-
             var viewModel = new ClarifierReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
-                SequenceNumber = sequenceNumber,
-                SectionNumber = sectionNumber,
-                PageId = pageId,
+                SequenceNumber = _sequenceNumber,
+                SectionNumber = _sectionNumber,
+                PageId = _pageId,
                 Status = ClarificationPageReviewStatus.Pass,
                 OptionPassText = "test",
                 ClarificationResponse = "All good"
@@ -161,12 +157,14 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
                                     command.SectionNumber,
                                     command.PageId,
                                     _controller.User.UserId(),
+                                    _controller.User.UserDisplayName(),
                                     command.ClarificationResponse,
                                     command.Status,
-                                    command.ReviewComment)).ReturnsAsync(true);
+                                    command.ReviewComment,
+                                    It.IsAny<IFormFileCollection>())).ReturnsAsync(true);
 
             // act
-            var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;
+            var result = await _controller.ReviewPageAnswers(command) as RedirectToActionResult;
 
             // assert
             Assert.AreEqual("ClarificationOverview", result.ControllerName);
@@ -177,24 +175,22 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
                         command.SectionNumber,
                         command.PageId,
                         _controller.User.UserId(),
+                        _controller.User.UserDisplayName(),
                         command.ClarificationResponse,
                         command.Status,
-                        command.ReviewComment), Times.Once);
+                        command.ReviewComment,
+                        It.IsAny<IFormFileCollection>()), Times.Once);
         }
 
         [Test]
         public async Task POST_ReviewPageAnswers_When_Invalid_does_not_submit_ClarificationPageReviewOutcome()
         {
-            int sequenceNumber = 4;
-            int sectionNumber = 2;
-            string pageId = "4200";
-
             var viewModel = new ClarifierReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
-                SequenceNumber = sequenceNumber,
-                SectionNumber = sectionNumber,
-                PageId = pageId,
+                SequenceNumber = _sequenceNumber,
+                SectionNumber = _sectionNumber,
+                PageId = _pageId,
                 Status = ClarificationPageReviewStatus.Pass,
                 OptionPassText = "test",
                 ClarificationResponse = null
@@ -209,7 +205,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
             _clarificationPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
             // act
-            var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as ViewResult;
+            var result = await _controller.ReviewPageAnswers(command) as ViewResult;
             var actualViewModel = result?.Model as ReviewAnswersViewModel;
 
             // assert
@@ -222,30 +218,27 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
                         command.SectionNumber,
                         command.PageId,
                         _controller.User.UserId(),
+                        _controller.User.UserDisplayName(),
                         command.ClarificationResponse,
                         command.Status,
-                        command.ReviewComment), Times.Never);
+                        command.ReviewComment,
+                        It.IsAny<IFormFileCollection>()), Times.Never);
         }
 
 
         [Test]
         public async Task POST_ReviewPageAnswers_When_ClarificationRequired_is_false_redirects_to_NextPage()
         {
-            int sequenceNumber = 4;
-            int sectionNumber = 2;
-            string pageId = "4200";
-            string nextPageId = "4210";
-
             var viewModel = new ClarifierReviewAnswersViewModel
             {
                 ApplicationId = _applicationId,
-                SequenceNumber = sequenceNumber,
-                SectionNumber = sectionNumber,
-                PageId = pageId,
+                SequenceNumber = _sequenceNumber,
+                SectionNumber = _sectionNumber,
+                PageId = _pageId,
                 Status = ClarificationPageReviewStatus.Pass,
                 OptionPassText = "test",
                 ClarificationResponse = "All good",
-                NextPageId = nextPageId
+                NextPageId = _nextPageId
             };
 
             var command = new SubmitClarificationPageAnswerCommand(viewModel);
@@ -254,7 +247,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
             _sectionReviewOrchestrator.Setup(x => x.GetReviewAnswersViewModel(It.IsAny<GetReviewAnswersRequest>())).ReturnsAsync(viewModel);
 
             // act
-            var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;
+            var result = await _controller.ReviewPageAnswers(command) as RedirectToActionResult;
 
             // assert
             Assert.AreEqual("ClarificationSectionReview", result.ControllerName);
@@ -265,9 +258,64 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
                         command.SectionNumber,
                         command.PageId,
                         _controller.User.UserId(),
+                        _controller.User.UserDisplayName(),
                         command.ClarificationResponse,
                         command.Status,
-                        command.ReviewComment), Times.Never);
+                        command.ReviewComment,
+                        It.IsAny<IFormFileCollection>()), Times.Never);
+        }
+
+        [Test]
+        public async Task DownloadClarificationFile_when_file_exists_downloads_the_requested_file()
+        {
+            string filename = "test.pdf";
+            string contentType = "application/pdf";
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StreamContent(new MemoryStream())
+            { Headers = { ContentLength = 0, ContentType = new MediaTypeHeaderValue(contentType) } };
+
+            _clarificationApiClient.Setup(x => x.DownloadFile(_applicationId, _sequenceNumber, _sectionNumber, _pageId, filename)).ReturnsAsync(response);
+
+            // act
+            var result = await _controller.DownloadClarificationFile(_applicationId, _sequenceNumber, _sectionNumber, _pageId, filename) as FileStreamResult;
+
+            // assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(filename, result.FileDownloadName);
+            Assert.AreEqual(contentType, result.ContentType);
+        }
+
+        [Test]
+        public async Task DownloadClarificationFile_when_file_does_not_exists_then_gives_NotFound_result()
+        {
+            string filename = "test.pdf";
+
+            var response = new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            _clarificationApiClient.Setup(x => x.DownloadFile(_applicationId, _sequenceNumber, _sectionNumber, _pageId, filename)).ReturnsAsync(response);
+
+            // act
+            var result = await _controller.DownloadClarificationFile(_applicationId, _sequenceNumber, _sectionNumber, _pageId, filename) as NotFoundResult;
+
+            // assert
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public async Task DeleteClarificationFile_deletes_the_file_and_redirects_to_ReviewPageAnswers()
+        {
+            string filename = "test.pdf";
+
+            var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+            _clarificationApiClient.Setup(x => x.DeleteFile(_applicationId, _sequenceNumber, _sectionNumber, _pageId, filename)).ReturnsAsync(response);
+
+            // act
+            var result = await _controller.DeleteClarificationFile(_applicationId, _sequenceNumber, _sectionNumber, _pageId, filename) as RedirectToActionResult;
+
+            // assert
+            Assert.AreEqual("ClarificationSectionReview", result.ControllerName);
+            Assert.AreEqual("ReviewPageAnswers", result.ActionName);
         }
     }
 }

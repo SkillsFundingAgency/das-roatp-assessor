@@ -65,12 +65,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             }
 
             var userId = HttpContext.User.UserId();
+            var userName = HttpContext.User.UserDisplayName();
             var submitForModeration = "YES".Equals(command.MoveToModeration, StringComparison.OrdinalIgnoreCase);
 
             // submit if validation passed and user specified to do so
             if (ModelState.IsValid && submitForModeration)
             {
-                var submittedSuccessfully = await _assessorApiClient.UpdateAssessorReviewStatus(command.ApplicationId, userId, AssessorReviewStatus.Approved);
+                var submittedSuccessfully = await _assessorApiClient.UpdateAssessorReviewStatus(command.ApplicationId, userId, userName, AssessorReviewStatus.Approved);
 
                 if (!submittedSuccessfully)
                 {

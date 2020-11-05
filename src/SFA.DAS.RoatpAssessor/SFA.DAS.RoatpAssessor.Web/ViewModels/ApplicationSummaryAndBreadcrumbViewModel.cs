@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
-    public class ApplicationSummaryAndBreadcrumbViewModel
+    public abstract class ApplicationSummaryAndBreadcrumbViewModel
     {
 
         public Guid ApplicationId { get; set; }
@@ -31,20 +31,5 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 return ApplicationRoute.Substring(0, index + 1);
             }
         }
-
-        #region Clarified Answer
-        public string ClarificationResponse { get; set; }
-        #endregion
-
-        // TODO: Future Tech Debt - split the regions below into appropriate base classes.
-        // The reason they are here is because different VMs inherit from it and this base class used a as a common type in several views
-        // Note that it also affects ModelState & validation on the views
-        #region Approval Section
-        public string Status { get; set; }
-
-        public string OptionPassText { get; set; }
-        public string OptionFailText { get; set; }
-        public string OptionInProgressText { get; set; }
-        #endregion
     }
 }
