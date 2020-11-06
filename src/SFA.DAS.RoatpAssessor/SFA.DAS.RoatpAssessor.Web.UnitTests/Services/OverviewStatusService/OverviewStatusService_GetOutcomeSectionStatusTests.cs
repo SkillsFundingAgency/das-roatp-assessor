@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using StatusService = SFA.DAS.RoatpAssessor.Web.Services.OverviewStatusService;
 
@@ -96,6 +97,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
         }
 
         [TestCase(2, 1, false, SectionStatus.Fail)]
+        [TestCase(2, 1, true, SectionStatus.Fail)]
         [TestCase(1, 2, false, SectionStatus.Fail)]
         [TestCase(1, 2, true,  SectionStatus.Fail)]
         [TestCase(0, 3, false, SectionStatus.Fail)]
@@ -170,6 +172,36 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
 
             var result = StatusService.GetOutcomeSectionStatus(_outcomes, _sequenceNumber, _sectionNumber);
             Assert.AreEqual(SectionStatus.InProgress, result);
+        }
+
+        [TestCase(2, 1, false, SectionStatus.Fail)]
+        [TestCase(2, 1, true, SectionStatus.Fail)]
+        [TestCase(1, 2, false, SectionStatus.Fail)]
+        [TestCase(1, 2, true, SectionStatus.Fail)]
+        [TestCase(0, 3, false, SectionStatus.Fail)]
+        [TestCase(0, 3, true, SectionStatus.Fail)]
+        [TestCase(3, 0, false, SectionStatus.Pass)]
+        [TestCase(3, 0, true, SectionStatus.Pass)]
+        public void When_Several_Matching_Outcomes_And_Moderation_PassedOrFailed_And_No_Clarification_Process_Returns_Expected_Status(int passOutcomes, int failOutcomes, bool isSectorsSection, string expectedStatus)
+        {
+            if (isSectorsSection)
+            {
+                _sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining;
+                _sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
+            }
+
+            for (int p = 0; p < passOutcomes; p++)
+            {
+                _outcomes.Add(new ClarificationPageReviewOutcome { SequenceNumber = _sequenceNumber, SectionNumber = _sectionNumber, Status = null, ModeratorReviewStatus = ModeratorPageReviewStatus.Pass });
+            }
+
+            for (int f = 0; f < failOutcomes; f++)
+            {
+                _outcomes.Add(new ClarificationPageReviewOutcome { SequenceNumber = _sequenceNumber, SectionNumber = _sectionNumber, Status = null, ModeratorReviewStatus = ModeratorPageReviewStatus.Fail });
+            }
+
+            var result = StatusService.GetOutcomeSectionStatus(_outcomes, _sequenceNumber, _sectionNumber);
+            Assert.AreEqual(expectedStatus, result);
         }
     }
 }

@@ -59,7 +59,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 p.SequenceNumber == sequenceNumber &&
                 p.SectionNumber == sectionNumber).ToList();
 
-            var outcomes = sectionPageReviewOutcomes?.Select(o => o.Status).ToList();
+            var outcomes = sectionPageReviewOutcomes?.Select(o => o.Status ?? o.ModeratorReviewStatus).ToList();
 
             return GetStatusFromOutcomes(outcomes, false);
         }
