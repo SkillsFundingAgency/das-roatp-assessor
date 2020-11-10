@@ -1,10 +1,7 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -49,14 +46,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     {
                         if (string.IsNullOrEmpty(section.Status))
                         {
-                            if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
-                            {
-                                section.Status = GetSectorsSectionStatus(savedOutcomes);
-                            }
-                            else
-                            {
-                                section.Status = GetSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
-                            }
+                            section.Status = OverviewStatusService.GetClarificationSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
                         }
                     }
                 }
@@ -67,78 +57,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string GetSectionStatus(List<ClarificationPageReviewOutcome> pageReviewOutcomes, int sequenceNumber, int sectionNumber)
-        {
-            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
-                p.SequenceNumber == sequenceNumber &&
-                p.SectionNumber == sectionNumber).ToList();
-
-            var sectionStatus = string.Empty;
-
-            if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
-            {
-                if (sectionPageReviewOutcomes.All(x => x.Status == ClarificationPageReviewStatus.Pass))
-                {
-                    sectionStatus = ClarificationSectionStatus.Pass;
-                }
-                else if (sectionPageReviewOutcomes.All(p =>
-                    p.Status == ClarificationPageReviewStatus.Pass || p.Status == ClarificationPageReviewStatus.Fail))
-                {
-                    sectionStatus = ClarificationSectionStatus.Fail;
-                }
-                else if (sectionPageReviewOutcomes.Any(p => p.Status == ClarificationPageReviewStatus.InProgress))
-                {
-                    sectionStatus = ClarificationSectionStatus.InProgress;
-                }
-                else if (sectionPageReviewOutcomes.Where(p => p.ModeratorReviewStatus == ModeratorPageReviewStatus.Fail).All(p => string.IsNullOrEmpty(p.Status)))
-                {
-                    sectionStatus = ClarificationSectionStatus.Clarification;
-                }
-                else
-                {
-                    sectionStatus = ClarificationSectionStatus.InProgress;
-                }
-            }
-
-            return sectionStatus;
-        }
-
-        public string GetSectorsSectionStatus(List<ClarificationPageReviewOutcome> pageReviewOutcomes)
-        {
-            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
-                p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
-                p.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees).ToList();
-
-            var sectionStatus = string.Empty;
-
-            if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
-            {
-                if (sectionPageReviewOutcomes.All(x => x.Status == ClarificationPageReviewStatus.Pass))
-                {
-                    sectionStatus = ClarificationSectionStatus.Pass;
-                }
-                else if (sectionPageReviewOutcomes.All(p =>
-                    p.Status == ClarificationPageReviewStatus.Pass || p.Status == ClarificationPageReviewStatus.Fail))
-                {
-                    sectionStatus = ClarificationSectionStatus.Fail;
-                }
-                else if (sectionPageReviewOutcomes.Any(p => p.Status == ClarificationPageReviewStatus.InProgress))
-                {
-                    sectionStatus = ClarificationSectionStatus.InProgress;
-                }
-                else if (sectionPageReviewOutcomes.Where(p => p.ModeratorReviewStatus == ModeratorPageReviewStatus.Fail).All(p => string.IsNullOrEmpty(p.Status)))
-                {
-                    sectionStatus = ClarificationSectionStatus.Clarification;
-                }
-                else
-                {
-                    sectionStatus = ClarificationSectionStatus.InProgress;
-                }
-            }
-
-            return sectionStatus;
-        }
-
         private static bool IsReadyForClarificationConfirmation(ClarifierApplicationViewModel viewmodel)
         {
             var isReadyForClarificationConfirmation = true;
@@ -147,9 +65,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 foreach (var section in sequence.Sections)
                 {
-                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(ClarificationSectionStatus.Pass) &&
-                                                   !section.Status.Equals(ClarificationSectionStatus.Fail) &&
-                                                   !section.Status.Equals(ClarificationSectionStatus.NotRequired)))
+                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(SectionStatus.Pass) &&
+                                                   !section.Status.Equals(SectionStatus.Fail) &&
+                                                   !section.Status.Equals(SectionStatus.NotRequired)))
                     {
                         isReadyForClarificationConfirmation = false;
                         break;

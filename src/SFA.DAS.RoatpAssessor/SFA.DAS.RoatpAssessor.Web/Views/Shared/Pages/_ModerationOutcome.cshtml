@@ -2,7 +2,7 @@
 @model SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification.ModerationOutcome
 
 @{
-    var assessor1CssModifierClassName = ModeratorPageReviewStatus.Pass.Equals(Model.ModeratorReviewStatus) ? "das-tag--solid-green" : "das-tag--solid-red";
+    var statusCssModifierClassName = ModeratorPageReviewStatus.Pass.Equals(Model.ModeratorReviewStatus) ? "das-tag--solid-green" : "das-tag--solid-red";
 }
 
 <div class="govuk-grid-row">
@@ -18,7 +18,7 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header">Outcome</th>
-                    <td class="govuk-table__cell"><strong class="das-tag @assessor1CssModifierClassName">@Model.ModeratorReviewStatus</strong></td>
+                    <td class="govuk-table__cell"><strong class="das-tag @statusCssModifierClassName">@Model.ModeratorReviewStatus</strong></td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header">Internal Comments</th>

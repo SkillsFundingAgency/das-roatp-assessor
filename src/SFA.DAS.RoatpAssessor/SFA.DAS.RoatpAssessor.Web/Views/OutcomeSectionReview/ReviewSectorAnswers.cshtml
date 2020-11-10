@@ -1,11 +1,11 @@
-﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.AssessorSectorDetailsViewModel;
+﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.OutcomeSectorDetailsViewModel;
 
 @{
-    ViewBag.Title = $"Assessor - {@Model.Heading}";
+    ViewBag.Title = $"Outcome - {@Model.Heading}";
     Layout = "_Layout";
 }
 
-<partial name="~/Views/AssessorSectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
+<partial name="~/Views/OutcomeSectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
@@ -25,7 +25,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @{ 
+            @{
                 <table class="govuk-table govuk-!-margin-bottom-9">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
@@ -114,21 +114,26 @@
         </div>
     </div>
 
+    <partial name="~/Views/Shared/Pages/_BlindAssessmentOutcome.cshtml" for="@Model.BlindAssessmentOutcome" />
+
+    @if (Model.ClarificationRequired && !string.IsNullOrWhiteSpace(Model.ClarificationOutcome?.ClarifierUserName) && !string.IsNullOrEmpty(Model.ClarificationOutcome?.ClarificationResponse))
+    {
+        <partial name="~/Views/Shared/Pages/_ClarificationOutcome.cshtml" for="@Model.ClarificationOutcome" />
+    }
+    else
+    {
+        <partial name="~/Views/Shared/Pages/_ModerationOutcome.cshtml" for="@Model.ModerationOutcome" />
+    }
+
     @if (Model.ApplicationId != Guid.Empty)
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <form class="js-disable-on-submit" method="post" asp-action="ReviewSectorAnswers" asp-controller="AssessorSectionReview">
+                <form class="js-disable-on-submit" method="post" asp-action="ReviewSectorAnswers" asp-controller="OutcomeSectionReview">
                     <input type="hidden" asp-for="ApplicationId" />
-                    <input type="hidden" asp-for="PageId" />
-                    <input type="hidden" asp-for="Heading" />
 
-                    <partial name="~/Views/AssessorSectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
-
-                    <button class="govuk-button" type="submit">Save and continue</button>
+                    <button class="govuk-button" type="submit">Continue</button>
                 </form>
-
-
             </div>
         </div>
     }

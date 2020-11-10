@@ -1,13 +1,13 @@
 ﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
 
-@model SFA.DAS.RoatpAssessor.Web.ViewModels.ModeratorReviewAnswersViewModel
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.OutcomeReviewAnswersViewModel
 
 @{
-    ViewBag.Title = $"Moderator - {@Model.Heading}";
+    ViewBag.Title = $"Outcome - {@Model.Heading}";
     Layout = "_Layout";
 }
 
-<partial name="~/Views/ModeratorSectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
+<partial name="~/Views/OutcomeSectionReview/Pages/_Breadcrumb.cshtml" for="@Model" />
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
@@ -153,21 +153,26 @@
 
     <partial name="~/Views/Shared/Pages/_BlindAssessmentOutcome.cshtml" for="@Model.BlindAssessmentOutcome" />
 
+    @if (Model.ClarificationRequired && !string.IsNullOrWhiteSpace(Model.ClarificationOutcome?.ClarifierUserName) && !string.IsNullOrEmpty(Model.ClarificationOutcome?.ClarificationResponse))
+    {
+        <partial name="~/Views/Shared/Pages/_ClarificationOutcome.cshtml" for="@Model.ClarificationOutcome" />
+    }
+    else
+    {
+        <partial name="~/Views/Shared/Pages/_ModerationOutcome.cshtml" for="@Model.ModerationOutcome" />
+    }
+
     @if (Model.ApplicationId != Guid.Empty)
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <form class="js-disable-on-submit" method="post" asp-action="ReviewPageAnswers" asp-controller="ModeratorSectionReview">
+                <form class="js-disable-on-submit" method="post" asp-action="ReviewPageAnswers" asp-controller="OutcomeSectionReview">
                     <input type="hidden" asp-for="ApplicationId" />
                     <input type="hidden" asp-for="SequenceNumber" />
                     <input type="hidden" asp-for="SectionNumber" />
                     <input type="hidden" asp-for="PageId" />
                     <input type="hidden" asp-for="NextPageId" />
-                    <input type="hidden" asp-for="Heading" />
-
-                    <partial name="~/Views/ModeratorSectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
-
-                    <button class="govuk-button" type="submit">Save and continue</button>
+                    <button class="govuk-button" type="submit">Continue</button>
                 </form>
             </div>
         </div>

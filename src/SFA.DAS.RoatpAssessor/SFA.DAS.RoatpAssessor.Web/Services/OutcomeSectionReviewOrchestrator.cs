@@ -16,22 +16,25 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Services
 {
-    public class ClarificationSectionReviewOrchestrator : IClarificationSectionReviewOrchestrator
+    public class OutcomeSectionReviewOrchestrator : IOutcomeSectionReviewOrchestrator
     {
-        private readonly ILogger<ClarificationSectionReviewOrchestrator> _logger;
+        private readonly ILogger<OutcomeSectionReviewOrchestrator> _logger;
         private readonly IRoatpApplicationApiClient _applicationApiClient;
+        private readonly IRoatpModerationApiClient _moderationApiClient;
         private readonly IRoatpClarificationApiClient _clarificationApiClient;
         private readonly ISupplementaryInformationService _supplementaryInformationService;
 
-        public ClarificationSectionReviewOrchestrator(ILogger<ClarificationSectionReviewOrchestrator> logger, IRoatpApplicationApiClient applicationApiClient, IRoatpClarificationApiClient clarificationApiClient, ISupplementaryInformationService supplementaryInformationService)
+        public OutcomeSectionReviewOrchestrator(ILogger<OutcomeSectionReviewOrchestrator> logger, IRoatpApplicationApiClient applicationApiClient, IRoatpModerationApiClient moderationApiClient,
+            IRoatpClarificationApiClient clarificationApiClient, ISupplementaryInformationService supplementaryInformationService)
         {
             _logger = logger;
             _applicationApiClient = applicationApiClient;
+            _moderationApiClient = moderationApiClient;
             _clarificationApiClient = clarificationApiClient;
             _supplementaryInformationService = supplementaryInformationService;
         }
 
-        public async Task<ClarifierReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request)
+        public async Task<OutcomeReviewAnswersViewModel> GetReviewAnswersViewModel(GetReviewAnswersRequest request)
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
@@ -42,7 +45,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            var viewModel = new ClarifierReviewAnswersViewModel
+            var viewModel = new OutcomeReviewAnswersViewModel
             {
                 ApplicationId = application.ApplicationId,
 
@@ -65,7 +68,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 Questions = clarificationPage.Questions != null ? new List<Question>(clarificationPage.Questions) : new List<Question>(),
                 Answers = clarificationPage.Answers != null ? new List<Answer>(clarificationPage.Answers) : new List<Answer>(),
                 TabularData = GetTabularDataFromQuestionsAndAnswers(clarificationPage.Questions, clarificationPage.Answers),
-                SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, clarificationPage.PageId)
+                SupplementaryInformation = await _supplementaryInformationService.GetSupplementaryInformation(application.ApplicationId, clarificationPage.PageId),
+
+                BlindAssessmentOutcome = await _moderationApiClient.GetBlindAssessmentOutcome(application.ApplicationId, clarificationPage.SequenceNumber, clarificationPage.SectionNumber, clarificationPage.PageId)
             };
 
             await SetPageReviewOutcome(request, viewModel);
@@ -106,7 +111,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewModel;
         }
 
-        public async Task<ClarifierSectorDetailsViewModel> GetSectorDetailsViewModel(GetSectorDetailsRequest request)
+        public async Task<OutcomeSectorDetailsViewModel> GetSectorDetailsViewModel(GetSectorDetailsRequest request)
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var clarificationPage = await _clarificationApiClient.GetClarificationPage(
@@ -121,8 +126,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             }
 
             var sectorDetails = await _clarificationApiClient.GetClarificationSectorDetails(request.ApplicationId, request.PageId);
+            var blindAssessmentOutcome = await _moderationApiClient.GetBlindAssessmentOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining, SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, request.PageId);
 
-            var viewModel = new ClarifierSectorDetailsViewModel
+            var viewModel = new OutcomeSectorDetailsViewModel
             {
                 ApplicationId = application.ApplicationId,
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN,
@@ -133,7 +139,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
                 Caption = clarificationPage.Caption,
                 Heading = $"Delivering training in '{sectorDetails?.SectorName}' sector",
-                SectorDetails = sectorDetails
+                SectorDetails = sectorDetails,
+                BlindAssessmentOutcome = blindAssessmentOutcome
             };
 
             await SetSectorReviewOutcome(request, viewModel);
@@ -176,7 +183,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return tabularDataList;
         }
 
-        private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, ClarifierSectorDetailsViewModel viewModel)
+        private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, OutcomeSectorDetailsViewModel viewModel)
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the moderator page back from the service
             var pageReviewOutcome = await _clarificationApiClient.GetClarificationPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
@@ -212,15 +219,29 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     ModeratorReviewComment = pageReviewOutcome.ModeratorReviewComment
                 };
 
+                viewModel.ClarificationOutcome = new ApplyTypes.Outcome.ClarificationOutcome
+                {
+                    ApplicationId = pageReviewOutcome.ApplicationId,
+                    SequenceNumber = pageReviewOutcome.SequenceNumber,
+                    SectionNumber = pageReviewOutcome.SectionNumber,
+                    PageId = pageReviewOutcome.PageId,
+                    ClarifierUserId = pageReviewOutcome.UserId,
+                    ClarifierUserName = pageReviewOutcome.UserName,
+                    ClarificationReviewStatus = pageReviewOutcome.Status,
+                    ClarificationReviewComment = pageReviewOutcome.Comment,
+                    ClarificationResponse = pageReviewOutcome.ClarificationResponse,
+                    ClarificationFiles = string.IsNullOrEmpty(pageReviewOutcome.ClarificationFile) ? null : new List<string> { pageReviewOutcome.ClarificationFile }
+                };
+
                 viewModel.ClarificationResponse = pageReviewOutcome.ClarificationResponse;
                 viewModel.ClarificationFile = pageReviewOutcome.ClarificationFile;
             }
         }
 
 
-        private async Task SetPageReviewOutcome(GetReviewAnswersRequest request, ClarifierReviewAnswersViewModel viewModel)
+        private async Task SetPageReviewOutcome(GetReviewAnswersRequest request, OutcomeReviewAnswersViewModel viewModel)
         {
-            // TODO: To think about... could we move this into Apply Service? It's really part of getting the moderator page back from the service
+            // TODO: To think about... could we move this into Apply Service? It's really part of getting the page back from the service
             var pageReviewOutcome = await _clarificationApiClient.GetClarificationPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, request.UserId);
 
             if (pageReviewOutcome != null)
@@ -251,6 +272,20 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     ModeratorUserName = pageReviewOutcome.ModeratorUserName,
                     ModeratorReviewStatus = pageReviewOutcome.ModeratorReviewStatus,
                     ModeratorReviewComment = pageReviewOutcome.ModeratorReviewComment
+                };
+
+                viewModel.ClarificationOutcome = new ApplyTypes.Outcome.ClarificationOutcome
+                {
+                    ApplicationId = pageReviewOutcome.ApplicationId,
+                    SequenceNumber = pageReviewOutcome.SequenceNumber,
+                    SectionNumber = pageReviewOutcome.SectionNumber,
+                    PageId = pageReviewOutcome.PageId,
+                    ClarifierUserId = pageReviewOutcome.UserId,
+                    ClarifierUserName = pageReviewOutcome.UserName,
+                    ClarificationReviewStatus = pageReviewOutcome.Status,
+                    ClarificationReviewComment = pageReviewOutcome.Comment,
+                    ClarificationResponse = pageReviewOutcome.ClarificationResponse,
+                    ClarificationFiles = string.IsNullOrEmpty(pageReviewOutcome.ClarificationFile) ? null : new List<string> { pageReviewOutcome.ClarificationFile }
                 };
 
                 viewModel.ClarificationResponse = pageReviewOutcome.ClarificationResponse;

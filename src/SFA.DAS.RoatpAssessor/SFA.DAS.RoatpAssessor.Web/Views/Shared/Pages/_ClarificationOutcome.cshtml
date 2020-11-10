@@ -1,0 +1,55 @@
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+@model SFA.DAS.RoatpAssessor.Web.ApplyTypes.Outcome.ClarificationOutcome
+
+@{
+    var statusCssModifierClassName = ClarificationPageReviewStatus.Pass.Equals(Model.ClarificationReviewStatus) ? "das-tag--solid-green" : "das-tag--solid-red";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <table class="govuk-table govuk-!-margin-bottom-9">
+            <caption class="govuk-table__caption govuk-heading-m">Outcome of moderation</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-width-one-quarter"></th>
+                    <th class="govuk-table__header">@Model.ClarifierUserName</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Clarification Response</th>
+                    <td class="govuk-table__cell">@Model.ClarificationResponse</td>
+                </tr>
+                @if (Model.ClarificationFiles?.Any() is true)
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">Files</th>
+                        <td class="govuk-table__cell govuk-table__cell--break-word" scope="row">
+                            @foreach (var file in Model.ClarificationFiles)
+                            {
+                                <a class="govuk-link" href="@Url.Action("DownloadClarificationFile", "ClarificationSectionReview" , new
+                                {
+                                    ApplicationId = Model.ApplicationId,
+                                    SequenceNumber = Model.SequenceNumber,
+                                    SectionNumber = Model.SectionNumber,
+                                    PageId = Model.PageId,
+                                    FileName = file
+                                })">
+                                    @file
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Outcome</th>
+                    <td class="govuk-table__cell"><strong class="das-tag @statusCssModifierClassName">@Model.ClarificationReviewStatus</strong></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Internal Comments</th>
+                    <td class="govuk-table__cell">@Model.ClarificationReviewComment</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

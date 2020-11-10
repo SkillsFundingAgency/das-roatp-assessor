@@ -7,8 +7,7 @@ using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
-using SFA.DAS.RoatpAssessor.Web.Controllers.Moderator;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.Controllers.Outcome;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
@@ -24,9 +23,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeOverview
         private Mock<IOutcomeOverviewOrchestrator> _orchestrator;
         private OutcomeOverviewController _controller;
         private OutcomeApplicationViewModel _applicationViewModel;
-        private readonly string _moderatorName = "James Smith";
-        private readonly string _moderationStatus = "Pass";
-        private DateTime _outcomeDate = DateTime.UtcNow;
 
             [SetUp]
         public void SetUp()
@@ -54,19 +50,21 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeOverview
                                             ApplicationId = _applicationId,
                                             Assessor1ReviewStatus = AssessorReviewStatus.Approved, Assessor1UserId = userId, Assessor1Name = userDisplayName,
                                             Assessor2ReviewStatus = AssessorReviewStatus.Approved, Assessor2UserId = assessor2Id, Assessor2Name = assessor2DisplayName,
-                                            ModerationStatus = _moderationStatus,
+                                            ModerationStatus = ModerationStatus.Pass,
                                             ApplyData =  new ApplyData
                                             {
                                                 ModeratorReviewDetails = new ModeratorReviewDetails
                                                 {
-                                                    ModeratorName = _moderatorName,
-                                                    OutcomeDateTime = _outcomeDate
+                                                    ModeratorUserId = userId,
+                                                    ModeratorName = userDisplayName,
+                                                    ModeratorComments = null,
+                                                    OutcomeDateTime = DateTime.UtcNow
                                                 }
                                             }
             };
 
             var contact = new Contact { Email = userId, GivenNames = _controller.User.GivenName(), FamilyName = _controller.User.Surname() };
-            var sequences = new List<ModeratorSequence>();
+            var sequences = new List<ClarificationSequence>();
 
             return new OutcomeApplicationViewModel(application, contact, sequences, userId);
         }
@@ -74,7 +72,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeOverview
         [Test]
         public async Task ViewApplication_returns_view_with_expected_viewmodel()
         {
-            var result = await _controller.ViewOutcome(_applicationId) as ViewResult;
+            var result = await _controller.ViewApplication(_applicationId) as ViewResult;
             var actualViewModel = result?.Model as OutcomeApplicationViewModel;
 
             Assert.That(result, Is.Not.Null);
@@ -87,7 +85,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeOverview
         {
             _orchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetOutcomeOverviewRequest>())).ReturnsAsync((OutcomeApplicationViewModel)null);
 
-            var result = await _controller.ViewOutcome(_applicationId) as RedirectToActionResult;
+            var result = await _controller.ViewApplication(_applicationId) as RedirectToActionResult;
 
             Assert.AreEqual("Home", result.ControllerName);
             Assert.AreEqual("Index", result.ActionName);

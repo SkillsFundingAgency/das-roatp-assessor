@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -49,14 +50,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     {
                         if (string.IsNullOrEmpty(section.Status))
                         {
-                            if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
-                            {
-                                section.Status = GetSectorsSectionStatus(savedOutcomes);
-                            }
-                            else
-                            {
-                                section.Status = GetSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
-                            }
+                            section.Status = OverviewStatusService.GetAssessorSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
                         }
                     }
                 }
@@ -67,82 +61,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return viewmodel;
         }
 
-        public string GetSectionStatus(List<AssessorPageReviewOutcome> pageReviewOutcomes, int sequenceNumber, int sectionNumber)
-        {
-            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
-                p.SequenceNumber == sequenceNumber &&
-                p.SectionNumber == sectionNumber).ToList();
-
-            var sectionStatus = string.Empty;
-
-            if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
-            {
-                if (sectionPageReviewOutcomes.Count.Equals(1))
-                {
-                    // The section only has 1 question
-                    sectionStatus = sectionPageReviewOutcomes[0].Status;
-                }
-                else
-                {
-                    // The section contains multiple question
-                    if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
-                    {
-                        sectionStatus = null;
-                    }
-                    else if (sectionPageReviewOutcomes.All(x => x.Status == AssessorPageReviewStatus.Pass))
-                    {
-                        sectionStatus = AssessorSectionStatus.Pass;
-                    }
-                    else if (sectionPageReviewOutcomes.All(p =>
-                        p.Status == AssessorPageReviewStatus.Pass || p.Status == AssessorPageReviewStatus.Fail))
-                    {
-                        var failStatusesCount = sectionPageReviewOutcomes.Count(p => p.Status == AssessorPageReviewStatus.Fail);
-                        var pluarlisedFailsOutOf = failStatusesCount == 1 ? AssessorSectionStatus.FailOutOf : AssessorSectionStatus.FailsOutOf;
-
-                        sectionStatus = $"{failStatusesCount} {pluarlisedFailsOutOf} {sectionPageReviewOutcomes.Count}";
-                    }
-                    else
-                    {
-                        sectionStatus = AssessorSectionStatus.InProgress;
-                    }
-                }
-            }
-
-            return sectionStatus;
-        }
-
-        public string GetSectorsSectionStatus(List<AssessorPageReviewOutcome> pageReviewOutcomes)
-        {
-            var sectionPageReviewOutcomes = pageReviewOutcomes?.Where(p =>
-                p.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining &&
-                p.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees).ToList();
-
-            var sectionStatus = string.Empty;
-
-            if (sectionPageReviewOutcomes != null && sectionPageReviewOutcomes.Any())
-            {
-                if (sectionPageReviewOutcomes.All(p => string.IsNullOrEmpty(p.Status)))
-                {
-                    sectionStatus = null;
-                }
-                else if (sectionPageReviewOutcomes.All(p => p.Status == AssessorPageReviewStatus.Pass))
-                {
-                    sectionStatus = AssessorSectionStatus.Pass;
-                }
-                else if (sectionPageReviewOutcomes.All(p =>
-                            p.Status == AssessorPageReviewStatus.Pass || p.Status == AssessorPageReviewStatus.Fail))
-                {
-                    sectionStatus = AssessorSectionStatus.Fail;
-                }
-                else
-                {
-                    sectionStatus = AssessorSectionStatus.InProgress;
-                }
-            }
-
-            return sectionStatus;
-        }
-
         private static bool IsReadyForModeration(AssessorApplicationViewModel viewmodel)
         {
             var isReadyForModeration = true;
@@ -151,11 +69,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 foreach (var section in sequence.Sections)
                 {
-                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(AssessorSectionStatus.Pass) &&
-                                                   !section.Status.Equals(AssessorSectionStatus.Fail) &&
-                                                   !section.Status.Equals(AssessorSectionStatus.NotRequired) &&
-                                                   !section.Status.Contains(AssessorSectionStatus.FailOutOf) &&
-                                                   !section.Status.Contains(AssessorSectionStatus.FailsOutOf)))
+                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(SectionStatus.Pass) &&
+                                                   !section.Status.Equals(SectionStatus.Fail) &&
+                                                   !section.Status.Equals(SectionStatus.NotRequired) &&
+                                                   !section.Status.Contains(SectionStatus.FailOutOf) &&
+                                                   !section.Status.Contains(SectionStatus.FailsOutOf)))
                     {
                         isReadyForModeration = false;
                         break;

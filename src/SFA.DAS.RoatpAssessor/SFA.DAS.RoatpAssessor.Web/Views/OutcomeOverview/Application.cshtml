@@ -1,9 +1,9 @@
-@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common
 
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.OutcomeApplicationViewModel
 
 @{
-    ViewBag.Title = "Moderator evaluation";
+    ViewBag.Title = "Moderator outcome";
     Layout = "_Layout";
 }
 
@@ -39,14 +39,13 @@
                                 {
                                     <li class="app-task-list__item">
                                         <span id="section-@sequence.SequenceNumber.@currentSection.SectionNumber" class="app-task-list__task-name app-task-list__task-name--inactive">
-                                            @if (currentSection.Status != null && currentSection.Status.Equals(AssessorSectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase))
+                                            @if (currentSection.Status != null && currentSection.Status.Equals(SectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase))
                                             {
                                                 @currentSection.LinkTitle
                                             }
                                             else
                                             {
-                                                @*<a asp-controller="ModeratorSectionReview" asp-action="ReviewPageAnswers" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@sequence.SequenceNumber" asp-route-sectionNumber="@currentSection.SectionNumber" class="govuk-link">@currentSection.LinkTitle</a>*@
-                                                <a href="#" class="govuk-link">@currentSection.LinkTitle</a>
+                                                <a asp-controller="OutcomeSectionReview" asp-action="ReviewPageAnswers" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@sequence.SequenceNumber" asp-route-sectionNumber="@currentSection.SectionNumber" class="govuk-link">@currentSection.LinkTitle</a>
                                             }
                                         </span>
                                         @if (!string.IsNullOrWhiteSpace(currentSection.Status))

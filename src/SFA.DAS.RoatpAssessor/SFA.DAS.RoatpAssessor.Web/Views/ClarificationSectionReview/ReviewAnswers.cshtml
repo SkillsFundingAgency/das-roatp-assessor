@@ -20,7 +20,7 @@
             </span>
             <h1 class="govuk-heading-xl">@Model.Heading</h1>
             
-            <partial name="~/Views/ClarificationSectionReview/Pages/_ApplicationSummary.cshtml" for="@Model" />
+            <partial name="~/Views/Shared/Pages/_ApplicationSummary.cshtml" for="@Model" />
         </div>
     </div>
 
@@ -28,7 +28,7 @@
     {
         foreach (var item in Model.TabularData)
         {
-            <partial name="~/Views/ClarificationSectionReview/Pages/_TabularData.cshtml" for="@item" />
+            <partial name="~/Views/Shared/Pages/_TabularData.cshtml" for="@item" />
         }
     }
     else
@@ -155,7 +155,7 @@
         </div>
     }
 
-    <partial name="~/Views/ClarificationSectionReview/Pages/_ModerationOutcome.cshtml" for="@Model.ModerationOutcome" />
+    <partial name="~/Views/Shared/Pages/_ModerationOutcome.cshtml" for="@Model.ModerationOutcome" />
 
     @if (Model.ApplicationId != Guid.Empty)
     {
