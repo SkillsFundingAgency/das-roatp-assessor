@@ -49,6 +49,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             viewModel.Assessor1UserId = application.Assessor1UserId;
             viewModel.Assessor2UserId = application.Assessor2UserId;
             viewModel.ModerationStatus = application.ModerationStatus;
+            viewModel.ModeratorName = application.ModeratorName;
 
             return viewModel;
         }
