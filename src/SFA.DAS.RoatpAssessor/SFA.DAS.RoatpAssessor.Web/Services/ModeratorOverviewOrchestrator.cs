@@ -1,4 +1,5 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
@@ -48,14 +49,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     {
                         if (string.IsNullOrEmpty(section.Status))
                         {
-                            if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
-                            {
-                                section.Status = OverviewStatusService.GetSectorsSectionStatus(savedOutcomes);
-                            }
-                            else
-                            {
-                                section.Status = OverviewStatusService.GetSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
-                            }
+                            section.Status = OverviewStatusService.GetModerationSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
                         }
                     }
                 }
@@ -74,11 +68,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             {
                 foreach (var section in sequence.Sections)
                 {
-                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(ModeratorSectionStatus.Pass) &&
-                                                   !section.Status.Equals(ModeratorSectionStatus.Fail) &&
-                                                   !section.Status.Equals(ModeratorSectionStatus.NotRequired) &&
-                                                   !section.Status.Contains(ModeratorSectionStatus.FailOutOf) &&
-                                                   !section.Status.Contains(ModeratorSectionStatus.FailsOutOf)))
+                    if (string.IsNullOrEmpty(section.Status) || (!section.Status.Equals(SectionStatus.Pass) &&
+                                                   !section.Status.Equals(SectionStatus.Fail) &&
+                                                   !section.Status.Equals(SectionStatus.NotRequired) &&
+                                                   !section.Status.Contains(SectionStatus.FailOutOf) &&
+                                                   !section.Status.Contains(SectionStatus.FailsOutOf)))
                     {
                         isReadyForModeratorConfirmation = false;
                         break;

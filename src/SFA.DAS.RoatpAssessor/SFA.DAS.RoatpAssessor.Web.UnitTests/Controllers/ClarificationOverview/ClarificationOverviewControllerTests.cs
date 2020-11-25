@@ -61,7 +61,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOverview
                     {
                         ClarificationRequestedOn = DateTime.Now,
                         ModeratorUserId =  userId,
-                        ModeratorName = userDisplayName
+                        ModeratorName = userDisplayName,
+                        ModeratorComments = null
                     }
                 }
             };

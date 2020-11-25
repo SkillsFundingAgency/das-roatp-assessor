@@ -5,5 +5,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator
     public class ModerationApplicationSummary : ApplicationSummary
     {
         public string ModerationStatus { get; set; }
+        public string ModeratorName { get; set; }
     }
 }

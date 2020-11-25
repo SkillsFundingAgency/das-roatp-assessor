@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using System;
 using System.Collections.Generic;
@@ -52,13 +53,13 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
             {
                 case null:
                     return string.Empty;
-                case string a when a.Equals(ModeratorSectionStatus.Pass, StringComparison.InvariantCultureIgnoreCase):
+                case string a when a.Equals(SectionStatus.Pass, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-green";
-                case string b when b.Contains(ModeratorSectionStatus.Fail, StringComparison.InvariantCultureIgnoreCase):
+                case string b when b.Contains(SectionStatus.Fail, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-red";
-                case string c when c.Equals(ModeratorSectionStatus.InProgress, StringComparison.InvariantCultureIgnoreCase):
+                case string c when c.Equals(SectionStatus.InProgress, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag";
-                case string d when d.Equals(ModeratorSectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase):
+                case string d when d.Equals(SectionStatus.NotRequired, StringComparison.InvariantCultureIgnoreCase):
                     return "app-task-list__tag das-tag das-tag--solid-grey";
                 default:
                     return string.Empty;

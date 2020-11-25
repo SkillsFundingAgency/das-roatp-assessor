@@ -202,6 +202,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
                 viewModel.ModerationOutcome = new ModerationOutcome
                 {
+                    ApplicationId = pageReviewOutcome.ApplicationId,
+                    SequenceNumber = pageReviewOutcome.SequenceNumber,
+                    SectionNumber = pageReviewOutcome.SectionNumber,
+                    PageId = pageReviewOutcome.PageId,
                     ModeratorUserId = pageReviewOutcome.ModeratorUserId,
                     ModeratorUserName = pageReviewOutcome.ModeratorUserName,
                     ModeratorReviewStatus = pageReviewOutcome.ModeratorReviewStatus,
@@ -239,6 +243,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
                 viewModel.ModerationOutcome = new ModerationOutcome
                 {
+                    ApplicationId = pageReviewOutcome.ApplicationId,
+                    SequenceNumber = pageReviewOutcome.SequenceNumber,
+                    SectionNumber = pageReviewOutcome.SectionNumber,
+                    PageId = pageReviewOutcome.PageId,
                     ModeratorUserId = pageReviewOutcome.ModeratorUserId,
                     ModeratorUserName = pageReviewOutcome.ModeratorUserName,
                     ModeratorReviewStatus = pageReviewOutcome.ModeratorReviewStatus,

@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.AdminService.Common.Extensions;
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.OutcomeApplicationViewModel
 
@@ -91,7 +92,6 @@
             </dd>
         </div>
     }
-    
     @if (Model.OutcomeDate.HasValue)
     {
         <div class="govuk-summary-list__row">
@@ -103,15 +103,30 @@
             </dd>
         </div>
     }
-    
-
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Outcome
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @if (Model.Outcome == ModerationStatus.Pass)
+            {
+                <strong class="das-tag das-tag--solid-green">Pass</strong>
+            }
+            else
+            {
+                <strong class="das-tag das-tag--solid-red">Fail</strong>
+            }
+        </dd>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.OutcomeComments))
+    {
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
-                Outcome 
+                Internal comments
             </dt>
             <dd class="govuk-summary-list__value">
-                @Model.Outcome
+                @Model.OutcomeComments
             </dd>
         </div>
-    
+    }
 </dl>

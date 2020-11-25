@@ -4,8 +4,7 @@ using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
-using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
@@ -57,7 +56,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
                     {
                         ClarificationRequestedOn = DateTime.Now,
                         ModeratorUserId = _userId,
-                        ModeratorName = _userDisplayName
+                        ModeratorName = _userDisplayName,
+                        ModeratorComments = null
                     }
                 }
             };
@@ -70,124 +70,6 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _clarificationApiClient.Setup(x => x.GetClarificationSequences(_applicationId)).ReturnsAsync(_sequences);
             _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
-        }
-
-        [TestCase(ClarificationPageReviewStatus.InProgress)]
-        [TestCase(ClarificationPageReviewStatus.Pass)]
-        [TestCase(ClarificationPageReviewStatus.Fail)]
-        public void GetSectionStatus_Single_PageReviewOutcome(string status)
-        {
-            const int sequenceNumber = 1;
-            const int sectionNumber = 1;
-
-            List<ClarificationPageReviewOutcome> sectionPageReviewOutcomes = new List<ClarificationPageReviewOutcome>
-            {
-                new ClarificationPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    SequenceNumber = sequenceNumber,
-                    SectionNumber = sectionNumber,
-                    Status = status
-                }
-            };
-
-            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
-            Assert.AreEqual(status, sectionStatus);
-        }
-
-        [TestCase(null, null, null, ClarificationSectionStatus.Clarification)]
-        [TestCase(null, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.Clarification)]
-        [TestCase(null, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
-        [TestCase(null, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
-        [TestCase(null, ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
-        [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.InProgress)]
-        [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
-        [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
-        [TestCase(ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.Fail)]
-        [TestCase(ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.Fail)]
-        [TestCase(ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.Fail)]
-        [TestCase(ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.Pass)]
-        public void GetSectionStatus_Multiple_PageReviewOutcomes(string statusOne, string statusTwo, string statusThree, string statusExpected)
-        {
-            const int sequenceNumber = 1;
-            const int sectionNumber = 1;
-
-            List<ClarificationPageReviewOutcome> sectionPageReviewOutcomes = new List<ClarificationPageReviewOutcome>
-            {
-                new ClarificationPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    SequenceNumber = sequenceNumber,
-                    SectionNumber = sectionNumber,
-                    Status = statusOne,
-                    ModeratorReviewStatus = statusOne == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
-                },
-                new ClarificationPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    SequenceNumber = sequenceNumber,
-                    SectionNumber = sectionNumber,
-                    Status = statusTwo,
-                    ModeratorReviewStatus = statusTwo == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
-                },
-                new ClarificationPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    SequenceNumber = sequenceNumber,
-                    SectionNumber = sectionNumber,
-                    Status = statusThree,
-                    ModeratorReviewStatus = statusThree == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
-                }
-            };
-
-            var sectionStatus = _orchestrator.GetSectionStatus(sectionPageReviewOutcomes, sequenceNumber, sectionNumber);
-            Assert.AreEqual(statusExpected, sectionStatus);
-        }
-
-        [TestCase(null, null, null, ClarificationSectionStatus.Clarification)]
-        [TestCase(null, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.Clarification)]
-        [TestCase(null, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
-        [TestCase(null, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
-        [TestCase(null, ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
-        [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.InProgress)]
-        [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
-        [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.InProgress)]
-        [TestCase(ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.Fail)]
-        [TestCase(ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.Fail)]
-        [TestCase(ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail, ClarificationSectionStatus.Fail)]
-        [TestCase(ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass, ClarificationSectionStatus.Pass)]
-        public void GetSectorsSectionStatus(string statusOne, string statusTwo, string statusThree, string statusExpected)
-        {
-            List<ClarificationPageReviewOutcome> sectionPageReviewOutcomes = new List<ClarificationPageReviewOutcome>
-            {
-                new ClarificationPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    Status = statusOne,
-                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                    ModeratorReviewStatus = statusOne == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
-                },
-                new ClarificationPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    Status = statusTwo,
-                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                    ModeratorReviewStatus = statusTwo == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
-                },
-                new ClarificationPageReviewOutcome
-                {
-                    ApplicationId = _applicationId,
-                    Status = statusThree,
-                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
-                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                    ModeratorReviewStatus = statusThree == ClarificationPageReviewStatus.Fail ? ModeratorPageReviewStatus.Fail : null
-                }
-            };
-
-            var sectionStatus = _orchestrator.GetSectorsSectionStatus(sectionPageReviewOutcomes);
-            Assert.AreEqual(statusExpected, sectionStatus);
         }
 
         [Test]
@@ -253,7 +135,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
         [Test]
         public async Task GetOverviewViewModel_When_SavedOutcomes_Contains_Clarification_Then_IsReadyForClarificationConfirmation_IsFalse()
         {
-            var expectedStatus = ClarificationSectionStatus.Clarification;
+            var expectedStatus = SectionStatus.Clarification;
             _sequences.Add(new ClarificationSequence { SequenceNumber = 1, Sections = new List<ClarificationSection> { new ClarificationSection { SectionNumber = 2 } } });
             _outcomes.Add(new ClarificationPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
 
@@ -267,7 +149,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
         [Test]
         public async Task GetOverviewViewModel_When_SavedOutcomes_Contains_InProgress_Then_IsReadyForClarificationConfirmation_IsFalse()
         {
-            var expectedStatus = ClarificationSectionStatus.InProgress;
+            var expectedStatus = SectionStatus.InProgress;
             _sequences.Add(new ClarificationSequence { SequenceNumber = 1, Sections = new List<ClarificationSection> { new ClarificationSection { SectionNumber = 2 } } });
             _outcomes.Add(new ClarificationPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
 
@@ -281,7 +163,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
         [Test]
         public async Task GetOverviewViewModel_When_SavedOutcomes_AreAll_Pass_Then_IsReadyForClarificationConfirmation_IsTrue()
         {
-            var expectedStatus = ClarificationSectionStatus.Pass;
+            var expectedStatus = SectionStatus.Pass;
             _sequences.Add(new ClarificationSequence { SequenceNumber = 1, Sections = new List<ClarificationSection> { new ClarificationSection { SectionNumber = 2 } } });
             _outcomes.Add(new ClarificationPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
 
@@ -295,7 +177,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
         [Test]
         public async Task GetOverviewViewModel_When_SavedOutcomes_AreAll_Fail_Then_IsReadyForClarificationConfirmation_IsTrue()
         {
-            var expectedStatus = ClarificationSectionStatus.Fail;
+            var expectedStatus = SectionStatus.Fail;
             _sequences.Add(new ClarificationSequence { SequenceNumber = 1, Sections = new List<ClarificationSection> { new ClarificationSection { SectionNumber = 2 } } });
             _outcomes.Add(new ClarificationPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = expectedStatus });
 
@@ -309,7 +191,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
         [Test]
         public async Task GetOverviewViewModel_When_SavedOutcomes_AreAll_PassOrFail_Then_IsReadyForClarificationConfirmation_IsTrue()
         {
-            var expectedStatus = ClarificationSectionStatus.Fail;
+            var expectedStatus = SectionStatus.Fail;
 
             _sequences.Add(new ClarificationSequence { SequenceNumber = 1, Sections = new List<ClarificationSection> { new ClarificationSection { SectionNumber = 2 } } });
             _outcomes.Add(new ClarificationPageReviewOutcome { SequenceNumber = 1, SectionNumber = 2, Status = ClarificationPageReviewStatus.Pass });

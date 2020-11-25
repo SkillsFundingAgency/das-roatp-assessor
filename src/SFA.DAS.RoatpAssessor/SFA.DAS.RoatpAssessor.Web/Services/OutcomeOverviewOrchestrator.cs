@@ -10,19 +10,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
     public class OutcomeOverviewOrchestrator : IOutcomeOverviewOrchestrator
     {
         private readonly IRoatpApplicationApiClient _applicationApiClient;
-        private readonly IRoatpModerationApiClient _moderationApiClient;
+        private readonly IRoatpClarificationApiClient _clarificationApiClient;
 
-        public OutcomeOverviewOrchestrator(IRoatpApplicationApiClient applicationApiClient, IRoatpModerationApiClient moderationApiClient)
+        public OutcomeOverviewOrchestrator(IRoatpApplicationApiClient applicationApiClient, IRoatpClarificationApiClient clarificationApiClient)
         {
             _applicationApiClient = applicationApiClient;
-            _moderationApiClient = moderationApiClient;
+            _clarificationApiClient = clarificationApiClient;
         }
 
         public async Task<OutcomeApplicationViewModel> GetOverviewViewModel(GetOutcomeOverviewRequest request)
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
-            var sequences = await _moderationApiClient.GetModeratorSequences(request.ApplicationId);
+            var sequences = await _clarificationApiClient.GetClarificationSequences(request.ApplicationId);
 
             if (application is null || contact is null || sequences is null)
             {
@@ -31,7 +31,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var viewmodel = new OutcomeApplicationViewModel(application, contact, sequences, request.UserId);
 
-            var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, request.UserId);
+            var savedOutcomes = await _clarificationApiClient.GetAllClarificationPageReviewOutcomes(request.ApplicationId, request.UserId);
             if (!(savedOutcomes is null) && savedOutcomes.Any())
             {
                 foreach (var sequence in viewmodel.Sequences)
@@ -40,14 +40,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                     {
                         if (string.IsNullOrEmpty(section.Status))
                         {
-                            if (sequence.SequenceNumber == SequenceIds.DeliveringApprenticeshipTraining && section.SectionNumber == SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees)
-                            {
-                                section.Status = OverviewStatusService.GetSectorsSectionStatus(savedOutcomes);
-                            }
-                            else
-                            {
-                                section.Status = OverviewStatusService.GetSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
-                            }
+                            section.Status = OverviewStatusService.GetOutcomeSectionStatus(savedOutcomes, sequence.SequenceNumber, section.SectionNumber);
                         }
                     }
                 }
