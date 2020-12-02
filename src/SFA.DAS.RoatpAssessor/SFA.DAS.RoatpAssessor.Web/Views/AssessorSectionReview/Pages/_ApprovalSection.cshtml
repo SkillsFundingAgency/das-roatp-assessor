@@ -1,7 +1,7 @@
 ﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationReviewViewModel
 
-<div class="govuk-form-group" sfa-validationerror-class="govuk-form-group--error">
+<div class="govuk-form-group" sfa-anyvalidationerror-class="govuk-form-group--error">
     <fieldset class="govuk-fieldset">
 
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -12,7 +12,7 @@
 
         <span id="Status" class="govuk-error-message" asp-validation-for="Status"></span>
 
-        <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+        <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
             @{
                 var radioCheckedPassed = Model.Status == AssessorPageReviewStatus.Pass ? "checked" : "";
                 var radioCheckedFailed = Model.Status == AssessorPageReviewStatus.Fail ? "checked" : "";
