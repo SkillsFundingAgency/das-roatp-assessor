@@ -10,7 +10,17 @@
                 {
                     foreach (var error in item.Value.Errors)
                     {
-                        <li><a href="#@item.Key">@error.ErrorMessage</a></li>
+                        var summaryLink = "#" + item.Key;
+
+                        if (item.Key == "Status") {
+                            summaryLink = "#OptionPass";
+                        }
+
+                        if (item.Key == "MoveToModeration") {
+                            summaryLink = "#OptionYes";
+                        }
+
+                        <li><a href="@summaryLink">@error.ErrorMessage</a></li>
                     }
                 }
             </ul>

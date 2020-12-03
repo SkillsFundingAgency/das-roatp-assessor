@@ -71,11 +71,11 @@
 
                                             if ("pass".Equals(item.OutcomeStatus, StringComparison.InvariantCultureIgnoreCase))
                                             {
-                                                cssModifierClassName = "app-task-list__tag das-tag das-tag--solid-green";
+                                                cssModifierClassName = "das-tag das-tag--solid-green";
                                             }
                                             else if ("fail".Equals(item.OutcomeStatus, StringComparison.InvariantCultureIgnoreCase))
                                             {
-                                                cssModifierClassName = "app-task-list__tag das-tag das-tag--solid-red";
+                                                cssModifierClassName = "das-tag das-tag--solid-red";
                                             }
                                         }
                                         <strong class="govuk-tag @cssModifierClassName das-no-wrap">@item.OutcomeStatus</strong>
