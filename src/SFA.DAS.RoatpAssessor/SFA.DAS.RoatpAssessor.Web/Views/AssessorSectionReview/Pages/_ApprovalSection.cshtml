@@ -1,7 +1,7 @@
 ﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationReviewViewModel
 
-<div class="govuk-form-group" sfa-validationerror-class="govuk-form-group--error">
+<div class="govuk-form-group" sfa-anyvalidationerror-class="govuk-form-group--error">
     <fieldset class="govuk-fieldset">
 
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -10,9 +10,11 @@
             </h2>
         </legend>
 
-        <span id="Status" class="govuk-error-message" asp-validation-for="Status"></span>
+        @* <p>@AssessorPageReviewStatus.Pass</p> *@
 
-        <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+        <span class="govuk-error-message" asp-validation-for="Status"></span>
+
+        <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
             @{
                 var radioCheckedPassed = Model.Status == AssessorPageReviewStatus.Pass ? "checked" : "";
                 var radioCheckedFailed = Model.Status == AssessorPageReviewStatus.Fail ? "checked" : "";
@@ -21,13 +23,7 @@
 
             <!-- PASS -->
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input"
-                       type="radio"
-                       id="OptionPass"
-                       name="Status"
-                       value="@AssessorPageReviewStatus.Pass"
-                       data-aria-controls="conditional-OptionPass"
-                       @radioCheckedPassed />
+                <input class="govuk-radios__input" type="radio" id="OptionPass" name="Status" value="@AssessorPageReviewStatus.Pass" data-aria-controls="conditional-OptionPass" @radioCheckedPassed />
                 <label class="govuk-label govuk-radios__label" for="OptionPass">
                     Pass
                 </label>
@@ -39,13 +35,7 @@
                             Add comments (optional)
                         </label>
                         <span class="govuk-error-message" asp-validation-for="OptionPassText"></span>
-                        <textarea class="govuk-textarea govuk-js-character-count"
-                                  asp-for="OptionPassText"
-                                  sfa-validation-for="OptionPassText"
-                                  sfa-validationerror-class="govuk-textarea--error-override"
-                                  rows="5"
-                                  aria-describedby="OptionPassText-info"
-                                  maxlength="10000"></textarea>
+                        <textarea class="govuk-textarea govuk-js-character-count" asp-for="OptionPassText" sfa-validation-for="OptionPassText" sfa-validationerror-class="govuk-textarea--error-override" rows="5" aria-describedby="OptionPassText-info" maxlength="10000"></textarea>
                     </div>
 
                     <span id="OptionPassText-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
@@ -57,13 +47,7 @@
 
             <!-- FAIL -->
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input"
-                       type="radio"
-                       id="OptionFail"
-                       name="Status"
-                       value="@AssessorPageReviewStatus.Fail"
-                       data-aria-controls="conditional-OptionFail"
-                       @radioCheckedFailed />
+                <input class="govuk-radios__input" type="radio" id="OptionFail" name="Status" value="@AssessorPageReviewStatus.Fail" data-aria-controls="conditional-OptionFail" @radioCheckedFailed />
                 <label class="govuk-label govuk-radios__label" for="OptionFail">
                     Fail
                 </label>
@@ -75,13 +59,7 @@
                             Add comments
                         </label>
                         <span class="govuk-error-message" asp-validation-for="OptionFailText"></span>
-                        <textarea class="govuk-textarea govuk-js-character-count"
-                                  asp-for="OptionFailText"
-                                  sfa-validation-for="OptionFailText"
-                                  sfa-validationerror-class="govuk-textarea--error-override"
-                                  rows="5"
-                                  aria-describedby="OptionFailText-info"
-                                  maxlength="10000"></textarea>
+                        <textarea class="govuk-textarea govuk-js-character-count" asp-for="OptionFailText" sfa-validation-for="OptionFailText" sfa-validationerror-class="govuk-textarea--error-override" rows="5" aria-describedby="OptionFailText-info" maxlength="10000"></textarea>
                     </div>
                     <span id="OptionFailText-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
                         You can enter up to 150 words
@@ -94,13 +72,7 @@
 
             <!-- IN PROGRESS -->
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input"
-                       type="radio"
-                       id="InProgress"
-                       name="Status"
-                       value="@AssessorPageReviewStatus.InProgress"
-                       data-aria-controls="conditional-InProgress"
-                       @radioCheckedInProgress />
+                <input class="govuk-radios__input" type="radio" id="InProgress" name="Status" value="@AssessorPageReviewStatus.InProgress" data-aria-controls="conditional-InProgress" @radioCheckedInProgress />
                 <label class="govuk-label govuk-radios__label" for="InProgress">
                     In progress
                 </label>
@@ -112,13 +84,7 @@
                             Add comments (optional)
                         </label>
                         <span class="govuk-error-message" asp-validation-for="OptionInProgressText"></span>
-                        <textarea class="govuk-textarea govuk-js-character-count"
-                                  asp-for="OptionInProgressText"
-                                  sfa-validation-for="OptionInProgressText"
-                                  sfa-validationerror-class="govuk-textarea--error-override"
-                                  rows="5"
-                                  aria-describedby="OptionInProgressText-info"
-                                  maxlength="10000"></textarea>
+                        <textarea class="govuk-textarea govuk-js-character-count" asp-for="OptionInProgressText" sfa-validation-for="OptionInProgressText" sfa-validationerror-class="govuk-textarea--error-override" rows="5" aria-describedby="OptionInProgressText-info" maxlength="10000"></textarea>
                     </div>
                     <span id="OptionInProgressText-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
                         You can enter up to 150 words

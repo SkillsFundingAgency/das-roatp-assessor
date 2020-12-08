@@ -67,7 +67,7 @@
                                 <span class="app-task-list__task-name app-task-list__task-name--inactive">
                                     @if (Model.IsReadyForModeration)
                                     {
-                                        <a asp-controller="AssessorOutcome" asp-action="AssessorOutcome" asp-route-applicationId="@Model.ApplicationId">Ready for moderation</a>
+                                        <a class="govuk-link govuk-link--no-visited-state" asp-controller="AssessorOutcome" asp-action="AssessorOutcome" asp-route-applicationId="@Model.ApplicationId">Ready for moderation</a>
                                     }
                                     else
                                     {

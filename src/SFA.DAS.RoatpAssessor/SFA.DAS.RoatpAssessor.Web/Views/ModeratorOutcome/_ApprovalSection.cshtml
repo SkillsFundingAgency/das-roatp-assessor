@@ -12,7 +12,7 @@
 
         <span id="Status" class="govuk-error-message" asp-validation-for="Status"></span>
 
-        <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+        <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
             @{
                 var radioCheckedPassed = Model.Status == ModeratorPageReviewStatus.Pass ? "checked" : "";
                 var radioCheckedFailed = Model.Status == ModeratorPageReviewStatus.Fail ? "checked" : "";
@@ -21,13 +21,7 @@
 
             <!-- PASS -->
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input"
-                       type="radio"
-                       id="OptionPass"
-                       name="Status"
-                       value="@ModeratorPageReviewStatus.Pass"
-                       data-aria-controls="conditional-OptionPass"
-                       @radioCheckedPassed />
+                <input class="govuk-radios__input" type="radio" id="OptionPass" name="Status" value="@ModeratorPageReviewStatus.Pass" data-aria-controls="conditional-OptionPass" @radioCheckedPassed />
                 <label class="govuk-label govuk-radios__label" for="OptionPass">
                     Pass
                 </label>
@@ -39,13 +33,7 @@
                             Add internal comments (optional)
                         </label>
                         <span class="govuk-error-message" asp-validation-for="OptionPassText"></span>
-                        <textarea class="govuk-textarea govuk-js-character-count"
-                                  asp-for="OptionPassText"
-                                  sfa-validation-for="OptionPassText"
-                                  sfa-validationerror-class="govuk-textarea--error-override"
-                                  rows="5"
-                                  aria-describedby="OptionPassText-info"
-                                  maxlength="10000"></textarea>
+                        <textarea class="govuk-textarea govuk-js-character-count" asp-for="OptionPassText" sfa-validation-for="OptionPassText" sfa-validationerror-class="govuk-textarea--error-override" rows="5" aria-describedby="OptionPassText-info" maxlength="10000"></textarea>
                     </div>
 
                     <span id="OptionPassText-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
@@ -57,13 +45,7 @@
 
             <!-- FAIL -->
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input"
-                       type="radio"
-                       id="OptionFail"
-                       name="Status"
-                       value="@ModeratorPageReviewStatus.Fail"
-                       data-aria-controls="conditional-OptionFail"
-                       @radioCheckedFailed />
+                <input class="govuk-radios__input" type="radio" id="OptionFail" name="Status" value="@ModeratorPageReviewStatus.Fail" data-aria-controls="conditional-OptionFail" @radioCheckedFailed />
                 <label class="govuk-label govuk-radios__label" for="OptionFail">
                     Fail
                 </label>
@@ -75,13 +57,7 @@
                             Add internal comments
                         </label>
                         <span class="govuk-error-message" asp-validation-for="OptionFailText"></span>
-                        <textarea class="govuk-textarea govuk-js-character-count"
-                                  asp-for="OptionFailText"
-                                  sfa-validation-for="OptionFailText"
-                                  sfa-validationerror-class="govuk-textarea--error-override"
-                                  rows="5"
-                                  aria-describedby="OptionFailText-info"
-                                  maxlength="10000"></textarea>
+                        <textarea class="govuk-textarea govuk-js-character-count" asp-for="OptionFailText" sfa-validation-for="OptionFailText" sfa-validationerror-class="govuk-textarea--error-override" rows="5" aria-describedby="OptionFailText-info" maxlength="10000"></textarea>
                     </div>
                     <span id="OptionFailText-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
                         You can enter up to 150 words
@@ -94,13 +70,7 @@
             @if (Model.FailCount > 0)
             {
                 <div class="govuk-radios__item">
-                    <input class="govuk-radios__input"
-                           type="radio"
-                           id="AskForClarification"
-                           name="Status"
-                           value="@ModeratorPageReviewStatus.AskForClarification"
-                           data-aria-controls="conditional-AskForClarification"
-                           @radioCheckedAskForClarification/>
+                    <input class="govuk-radios__input" type="radio" id="AskForClarification" name="Status" value="@ModeratorPageReviewStatus.AskForClarification" data-aria-controls="conditional-AskForClarification" @radioCheckedAskForClarification />
                     <label class="govuk-label govuk-radios__label" for="AskForClarification">
                         Ask for clarification
                     </label>
@@ -112,13 +82,7 @@
                                 Add internal comments (optional)
                             </label>
                             <span class="govuk-error-message" asp-validation-for="OptionAskForClarificationText"></span>
-                            <textarea class="govuk-textarea govuk-js-character-count"
-                                  asp-for="OptionAskForClarificationText"
-                                  sfa-validation-for="OptionAskForClarificationText"
-                                  sfa-validationerror-class="govuk-textarea--error-override"
-                                  rows="5"
-                                  aria-describedby="OptionAskForClarificationText-info"
-                                  maxlength="10000"></textarea>
+                            <textarea class="govuk-textarea govuk-js-character-count" asp-for="OptionAskForClarificationText" sfa-validation-for="OptionAskForClarificationText" sfa-validationerror-class="govuk-textarea--error-override" rows="5" aria-describedby="OptionAskForClarificationText-info" maxlength="10000"></textarea>
                         </div>
                         <span id="OptionAskForClarificationText-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
                             You can enter up to 150 words

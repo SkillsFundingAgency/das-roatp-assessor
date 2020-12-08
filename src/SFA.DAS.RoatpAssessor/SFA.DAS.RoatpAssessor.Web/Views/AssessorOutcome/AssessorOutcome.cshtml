@@ -27,12 +27,7 @@
         <div class="govuk-grid-column-two-thirds">
             <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
 
-            <span class="govuk-caption-xl">
-                @caption
-            </span>
-            <h1 class="govuk-heading-xl">Are you sure this application is ready for moderation?</h1>
-
-            <partial name="~/Views/AssessorOverview/_ApplicationSummary.cshtml" for="@Model" />
+            
         </div>
     </div>
 
@@ -42,54 +37,64 @@
             <div class="govuk-grid-column-two-thirds">
                 <form class="js-disable-on-submit" method="post" asp-action="AssessorOutcome" asp-controller="AssessorOutcome" asp-route-applicationId="@Model.ApplicationId">
                     <input type="hidden" asp-for="ApplicationId" />
+                    <div class="govuk-form-group" sfa-anyvalidationerror-class="govuk-form-group--error">
+                        <fieldset class="govuk-fieldset" aria-describedby="changed-name-hint changed-name-error">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-margin-bottom-7">
+                                <span class="govuk-caption-xl">
+                                    @caption
+                                </span>
+                                <h1 class="govuk-fieldset__heading">Are you sure this application is ready for moderation?</h1>
+                            </legend>
 
-                    <div class="govuk-warning-text">
-                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                        <strong class="govuk-warning-text__text">
-                            <span class="govuk-warning-text__assistive">Warning</span>
-                            You will not be able to change any outcome or comments.
-                        </strong>
-                    </div>
 
-                    <div class="govuk-form-group">
-                        @* 
-                            TODO: If we move to a dedicated viewmodel, remove the if statement and use this tag instead
-                            <span id="MoveToModeration" class="govuk-error-message" asp-validation-for="MoveToModeration"></span>
-                        *@
-                        @if (ViewData.ModelState.TryGetValue("MoveToModeration", out var moveToModerationErrors))
-                        {
-                            foreach (var error in moveToModerationErrors.Errors)
+                            <partial name="~/Views/AssessorOverview/_ApplicationSummary.cshtml" for="@Model" />
+
+                            <div class="govuk-warning-text">
+                                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                                <strong class="govuk-warning-text__text">
+                                    <span class="govuk-warning-text__assistive">Warning</span>
+                                    You will not be able to change any outcome or comments.
+                                </strong>
+                            </div>
+
+                            @* 
+                                TODO: If we move to a dedicated viewmodel, remove the if statement and use this tag instead
+                                <span id="MoveToModeration" class="govuk-error-message" asp-validation-for="MoveToModeration"></span>
+                            *@
+                            @if (ViewData.ModelState.TryGetValue("MoveToModeration", out var moveToModerationErrors))
                             {
-                                <span id="MoveToModeration" class="govuk-error-message">@error.ErrorMessage</span>
+                                foreach (var error in moveToModerationErrors.Errors)
+                                {
+                                    <span id="MoveToModeration" class="govuk-error-message">@error.ErrorMessage</span>
+                                }
                             }
-                        }
 
-                        <div class="govuk-radios govuk-radios--inline">
-                            <!-- Yes -->
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input"
-                                       type="radio"
-                                       id="OptionYes"
-                                       name="MoveToModeration"
-                                       value="YES" />
-                                <label class="govuk-label govuk-radios__label" for="OptionYes">
-                                    Yes
-                                </label>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <!-- Yes -->
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                        type="radio"
+                                        id="OptionYes"
+                                        name="MoveToModeration"
+                                        value="YES" />
+                                    <label class="govuk-label govuk-radios__label" for="OptionYes">
+                                        Yes
+                                    </label>
+                                </div>
+
+                                <!-- No-->
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                        type="radio"
+                                        id="OptionNo"
+                                        name="MoveToModeration"
+                                        value="NO" />
+                                    <label class="govuk-label govuk-radios__label" for="OptionNo">
+                                        No
+                                    </label>
+                                </div>
                             </div>
-
-                            <!-- No-->
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input"
-                                       type="radio"
-                                       id="OptionNo"
-                                       name="MoveToModeration"
-                                       value="NO" />
-                                <label class="govuk-label govuk-radios__label" for="OptionNo">
-                                    No
-                                </label>
-                            </div>
-
-                        </div>
+                        </fieldset>
                     </div>
 
                     <button class="govuk-button" type="submit">Save and continue</button>

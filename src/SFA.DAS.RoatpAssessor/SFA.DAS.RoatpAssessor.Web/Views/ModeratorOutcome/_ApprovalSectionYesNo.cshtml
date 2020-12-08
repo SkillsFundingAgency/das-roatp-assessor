@@ -24,7 +24,7 @@
         <fieldset class="govuk-fieldset">
             <span id="ConfirmStatus" class="govuk-error-message" asp-validation-for="ConfirmStatus"></span>
 
-            <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+            <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
                 @{
                 var radioCheckedYes = Model.ConfirmStatus == "Pass" ? "checked" : "";
                 var radioCheckedNo = Model.ConfirmStatus == "Fail" ? "checked" : "";
@@ -32,13 +32,7 @@
 
             <!-- YES -->
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input"
-                type="radio"
-                id="Yes"
-                name="ConfirmStatus"
-                value="Yes"
-                data-aria-controls="conditional-OptionYes"
-                @radioCheckedYes />
+                <input class="govuk-radios__input" type="radio" id="Yes" name="ConfirmStatus" value="Yes" data-aria-controls="conditional-OptionYes" @radioCheckedYes />
                 <label class="govuk-label govuk-radios__label" for="Yes">
                     Yes
                 </label>
@@ -47,13 +41,7 @@
 
             <!-- NO -->
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input"
-                type="radio"
-                id="No"
-                name="ConfirmStatus"
-                value="No"
-                data-aria-controls="conditional-OptionNo"
-                @radioCheckedNo />
+                <input class="govuk-radios__input" type="radio" id="No" name="ConfirmStatus" value="No" data-aria-controls="conditional-OptionNo" @radioCheckedNo />
                 <label class="govuk-label govuk-radios__label" for="No">
                     No
                 </label>
