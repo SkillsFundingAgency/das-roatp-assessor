@@ -45,9 +45,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             viewModel.Ukprn = application.Ukprn;
             viewModel.SubmittedDate = application.SubmittedDate;
             viewModel.ApplicationStatus = application.ApplicationStatus;
-            viewModel.ModeratorName = application.ModeratorName;
-            viewModel.OutcomeStatus = application.OutcomeStatus;
-            viewModel.OutcomeDate = application.OutcomeDate;
+            viewModel.ModerationStatus = application.ModerationStatus;
+            viewModel.OutcomeMadeDate = application.OutcomeMadeDate;
+            viewModel.OutcomeMadeBy = application.OutcomeMadeBy;
 
             return viewModel;
         }

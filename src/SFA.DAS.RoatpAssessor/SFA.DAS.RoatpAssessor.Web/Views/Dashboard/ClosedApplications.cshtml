@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.AdminService.Common.Extensions
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
+@using SFA.DAS.AdminService.Common.Extensions
 
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.ClosedApplicationsViewModel
 @{
@@ -36,7 +37,7 @@
                                     <th class="govuk-table__header" scope="col">Provider route</th>
                                     <th class="govuk-table__header" scope="col">Application submitted date</th>
                                     <th class="govuk-table__header" scope="col">Outcome made date</th>
-                                    <th class="govuk-table__header" scope="col">Moderator</th>
+                                    <th class="govuk-table__header" scope="col">Outcome made by</th>
                                     <th class="govuk-table__header" scope="col">Outcome</th>
                                 </tr>
                             </thead>
@@ -60,25 +61,31 @@
                                         @item.SubmittedDate.ToSfaShortDateString()
                                     </td>
                                     <td class="govuk-table__cell" data-label="Outcome made date">
-                                        @item.OutcomeDate.ToSfaShortDateString()
+                                        @item.OutcomeMadeDate.ToSfaShortDateString()
                                     </td>
-                                    <td class="govuk-table__cell" data-label="Moderator">
-                                        @item.ModeratorName
+                                    <td class="govuk-table__cell" data-label="Outcome made by">
+                                        @item.OutcomeMadeBy
                                     </td>
                                     <td class="govuk-table__cell" data-label="Outcome">
-                                        @{
+                                        @if (item.ApplicationStatus == ApplicationStatus.Withdrawn)
+                                        {   
+                                            <strong class="govuk-tag das-tag das-tag--solid-grey das-no-wrap">@item.ApplicationStatus</strong>
+                                        }
+                                        else
+                                        {
                                             var cssModifierClassName = string.Empty;
 
-                                            if ("pass".Equals(item.OutcomeStatus, StringComparison.InvariantCultureIgnoreCase))
+                                            if ("pass".Equals(item.ModerationStatus, StringComparison.InvariantCultureIgnoreCase))
                                             {
                                                 cssModifierClassName = "das-tag das-tag--solid-green";
                                             }
-                                            else if ("fail".Equals(item.OutcomeStatus, StringComparison.InvariantCultureIgnoreCase))
+                                            else if ("fail".Equals(item.ModerationStatus, StringComparison.InvariantCultureIgnoreCase))
                                             {
                                                 cssModifierClassName = "das-tag das-tag--solid-red";
                                             }
+
+                                            <strong class="govuk-tag @cssModifierClassName das-no-wrap">@item.ModerationStatus</strong>
                                         }
-                                        <strong class="govuk-tag @cssModifierClassName das-no-wrap">@item.OutcomeStatus</strong>
                                     </td>
                                 </tr>
                                 }
