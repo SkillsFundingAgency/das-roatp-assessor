@@ -10,6 +10,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string ApplicationReferenceNumber { get; set; }
         public string ProviderRoute { get; set; }
         public DateTime SubmittedDate { get; set; }
+        public string ApplicationStatus { get; set; }
         public string Assessor1Name { get; set; } 
         public string Assessor2Name { get; set; }
         public string Assessor1UserId { get; set; }
