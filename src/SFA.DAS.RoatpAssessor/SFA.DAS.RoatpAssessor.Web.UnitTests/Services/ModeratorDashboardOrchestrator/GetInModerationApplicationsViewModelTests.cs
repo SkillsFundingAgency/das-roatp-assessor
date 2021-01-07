@@ -79,6 +79,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
             Assert.AreEqual(expected.Assessor2UserId, actual.Assessor2UserId);
             Assert.AreEqual(expected.ProviderRoute, actual.ProviderRoute);
             Assert.AreEqual(expected.SubmittedDate, actual.SubmittedDate);
+            Assert.AreEqual(expected.ApplicationStatus, actual.ApplicationStatus);
             Assert.AreEqual(expected.Ukprn, actual.Ukprn);
             Assert.AreEqual(expected.ModerationStatus, actual.ModerationStatus);
             Assert.AreEqual(expected.ModeratorName, actual.ModeratorName);

@@ -55,8 +55,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeDashboardOrchestra
             var userId = _user.UserId();
             var applications = new List<ClosedApplicationSummary>
             {
-                new ClosedApplicationSummary { ApplicationReferenceNumber = "sdjfs", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), ModeratorName = "flggfdg", OutcomeStatus = ModerationStatus.Pass, OutcomeDate = DateTime.UtcNow },
-                new ClosedApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), ModeratorName = "fbvkjghb", OutcomeStatus = ModerationStatus.Fail, OutcomeDate = DateTime.UtcNow  }
+                new ClosedApplicationSummary { ApplicationReferenceNumber = "sdjfs", ProviderRoute = "Main", OrganisationName = "Org 1", Ukprn = "132436565", ApplicationId = Guid.NewGuid(), OutcomeMadeBy = "flggfdg", ModerationStatus = ModerationStatus.Pass, OutcomeMadeDate = DateTime.UtcNow },
+                new ClosedApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), OutcomeMadeBy = "fbvkjghb", ModerationStatus = ModerationStatus.Fail, OutcomeMadeDate = DateTime.UtcNow  }
             };
 
             _applicationApiClient.Setup(x => x.GetClosedApplications(userId)).ReturnsAsync(applications);
@@ -79,10 +79,11 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeDashboardOrchestra
             Assert.AreEqual(expected.Assessor2UserId, actual.Assessor2UserId);
             Assert.AreEqual(expected.ProviderRoute, actual.ProviderRoute);
             Assert.AreEqual(expected.SubmittedDate, actual.SubmittedDate);
+            Assert.AreEqual(expected.ApplicationStatus, actual.ApplicationStatus);
             Assert.AreEqual(expected.Ukprn, actual.Ukprn);
-            Assert.AreEqual(expected.ModeratorName, actual.ModeratorName);
-            Assert.AreEqual(expected.OutcomeStatus, actual.OutcomeStatus);
-            Assert.AreEqual(expected.OutcomeDate, actual.OutcomeDate);
+            Assert.AreEqual(expected.OutcomeMadeBy, actual.OutcomeMadeBy);
+            Assert.AreEqual(expected.ModerationStatus, actual.ModerationStatus);
+            Assert.AreEqual(expected.OutcomeMadeDate, actual.OutcomeMadeDate);
         }
     }
 }
