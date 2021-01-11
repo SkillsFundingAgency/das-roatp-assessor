@@ -29,6 +29,9 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public string UpdatedBy { get; set; }
         public DateTime? DeletedAt { get; set; }
         public string DeletedBy { get; set; }
+
+        public string Comments { get; set; }
+        public string ExternalComments { get; set; }
     }
 
     public class ApplyData
@@ -47,7 +50,11 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public int ProviderRoute { get; set; }
         public string ProviderRouteName { get; set; }
         public DateTime? ApplicationSubmittedOn { get; set; }
-        public Guid? ApplicationSubmittedBy { get; set; }        
+        public Guid? ApplicationSubmittedBy { get; set; }
+        public DateTime? ApplicationWithdrawnOn { get; set; }
+        public string ApplicationWithdrawnBy { get; set; }
+        public DateTime? ApplicationRemovedOn { get; set; }
+        public string ApplicationRemovedBy { get; set; }
     }
 
     public class ApplySequence
