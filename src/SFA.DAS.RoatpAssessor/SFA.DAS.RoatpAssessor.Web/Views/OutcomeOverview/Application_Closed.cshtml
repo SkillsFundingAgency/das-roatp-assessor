@@ -61,7 +61,7 @@
         </div>
 
         <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">Moderation outcome</h1>
+            <h2 class="govuk-heading-m">Moderation outcome</h2>
 
             <dl class="govuk-summary-list govuk-!-margin-bottom-9">
                 <div class="govuk-summary-list__row">
@@ -88,16 +88,16 @@
                         @Model.ApplicationClosedBy
                     </dd>
                 </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Internal Comments
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ApplicationComments
+                    </dd>
+                </div>
                 @if (Model.ApplicationStatus == ApplicationStatus.Removed)
                 {
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Internal Comments
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            @Model.ApplicationComments
-                        </dd>
-                    </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             External Comments
@@ -107,18 +107,8 @@
                         </dd>
                     </div>
                 }
-                else
-                {
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Comments
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            @Model.ApplicationComments
-                        </dd>
-                    </div>
-                }
             </dl>
         </div>
+        <p class="govuk-body"><a asp-action="Index" asp-controller="Home" class="govuk-link">Back to assessor applications</a></p>
     </div>
 </main>
