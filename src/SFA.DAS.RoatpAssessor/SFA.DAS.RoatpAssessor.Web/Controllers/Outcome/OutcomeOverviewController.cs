@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.AdminService.Common.Extensions;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
@@ -29,7 +30,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Outcome
             {
                 return RedirectToAction("Index", "Home");
             }
-            return View("~/Views/OutcomeOverview/Application.cshtml", viewModel);
+            else if (viewModel.ApplicationStatus == ApplicationStatus.Removed
+                    || viewModel.ApplicationStatus == ApplicationStatus.Withdrawn)
+            {
+                return View("~/Views/OutcomeOverview/Application_Closed.cshtml", viewModel);
+            }
+            else
+            {
+                return View("~/Views/OutcomeOverview/Application.cshtml", viewModel);
+            }
         }
     }
 }

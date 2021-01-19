@@ -26,8 +26,12 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string Outcome { get; set; }
         public string OutcomeComments { get; set; }
 
-        public OutcomeApplicationViewModel(Apply application, Contact contact, List<ClarificationSequence> sequences,
-            string userId)
+        public DateTime? ApplicationClosedOn { get; }
+        public string ApplicationClosedBy { get; }
+        public string ApplicationComments { get; }
+        public string ApplicationExternalComments { get; }
+
+        public OutcomeApplicationViewModel(Apply application, Contact contact, List<ClarificationSequence> sequences)
         {
             Id = application.Id;
             ApplicationId = application.ApplicationId;
@@ -49,6 +53,17 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 Ukprn = application.ApplyData.ApplyDetails.UKPRN;
                 ApplyLegalName = application.ApplyData.ApplyDetails.OrganisationName;
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn;
+
+                if (application.ApplicationStatus == ApplyTypes.Apply.ApplicationStatus.Withdrawn)
+                {
+                    ApplicationClosedOn = application.ApplyData.ApplyDetails.ApplicationWithdrawnOn;
+                    ApplicationClosedBy = application.ApplyData.ApplyDetails.ApplicationWithdrawnBy;
+                }
+                else if (application.ApplicationStatus == ApplyTypes.Apply.ApplicationStatus.Removed)
+                {
+                    ApplicationClosedOn = application.ApplyData.ApplyDetails.ApplicationRemovedOn;
+                    ApplicationClosedBy = application.ApplyData.ApplyDetails.ApplicationRemovedBy;
+                }
             }
 
             if (application.ApplyData?.ModeratorReviewDetails != null)
@@ -58,6 +73,9 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
                 OutcomeDate = moderatorDetails.OutcomeDateTime;
                 OutcomeComments = moderatorDetails.ModeratorComments;
             }
+
+            ApplicationComments = application.Comments;
+            ApplicationExternalComments = application.ExternalComments;
 
             Sequences = sequences;
         }

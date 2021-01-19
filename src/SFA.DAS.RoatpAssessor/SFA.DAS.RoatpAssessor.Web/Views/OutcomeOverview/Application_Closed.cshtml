@@ -1,0 +1,114 @@
+@using SFA.DAS.AdminService.Common.Extensions;
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.OutcomeApplicationViewModel
+
+@{
+    ViewBag.Title = "Moderation outcome";
+    Layout = "_Layout";
+}
+
+<partial name="~/Views/OutcomeOverview/_Breadcrumb.cshtml" />
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl">Application moderation overview</h1>
+
+            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        UKPRN
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.Ukprn
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Legal name
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ApplyLegalName
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Provider route
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ApplicationRouteShortText
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Applicant's email address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ApplicantEmailAddress
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Application submitted date
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.SubmittedDate.ToSfaShortDateString()
+                    </dd>
+                </div>
+            </dl>
+        </div>
+
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">Moderation outcome</h2>
+
+            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Outcome
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <strong class="das-tag das-tag--solid-grey">@Model.ApplicationStatus</strong>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Outcome made date
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ApplicationClosedOn.ToSfaShortDateString()
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Outcome made by
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ApplicationClosedBy
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Internal Comments
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ApplicationComments
+                    </dd>
+                </div>
+                @if (Model.ApplicationStatus == ApplicationStatus.Removed)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            External Comments
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.ApplicationExternalComments
+                        </dd>
+                    </div>
+                }
+            </dl>
+        </div>
+        <p class="govuk-body"><a asp-action="Index" asp-controller="Home" class="govuk-link">Back to assessor applications</a></p>
+    </div>
+</main>

@@ -1,5 +1,4 @@
-﻿using SFA.DAS.RoatpAssessor.Web.Domain;
-using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+﻿using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            var viewmodel = new OutcomeApplicationViewModel(application, contact, sequences, request.UserId);
+            var viewmodel = new OutcomeApplicationViewModel(application, contact, sequences);
 
             var savedOutcomes = await _clarificationApiClient.GetAllClarificationPageReviewOutcomes(request.ApplicationId, request.UserId);
             if (!(savedOutcomes is null) && savedOutcomes.Any())
