@@ -1,4 +1,9 @@
-﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts; 
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.ReviewAnswersViewModel
+
+@{
+    var safeguardingPolicyIncludesPreventDutyPolicy = Model.PageId == RoatpWorkflowPageIds.SafeguardingPolicyIncludesPreventDutyPolicy && Model.SupplementaryInformation.Any(sp => sp.PageId == RoatpWorkflowPageIds.SafeguardingPolicy);
+}
 
 <div class="govuk-form-group" sfa-validation-for="ClarificationFile" sfa-validationerror-class="govuk-form-group--error">
     @if (!string.IsNullOrWhiteSpace(Model.ClarificationFile))
@@ -41,7 +46,7 @@
             </tbody>
         </table>
     }
-    else if (Model.Questions.Any(q => "FileUpload".Equals(q.InputType)))
+    else if (Model.Questions.Any(q => "FileUpload".Equals(q.InputType)) || safeguardingPolicyIncludesPreventDutyPolicy)
     {
         <label class="govuk-label" asp-for="ClarificationFile">
             Upload a file (optional)
