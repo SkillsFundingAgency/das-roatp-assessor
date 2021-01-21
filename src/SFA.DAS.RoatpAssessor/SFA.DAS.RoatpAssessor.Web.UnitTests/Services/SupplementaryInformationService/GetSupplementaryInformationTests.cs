@@ -55,7 +55,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
                 },
                 Answers = new List<Answer>
                 {
-                    new Answer { QuestionId = "Q1", Value = "value" }
+                    new Answer { QuestionId = "Q1", Value = "Yes" }
                 }
             };
 
