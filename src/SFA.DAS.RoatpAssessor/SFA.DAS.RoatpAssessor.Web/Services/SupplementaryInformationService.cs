@@ -23,11 +23,21 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             if (pageId == RoatpWorkflowPageIds.SafeguardingPolicyIncludesPreventDutyPolicy)
             {
-                var safeGuardingPolicySupplementaryInformation = await GetSafeguardingPolicySupplementaryInformation(applicationId);
+                const int safegaurdingPolicySequenceNumber = RoatpWorkflowSequenceIds.ProtectingYourApprentices;
+                const int safegaurdingPolicySectionNumber = 4;
 
-                if (safeGuardingPolicySupplementaryInformation != null)
+                var page = await _assessorApiClient.GetAssessorPage(applicationId, safegaurdingPolicySequenceNumber, safegaurdingPolicySectionNumber, pageId);
+                var answer = page?.Answers.First().Value;
+
+                // Only retrieve if it was included in the safeguarding policy
+                if ("Yes".Equals(answer, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    supplementaryInformation.Add(safeGuardingPolicySupplementaryInformation);
+                    var safeGuardingPolicySupplementaryInformation = await GetSafeguardingPolicySupplementaryInformation(applicationId);
+
+                    if (safeGuardingPolicySupplementaryInformation != null)
+                    {
+                        supplementaryInformation.Add(safeGuardingPolicySupplementaryInformation);
+                    }
                 }
             }
 
@@ -36,7 +46,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         private async Task<SupplementaryInformation> GetSafeguardingPolicySupplementaryInformation(Guid applicationId)
         {
-            const int safegaurdingPolicySequenceNumber = 4;
+            const int safegaurdingPolicySequenceNumber = RoatpWorkflowSequenceIds.ProtectingYourApprentices;
             const int safegaurdingPolicySectionNumber = 4;
             const string safegaurdingPolicyPageId = RoatpWorkflowPageIds.SafeguardingPolicy;
             const string safegaurdingPolicyLabel = "Safeguarding policy";
