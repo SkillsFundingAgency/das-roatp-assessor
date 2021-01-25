@@ -55,7 +55,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
                 },
                 Answers = new List<Answer>
                 {
-                    new Answer { QuestionId = "Q1", Value = "value" }
+                    new Answer { QuestionId = "Q1", Value = "Yes" }
                 }
             };
 
@@ -65,6 +65,32 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
             var result = await _service.GetSupplementaryInformation(_applicationId, safeguardingPreventDutyPolicyPageId);
 
             CollectionAssert.IsNotEmpty(result);
+        }
+
+        [Test]
+        public async Task When_SupplementaryInformation_excluded()
+        {
+            var safeguardingPreventDutyPolicyPageId = RoatpWorkflowPageIds.SafeguardingPolicyIncludesPreventDutyPolicy;
+
+            var assessorPage = new AssessorPage
+            {
+                ApplicationId = _applicationId,
+                Questions = new List<Question>
+                {
+                    new Question { QuestionId = "Q1" }
+                },
+                Answers = new List<Answer>
+                {
+                    new Answer { QuestionId = "Q1", Value = "No" }
+                }
+            };
+
+            _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+                .ReturnsAsync(assessorPage);
+
+            var result = await _service.GetSupplementaryInformation(_applicationId, safeguardingPreventDutyPolicyPageId);
+
+            CollectionAssert.IsEmpty(result);
         }
     }
 }
