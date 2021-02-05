@@ -45,80 +45,130 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    @foreach (var question in Model.Questions)
-                    {
-                        var answer = Model.Answers.SingleOrDefault(pg => pg.QuestionId == question.QuestionId)?.Value;
+                        @foreach (var question in Model.Questions)
+                        {
+                            var answer = Model.Answers.SingleOrDefault(pg => pg.QuestionId == question.QuestionId)?.Value;
 
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table__header">@Html.Raw(question.Label)</th>
-                            <td class="govuk-table__cell">
-                                @switch (question.InputType)
-                                {
-                                    case QuestionInputType.FileUpload:
-                                        <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNo="@Model.SequenceNumber" asp-route-sectionNo="@Model.SectionNumber" asp-route-pageId="@Model.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
-                                        break;
-                                    case QuestionInputType.CheckboxList:
-                                    case QuestionInputType.ComplexCheckboxList:
-                                        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-                                            @foreach (var selectedAnswer in answer.Split(','))
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">@Html.Raw(question.Label)</th>
+                                <td class="govuk-table__cell">
+                                    @switch (question.InputType)
+                                    {
+                                        case QuestionInputType.FileUpload:
+                                            <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNo="@Model.SequenceNumber" asp-route-sectionNo="@Model.SectionNumber" asp-route-pageId="@Model.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
+                                            break;
+                                        case QuestionInputType.CheckboxList:
+                                        case QuestionInputType.ComplexCheckboxList:
+                                            <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+                                                @foreach (var selectedAnswer in answer.Split(','))
+                                                {
+                                                    <li>@selectedAnswer</li>
+                                                }
+                                            </ul>
+                                            break;
+                                        default:
+                                            @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
                                             {
-                                                <li>@selectedAnswer</li>
+                                                <span>@Html.Raw(question.InputPrefix)</span>
                                             }
-                                        </ul>
-                                        break;
-                                    default:
-                                        @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
-                                        {
-                                            <span>@Html.Raw(question.InputPrefix)</span>
-                                        }
-                                        @Html.Raw(answer)
-                                        @if (!string.IsNullOrWhiteSpace(question.InputSuffix))
-                                        {
-                                            <span>@Html.Raw(question.InputSuffix)</span>
-                                        }
-                                        break;
-                                }
-                            </td>
-                        </tr>
-                    }
-
-                    @foreach (var supplementaryInformation in Model.SupplementaryInformation)
-                    {
-                        var question = supplementaryInformation.Question;
-                        var answer = supplementaryInformation.Answer?.Value;
-
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table__header">@Html.Raw(question.Label)</th>
-                            <td class="govuk-table__cell">
-                                @switch (question.InputType)
-                                {
-                                    case QuestionInputType.FileUpload:
-                                        <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@supplementaryInformation.ApplicationId" asp-route-sequenceNo="@supplementaryInformation.SequenceNumber" asp-route-sectionNo="@supplementaryInformation.SectionNumber" asp-route-pageId="@supplementaryInformation.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
-                                        break;
-                                    case QuestionInputType.CheckboxList:
-                                    case QuestionInputType.ComplexCheckboxList:
-                                        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-                                            @foreach (var selectedAnswer in answer.Split(','))
+                                            @Html.Raw(answer)
+                                            @if (!string.IsNullOrWhiteSpace(question.InputSuffix))
                                             {
-                                                <li>@selectedAnswer</li>
+                                                <span>@Html.Raw(question.InputSuffix)</span>
                                             }
-                                        </ul>
-                                        break;
-                                    default:
-                                        @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
+                                            break;
+                                    }
+                                </td>
+                            </tr>
+                            if (question.Options != null && question.Options.Any())
+                            {
+                                foreach (var option in question.Options)
+                                {
+                                    if (option.FurtherQuestions != null && option.FurtherQuestions.Any())
+                                    {
+                                        foreach (var furtherQuestion in option.FurtherQuestions)
                                         {
-                                            <span>@Html.Raw(question.InputPrefix)</span>
+
+                                            var answerFurtherQuestion = Model.Answers.SingleOrDefault(pg => pg.QuestionId == furtherQuestion.QuestionId)?.Value;
+
+                                            <tr class="govuk-table__row">
+                                                <th scope="row" class="govuk-table__header">@Html.Raw(furtherQuestion.Label)</th>
+                                                <td class="govuk-table__cell">
+                                                    @switch (furtherQuestion.InputType)
+                                                    {
+                                                        case QuestionInputType.FileUpload:
+                                                            <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNo="@Model.SequenceNumber" asp-route-sectionNo="@Model.SectionNumber" asp-route-pageId="@Model.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answerFurtherQuestion">@answerFurtherQuestion</a>
+                                                            break;
+                                                        case QuestionInputType.CheckboxList:
+                                                        case QuestionInputType.ComplexCheckboxList:
+                                                            <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+                                                                @foreach (var selectedAnswer in answerFurtherQuestion.Split(','))
+                                                                {
+                                                                    <li>@selectedAnswer</li>
+                                                                }
+                                                            </ul>
+                                                            break;
+                                                        default:
+                                                            @if (!string.IsNullOrWhiteSpace(furtherQuestion.InputPrefix))
+                                                            {
+                                                                <span>@Html.Raw(furtherQuestion.InputPrefix)</span>
+                                                            }
+                                                            @if (string.IsNullOrEmpty(answerFurtherQuestion))
+                                                            {
+                                                                answerFurtherQuestion = "Not applicable";
+                                                            }
+                                                            @Html.Raw(answerFurtherQuestion)
+                                                            @if (!string.IsNullOrWhiteSpace(furtherQuestion.InputSuffix))
+                                                            {
+                                                                <span>@Html.Raw(furtherQuestion.InputSuffix)</span>
+                                                            }
+                                                            break;
+                                                    }
+                                                </td>
+                                            </tr>
                                         }
-                                        @Html.Raw(answer)
-                                        @if (!string.IsNullOrWhiteSpace(question.InputSuffix))
-                                        {
-                                            <span>@Html.Raw(question.InputSuffix)</span>
-                                        }
-                                        break;
+                                    }
                                 }
-                            </td>
-                        </tr>
-                    }
+                            }
+                        }
+
+                        @foreach (var supplementaryInformation in Model.SupplementaryInformation)
+                        {
+                            var question = supplementaryInformation.Question;
+                            var answer = supplementaryInformation.Answer?.Value;
+
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">@Html.Raw(question.Label)</th>
+                                <td class="govuk-table__cell">
+                                    @switch (question.InputType)
+                                    {
+                                        case QuestionInputType.FileUpload:
+                                            <a class="govuk-link" asp-controller="Download" asp-action="DownloadFile" asp-route-applicationId="@supplementaryInformation.ApplicationId" asp-route-sequenceNo="@supplementaryInformation.SequenceNumber" asp-route-sectionNo="@supplementaryInformation.SectionNumber" asp-route-pageId="@supplementaryInformation.PageId" asp-route-questionId="@question.QuestionId" asp-route-filename="@answer">@answer</a>
+                                            break;
+                                        case QuestionInputType.CheckboxList:
+                                        case QuestionInputType.ComplexCheckboxList:
+                                            <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+                                                @foreach (var selectedAnswer in answer.Split(','))
+                                                {
+                                                    <li>@selectedAnswer</li>
+                                                }
+                                            </ul>
+                                            break;
+                                        default:
+                                            @if (!string.IsNullOrWhiteSpace(question.InputPrefix))
+                                            {
+                                                <span>@Html.Raw(question.InputPrefix)</span>
+                                            }
+                                            @Html.Raw(answer)
+                                            @if (!string.IsNullOrWhiteSpace(question.InputSuffix))
+                                            {
+                                                <span>@Html.Raw(question.InputSuffix)</span>
+                                            }
+                                            break;
+                                    }
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             }
