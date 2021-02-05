@@ -115,9 +115,12 @@
                                                             }
                                                             @if (string.IsNullOrWhiteSpace(answerFurtherQuestion))
                                                             {
-                                                                answerFurtherQuestion = "Not applicable";
+                                                                <text>Not applicable</text>
                                                             }
-                                                            @Html.Raw(answerFurtherQuestion)
+                                                            else
+                                                            {
+                                                                @Html.Raw(answerFurtherQuestion)
+                                                            }
                                                             @if (!string.IsNullOrWhiteSpace(furtherQuestion.InputSuffix))
                                                             {
                                                                 <span>@Html.Raw(furtherQuestion.InputSuffix)</span>
