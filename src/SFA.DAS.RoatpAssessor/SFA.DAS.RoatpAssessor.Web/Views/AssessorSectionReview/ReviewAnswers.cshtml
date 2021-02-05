@@ -113,7 +113,7 @@
                                                             {
                                                                 <span>@Html.Raw(furtherQuestion.InputPrefix)</span>
                                                             }
-                                                            @if (string.IsNullOrEmpty(answerFurtherQuestion))
+                                                            @if (string.IsNullOrWhiteSpace(answerFurtherQuestion))
                                                             {
                                                                 answerFurtherQuestion = "Not applicable";
                                                             }
