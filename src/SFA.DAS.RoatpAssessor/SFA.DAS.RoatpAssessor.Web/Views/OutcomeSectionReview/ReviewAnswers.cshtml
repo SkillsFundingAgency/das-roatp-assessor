@@ -134,8 +134,9 @@
                                     }
                                 }
                             }
+                            
 
-                            @foreach (var supplementaryInformation in Model.SupplementaryInformation)
+                        @foreach (var supplementaryInformation in Model.SupplementaryInformation)
                             {
                                 var question = supplementaryInformation.Question;
                                 var answer = supplementaryInformation.Answer?.Value;
