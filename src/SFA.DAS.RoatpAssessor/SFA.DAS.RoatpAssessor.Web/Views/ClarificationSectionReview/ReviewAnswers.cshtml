@@ -92,7 +92,7 @@
                                         Options = question.Options,
                                         Answers = Model.Answers
                                     };
-                                    @await Html.PartialAsync("~/Views/Shared/Partials/_FurtherQuestionAnswers.cshtml", furtherQuestionsViewModel)
+                                    <partial name="~/Views/Shared/Partials/_FurtherQuestionAnswers.cshtml" for="@furtherQuestionsViewModel" />
                                 }
                             }
 

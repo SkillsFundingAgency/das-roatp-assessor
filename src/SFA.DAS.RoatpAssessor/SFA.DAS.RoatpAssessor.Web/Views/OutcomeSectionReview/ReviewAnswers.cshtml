@@ -88,12 +88,12 @@
                                         Options = question.Options,
                                         Answers = Model.Answers
                                     };
-                                    @await Html.PartialAsync("~/Views/Shared/Partials/_FurtherQuestionAnswers.cshtml", furtherQuestionsViewModel)
+                                    <partial name="~/Views/Shared/Partials/_FurtherQuestionAnswers.cshtml" for="@furtherQuestionsViewModel" />
                                 }
                             }
-                            
 
-                        @foreach (var supplementaryInformation in Model.SupplementaryInformation)
+
+                            @foreach (var supplementaryInformation in Model.SupplementaryInformation)
                             {
                                 var question = supplementaryInformation.Question;
                                 var answer = supplementaryInformation.Answer?.Value;
