@@ -1,4 +1,6 @@
+@using SFA.DAS.AdminService.Common.Extensions;
 @using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common
+@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.OutcomeApplicationViewModel
 
@@ -13,7 +15,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-           
+
 
             <h1 class="govuk-heading-xl">Application moderation overview</h1>
 
@@ -60,6 +62,58 @@
                     }
                 </ol>
             </div>
+
+            @if (Model.Outcome == ModerationStatus.Fail || Model.Outcome == ModerationStatus.Pass)
+            {
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Moderation outcome</h2>
+
+                <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Outcome
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @if (Model.Outcome == ModerationStatus.Pass)
+                            {
+                                <strong class="das-tag das-tag--solid-green">Pass</strong>
+                            }
+                            else
+                            {
+                                <strong class="das-tag das-tag--solid-red">Fail</strong>
+                            }
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Outcome made date
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.OutcomeDate.ToSfaShortDateString()
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Moderated by
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.ModeratorName
+                        </dd>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(Model.OutcomeComments))
+                    {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Internal comments
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.OutcomeComments
+                        </dd>
+                    </div>
+                    }
+                </dl>
+            </div>
+            }
         </div>
     }
 </main>
