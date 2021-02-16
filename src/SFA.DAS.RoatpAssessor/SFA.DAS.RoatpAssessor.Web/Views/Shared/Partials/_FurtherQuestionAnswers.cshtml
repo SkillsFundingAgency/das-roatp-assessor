@@ -1,0 +1,50 @@
+﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums
+@model SFA.DAS.RoatpAssessor.Web.ViewModels.FurtherQuestionsViewModel;
+
+@foreach (var option in Model.Options)
+{
+    if (option.FurtherQuestions != null && option.FurtherQuestions.Any())
+    {
+        foreach (var furtherQuestion in option.FurtherQuestions)
+        {
+
+            var answerFurtherQuestion = Model.Answers.SingleOrDefault(pg => pg.QuestionId == furtherQuestion.QuestionId)?.Value;
+
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@Html.Raw(furtherQuestion.Label)</th>
+                <td class="govuk-table__cell">
+                    @switch (furtherQuestion.InputType)
+                    {
+                        case QuestionInputType.CheckboxList:
+                        case QuestionInputType.ComplexCheckboxList:
+                            <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+                                @foreach (var selectedAnswer in answerFurtherQuestion.Split(','))
+                                {
+                                    <li>@selectedAnswer</li>
+                                }
+                            </ul>
+                            break;
+                        default:
+                            @if (!string.IsNullOrWhiteSpace(furtherQuestion.InputPrefix))
+                            {
+                                <span>@Html.Raw(furtherQuestion.InputPrefix)</span>
+                            }
+                            @if (string.IsNullOrWhiteSpace(answerFurtherQuestion))
+                            {
+                                <text>Not applicable</text>
+                            }
+                            else
+                            {
+                                @Html.Raw(answerFurtherQuestion)
+                            }
+                            @if (!string.IsNullOrWhiteSpace(furtherQuestion.InputSuffix))
+                            {
+                                <span>@Html.Raw(furtherQuestion.InputSuffix)</span>
+                            }
+                            break;
+                    }
+                </td>
+            </tr>
+        }
+    }
+}

@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
+@using SFA.DAS.RoatpAssessor.Web.ViewModels
 
 @model SFA.DAS.RoatpAssessor.Web.ViewModels.OutcomeReviewAnswersViewModel
 
@@ -80,7 +81,17 @@
                                         }
                                     </td>
                                 </tr>
+                                if (question.Options != null && question.Options.Any())
+                                {
+                                    var furtherQuestionsViewModel = new FurtherQuestionsViewModel
+                                    {
+                                        Options = question.Options,
+                                        Answers = Model.Answers
+                                    };
+                                    <partial name="~/Views/Shared/Partials/_FurtherQuestionAnswers.cshtml" for="@furtherQuestionsViewModel" />
+                                }
                             }
+
 
                             @foreach (var supplementaryInformation in Model.SupplementaryInformation)
                             {
