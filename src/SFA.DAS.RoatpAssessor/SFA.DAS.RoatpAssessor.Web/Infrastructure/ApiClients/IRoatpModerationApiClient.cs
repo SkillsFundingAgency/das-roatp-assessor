@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
@@ -14,7 +14,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         Task<List<ModeratorSector>> GetModeratorSectors(Guid applicationId, string userId);
 
-        Task<ModeratorSectorDetails> GetModeratorSectorDetails(Guid applicationId, string pageId);
+        Task<SectorDetails> GetModeratorSectorDetails(Guid applicationId, string pageId);
 
         Task<BlindAssessmentOutcome> GetBlindAssessmentOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
 

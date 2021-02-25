@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Infrastructure;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.Models;
 
@@ -50,9 +51,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             });
         }
 
-        public async Task<ClarificationSectorDetails> GetClarificationSectorDetails(Guid applicationId, string pageId)
+        public async Task<SectorDetails> GetClarificationSectorDetails(Guid applicationId, string pageId)
         {
-            return await Get<ClarificationSectorDetails>($"/Clarification/Applications/{applicationId}/SectorDetails/{pageId}");
+            return await Get<SectorDetails>($"/Clarification/Applications/{applicationId}/SectorDetails/{pageId}");
         }
 
         public async Task<bool> SubmitClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId,

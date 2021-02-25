@@ -8,7 +8,6 @@
 
         public string NextPageId { get; set; }
 
-
         // TODO: Future Tech Debt - split the regions below into appropriate base classes.
         // The reason they are here is because different VMs inherit from it and this base class used a as a common type in several views
         // Note that it also affects ModelState & validation on the views

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.Models;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
@@ -17,7 +18,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         Task<List<AssessorSector>> GetAssessorSectors(Guid applicationId, string userId);
 
-        Task<AssessorSectorDetails> GetAssessorSectorDetails(Guid applicationId, string pageId);
+        Task<SectorDetails> GetAssessorSectorDetails(Guid applicationId, string pageId);
 
         Task<bool> SubmitAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId, string userName, string status, string comment);
 
