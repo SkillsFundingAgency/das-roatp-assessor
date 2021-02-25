@@ -43,14 +43,3 @@
     }
 
 </main>
-
-
-@functions {
-    private string DecorateWithNotApplicable(string detail)
-    {
-        if (string.IsNullOrEmpty(detail))
-            return "Not applicable";
-
-        return detail;
-    }
-}
