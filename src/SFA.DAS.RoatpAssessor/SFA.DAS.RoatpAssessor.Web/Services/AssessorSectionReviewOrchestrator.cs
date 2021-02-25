@@ -134,7 +134,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 SubmittedDate = application.ApplyData.ApplyDetails.ApplicationSubmittedOn,
                 Caption = assessorPage.Caption,
                 Heading = $"Delivering training in '{sectorDetails?.SectorName}' sector",
-                SectorDetails = sectorDetails,
+                SectorDetails = sectorDetails
             };
 
             await SetSectorReviewOutcome(request, viewModel);
