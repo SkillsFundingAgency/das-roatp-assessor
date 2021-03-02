@@ -1,9 +1,9 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 
 namespace SFA.DAS.RoatpAssessor.Web.ViewModels
 {
     public class AssessorSectorDetailsViewModel : SectorDetailsViewModel
     {
-        public new AssessorSectorDetails SectorDetails { get; set; }
+        public new SectorDetails SectorDetails { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
@@ -15,7 +16,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 
         Task<List<ClarificationSector>> GetClarificationSectors(Guid applicationId, string userId);
 
-        Task<ClarificationSectorDetails> GetClarificationSectorDetails(Guid applicationId, string pageId);
+        Task<SectorDetails> GetClarificationSectorDetails(Guid applicationId, string pageId);
 
         Task<bool> SubmitClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId, string userName, string clarificationResponse, string status, string comment, IFormFileCollection clarificationFiles);
 
