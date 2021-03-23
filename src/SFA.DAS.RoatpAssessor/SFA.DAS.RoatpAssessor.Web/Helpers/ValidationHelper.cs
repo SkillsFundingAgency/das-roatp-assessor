@@ -25,6 +25,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
                     {
                         return "Select the outcome for Individualised Learner Record (ILR) data";
                     }
+                case RoatpWorkflowPageIds.OrganisationWhoCanSubmitILRData:
+                {
+                    return "Select the outcome for who is the individual accountable for submitting ILR data for your organisation";
+                }
                 default:
                     {
                         return $"Select the outcome for {defaultHeadingText?.ToLower()}";

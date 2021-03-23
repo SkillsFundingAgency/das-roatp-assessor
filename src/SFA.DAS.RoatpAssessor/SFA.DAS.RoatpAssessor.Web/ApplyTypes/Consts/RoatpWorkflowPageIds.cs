@@ -9,5 +9,6 @@
         public const string HowPersonWorkedWithEmployersToDevelopAndDeliverTraining = "7595";
         public const string HowWillYourOrganisationEngageWithEndPointAssessmentOrganisations = "6270";
         public const string OrganisationHasResourcesToSubmitILRData = "8310";
+        public const string OrganisationWhoCanSubmitILRData = "8320";
     }
 }
