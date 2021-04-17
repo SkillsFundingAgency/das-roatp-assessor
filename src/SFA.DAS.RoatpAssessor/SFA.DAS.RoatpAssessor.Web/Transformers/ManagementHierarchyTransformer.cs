@@ -1,7 +1,9 @@
-﻿using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+﻿using System;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.ResponseCaching.Internal;
 
 namespace SFA.DAS.RoatpAssessor.Web.Transformers
 {
@@ -78,22 +80,33 @@ namespace SFA.DAS.RoatpAssessor.Web.Transformers
             return columns;
         }
 
-        private static string ConvertIntegerToMonth(string monthInteger)
+        private static string ConvertIntegerToMonth(string monthAsString)
         {
-            switch (monthInteger)
+            int monthInt;
+           
+            try
+            {
+                monthInt = int.Parse(monthAsString);
+            }
+            catch
+            {
+                return "";
+            }
+
+            switch (monthInt)
             { 
-                case "1": return "Jan";
-                case "2": return "Feb";
-                case "3": return "Mar";
-                case "4": return "Apr";
-                case "5": return "May";          
-                case "6": return "Jun";          
-                case "7": return "Jul";
-                case "8": return "Aug";
-                case "9": return "Sep";
-                case "10": return "Oct";
-                case "11": return "Nov";
-                case "12": return "Dec";
+                case 1: return "Jan";
+                case 2: return "Feb";
+                case 3: return "Mar";
+                case 4: return "Apr";
+                case 5: return "May";          
+                case 6: return "Jun";          
+                case 7: return "Jul";
+                case 8: return "Aug";
+                case 9: return "Sep";
+                case 10: return "Oct";
+                case 11: return "Nov";
+                case 12: return "Dec";
                 default: return "";
  
             }
