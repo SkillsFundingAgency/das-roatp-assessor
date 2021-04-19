@@ -3,6 +3,7 @@
     public class SectorDetails
     {
         public string SectorName { get; set; }
+        public string WhatStandardsOffered { get; set; }
         public string HowManyStarts { get; set; }
         public string HowManyEmployees { get; set; }
         public string FirstName { get; set; }
