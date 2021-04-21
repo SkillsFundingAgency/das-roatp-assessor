@@ -128,6 +128,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
             Assert.AreEqual(_application.Assessor1Name, result.Assessor1Name);
             Assert.AreEqual(_application.Assessor2Name, result.Assessor2Name);
             Assert.AreEqual(_application.ApplyData.ModeratorReviewDetails.ModeratorName, result.ModeratorName);
+            Assert.AreEqual(_application.ApplyData.ModeratorReviewDetails.ModeratorComments, result.ModeratorComments);
             Assert.AreEqual(_application.ApplyData.ModeratorReviewDetails.ClarificationRequestedOn, result.ClarificationRequestedDate);
             Assert.AreSame(_sequences, result.Sequences);
         }
