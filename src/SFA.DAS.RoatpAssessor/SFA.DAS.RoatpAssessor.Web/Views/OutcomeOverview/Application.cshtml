@@ -100,17 +100,21 @@
                             @Model.ModeratorName
                         </dd>
                     </div>
-                    @if (!string.IsNullOrWhiteSpace(Model.OutcomeComments))
-                    {
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             Internal comments
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            @Model.OutcomeComments
+                            @if (!string.IsNullOrWhiteSpace(Model.OutcomeComments))
+                            {
+                                @Model.OutcomeComments
+                            }
+                            else
+                            {
+                                <text>No comments</text>
+                            }
                         </dd>
                     </div>
-                    }
                 </dl>
             </div>
             }
