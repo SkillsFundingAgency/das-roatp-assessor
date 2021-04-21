@@ -19,7 +19,8 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
         public string Assessor2Name { get; set; }
 
         public string ModeratorName { get; set; }
-        public DateTime? ClarificationRequestedDate { get; set; }
+        public string ModeratorComments { get; set; }
+        public DateTime? ClarificationRequestedDate { get; set; } 
 
         public List<ClarificationSequence> Sequences { get; }
         public bool IsReadyForClarificationConfirmation { get; set; }
@@ -51,6 +52,7 @@ namespace SFA.DAS.RoatpAssessor.Web.ViewModels
             {
                 ClarificationRequestedDate = application.ApplyData.ModeratorReviewDetails.ClarificationRequestedOn;
                 ModeratorName = application.ApplyData.ModeratorReviewDetails.ModeratorName;
+                ModeratorComments = application.ApplyData.ModeratorReviewDetails.ModeratorComments;
             }
 
             Sequences = sequences;
