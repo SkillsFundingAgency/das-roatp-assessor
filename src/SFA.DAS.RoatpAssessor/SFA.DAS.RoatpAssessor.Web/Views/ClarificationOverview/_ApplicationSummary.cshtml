@@ -102,4 +102,32 @@
             </dd>
         </div>
     }
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Internal Comments
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @if (string.IsNullOrWhiteSpace(Model.ModeratorComments))
+            {
+                <text>No comments</text>
+            }
+            else
+            {
+                <details class="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            View internal comments
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <ul class="govuk-list">
+                            <li>
+                                @Html.Raw(Model.ModeratorComments)
+                            </li>
+                        </ul>
+                    </div>
+                </details>
+            }
+        </dd>
+    </div>
 </dl>
