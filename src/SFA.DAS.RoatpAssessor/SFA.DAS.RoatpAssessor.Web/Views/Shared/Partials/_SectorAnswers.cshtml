@@ -12,102 +12,101 @@
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">What standards do you intend to offer within the '@Model?.SectorName' sector?</th>
-                    <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.WhatStandardsOffered))</td>
+                    <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.WhatStandardsOffered))</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">How many starts does your organisation forecast in the '@Model?.SectorName' sector in the first 12 months of joining the RoATP?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.HowManyStarts))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.HowManyStarts))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">How many employees will deliver training in the '@Model?.SectorName' sector?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.HowManyEmployees))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.HowManyEmployees))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">First name</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.FirstName))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.FirstName))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Last name</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.LastName))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.LastName))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Job role</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.JobRole))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.JobRole))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Time in role</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.TimeInRole))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.TimeInRole))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Is this person part of any other organisations?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.IsPartOfAnyOtherOrganisations))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.IsPartOfAnyOtherOrganisations))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Enter the names of all these organisations</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.OtherOrganisations))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.OtherOrganisations))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Date of birth</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.DateOfBirth))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.DateOfBirth))</td>
                     </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Email</th>
-                    <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.Email))</td>
+                    <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.Email))</td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Contact number</th>
-                    <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.ContactNumber))</td>
+                    <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.ContactNumber))</td>
                 </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">What's their experience of delivering training in this sector?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.ExperienceOfDelivering))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.ExperienceOfDelivering))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Where did they gain this experience?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.WhereDidTheyGainThisExperience))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.WhereDidTheyGainThisExperience))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Do they have any qualifications relating to this sector?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.DoTheyHaveQualifications))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.DoTheyHaveQualifications))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Tell us what qualifications they have</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.WhatQualificationsDoTheyHave))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.WhatQualificationsDoTheyHave))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Are they approved by awarding bodies to deliver training?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.ApprovedByAwardingBodies))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.ApprovedByAwardingBodies))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Names of awarding bodies</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.NamesOfAwardingBodies))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.NamesOfAwardingBodies))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Do they have sector or trade body memberships?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.DoTheyHaveTradeBodyMemberships))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.DoTheyHaveTradeBodyMemberships))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Names of sector or trade bodies</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.NamesOfTradeBodyMemberships))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.NamesOfTradeBodyMemberships))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">What type of apprenticeship training have they delivered?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.WhatTypeOfTrainingDelivered))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.WhatTypeOfTrainingDelivered))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">How have they delivered training to apprentices?</th>
                         <td class="govuk-table__cell">
                             @if (Model?.HowIsTrainingDelivered == null)
                             {
-                                @Html.Raw("Not applicable")
-                                ;
+                                <text>Not applicable</text>
                             }
                             else
                             {
                                 <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
                                     @foreach (var item in Model.HowIsTrainingDelivered)
                                     {
-                                        <li>@Html.Raw(item)</li>
+                                        <li>@item</li>
                                     }
                                 </ul>
                             }
@@ -115,11 +114,11 @@
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">What's their experience of delivering training to apprentices?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.ExperienceOfDeliveringTraining))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.ExperienceOfDeliveringTraining))</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">What's the typical duration of training they have delivered to apprentices?</th>
-                        <td class="govuk-table__cell">@Html.Raw(DecorateWithNotApplicable(Model?.TypicalDurationOfTraining))</td>
+                        <td class="govuk-table__cell">@(DecorateWithNotApplicable(Model?.TypicalDurationOfTraining))</td>
                     </tr>
                 </tbody>
             </table>
@@ -129,9 +128,6 @@
 @functions {
     private string DecorateWithNotApplicable(string detail)
     {
-        if (string.IsNullOrEmpty(detail))
-            return "Not applicable";
-
-        return detail;
+        return string.IsNullOrEmpty(detail) ? "Not applicable" : detail;
     }
 }
