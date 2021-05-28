@@ -71,7 +71,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             {
                 content.Add(new StringContent(comment), "Comment");
             }
-            content.Add(new StringContent(clarificationResponse), "ClarificationResponse");
+            if (!string.IsNullOrEmpty(clarificationResponse))
+            {
+                content.Add(new StringContent(clarificationResponse), "ClarificationResponse");
+            }
 
             if (clarificationFiles != null && clarificationFiles.Any())
             {

@@ -20,7 +20,7 @@
                 @Model.Caption
             </span>
             <h1 class="govuk-heading-xl">@Model.Heading</h1>
-            
+
             <partial name="~/Views/Shared/Pages/_ApplicationSummary.cshtml" for="@Model" />
         </div>
     </div>
@@ -44,10 +44,10 @@
                             Original answer
                         </caption>
                         <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Application question</th>
-                            <th class="govuk-table__header das-no-wrap" scope="col">Applicant's answer</th>
-                        </tr>
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Application question</th>
+                                <th class="govuk-table__header das-no-wrap" scope="col">Applicant's answer</th>
+                            </tr>
                         </thead>
                         <tbody class="govuk-table__body">
                             @foreach (var question in Model.Questions)
@@ -179,10 +179,19 @@
                     <input type="hidden" asp-for="NextPageId" />
                     <input type="hidden" asp-for="Heading" />
                     <input type="hidden" asp-for="ClarificationRequired" />
+                    <input type="hidden" asp-for="ClarificationFileRequired" />
 
                     @if (Model.ClarificationRequired)
                     {
-                        <partial name="~/Views/ClarificationSectionReview/Pages/_ClarifiedAnswer.cshtml" for="@Model" />
+                        @if (Model.ClarificationFileRequired)
+                        {
+                            <partial name="~/Views/ClarificationSectionReview/Pages/_ClarifiedAnswerFileUpload.cshtml" for="@Model" />
+                        }
+                        else
+                        {
+                            <partial name="~/Views/ClarificationSectionReview/Pages/_ClarifiedAnswerText.cshtml" for="@Model" />
+                        }
+
                         <partial name="~/Views/ClarificationSectionReview/Pages/_ApprovalSection.cshtml" for="@Model" />
                         <button class="govuk-button" type="submit">Save and continue</button>
                     }

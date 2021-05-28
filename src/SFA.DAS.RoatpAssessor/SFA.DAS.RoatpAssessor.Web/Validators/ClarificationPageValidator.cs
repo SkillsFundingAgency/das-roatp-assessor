@@ -16,6 +16,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
         private const string TooManyWords = "Internal comments must be 150 words or less";
         private const string CommentRequired = "Enter internal comments";
 
+        private const string ClarificationFileRequired = "Upload a file";
+
         private const int ClarificationResponseMaxWordsCount = 300;
         private const string ClarificationResponseRequired = "Enter clarification response";
         private const string ClarificationResponseTooManyWords = "Clarification response must be 300 words or less";
@@ -31,16 +33,30 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
                 Errors = new List<ValidationErrorDetail>()
             };
 
-            if (string.IsNullOrWhiteSpace(command.ClarificationResponse))
+            if(command.ClarificationFileRequired)
             {
-                validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ClarificationResponse), ClarificationResponseRequired));
+                if(!string.IsNullOrWhiteSpace(command.ClarificationFile))
+                {
+                    // Not validation required as we got a file on record.
+                }
+                else if (command.FilesToUpload is null || !command.FilesToUpload.Any())
+                {
+                    validationResponse.Errors.Add(new ValidationErrorDetail("ClarificationFile", ClarificationFileRequired));
+                }
             }
             else
             {
-                var wordCount = ValidationHelper.GetWordCount(command.ClarificationResponse);
-                if (wordCount > ClarificationResponseMaxWordsCount)
+                if (string.IsNullOrWhiteSpace(command.ClarificationResponse))
                 {
-                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ClarificationResponse), ClarificationResponseTooManyWords));
+                    validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ClarificationResponse), ClarificationResponseRequired));
+                }
+                else
+                {
+                    var wordCount = ValidationHelper.GetWordCount(command.ClarificationResponse);
+                    if (wordCount > ClarificationResponseMaxWordsCount)
+                    {
+                        validationResponse.Errors.Add(new ValidationErrorDetail(nameof(command.ClarificationResponse), ClarificationResponseTooManyWords));
+                    }
                 }
             }
 
@@ -93,7 +109,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Validators
             {
                 foreach (var file in command.FilesToUpload)
                 {
-                    
                     if (!FileContentIsValidForPdfFile(file))
                     {
                         validationResponse.Errors.Add(new ValidationErrorDetail("ClarificationFile", FileMustBePdf));
