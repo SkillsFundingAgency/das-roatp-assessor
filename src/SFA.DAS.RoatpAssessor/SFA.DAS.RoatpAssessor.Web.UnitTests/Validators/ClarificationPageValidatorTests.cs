@@ -133,6 +133,74 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
         }
 
         [Test]
+        public async Task When_ClarificationFileRequired_but_FilesToUpload_has_no_files_then_an_error_is_returned()
+        {
+            _command.ClarificationFileRequired = true;
+
+            var response = await _validator.Validate(_command);
+
+            Assert.IsFalse(response.IsValid);
+            Assert.AreEqual("Upload a file", response.Errors.First().ErrorMessage);
+            Assert.AreEqual("ClarificationFile", response.Errors.First().Field);
+        }
+
+        [Test]
+        public async Task When_ClarificationFileRequired_and_FilesToUpload_has_file_and_status_is_pass_then_no_error_is_returned()
+        {
+            _command.ClarificationFileRequired = true;
+            _command.Status = ClarificationPageReviewStatus.Pass;
+            _command.FilesToUpload = new FormFileCollection
+            {
+                GenerateClarificationFile("ClarificationFile.pdf", true, 10)
+            };
+
+            var response = await _validator.Validate(_command);
+
+            Assert.IsTrue(response.IsValid);
+        }
+
+        [Test]
+        public async Task When_ClarificationFileRequired_and_FilesToUpload_has_file_and_status_is_fail_then_no_error_is_returned()
+        {
+            _command.ClarificationFileRequired = true;
+            _command.Status = ClarificationPageReviewStatus.Fail;
+            _command.OptionFailText = "No good";
+            _command.FilesToUpload = new FormFileCollection
+            {
+                GenerateClarificationFile("ClarificationFile.pdf", true, 10)
+            };
+
+            var response = await _validator.Validate(_command);
+
+            Assert.IsTrue(response.IsValid);
+        }
+
+        [Test]
+        public async Task When_ClarificationFileRequired_and_ClarificationFile_exists_and_status_is_pass_then_no_error_is_returned()
+        {
+            _command.ClarificationFileRequired = true;
+            _command.Status = ClarificationPageReviewStatus.Pass;
+            _command.ClarificationFile = "ClarificationFile.pdf";
+
+            var response = await _validator.Validate(_command);
+
+            Assert.IsTrue(response.IsValid);
+        }
+
+        [Test]
+        public async Task When_ClarificationFileRequired_and_ClarificationFile_existse_and_status_is_fail_then_no_error_is_returned()
+        {
+            _command.ClarificationFileRequired = true;
+            _command.Status = ClarificationPageReviewStatus.Fail;
+            _command.OptionFailText = "No good";
+            _command.ClarificationFile = "ClarificationFile.pdf";
+
+            var response = await _validator.Validate(_command);
+
+            Assert.IsTrue(response.IsValid);
+        }
+
+        [Test]
         public async Task When_FilesToUpload_has_file_that_exceeds_maximum_filesize_then_an_error_is_returned()
         {
             const int currentMaxFileSizeInBytes = 5 * 1024 * 1024;

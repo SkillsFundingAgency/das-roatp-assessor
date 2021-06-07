@@ -1,0 +1,63 @@
+﻿@model SFA.DAS.RoatpAssessor.Web.ViewModels.ApplicationReviewViewModel
+
+<div class="govuk-form-group" sfa-validation-for="ClarificationFile" sfa-validationerror-class="govuk-form-group--error">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <h2 class="govuk-fieldset__heading">
+                Clarified answer
+            </h2>
+        </legend>
+
+        <div class="govuk-form-group">
+            @if (!string.IsNullOrWhiteSpace(Model.ClarificationFile))
+            {
+                <input type="hidden" asp-for="ClarificationFile" />
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">File</th>
+                            <th class="govuk-table__header" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell govuk-table__cell--break-word" scope="row">
+                                <a class="govuk-link" href="@Url.Action("DownloadClarificationFile", "ClarificationSectionReview" , new
+                                       {
+                                            ApplicationId = Model.ApplicationId,
+                                            SequenceNumber = Model.SequenceNumber,
+                                            SectionNumber = Model.SectionNumber,
+                                            PageId = Model.PageId,
+                                            FileName = Model.ClarificationFile
+                                       })">
+                                    @Model.ClarificationFile
+                                </a>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("DeleteClarificationFile", "ClarificationSectionReview" , new
+                                       {
+                                            ApplicationId = Model.ApplicationId,
+                                            SequenceNumber = Model.SequenceNumber,
+                                            SectionNumber = Model.SectionNumber,
+                                            PageId = Model.PageId,
+                                            FileName = Model.ClarificationFile
+                                       })">
+                                    Remove<span class="govuk-visually-hidden"> file</span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <label class="govuk-label" asp-for="ClarificationFile">
+                    Upload a file
+                </label>
+                <span class="govuk-error-message" asp-validation-for="ClarificationFile"></span>
+                <input class="govuk-file-upload" type="file" asp-for="ClarificationFile" accept=".pdf,application/pdf" />
+            }
+        </div>
+    </fieldset>
+</div>
+

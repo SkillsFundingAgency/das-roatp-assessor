@@ -15,6 +15,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
         public string Status { get; set; }
         public bool ClarificationRequired { get; set; }
         public string ClarificationResponse { get; set; }
+        public bool ClarificationFileRequired { get; set; }
+        public string ClarificationFile { get; set; }
         public string OptionPassText { get; set; }
         public string OptionFailText { get; set; }
         public string OptionInProgressText { get; set; }
@@ -63,6 +65,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Models
             Status = viewModel.Status;
             ClarificationRequired = viewModel.ClarificationRequired;
             ClarificationResponse = viewModel.ClarificationResponse;
+            ClarificationFileRequired = viewModel.ClarificationFileRequired;
+            ClarificationFile = viewModel.ClarificationFile;
             OptionPassText = viewModel.OptionPassText;
             OptionFailText = viewModel.OptionFailText;
             OptionInProgressText = viewModel.OptionInProgressText;

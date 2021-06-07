@@ -16,10 +16,13 @@
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header">Clarification Response</th>
-                    <td class="govuk-table__cell">@Model.ClarificationResponse</td>
-                </tr>
+                @if (!string.IsNullOrEmpty(Model.ClarificationResponse))
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">Clarification Response</th>
+                        <td class="govuk-table__cell">@Model.ClarificationResponse</td>
+                    </tr>
+                }
                 @if (Model.ClarificationFiles?.Any() is true)
                 {
                     <tr class="govuk-table__row">
