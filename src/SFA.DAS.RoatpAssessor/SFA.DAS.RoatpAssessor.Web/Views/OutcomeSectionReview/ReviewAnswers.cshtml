@@ -164,7 +164,8 @@
 
     <partial name="~/Views/Shared/Pages/_BlindAssessmentOutcome.cshtml" for="@Model.BlindAssessmentOutcome" />
 
-    @if (Model.ClarificationRequired && !string.IsNullOrWhiteSpace(Model.ClarificationOutcome?.ClarifierUserName) && !string.IsNullOrEmpty(Model.ClarificationOutcome?.ClarificationResponse))
+    @if (Model.ClarificationRequired && !string.IsNullOrWhiteSpace(Model.ClarificationOutcome?.ClarifierUserName)
+        && (!string.IsNullOrWhiteSpace(Model.ClarificationOutcome?.ClarificationResponse) || Model.ClarificationOutcome?.ClarificationFiles?.Any() is true))
     {
         <partial name="~/Views/Shared/Pages/_ClarificationOutcome.cshtml" for="@Model.ClarificationOutcome" />
     }
