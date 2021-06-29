@@ -42,9 +42,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         {
             var userId = _controller.User.UserId();
             var expectedViewModel = new NewApplicationsViewModel(1, 2, 3, 4, 5);
-            _assessorOrchestrator.Setup(x => x.GetNewApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
+            _assessorOrchestrator.Setup(x => x.GetNewApplicationsViewModel(userId,null,null)).ReturnsAsync(expectedViewModel);
 
-            var result = await _controller.NewApplications();
+            var result = await _controller.NewApplications(null,null);
 
             Assert.AreSame(expectedViewModel, result.Model);
         }
