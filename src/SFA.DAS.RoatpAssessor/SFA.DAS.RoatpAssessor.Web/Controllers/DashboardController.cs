@@ -25,10 +25,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         }
 
         [HttpGet("/Dashboard/New")]
-        public async Task<ViewResult> NewApplications()
+        public async Task<ViewResult> NewApplications(string sortOrder)
         {
             var userId = HttpContext.User.UserId();
-            var vm = await _assessorOrchestrator.GetNewApplicationsViewModel(userId);
+            var vm = await _assessorOrchestrator.GetNewApplicationsViewModel(userId, sortOrder);
             return View(vm);
         }
 

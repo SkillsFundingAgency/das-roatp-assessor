@@ -6,7 +6,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 {
     public interface IAssessorDashboardOrchestrator
     {
-        Task<NewApplicationsViewModel> GetNewApplicationsViewModel(string userId);
+        Task<NewApplicationsViewModel> GetNewApplicationsViewModel(string userId, string sortOrder);
 
         Task<bool> AssignApplicationToAssessor(Guid applicationId, int assessorNumber, string assessorUserId, string assessorName);
 

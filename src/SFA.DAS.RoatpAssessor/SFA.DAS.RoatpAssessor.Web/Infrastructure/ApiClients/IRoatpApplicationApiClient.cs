@@ -14,7 +14,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
     {
         Task<ApplicationCounts> GetApplicationCounts(string userId);
 
-        Task<List<AssessorApplicationSummary>> GetNewApplications(string userId);
+        Task<List<AssessorApplicationSummary>> GetNewApplications(string userId, string sortOrder);
         Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId);
         Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId);
         Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId);

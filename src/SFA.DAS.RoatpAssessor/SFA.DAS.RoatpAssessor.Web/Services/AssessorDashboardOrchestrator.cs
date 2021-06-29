@@ -19,10 +19,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             _assessorApiClient = assessorApiClient;
         }
 
-        public async Task<NewApplicationsViewModel> GetNewApplicationsViewModel(string userId)
+        public async Task<NewApplicationsViewModel> GetNewApplicationsViewModel(string userId, string sortOrder)
         {
             var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
-            var applications = await _applicationApiClient.GetNewApplications(userId);
+            var applications = await _applicationApiClient.GetNewApplications(userId,sortOrder);
 
             var viewModel = new NewApplicationsViewModel(applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications);
             AddApplicationsToViewModel(viewModel, applications);
