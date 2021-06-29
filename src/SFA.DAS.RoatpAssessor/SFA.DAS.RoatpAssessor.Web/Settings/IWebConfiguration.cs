@@ -8,7 +8,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Settings
 
         AuthSettings StaffAuthentication { get; set; }
 
-        ClientApiAuthentication RoatpApplicationApiAuthentication { get; set; }
+        ManagedIdentityApiAuthentication RoatpApplicationApiAuthentication { get; set; }
 
         string EsfaAdminServicesBaseUrl { get; set; }
     }
