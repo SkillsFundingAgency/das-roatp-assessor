@@ -54,9 +54,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         {
             var userId = _controller.User.UserId();
             var expectedViewModel = new InProgressApplicationsViewModel(userId, 1, 2, 3, 4, 5);
-            _assessorOrchestrator.Setup(x => x.GetInProgressApplicationsViewModel(userId)).ReturnsAsync(expectedViewModel);
+            _assessorOrchestrator.Setup(x => x.GetInProgressApplicationsViewModel(userId,null,null)).ReturnsAsync(expectedViewModel);
 
-            var result = await _controller.InProgressApplications();
+            var result = await _controller.InProgressApplications(null,null);
 
             Assert.AreSame(expectedViewModel, result.Model);
         }

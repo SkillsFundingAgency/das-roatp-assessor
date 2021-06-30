@@ -31,9 +31,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/New?sortOrder={sortOrder}&sortColumn={sortColumn}");
         }
 
-        public async Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId)
+        public async Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId, string sortOrder, string sortColumn)
         {
-            return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/InProgress");
+            return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/InProgress?sortOrder={sortOrder}&sortColumn={sortColumn}");
         }
 
         public async Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId)

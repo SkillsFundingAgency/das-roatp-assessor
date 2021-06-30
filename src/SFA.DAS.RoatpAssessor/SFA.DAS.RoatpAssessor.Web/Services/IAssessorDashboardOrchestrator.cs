@@ -10,6 +10,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         Task<bool> AssignApplicationToAssessor(Guid applicationId, int assessorNumber, string assessorUserId, string assessorName);
 
-        Task<InProgressApplicationsViewModel> GetInProgressApplicationsViewModel(string userId);
+        Task<InProgressApplicationsViewModel> GetInProgressApplicationsViewModel(string userId, string sortOrder, string sortColumn);
     }
 }

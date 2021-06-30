@@ -44,10 +44,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         }
 
         [HttpGet("/Dashboard/InProgress")]
-        public async Task<ViewResult> InProgressApplications()
+        public async Task<ViewResult> InProgressApplications(string sortOrder, string sortColumn)
         {
             var userId = HttpContext.User.UserId();
-            var vm = await _assessorOrchestrator.GetInProgressApplicationsViewModel(userId);
+            var vm = await _assessorOrchestrator.GetInProgressApplicationsViewModel(userId, sortOrder, sortColumn);
             return View(vm);
         }
 

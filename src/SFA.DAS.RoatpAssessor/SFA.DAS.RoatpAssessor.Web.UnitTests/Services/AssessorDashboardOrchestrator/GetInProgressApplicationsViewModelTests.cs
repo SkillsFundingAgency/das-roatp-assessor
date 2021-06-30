@@ -30,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
             _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_applicationApiClient.Object, _assessorApiClient.Object);
 
-            _applicationApiClient.Setup(x => x.GetInProgressApplications(_user.UserId())).ReturnsAsync(new List<AssessorApplicationSummary>());
+            _applicationApiClient.Setup(x => x.GetInProgressApplications(_user.UserId(),null,null)).ReturnsAsync(new List<AssessorApplicationSummary>());
             _applicationApiClient.Setup(x => x.GetApplicationCounts(_user.UserId())).ReturnsAsync(new ApplicationCounts());
         }
 
@@ -42,7 +42,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
 
             _applicationApiClient.Setup(x => x.GetApplicationCounts(userId)).ReturnsAsync(summary);
 
-            var response = await _orchestrator.GetInProgressApplicationsViewModel(userId);
+            var response = await _orchestrator.GetInProgressApplicationsViewModel(userId,null,null);
 
             Assert.AreEqual(summary.NewApplications, response.NewApplications);
             Assert.AreEqual(summary.InProgressApplications, response.InProgressApplications);
@@ -61,9 +61,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
                 new AssessorApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), Assessor1UserId = "fbvkjghb", Assessor2UserId = "fdkgjgfdh" }
             };
 
-            _applicationApiClient.Setup(x => x.GetInProgressApplications(userId)).ReturnsAsync(applications);
+            _applicationApiClient.Setup(x => x.GetInProgressApplications(userId,null,null)).ReturnsAsync(applications);
 
-            var response = await _orchestrator.GetInProgressApplicationsViewModel(userId);
+            var response = await _orchestrator.GetInProgressApplicationsViewModel(userId,null,null);
 
             Assert.AreEqual(applications.Count, response.Applications.Count);
             AssertApplicationsMatch(applications.First(), response.Applications.First());
