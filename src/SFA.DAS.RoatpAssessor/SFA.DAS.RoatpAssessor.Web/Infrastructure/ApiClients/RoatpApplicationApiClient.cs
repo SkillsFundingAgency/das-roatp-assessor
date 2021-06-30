@@ -36,19 +36,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/InProgress?sortOrder={sortOrder}&sortColumn={sortColumn}");
         }
 
-        public async Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId)
+        public async Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId, string sortOrder, string sortColumn)
         {
-            return await Get<List<ModerationApplicationSummary>>($"Assessor/Applications/{userId}/InModeration");
+            return await Get<List<ModerationApplicationSummary>>($"Assessor/Applications/{userId}/InModeration?sortOrder={sortOrder}&sortColumn={sortColumn}");
         }
 
-        public async Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId)
+        public async Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId, string sortOrder, string sortColumn)
         {
-            return await Get<List<ClarificationApplicationSummary>>($"Assessor/Applications/{userId}/InClarification");
+            return await Get<List<ClarificationApplicationSummary>>($"Assessor/Applications/{userId}/InClarification?sortOrder={sortOrder}&sortColumn={sortColumn}");
         }
 
-        public async Task<List<ClosedApplicationSummary>> GetClosedApplications(string userId)
+        public async Task<List<ClosedApplicationSummary>> GetClosedApplications(string userId, string sortOrder, string sortColumn)
         {
-            return await Get<List<ClosedApplicationSummary>>($"Assessor/Applications/{userId}/Closed");
+            return await Get<List<ClosedApplicationSummary>>($"Assessor/Applications/{userId}/Closed?sortOrder={sortOrder}&sortColumn={sortColumn}");
         }
 
         public async Task<Apply> GetApplication(Guid applicationId)
