@@ -40,6 +40,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            if (output.TagName != "sortable-column")
+                return;
+
             output.TagName = "";
             var content = new StringBuilder();
 
