@@ -11,6 +11,7 @@ using SFA.DAS.RoatpAssessor.Web.Types;
 
 namespace SFA.DAS.RoatpAssessor.Web.Helpers
 {
+    [HtmlTargetElement("sortable-column")]
     public class SortableColumnTagHelper : TagHelper
     {
         private const string CssClass = "govuk-link das-table__sort ";
@@ -40,12 +41,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            if (output.TagName != "sortable-column")
-                return;
-
-            output.TagName = "";
-            var content = new StringBuilder();
-
             var action = ViewContext.RouteData.Values["action"] as string;
             var controller = ViewContext.RouteData.Values["controller"] as string;
 
@@ -69,13 +64,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
 
             var ariaSort = sortOrder.ToString().ToLower();
 
+            var content = new StringBuilder();
             content.Append($"<a class=\"{CssClass}{sortOrderCssSuffix}\" href=\"{href}\" aria-sort=\"{ariaSort}\">");
             content.Append(Label);
             content.Append("</a>");
 
+            output.TagName = "";
             output.PostContent.SetHtmlContent(content.ToString());
             output.Attributes.Clear();
-
         }
 
         private SortOrder GetSortOrderFromQueryString()
