@@ -11,10 +11,10 @@ using SFA.DAS.RoatpAssessor.Web.Types;
 
 namespace SFA.DAS.RoatpAssessor.Web.Helpers
 {
-    [HtmlTargetElement("sortable-column")]
+    [HtmlTargetElement("sfa-roatp-sortable-column")]
     public class SortableColumnTagHelper : TagHelper
     {
-        private const string CssClass = "govuk-link das-table__sort ";
+        private const string CssClass = "govuk-link das-table__sort";
 
         [HtmlAttributeName("column-name")]
         public string ColumnName { get; set; }
@@ -66,7 +66,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
             var ariaSort = sortOrder.ToString().ToLower();
 
             var content = new StringBuilder();
-            content.Append($"<a class=\"{CssClass}{sortOrderCssSuffix}\" href=\"{href}\" aria-sort=\"{ariaSort}\">");
+            content.Append($"<a class=\"{CssClass} {sortOrderCssSuffix}\" href=\"{href}\" aria-sort=\"{ariaSort}\">");
             content.Append(Label);
             content.Append("</a>");
 
