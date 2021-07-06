@@ -12,6 +12,7 @@
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
             <h1 class="govuk-heading-xl">
                 RoATP assessor applications
             </h1>
@@ -20,9 +21,12 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <div class="govuk-tabs">
+            <partial name="_DashboardSearch" />
+        </div>
 
-                @{ await Html.RenderPartialAsync("DashboardNavigation.cshtml"); }
+        <div class="govuk-grid-column-full">
+            <div class="govuk-tabs">
+                <partial name="_DashboardNavigation.cshtml" />
 
                 <div class="govuk-tabs__panel">
                     @if (Model.Applications != null && Model.Applications.Any())
@@ -47,29 +51,29 @@
                             <tbody class="govuk-table__body">
                                 @foreach (var item in Model.Applications)
                                 {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell" data-label="Organisation name">
-                                        <a class="govuk-link" asp-action="ViewApplication" asp-controller="ClarificationOverview" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="UKPRN">
-                                        @item.Ukprn
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Application reference number">
-                                        @item.ApplicationReferenceNumber
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Provider route">
-                                        @item.ProviderRoute
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Application submitted date">
-                                        @item.SubmittedDate.ToSfaShortDateString()
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Clarification requested date">
-                                        @item.ClarificationRequestedDate.ToSfaShortDateString()
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Moderator">
-                                        @item.ModeratorName
-                                    </td>
-                                </tr>
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell" data-label="Organisation name">
+                                            <a class="govuk-link" asp-action="ViewApplication" asp-controller="ClarificationOverview" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="UKPRN">
+                                            @item.Ukprn
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Application reference number">
+                                            @item.ApplicationReferenceNumber
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Provider route">
+                                            @item.ProviderRoute
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Application submitted date">
+                                            @item.SubmittedDate.ToSfaShortDateString()
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Clarification requested date">
+                                            @item.ClarificationRequestedDate.ToSfaShortDateString()
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Moderator">
+                                            @item.ModeratorName
+                                        </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>

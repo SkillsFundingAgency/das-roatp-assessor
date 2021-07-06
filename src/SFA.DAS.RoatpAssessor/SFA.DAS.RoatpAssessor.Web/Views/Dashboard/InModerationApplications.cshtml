@@ -12,6 +12,7 @@
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
             <h1 class="govuk-heading-xl">
                 RoATP assessor applications
             </h1>
@@ -20,8 +21,13 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
+            <partial name="_DashboardSearch" />
+        </div>
+
+        <div class="govuk-grid-column-full">
             <div class="govuk-tabs">
-                <partial name="DashboardNavigation.cshtml" />
+                <partial name="_DashboardNavigation.cshtml" />
+
                 <div class="govuk-tabs__panel">
                     @if (Model.Applications != null && Model.Applications.Any())
                     {

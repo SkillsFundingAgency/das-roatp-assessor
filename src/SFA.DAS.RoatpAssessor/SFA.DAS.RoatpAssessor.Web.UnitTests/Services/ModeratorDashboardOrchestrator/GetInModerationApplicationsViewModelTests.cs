@@ -28,8 +28,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
             _applicationApiClient = new Mock<IRoatpApplicationApiClient>();
             _orchestrator = new Web.Services.ModeratorDashboardOrchestrator(_applicationApiClient.Object);
 
-            _applicationApiClient.Setup(x => x.GetInModerationApplications(_user.UserId(),null,null)).ReturnsAsync(new List<ModerationApplicationSummary>());
-            _applicationApiClient.Setup(x => x.GetApplicationCounts(_user.UserId())).ReturnsAsync(new ApplicationCounts());
+            _applicationApiClient.Setup(x => x.GetInModerationApplications(_user.UserId(), null, null, null)).ReturnsAsync(new List<ModerationApplicationSummary>());
+            _applicationApiClient.Setup(x => x.GetApplicationCounts(_user.UserId(), null)).ReturnsAsync(new ApplicationCounts());
         }
 
         [Test]
@@ -38,9 +38,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
             var userId = _user.UserId();
             var summary = new ApplicationCounts { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6, ClosedApplications = 1 };
 
-            _applicationApiClient.Setup(x => x.GetApplicationCounts(userId)).ReturnsAsync(summary);
+            _applicationApiClient.Setup(x => x.GetApplicationCounts(userId, null)).ReturnsAsync(summary);
 
-            var response = await _orchestrator.GetInModerationApplicationsViewModel(userId,null,null);
+            var response = await _orchestrator.GetInModerationApplicationsViewModel(userId, null, null, null);
 
             Assert.AreEqual(summary.NewApplications, response.NewApplications);
             Assert.AreEqual(summary.InProgressApplications, response.InProgressApplications);
@@ -59,9 +59,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorDashboardOrchest
                 new ModerationApplicationSummary { ApplicationReferenceNumber = "fghhgfj", Assessor1Name = "sdjfghdfgd", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid(), Assessor1UserId = "fbvkjghb", Assessor2UserId = "fdkgjgfdh", ModerationStatus = ModerationStatus.New, ModeratorName = "sdjfghdfgd" }
             };
 
-            _applicationApiClient.Setup(x => x.GetInModerationApplications(userId,null,null)).ReturnsAsync(applications);
+            _applicationApiClient.Setup(x => x.GetInModerationApplications(userId, null, null, null)).ReturnsAsync(applications);
 
-            var response = await _orchestrator.GetInModerationApplicationsViewModel(userId,null,null);
+            var response = await _orchestrator.GetInModerationApplicationsViewModel(userId, null, null, null);
 
             Assert.AreEqual(applications.Count, response.Applications.Count);
             AssertApplicationsMatch(applications.First(), response.Applications.First());

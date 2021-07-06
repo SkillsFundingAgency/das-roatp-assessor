@@ -12,6 +12,7 @@
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
             <h1 class="govuk-heading-xl">
                 RoATP assessor applications
             </h1>
@@ -20,9 +21,12 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <div class="govuk-tabs">
+            <partial name="_DashboardSearch" />
+        </div>
 
-                @{ await Html.RenderPartialAsync("DashboardNavigation.cshtml"); }
+        <div class="govuk-grid-column-full">
+            <div class="govuk-tabs">
+                <partial name="_DashboardNavigation.cshtml" />
 
                 <div class="govuk-tabs__panel">
                     @if (Model.Applications != null && Model.Applications.Any())
@@ -36,63 +40,63 @@
                                     <th class="govuk-table__header" scope="col">Application reference number</th>
                                     <th class="govuk-table__header" scope="col">Provider route</th>
                                     <th class="govuk-table__header" scope="col">
-                                    <sortable-column column-name="SubmittedDate" column-label="Application submitted date" default="true" default-order="Descending"></sortable-column>
+                                        <sortable-column column-name="SubmittedDate" column-label="Application submitted date" default="true" default-order="Descending"></sortable-column>
                                     </th>
                                     <th class="govuk-table__header" scope="col">Outcome made date</th>
                                     <th class="govuk-table__header" scope="col">
-                                <sortable-column column-name="OutcomeMadeBy" column-label="Outcome made by" default="true" default-order="Descending"></sortable-column>
-                                </th>
+                                        <sortable-column column-name="OutcomeMadeBy" column-label="Outcome made by" default="true" default-order="Descending"></sortable-column>
+                                    </th>
                                     <th class="govuk-table__header" scope="col">Outcome</th>
                                 </tr>
                             </thead>
                             <tbody class="govuk-table__body">
                                 @foreach (var item in Model.Applications)
                                 {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell" data-label="Organisation name">
-                                        <a class="govuk-link" asp-action="ViewApplication" asp-controller="OutcomeOverview" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="UKPRN">
-                                        @item.Ukprn
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Application reference number">
-                                        @item.ApplicationReferenceNumber
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Provider route">
-                                        @item.ProviderRoute
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Application submitted date">
-                                        @item.SubmittedDate.ToSfaShortDateString()
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Outcome made date">
-                                        @item.OutcomeMadeDate.ToSfaShortDateString()
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Outcome made by">
-                                        @item.OutcomeMadeBy
-                                    </td>
-                                    <td class="govuk-table__cell" data-label="Outcome">
-                                        @if (item.ApplicationStatus == ApplicationStatus.Withdrawn
-                                            || item.ApplicationStatus == ApplicationStatus.Removed)
-                                        {   
-                                            <strong class="govuk-tag das-tag das-tag--solid-grey das-no-wrap">@item.ApplicationStatus</strong>
-                                        }
-                                        else
-                                        {
-                                            var cssModifierClassName = string.Empty;
-
-                                            if ("pass".Equals(item.ModerationStatus, StringComparison.InvariantCultureIgnoreCase))
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell" data-label="Organisation name">
+                                            <a class="govuk-link" asp-action="ViewApplication" asp-controller="OutcomeOverview" asp-route-applicationId="@item.ApplicationId">@item.OrganisationName</a>
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="UKPRN">
+                                            @item.Ukprn
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Application reference number">
+                                            @item.ApplicationReferenceNumber
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Provider route">
+                                            @item.ProviderRoute
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Application submitted date">
+                                            @item.SubmittedDate.ToSfaShortDateString()
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Outcome made date">
+                                            @item.OutcomeMadeDate.ToSfaShortDateString()
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Outcome made by">
+                                            @item.OutcomeMadeBy
+                                        </td>
+                                        <td class="govuk-table__cell" data-label="Outcome">
+                                            @if (item.ApplicationStatus == ApplicationStatus.Withdrawn
+                                               || item.ApplicationStatus == ApplicationStatus.Removed)
                                             {
-                                                cssModifierClassName = "das-tag das-tag--solid-green";
+                                                <strong class="govuk-tag das-tag das-tag--solid-grey das-no-wrap">@item.ApplicationStatus</strong>
                                             }
-                                            else if ("fail".Equals(item.ModerationStatus, StringComparison.InvariantCultureIgnoreCase))
+                                            else
                                             {
-                                                cssModifierClassName = "das-tag das-tag--solid-red";
-                                            }
+                                                var cssModifierClassName = string.Empty;
 
-                                            <strong class="govuk-tag @cssModifierClassName das-no-wrap">@item.ModerationStatus</strong>
-                                        }
-                                    </td>
-                                </tr>
+                                                if ("pass".Equals(item.ModerationStatus, StringComparison.InvariantCultureIgnoreCase))
+                                                {
+                                                    cssModifierClassName = "das-tag das-tag--solid-green";
+                                                }
+                                                else if ("fail".Equals(item.ModerationStatus, StringComparison.InvariantCultureIgnoreCase))
+                                                {
+                                                    cssModifierClassName = "das-tag das-tag--solid-red";
+                                                }
+
+                                                <strong class="govuk-tag @cssModifierClassName das-no-wrap">@item.ModerationStatus</strong>
+                                            }
+                                        </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>

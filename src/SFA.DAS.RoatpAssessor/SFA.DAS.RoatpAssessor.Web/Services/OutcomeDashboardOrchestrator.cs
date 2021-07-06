@@ -15,12 +15,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             _applicationApiClient = applicationApiClient;
         }
 
-        public async Task<ClosedApplicationsViewModel> GetClosedApplicationsViewModel(string userId, string sortOrder, string sortColumn)
+        public async Task<ClosedApplicationsViewModel> GetClosedApplicationsViewModel(string userId, string searchTerm, string sortColumn, string sortOrder)
         {
-            var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
-            var applications = await _applicationApiClient.GetClosedApplications(userId,sortOrder, sortColumn);
+            var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId, searchTerm);
+            var applications = await _applicationApiClient.GetClosedApplications(userId, searchTerm, sortColumn, sortOrder);
 
-            var viewModel = new ClosedApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications);
+            var viewModel = new ClosedApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications)
+            {
+                SearchTerm = searchTerm,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder
+            };
+
             AddApplicationsToViewModel(viewModel, applications);
             return viewModel;
         }

@@ -19,6 +19,7 @@
         public int ClarificationApplications { get; }
         public int ClosedApplications { get; }
 
+        public string SearchTerm { get; set; }
         public string SortColumn { get; set; }
         public string SortOrder { get; set; }
     }

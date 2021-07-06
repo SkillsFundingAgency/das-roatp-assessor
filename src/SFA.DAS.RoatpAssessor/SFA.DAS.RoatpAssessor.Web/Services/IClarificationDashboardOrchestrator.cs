@@ -5,6 +5,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 {
     public interface IClarificationDashboardOrchestrator
     {
-        Task<InClarificationApplicationsViewModel> GetInClarificationApplicationsViewModel(string userId,string sortOrder, string sortColumn);
+        Task<InClarificationApplicationsViewModel> GetInClarificationApplicationsViewModel(string userId, string searchTerm, string sortColumn, string sortOrder);
     }
 }

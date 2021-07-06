@@ -50,6 +50,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
 
             var values = new
             {
+                SearchTerm = GetSearchTermFromQueryString(),
                 SortColumn = ColumnName,
                 SortOrder = isSortColumn ? sortOrder.Reverse().ToString() : DefaultSortOrder.ToString()
             };
@@ -95,6 +96,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
             if (ViewContext.HttpContext.Request.Query.ContainsKey("SortColumn"))
             {
                 return ViewContext.HttpContext.Request.Query["SortColumn"];
+            }
+
+            return string.Empty;
+        }
+
+        private string GetSearchTermFromQueryString()
+        {
+            if (ViewContext.HttpContext.Request.Query.ContainsKey("SearchTerm"))
+            {
+                return ViewContext.HttpContext.Request.Query["SearchTerm"];
             }
 
             return string.Empty;
