@@ -32,22 +32,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         public async Task<ViewResult> NewApplications([StringTrim] string searchTerm, string sortColumn, string sortOrder)
         {
             ValidateSearchTerm(searchTerm);
-            ViewModels.NewApplicationsViewModel vm;
 
-            if (ModelState.IsValid)
-            {
-                var userId = HttpContext.User.UserId();
-                vm = await _assessorOrchestrator.GetNewApplicationsViewModel(userId, searchTerm, sortColumn, sortOrder);
-            }
-            else
-            {
-                vm = new ViewModels.NewApplicationsViewModel(0, 0, 0, 0, 0)
-                {
-                    SearchTerm = searchTerm,
-                    SortColumn = sortColumn,
-                    SortOrder = sortOrder
-                };
-            }
+            var userId = HttpContext.User.UserId();
+            var vm = await _assessorOrchestrator.GetNewApplicationsViewModel(userId, ModelState.IsValid ? searchTerm : null, sortColumn, sortOrder);
 
             return View(vm);
         }
@@ -67,22 +54,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         public async Task<ViewResult> InProgressApplications([StringTrim] string searchTerm, string sortColumn, string sortOrder)
         {
             ValidateSearchTerm(searchTerm);
-            ViewModels.InProgressApplicationsViewModel vm;
 
-            if (ModelState.IsValid)
-            {
-                var userId = HttpContext.User.UserId();
-                vm = await _assessorOrchestrator.GetInProgressApplicationsViewModel(userId, searchTerm, sortColumn, sortOrder);
-            }
-            else
-            {
-                vm = new ViewModels.InProgressApplicationsViewModel(HttpContext.User.UserId(), 0, 0, 0, 0, 0)
-                {
-                    SearchTerm = searchTerm,
-                    SortColumn = sortColumn,
-                    SortOrder = sortOrder
-                };
-            }
+            var userId = HttpContext.User.UserId();
+            var vm = await _assessorOrchestrator.GetInProgressApplicationsViewModel(userId, ModelState.IsValid ? searchTerm : null, sortColumn, sortOrder);
 
             return View(vm);
         }
@@ -91,22 +65,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         public async Task<ViewResult> InModerationApplications([StringTrim] string searchTerm, string sortColumn, string sortOrder)
         {
             ValidateSearchTerm(searchTerm);
-            ViewModels.InModerationApplicationsViewModel vm;
 
-            if (ModelState.IsValid)
-            {
-                var userId = HttpContext.User.UserId();
-                vm = await _moderatorOrchestrator.GetInModerationApplicationsViewModel(userId, searchTerm, sortColumn, sortOrder);
-            }
-            else
-            {
-                vm = new ViewModels.InModerationApplicationsViewModel(HttpContext.User.UserId(), 0, 0, 0, 0, 0)
-                {
-                    SearchTerm = searchTerm,
-                    SortColumn = sortColumn,
-                    SortOrder = sortOrder
-                };
-            }
+            var userId = HttpContext.User.UserId();
+            var vm = await _moderatorOrchestrator.GetInModerationApplicationsViewModel(userId, ModelState.IsValid ? searchTerm : null, sortColumn, sortOrder);
 
             return View(vm);
         }
@@ -115,22 +76,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         public async Task<ViewResult> InClarificationApplications([StringTrim] string searchTerm, string sortColumn, string sortOrder)
         {
             ValidateSearchTerm(searchTerm);
-            ViewModels.InClarificationApplicationsViewModel vm;
 
-            if (ModelState.IsValid)
-            {
-                var userId = HttpContext.User.UserId();
-                vm = await _clarificationOrchestrator.GetInClarificationApplicationsViewModel(userId, searchTerm, sortColumn, sortOrder);
-            }
-            else
-            {
-                vm = new ViewModels.InClarificationApplicationsViewModel(HttpContext.User.UserId(), 0, 0, 0, 0, 0)
-                {
-                    SearchTerm = searchTerm,
-                    SortColumn = sortColumn,
-                    SortOrder = sortOrder
-                };
-            }
+            var userId = HttpContext.User.UserId();
+            var vm = await _clarificationOrchestrator.GetInClarificationApplicationsViewModel(userId, ModelState.IsValid ? searchTerm : null, sortColumn, sortOrder);
 
             return View(vm);
         }
@@ -139,22 +87,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         public async Task<ViewResult> ClosedApplications([StringTrim] string searchTerm, string sortColumn, string sortOrder)
         {
             ValidateSearchTerm(searchTerm);
-            ViewModels.ClosedApplicationsViewModel vm;
 
-            if (ModelState.IsValid)
-            {
-                var userId = HttpContext.User.UserId();
-                vm = await _outcomeOrchestrator.GetClosedApplicationsViewModel(userId, searchTerm, sortColumn, sortOrder);
-            }
-            else
-            {
-                vm = new ViewModels.ClosedApplicationsViewModel(HttpContext.User.UserId(), 0, 0, 0, 0, 0)
-                {
-                    SearchTerm = searchTerm,
-                    SortColumn = sortColumn,
-                    SortOrder = sortOrder
-                };
-            }
+            var userId = HttpContext.User.UserId();
+            var vm = await _outcomeOrchestrator.GetClosedApplicationsViewModel(userId, ModelState.IsValid ? searchTerm : null, sortColumn, sortOrder);
 
             return View(vm);
         }
