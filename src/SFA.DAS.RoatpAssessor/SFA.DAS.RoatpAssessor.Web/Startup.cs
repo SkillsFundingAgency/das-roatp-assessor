@@ -22,6 +22,7 @@ using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Settings;
+using SFA.DAS.RoatpAssessor.Web.StartupExtensions;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 
 namespace SFA.DAS.RoatpAssessor.Web
@@ -80,13 +81,8 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddSession(opt => { opt.IdleTimeout = TimeSpan.FromHours(1); });
 
-            if (!_env.IsDevelopment())
-            {
-                services.AddDistributedRedisCache(options =>
-                {
-                    options.Configuration = ApplicationConfiguration.SessionRedisConnectionString;
-                });
-            }
+            services.AddCache(ApplicationConfiguration, _env);
+            services.AddDataProtection(ApplicationConfiguration, _env);
 
             AddAntiforgery(services);
 
