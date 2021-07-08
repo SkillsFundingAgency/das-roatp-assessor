@@ -25,10 +25,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         }
 
         [HttpGet("/Dashboard/New")]
-        public async Task<ViewResult> NewApplications()
+        public async Task<ViewResult> NewApplications(string sortOrder, string sortColumn)
         {
             var userId = HttpContext.User.UserId();
-            var vm = await _assessorOrchestrator.GetNewApplicationsViewModel(userId);
+            var vm = await _assessorOrchestrator.GetNewApplicationsViewModel(userId, sortOrder, sortColumn);
             return View(vm);
         }
 
@@ -44,34 +44,34 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         }
 
         [HttpGet("/Dashboard/InProgress")]
-        public async Task<ViewResult> InProgressApplications()
+        public async Task<ViewResult> InProgressApplications(string sortOrder, string sortColumn)
         {
             var userId = HttpContext.User.UserId();
-            var vm = await _assessorOrchestrator.GetInProgressApplicationsViewModel(userId);
+            var vm = await _assessorOrchestrator.GetInProgressApplicationsViewModel(userId, sortOrder, sortColumn);
             return View(vm);
         }
 
         [HttpGet("/Dashboard/InModeration")]
-        public async Task<ViewResult> InModerationApplications()
+        public async Task<ViewResult> InModerationApplications(string sortOrder, string sortColumn)
         {
             var userId = HttpContext.User.UserId();
-            var vm = await _moderatorOrchestrator.GetInModerationApplicationsViewModel(userId);
+            var vm = await _moderatorOrchestrator.GetInModerationApplicationsViewModel(userId, sortOrder, sortColumn);
             return View(vm);
         }
 
         [HttpGet("/Dashboard/InClarification")]
-        public async Task<ViewResult> InClarificationApplications()
+        public async Task<ViewResult> InClarificationApplications(string sortOrder, string sortColumn)
         {
             var userId = HttpContext.User.UserId();
-            var vm = await _clarificationOrchestrator.GetInClarificationApplicationsViewModel(userId);
+            var vm = await _clarificationOrchestrator.GetInClarificationApplicationsViewModel(userId, sortOrder, sortColumn);
             return View(vm);
         }
 
         [HttpGet("/Dashboard/Outcome")]
-        public async Task<ViewResult> ClosedApplications()
+        public async Task<ViewResult> ClosedApplications(string sortOrder, string sortColumn)
         {
             var userId = HttpContext.User.UserId();
-            var vm = await _outcomeOrchestrator.GetClosedApplicationsViewModel(userId);
+            var vm = await _outcomeOrchestrator.GetClosedApplicationsViewModel(userId, sortOrder, sortColumn);
             return View(vm);
         }
     }

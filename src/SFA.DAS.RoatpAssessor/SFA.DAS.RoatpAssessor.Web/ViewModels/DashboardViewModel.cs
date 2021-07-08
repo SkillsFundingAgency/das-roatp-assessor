@@ -18,5 +18,8 @@
         public int ModerationApplications { get; }
         public int ClarificationApplications { get; }
         public int ClosedApplications { get; }
+
+        public string SortColumn { get; set; }
+        public string SortOrder { get; set; }
     }
 }
