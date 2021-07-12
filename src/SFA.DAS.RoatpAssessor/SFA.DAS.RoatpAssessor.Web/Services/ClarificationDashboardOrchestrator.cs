@@ -15,10 +15,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             _applicationApiClient = applicationApiClient;
         }
 
-        public async Task<InClarificationApplicationsViewModel> GetInClarificationApplicationsViewModel(string userId)
+        public async Task<InClarificationApplicationsViewModel> GetInClarificationApplicationsViewModel(string userId, string sortOrder, string sortColumn)
         {
             var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
-            var applications = await _applicationApiClient.GetInClarificationApplications(userId);
+            var applications = await _applicationApiClient.GetInClarificationApplications(userId, sortOrder, sortColumn);
 
             var viewModel = new InClarificationApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications);
             AddApplicationsToViewModel(viewModel, applications);

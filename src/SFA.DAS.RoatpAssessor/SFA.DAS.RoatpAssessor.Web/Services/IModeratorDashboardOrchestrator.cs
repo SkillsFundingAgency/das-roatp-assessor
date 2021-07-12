@@ -5,6 +5,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 {
     public interface IModeratorDashboardOrchestrator
     {
-        Task<InModerationApplicationsViewModel> GetInModerationApplicationsViewModel(string userId);
+        Task<InModerationApplicationsViewModel> GetInModerationApplicationsViewModel(string userId, string sortOrder, string sortColumn);
     }
 }

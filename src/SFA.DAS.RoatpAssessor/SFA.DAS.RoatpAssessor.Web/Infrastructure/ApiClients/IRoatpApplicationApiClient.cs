@@ -14,11 +14,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
     {
         Task<ApplicationCounts> GetApplicationCounts(string userId);
 
-        Task<List<AssessorApplicationSummary>> GetNewApplications(string userId);
-        Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId);
-        Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId);
-        Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId);
-        Task<List<ClosedApplicationSummary>> GetClosedApplications(string userId);
+        Task<List<AssessorApplicationSummary>> GetNewApplications(string userId, string sortOrder, string sortColumn);
+        Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId, string sortOrder, string sortColumn);
+        Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId, string sortOrder, string sortColumn);
+        Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId, string sortOrder, string sortColumn);
+        Task<List<ClosedApplicationSummary>> GetClosedApplications(string userId, string sortOrder, string sortColumn);
 
         Task<Apply> GetApplication(Guid applicationId);
 
