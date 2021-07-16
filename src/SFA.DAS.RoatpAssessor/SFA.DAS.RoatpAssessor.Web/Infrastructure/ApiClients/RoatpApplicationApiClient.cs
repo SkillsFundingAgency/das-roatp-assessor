@@ -21,34 +21,34 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenService.GetToken(_httpClient.BaseAddress));
         }
 
-        public async Task<ApplicationCounts> GetApplicationCounts(string userId)
+        public async Task<ApplicationCounts> GetApplicationCounts(string userId, string searchTerm)
         {
-            return await Get<ApplicationCounts>($"Assessor/Applications/{userId}");
+            return await Get<ApplicationCounts>($"Assessor/Applications/{userId}?searchTerm={searchTerm}");
         }
 
-        public async Task<List<AssessorApplicationSummary>> GetNewApplications(string userId, string sortOrder, string sortColumn)
+        public async Task<List<AssessorApplicationSummary>> GetNewApplications(string userId, string searchTerm, string sortColumn, string sortOrder)
         {
-            return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/New?sortOrder={sortOrder}&sortColumn={sortColumn}");
+            return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/New?searchTerm={searchTerm}&sortColumn={sortColumn}&sortOrder={sortOrder}");
         }
 
-        public async Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId, string sortOrder, string sortColumn)
+        public async Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId, string searchTerm, string sortColumn, string sortOrder)
         {
-            return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/InProgress?sortOrder={sortOrder}&sortColumn={sortColumn}");
+            return await Get<List<AssessorApplicationSummary>>($"Assessor/Applications/{userId}/InProgress?searchTerm={searchTerm}&sortColumn={sortColumn}&sortOrder={sortOrder}");
         }
 
-        public async Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId, string sortOrder, string sortColumn)
+        public async Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId, string searchTerm, string sortColumn, string sortOrder)
         {
-            return await Get<List<ModerationApplicationSummary>>($"Assessor/Applications/{userId}/InModeration?sortOrder={sortOrder}&sortColumn={sortColumn}");
+            return await Get<List<ModerationApplicationSummary>>($"Assessor/Applications/{userId}/InModeration?searchTerm={searchTerm}&sortColumn={sortColumn}&sortOrder={sortOrder}");
         }
 
-        public async Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId, string sortOrder, string sortColumn)
+        public async Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId, string searchTerm, string sortColumn, string sortOrder)
         {
-            return await Get<List<ClarificationApplicationSummary>>($"Assessor/Applications/{userId}/InClarification?sortOrder={sortOrder}&sortColumn={sortColumn}");
+            return await Get<List<ClarificationApplicationSummary>>($"Assessor/Applications/{userId}/InClarification?searchTerm={searchTerm}&sortColumn={sortColumn}&sortOrder={sortOrder}");
         }
 
-        public async Task<List<ClosedApplicationSummary>> GetClosedApplications(string userId, string sortOrder, string sortColumn)
+        public async Task<List<ClosedApplicationSummary>> GetClosedApplications(string userId, string searchTerm, string sortColumn, string sortOrder)
         {
-            return await Get<List<ClosedApplicationSummary>>($"Assessor/Applications/{userId}/Closed?sortOrder={sortOrder}&sortColumn={sortColumn}");
+            return await Get<List<ClosedApplicationSummary>>($"Assessor/Applications/{userId}/Closed?searchTerm={searchTerm}&sortColumn={sortColumn}&sortOrder={sortOrder}");
         }
 
         public async Task<Apply> GetApplication(Guid applicationId)

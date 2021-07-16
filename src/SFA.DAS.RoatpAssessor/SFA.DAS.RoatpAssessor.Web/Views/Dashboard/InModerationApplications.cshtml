@@ -12,6 +12,7 @@
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
             <h1 class="govuk-heading-xl">
                 RoATP assessor applications
             </h1>
@@ -20,8 +21,11 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
+            <partial name="_DashboardSearch" />
+
             <div class="govuk-tabs">
-                <partial name="DashboardNavigation.cshtml" />
+                <partial name="_DashboardNavigation.cshtml" />
+
                 <div class="govuk-tabs__panel">
                     @if (Model.Applications != null && Model.Applications.Any())
                     {
@@ -34,10 +38,10 @@
                                     <th class="govuk-table__header" scope="col">Application reference number</th>
                                     <th class="govuk-table__header" scope="col">Provider route</th>
                                     <th class="govuk-table__header" scope="col">
-                                        <sortable-column column-name="SubmittedDate" column-label="Application submitted date" default="true" default-order="Descending"></sortable-column>
+                                        <sfa-roatp-sortable-column column-name="SubmittedDate" column-label="Application submitted date" default="true" default-order="Descending" />
                                     </th>
                                     <th class="govuk-table__header   das-no-wrap" scope="col">
-                                        <sortable-column column-name="ModeratorName" column-label="Moderator" default="true" default-order="Descending"></sortable-column>
+                                        <sfa-roatp-sortable-column column-name="ModeratorName" column-label="Moderator" default="true" default-order="Descending" />
                                     </th>
                                     <th class="govuk-table__header" scope="col">Status</th>
                                 </tr>

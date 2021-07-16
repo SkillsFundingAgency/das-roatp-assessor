@@ -5,6 +5,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 {
     public interface IOutcomeDashboardOrchestrator
     {
-        Task<ClosedApplicationsViewModel> GetClosedApplicationsViewModel(string userId, string sortOrder, string sortColumn);
+        Task<ClosedApplicationsViewModel> GetClosedApplicationsViewModel(string userId, string searchTerm, string sortColumn, string sortOrder);
     }
 }

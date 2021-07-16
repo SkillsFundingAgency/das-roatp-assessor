@@ -12,13 +12,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
     public interface IRoatpApplicationApiClient
     {
-        Task<ApplicationCounts> GetApplicationCounts(string userId);
+        Task<ApplicationCounts> GetApplicationCounts(string userId, string searchTerm);
 
-        Task<List<AssessorApplicationSummary>> GetNewApplications(string userId, string sortOrder, string sortColumn);
-        Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId, string sortOrder, string sortColumn);
-        Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId, string sortOrder, string sortColumn);
-        Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId, string sortOrder, string sortColumn);
-        Task<List<ClosedApplicationSummary>> GetClosedApplications(string userId, string sortOrder, string sortColumn);
+        Task<List<AssessorApplicationSummary>> GetNewApplications(string userId, string searchTerm, string sortColumn, string sortOrder);
+        Task<List<AssessorApplicationSummary>> GetInProgressApplications(string userId, string searchTerm, string sortColumn,string sortOrder);
+        Task<List<ModerationApplicationSummary>> GetInModerationApplications(string userId, string searchTerm, string sortColumn, string sortOrder);
+        Task<List<ClarificationApplicationSummary>> GetInClarificationApplications(string userId, string searchTerm, string sortColumn, string sortOrder);
+        Task<List<ClosedApplicationSummary>> GetClosedApplications(string userId, string searchTerm, string sortColumn, string sortOrder);
 
         Task<Apply> GetApplication(Guid applicationId);
 

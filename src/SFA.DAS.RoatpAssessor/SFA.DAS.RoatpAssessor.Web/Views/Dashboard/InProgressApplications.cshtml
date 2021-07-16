@@ -10,6 +10,7 @@
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            <partial name="~/Views/Shared/Partials/_ValidationSummary.cshtml" />
             <h1 class="govuk-heading-xl">
                 RoATP assessor applications
             </h1>
@@ -18,9 +19,10 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <div class="govuk-tabs">
+            <partial name="_DashboardSearch" />
 
-                <partial name="DashboardNavigation.cshtml" />
+            <div class="govuk-tabs">
+                <partial name="_DashboardNavigation.cshtml" />
 
                 <div class="govuk-tabs__panel">
                     @if (Model.Applications != null && Model.Applications.Any())
@@ -34,7 +36,7 @@
                                     <th class="govuk-table__header" scope="col">Application reference number</th>
                                     <th class="govuk-table__header" scope="col">Provider route</th>
                                     <th class="govuk-table__header" scope="col">
-                                        <sortable-column column-name="SubmittedDate" column-label="Application submitted date" default="true" default-order="Descending"></sortable-column>
+                                        <sfa-roatp-sortable-column column-name="SubmittedDate" column-label="Application submitted date" default="true" default-order="Descending" />
                                     </th>
                                     <th class="govuk-table__header das-no-wrap" scope="col">Assessor 1</th>
                                     <th class="govuk-table__header das-no-wrap" scope="col">Assessor 2</th>

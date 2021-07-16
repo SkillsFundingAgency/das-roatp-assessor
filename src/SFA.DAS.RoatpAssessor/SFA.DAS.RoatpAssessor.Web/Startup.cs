@@ -21,6 +21,7 @@ using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
+using SFA.DAS.RoatpAssessor.Web.ModelBinders;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Settings;
 using SFA.DAS.RoatpAssessor.Web.StartupExtensions;
@@ -73,6 +74,7 @@ namespace SFA.DAS.RoatpAssessor.Web
                 {
                     //options.Filters.Add<CheckSessionFilter>();
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                    options.ModelBinderProviders.Insert(0, new StringTrimmingModelBinderProvider());
                 })
                 // NOTE: Can we move this to 2.2 to match the version of .NET Core we're coding against?
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options =>
@@ -155,6 +157,9 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.AddTransient<IModeratorDashboardOrchestrator, ModeratorDashboardOrchestrator>();
             services.AddTransient<IClarificationDashboardOrchestrator, ClarificationDashboardOrchestrator>();
             services.AddTransient<IOutcomeDashboardOrchestrator, OutcomeDashboardOrchestrator>();
+
+            services.AddTransient<ISearchTermValidator, SearchTermValidator>();
+
             services.AddTransient<IRoatpApplicationTokenService, RoatpApplicationTokenService>();
             services.AddTransient<IClarificationOutcomeOrchestrator, ClarificationOutcomeOrchestrator>();
             services.AddTransient<IRoatpAssessorApiClient>(x => new RoatpAssessorApiClient(

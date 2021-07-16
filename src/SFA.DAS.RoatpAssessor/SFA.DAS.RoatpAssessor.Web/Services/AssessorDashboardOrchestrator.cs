@@ -19,12 +19,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             _assessorApiClient = assessorApiClient;
         }
 
-        public async Task<NewApplicationsViewModel> GetNewApplicationsViewModel(string userId, string sortOrder, string sortColumn)
+        public async Task<NewApplicationsViewModel> GetNewApplicationsViewModel(string userId, string searchTerm, string sortColumn, string sortOrder)
         {
-            var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
-            var applications = await _applicationApiClient.GetNewApplications(userId,sortOrder, sortColumn);
+            var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId, searchTerm);
+            var applications = await _applicationApiClient.GetNewApplications(userId, searchTerm, sortColumn, sortOrder);
 
-            var viewModel = new NewApplicationsViewModel(applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications);
+            var viewModel = new NewApplicationsViewModel(applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications)
+            {
+                SearchTerm = searchTerm,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder
+            };
+
             AddApplicationsToViewModel(viewModel, applications);
             return viewModel;
         }
@@ -34,12 +40,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
             return await _assessorApiClient.AssignAssessor(applicationId, new AssignAssessorCommand(assessorNumber, assessorUserId, assessorName));
         }
 
-        public async Task<InProgressApplicationsViewModel> GetInProgressApplicationsViewModel(string userId, string sortOrder, string sortColumn)
+        public async Task<InProgressApplicationsViewModel> GetInProgressApplicationsViewModel(string userId, string searchTerm, string sortColumn, string sortOrder)
         {
-            var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId);
-            var applications = await _applicationApiClient.GetInProgressApplications(userId, sortOrder, sortColumn);
+            var applicationSummary = await _applicationApiClient.GetApplicationCounts(userId, searchTerm);
+            var applications = await _applicationApiClient.GetInProgressApplications(userId, searchTerm, sortColumn, sortOrder);
 
-            var viewModel = new InProgressApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications);
+            var viewModel = new InProgressApplicationsViewModel(userId, applicationSummary.NewApplications, applicationSummary.InProgressApplications, applicationSummary.ModerationApplications, applicationSummary.ClarificationApplications, applicationSummary.ClosedApplications)
+            {
+                SearchTerm = searchTerm,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder
+            };
+
             AddApplicationsToViewModel(viewModel, applications);
             return viewModel;
         }

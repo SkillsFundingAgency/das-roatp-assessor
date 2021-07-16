@@ -30,8 +30,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
             _assessorApiClient = new Mock<IRoatpAssessorApiClient>();
             _orchestrator = new Web.Services.AssessorDashboardOrchestrator(_applicationApiClient.Object, _assessorApiClient.Object);
 
-            _applicationApiClient.Setup(x => x.GetNewApplications(_user.UserId(),null,null)).ReturnsAsync(new List<AssessorApplicationSummary>());
-            _applicationApiClient.Setup(x => x.GetApplicationCounts(_user.UserId())).ReturnsAsync(new ApplicationCounts());
+            _applicationApiClient.Setup(x => x.GetNewApplications(_user.UserId() ,null, null, null)).ReturnsAsync(new List<AssessorApplicationSummary>());
+            _applicationApiClient.Setup(x => x.GetApplicationCounts(_user.UserId(), null)).ReturnsAsync(new ApplicationCounts());
         }
 
         [Test]
@@ -40,9 +40,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
             var userId = _user.UserId();
             var summary = new ApplicationCounts { NewApplications = 34, ModerationApplications = 43, InProgressApplications = 2, ClarificationApplications = 6, ClosedApplications = 1 };
 
-            _applicationApiClient.Setup(x => x.GetApplicationCounts(userId)).ReturnsAsync(summary);
+            _applicationApiClient.Setup(x => x.GetApplicationCounts(userId, null)).ReturnsAsync(summary);
 
-            var response = await _orchestrator.GetNewApplicationsViewModel(userId,null,null);
+            var response = await _orchestrator.GetNewApplicationsViewModel(userId, null, null, null);
 
             Assert.AreEqual(summary.NewApplications, response.NewApplications);
             Assert.AreEqual(summary.InProgressApplications, response.InProgressApplications);
@@ -61,9 +61,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
                 new AssessorApplicationSummary { ApplicationReferenceNumber = "fghhgfj", ProviderRoute = "Supporting", OrganisationName = "Org 2", Ukprn = "3465904568", ApplicationId = Guid.NewGuid() }
             };
 
-            _applicationApiClient.Setup(x => x.GetNewApplications(userId,null,null)).ReturnsAsync(applications);
+            _applicationApiClient.Setup(x => x.GetNewApplications(userId, null, null, null)).ReturnsAsync(applications);
 
-            var response = await _orchestrator.GetNewApplicationsViewModel(userId,null,null);
+            var response = await _orchestrator.GetNewApplicationsViewModel(userId, null, null, null);
 
             Assert.AreEqual(applications.Count, response.Applications.Count);
             AssertApplicationsMatch(applications.First(), response.Applications.First());
