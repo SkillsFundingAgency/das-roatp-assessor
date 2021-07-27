@@ -422,4 +422,21 @@
     }
 }
 
+/* Inline button links */
+.das-inline-button-link {
+    display: inline-block;
+    padding: 0 0 7px 0;
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.1875;
+    margin-bottom: 22px;
+}
 
+@media (min-width: 40.0625em) {
+    .das-inline-button-link {
+        padding: 10px 0 7px 0;
+        font-size: 19px;
+        font-size: 1.1875rem;
+        line-height: 1;
+    }
+}
