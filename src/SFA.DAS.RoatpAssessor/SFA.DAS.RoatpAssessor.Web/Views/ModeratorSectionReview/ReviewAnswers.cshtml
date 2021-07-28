@@ -180,11 +180,11 @@
                     <button class="govuk-button govuk-!-margin-right-3" type="submit">Save and continue</button>
                     @if (!string.IsNullOrEmpty(Model.NextPageId))
                     {
-                        <a class="govuk-link govuk-link--no-visited-state das-inline-button-link" asp-action="ReviewPageAnswers" asp-controller="ModeratorSectionReview" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@Model.SequenceNumber" asp-route-sectionNumber="@Model.SectionNumber" asp-route-pageId="@Model.NextPageId">Skip this question</a>
+                        <a id="skip" class="govuk-link govuk-link--no-visited-state das-inline-button-link" asp-action="ReviewPageAnswers" asp-controller="ModeratorSectionReview" asp-route-applicationId="@Model.ApplicationId" asp-route-sequenceNumber="@Model.SequenceNumber" asp-route-sectionNumber="@Model.SectionNumber" asp-route-pageId="@Model.NextPageId">Skip this question</a>
                     }
                     else
                     {
-                        <a class="govuk-link govuk-link--no-visited-state das-inline-button-link" asp-action="ViewApplication" asp-controller="ModeratorOverview">Skip this question</a>
+                        <a id="skip" class="govuk-link govuk-link--no-visited-state das-inline-button-link" asp-action="ViewApplication" asp-controller="ModeratorOverview">Skip this question</a>
                     }
                 </form>
             </div>
