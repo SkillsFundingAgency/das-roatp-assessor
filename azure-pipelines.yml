@@ -77,7 +77,7 @@ steps:
     pollingTimeoutSec: '300'
   enabled: false
 
-- template: azure-pipelines-templates/dependency-check.yml@das-platform-building-blocks  
+- template: azure-pipelines-templates/build/step/dependency-check.yml@das-platform-building-blocks  
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish WebApp'
