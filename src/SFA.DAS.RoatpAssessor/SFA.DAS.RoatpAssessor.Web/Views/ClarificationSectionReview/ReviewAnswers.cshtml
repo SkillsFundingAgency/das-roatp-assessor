@@ -165,7 +165,10 @@
         </div>
     }
 
-    <partial name="~/Views/Shared/Pages/_ModerationOutcome.cshtml" for="@Model.ModerationOutcome" />
+    @if (Model.ModerationOutcome != null)
+    {
+        <partial name="~/Views/Shared/Pages/_ModerationOutcome.cshtml" for="@Model.ModerationOutcome" />
+    }
 
     @if (Model.ApplicationId != Guid.Empty)
     {

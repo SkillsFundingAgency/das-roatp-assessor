@@ -161,7 +161,10 @@
         </div>
     }
 
-    <partial name="~/Views/Shared/Pages/_BlindAssessmentOutcome.cshtml" for="@Model.BlindAssessmentOutcome" />
+    @if (Model.BlindAssessmentOutcome != null)
+    {
+        <partial name="~/Views/Shared/Pages/_BlindAssessmentOutcome.cshtml" for="@Model.BlindAssessmentOutcome" />
+    }
 
     @if (Model.ApplicationId != Guid.Empty)
     {
