@@ -29,6 +29,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Helpers
                 {
                     return "Select the outcome for who is the individual accountable for submitting ILR data for your organisation";
                 }
+                case RoatpWorkflowPageIds.ManagementHierarchy_Financial:
+                    {
+                        return "Select the outcome for turnover and full time equivalent (FTE) employees";
+                    }
                 default:
                     {
                         return $"Select the outcome for {defaultHeadingText?.ToLower()}";
