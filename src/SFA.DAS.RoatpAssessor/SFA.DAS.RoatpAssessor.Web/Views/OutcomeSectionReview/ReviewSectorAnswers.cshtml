@@ -24,13 +24,16 @@
     </div>
     <partial name="~/Views/Shared/Partials/_SectorAnswers.cshtml" for="@Model.SectorDetails" />
 
-    <partial name="~/Views/Shared/Pages/_BlindAssessmentOutcome.cshtml" for="@Model.BlindAssessmentOutcome" />
+    @if (Model.BlindAssessmentOutcome != null)
+    {
+        <partial name="~/Views/Shared/Pages/_BlindAssessmentOutcome.cshtml" for="@Model.BlindAssessmentOutcome" />
+    }
 
     @if (Model.ClarificationRequired && !string.IsNullOrWhiteSpace(Model.ClarificationOutcome?.ClarifierUserName) && !string.IsNullOrEmpty(Model.ClarificationOutcome?.ClarificationResponse))
     {
         <partial name="~/Views/Shared/Pages/_ClarificationOutcome.cshtml" for="@Model.ClarificationOutcome" />
     }
-    else
+    else if (Model.ModerationOutcome != null)
     {
         <partial name="~/Views/Shared/Pages/_ModerationOutcome.cshtml" for="@Model.ModerationOutcome" />
     }
