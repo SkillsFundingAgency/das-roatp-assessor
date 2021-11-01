@@ -8,8 +8,6 @@ namespace SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply
         public Guid ApplicationId { get; set; }
         public Guid OrganisationId { get; set; }
         public string ApplicationStatus { get; set; }
-        public string GatewayReviewStatus { get; set; }
-        public string FinancialReviewStatus { get; set; }
         public string ModerationStatus { get; set; }
 
         public string Assessor1UserId { get; set; }
