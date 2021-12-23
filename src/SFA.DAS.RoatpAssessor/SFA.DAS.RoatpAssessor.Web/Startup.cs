@@ -19,6 +19,7 @@ using Polly.Extensions.Http;
 using SFA.DAS.AdminService.Common;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.ModelBinders;
@@ -223,6 +224,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             app.UseRequestLocalization();
             app.UseStatusCodePagesWithReExecute("/ErrorPage/{0}");
             app.UseSecurityHeaders();
+            app.UseMiddleware<SecurityHeadersMiddleware>();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseHealthChecks("/health");
