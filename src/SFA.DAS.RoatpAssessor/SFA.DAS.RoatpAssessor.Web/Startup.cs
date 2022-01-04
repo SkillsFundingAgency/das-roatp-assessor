@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Polly;
 using Polly.Extensions.Http;
 using SFA.DAS.AdminService.Common;
@@ -224,7 +225,14 @@ namespace SFA.DAS.RoatpAssessor.Web
             app.UseRequestLocalization();
             app.UseStatusCodePagesWithReExecute("/ErrorPage/{0}");
             app.UseSecurityHeaders();
-            app.UseMiddleware<SecurityHeadersMiddleware>();
+            app.Use(async (context, next) =>
+            {
+                if (!context.Response.Headers.ContainsKey("X-Permitted-Cross-Domain-Policies"))
+                {
+                    context.Response.Headers.Add("X-Permitted-Cross-Domain-Policies", new StringValues("none"));
+                }
+                await next();
+            });
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseHealthChecks("/health");
