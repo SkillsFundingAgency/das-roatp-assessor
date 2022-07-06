@@ -103,6 +103,7 @@
                 }
             },
             "dependsOn": [
+                "[variables('resourceGroupName')]"
             ]
         },
         {
@@ -217,11 +218,7 @@
                         "value": "[parameters('appServiceAllowedIPs')]"
                     }
                 }
-            },
-            "dependsOn": [
-                "[concat('app-insights-', parameters('utcValue'))]",
-                "[concat('app-service-certificate-', parameters('utcValue'))]"
-            ]
+            }
         }
     ],
     "outputs": {
