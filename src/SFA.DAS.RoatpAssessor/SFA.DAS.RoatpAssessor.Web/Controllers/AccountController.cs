@@ -3,18 +3,24 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.RoatpAssessor.Web.Settings;
+using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(ILogger<AccountController> logger)
+        public AccountController(ILogger<AccountController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -78,6 +84,12 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             }
 
             return View("AccessDenied");
+        }
+
+        [HttpGet]
+        public IActionResult ChangeSignInDetails()
+        {
+            return View(new ChangeSignInDetailsViewModel(_configuration["EnvironmentName"]));
         }
     }
 }

@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Castle.Core.Configuration;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
+using SFA.DAS.RoatpAssessor.Web.ViewModels;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Account
 {
@@ -13,11 +17,13 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Account
     public class AccountControllerTests
     {
         private AccountController _controller;
+        private Mock<IConfiguration> _mockConfiguration;
 
         [SetUp]
         public void Setup()
         {
-            _controller = new AccountController(Mock.Of<ILogger<AccountController>>())
+            _mockConfiguration = new Mock<IConfiguration>();
+;           _controller = new AccountController(Mock.Of<ILogger<AccountController>>(), _mockConfiguration.Object)
             {
                 ControllerContext = MockedControllerContext.Setup(),
                 Url = Mock.Of<IUrlHelper>()
@@ -70,6 +76,20 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Account
 
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual("AccessDenied", result.ViewName);
+        }
+
+        [Test]
+        public void ChangeSignInDetails_shows_correct_view()
+        {
+            //arrange
+            _mockConfiguration.Setup(x => x["EnvironmentName"]).Returns("test");
+
+            //sut
+            var actual = _controller.ChangeSignInDetails() as ViewResult;
+
+            Assert.That(actual, Is.Not.Null);
+            var actualModel = actual?.Model as ChangeSignInDetailsViewModel;
+            Assert.AreEqual("https://home.integration.account.gov.uk/settings", actualModel?.SettingsLink);
         }
     }
 }
