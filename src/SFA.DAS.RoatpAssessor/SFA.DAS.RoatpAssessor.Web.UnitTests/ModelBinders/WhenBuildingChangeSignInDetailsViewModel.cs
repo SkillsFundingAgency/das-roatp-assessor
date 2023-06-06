@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.ModelBinders

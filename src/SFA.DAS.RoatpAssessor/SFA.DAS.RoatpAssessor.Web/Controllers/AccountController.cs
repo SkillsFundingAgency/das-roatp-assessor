@@ -7,6 +7,7 @@ using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
+using SFA.DAS.RoatpAssessor.Web.Settings;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
@@ -14,11 +15,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
     {
         private readonly ILogger<AccountController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IWebConfiguration _webConfiguration;
 
-        public AccountController(ILogger<AccountController> logger, IConfiguration configuration)
+        public AccountController(
+            ILogger<AccountController> logger,
+            IConfiguration configuration,
+            IWebConfiguration webConfiguration)
         {
             _logger = logger;
             _configuration = configuration;
+            _webConfiguration = webConfiguration;
         }
 
         [HttpGet]
@@ -87,7 +93,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
         [HttpGet]
         public IActionResult ChangeSignInDetails()
         {
-            return View(new ChangeSignInDetailsViewModel(_configuration["EnvironmentName"]));
+            // redirect the user to dashboard if UseGovSignIn is set false.
+            if (!_webConfiguration.UseGovSignIn) return RedirectToAction("Dashboard", "Home");
+
+            return View(new ChangeSignInDetailsViewModel(_configuration["ResourceEnvironmentName"]));
         }
     }
 }
