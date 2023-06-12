@@ -167,7 +167,7 @@
                               "value": "[parameters('environmentName')]"
                             },
                             {
-                              "name": "resourceEnvironmentName",
+                              "name": "ResourceEnvironmentName",
                               "value": "[parameters('resourceEnvironmentName')]"
                             },
                             {
