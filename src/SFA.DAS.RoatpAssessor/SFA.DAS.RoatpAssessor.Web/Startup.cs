@@ -199,6 +199,8 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.AddTransient<IClarificationPageValidator, ClarificationPageValidator>();
             services.AddTransient<IClarificationOutcomeValidator, ClarificationOutcomeValidator>();
 
+            services.AddTransient<IAddUserDetailsValidator, AddUserDetailsValidator>();
+
             services.AddTransient<IOutcomeSectionReviewOrchestrator, OutcomeSectionReviewOrchestrator>();
 
             DependencyInjection.ConfigureDependencyInjection(services);
