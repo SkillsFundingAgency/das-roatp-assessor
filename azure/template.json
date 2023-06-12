@@ -157,44 +157,48 @@
                     },
                     "appServiceAppSettings": {
                         "value": {
-                            "array": [
-                                {
-                                    "name": "ConfigurationStorageConnectionString",
-                                    "value": "[parameters('configurationStorageConnectionString')]"
-                                },
-                                {
-                                    "name": "EnvironmentName",
-                                    "value": "[parameters('environmentName')]"
-                                },
-                                {
-                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference(concat('app-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
-                                },
-                                {
-                                    "name": "ASPNETCORE_ENVIRONMENT",
-                                    "value": "[toUpper(parameters('environmentName'))]"
-                                },
-                                {
-                                    "name": "ConfigNames",
-                                    "value": "[parameters('configNames')]"
-                                },
-                                {
-                                    "name": "Version",
-                                    "value": "[parameters('version')]"
-                                },
-                                {
-                                    "name": "WEBSITE_SWAP_WARMUP_PING_PATH",
-                                    "value": "/Ping"
-                                },
-                                {
-                                    "name": "WEBSITE_SWAP_WARMUP_PING_STATUSES",
-                                    "value": "200"
-                                },
-                                {
-                                    "name": "cdn:url",
-                                    "value": "[parameters('cdnUrl')]"
-                                }
-                            ]
+                          "array": [
+                            {
+                              "name": "ConfigurationStorageConnectionString",
+                              "value": "[parameters('configurationStorageConnectionString')]"
+                            },
+                            {
+                              "name": "EnvironmentName",
+                              "value": "[parameters('environmentName')]"
+                            },
+                            {
+                              "name": "resourceEnvironmentName",
+                              "value": "[parameters('resourceEnvironmentName')]"
+                            },
+                            {
+                              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                              "value": "[reference(concat('app-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
+                            },
+                            {
+                              "name": "ASPNETCORE_ENVIRONMENT",
+                              "value": "[toUpper(parameters('environmentName'))]"
+                            },
+                            {
+                              "name": "ConfigNames",
+                              "value": "[parameters('configNames')]"
+                            },
+                            {
+                              "name": "Version",
+                              "value": "[parameters('version')]"
+                            },
+                            {
+                              "name": "WEBSITE_SWAP_WARMUP_PING_PATH",
+                              "value": "/Ping"
+                            },
+                            {
+                              "name": "WEBSITE_SWAP_WARMUP_PING_STATUSES",
+                              "value": "200"
+                            },
+                            {
+                              "name": "cdn:url",
+                              "value": "[parameters('cdnUrl')]"
+                            }
+                          ]
                         }
                     },
                     "appServiceConnectionStrings": {
