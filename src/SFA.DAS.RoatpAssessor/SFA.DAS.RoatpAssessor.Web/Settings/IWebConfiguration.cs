@@ -15,5 +15,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Settings
         ManagedIdentityApiAuthentication RoatpApplicationApiAuthentication { get; set; }
 
         string EsfaAdminServicesBaseUrl { get; set; }
+        
+        /// <summary>
+        /// Gets or Sets UseGovSignIn Property.
+        /// </summary>
+        bool UseGovSignIn { get; set; }
     }
 }

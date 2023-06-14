@@ -6,6 +6,9 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
+using SFA.DAS.RoatpAssessor.Web.Settings;
+using SFA.DAS.RoatpAssessor.Web.ViewModels;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Account
 {
@@ -13,11 +16,15 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Account
     public class AccountControllerTests
     {
         private AccountController _controller;
+        private Mock<IConfiguration> _mockConfiguration;
+        private Mock<IWebConfiguration> _mockWebConfiguration;
 
         [SetUp]
         public void Setup()
         {
-            _controller = new AccountController(Mock.Of<ILogger<AccountController>>())
+            _mockConfiguration = new Mock<IConfiguration>();
+            _mockWebConfiguration = new Mock<IWebConfiguration>();
+;           _controller = new AccountController(Mock.Of<ILogger<AccountController>>(), _mockConfiguration.Object, _mockWebConfiguration.Object)
             {
                 ControllerContext = MockedControllerContext.Setup(),
                 Url = Mock.Of<IUrlHelper>()
@@ -70,6 +77,36 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Account
 
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual("AccessDenied", result.ViewName);
+        }
+
+        [Test]
+        public void ChangeSignInDetails_Shows_Correct_View_When_UseGovSignIn_True()
+        {
+            //arrange
+            _mockConfiguration.Setup(x => x["ResourceEnvironmentName"]).Returns("test");
+            _mockWebConfiguration.Setup(config => config.UseGovSignIn).Returns(true);
+
+            //sut
+            var actual = _controller.ChangeSignInDetails() as ViewResult;
+
+            Assert.That(actual, Is.Not.Null);
+            var actualModel = actual?.Model as ChangeSignInDetailsViewModel;
+            Assert.AreEqual("https://home.integration.account.gov.uk/settings", actualModel?.SettingsLink);
+        }
+
+        [Test]
+        public void ChangeSignInDetails_Redirects_to_Home_When_UseGovSignIn_False()
+        {
+            //arrange
+            _mockWebConfiguration.Setup(config => config.UseGovSignIn).Returns(false);
+
+            //sut
+            var actual = _controller.ChangeSignInDetails() as RedirectToActionResult;
+
+            //assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.AreEqual("Home", actual.ControllerName);
+            Assert.AreEqual("Dashboard", actual.ActionName);
         }
     }
 }
