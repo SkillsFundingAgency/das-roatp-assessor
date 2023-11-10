@@ -3,28 +3,18 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System.Linq;
 using System.Security.Claims;
-using Microsoft.Extensions.Configuration;
-using SFA.DAS.RoatpAssessor.Web.Settings;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
-        private readonly IConfiguration _configuration;
-        private readonly IWebConfiguration _webConfiguration;
 
-        public AccountController(
-            ILogger<AccountController> logger,
-            IConfiguration configuration,
-            IWebConfiguration webConfiguration)
+        public AccountController(ILogger<AccountController> logger)
         {
             _logger = logger;
-            _configuration = configuration;
-            _webConfiguration = webConfiguration;
         }
 
         [HttpGet]
@@ -88,15 +78,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             }
 
             return View("AccessDenied");
-        }
-
-        [HttpGet]
-        public IActionResult ChangeSignInDetails()
-        {
-            // redirect the user to dashboard if UseGovSignIn is set false.
-            if (!_webConfiguration.UseGovSignIn) return RedirectToAction("Dashboard", "Home");
-
-            return View(new ChangeSignInDetailsViewModel(_configuration["ResourceEnvironmentName"]));
         }
     }
 }

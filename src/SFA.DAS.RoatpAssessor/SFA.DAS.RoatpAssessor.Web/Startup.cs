@@ -55,16 +55,6 @@ namespace SFA.DAS.RoatpAssessor.Web
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureApplicationConfiguration();
-            services.Configure<WebConfiguration>(options =>
-            {
-                options.UseGovSignIn = ApplicationConfiguration.UseGovSignIn;
-                options.DataProtectionKeysDatabase = ApplicationConfiguration.DataProtectionKeysDatabase;
-                options.EsfaAdminServicesBaseUrl = ApplicationConfiguration.EsfaAdminServicesBaseUrl;
-                options.RoatpApplicationApiAuthentication = ApplicationConfiguration.RoatpApplicationApiAuthentication;
-                options.SessionCachingDatabase = ApplicationConfiguration.SessionCachingDatabase;
-                options.SessionRedisConnectionString = ApplicationConfiguration.SessionRedisConnectionString;
-                options.StaffAuthentication = ApplicationConfiguration.StaffAuthentication;
-            });
 
             services.Configure<CookiePolicyOptions>(options =>
             {
