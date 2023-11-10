@@ -5,26 +5,34 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using SFA.DAS.RoatpAssessor.Web.Settings;
+using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers
 {
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
+        private readonly IWebConfiguration _webConfiguration;
 
-        public AccountController(ILogger<AccountController> logger)
+        public AccountController(ILogger<AccountController> logger, IWebConfiguration webConfiguration)
         {
             _logger = logger;
+            _webConfiguration = webConfiguration;
         }
 
         [HttpGet]
         public IActionResult SignIn()
         {
+            var challengeScheme = _webConfiguration.UseDfeSignIn
+                ? OpenIdConnectDefaults.AuthenticationScheme
+                : WsFederationDefaults.AuthenticationScheme;
             _logger.LogInformation("Start of Sign In");
             var redirectUrl = Url.Action("PostSignIn", "Account");
             return Challenge(
                 new AuthenticationProperties { RedirectUri = redirectUrl },
-                WsFederationDefaults.AuthenticationScheme);
+                challengeScheme);
         }
 
         [HttpGet]
@@ -53,11 +61,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
             {
                 Response.Cookies.Delete(cookie);
             }
+            var authScheme = _webConfiguration.UseDfeSignIn
+                ? OpenIdConnectDefaults.AuthenticationScheme
+                : WsFederationDefaults.AuthenticationScheme;
 
             return SignOut(
                 new AuthenticationProperties { RedirectUri = callbackUrl },
                 CookieAuthenticationDefaults.AuthenticationScheme,
-                WsFederationDefaults.AuthenticationScheme);
+                authScheme);
         }
 
         [HttpGet]
@@ -76,8 +87,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers
 
                 _logger.LogError($"AccessDenied - User '{userName}' does not have a valid role. They have the following roles: '{string.Join(",", roles)}'");
             }
+            
+            var model = new Error403ViewModel
+            {
+                UseDfESignIn = _webConfiguration.UseDfeSignIn,
+                HelpPageLink = _webConfiguration.DfESignInServiceHelpUrl
+            };
 
-            return View("AccessDenied");
+            return View("AccessDenied",model);
         }
     }
 }
