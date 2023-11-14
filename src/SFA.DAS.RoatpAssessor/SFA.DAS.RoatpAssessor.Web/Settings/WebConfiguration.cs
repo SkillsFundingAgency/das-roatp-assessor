@@ -23,8 +23,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Settings
         [JsonRequired]
         public string EsfaAdminServicesBaseUrl { get; set; }
 
-        // <inherit-doc />
-        [JsonRequired] 
-        public bool UseGovSignIn { get; set; }
+        public bool UseDfeSignIn { get; set; }
+        public string DfESignInServiceHelpUrl { get; set; }
     }
 }
