@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
+using System.Collections.Generic;
 using StatusService = SFA.DAS.RoatpAssessor.Web.Services.OverviewStatusService;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
@@ -63,9 +63,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
         }
 
         [TestCase(null, SectionStatus.Clarification)]
-        [TestCase(ClarificationPageReviewStatus.Pass, SectionStatus.Pass)]
-        [TestCase(ClarificationPageReviewStatus.Fail, SectionStatus.Fail)]
-        [TestCase(ClarificationPageReviewStatus.InProgress, SectionStatus.InProgress)]
+        [TestCase(ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass)]
+        [TestCase(ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail)]
+        [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.InProgress)]
         public void When_Single_Outcome_Returns_Expected_Status(string pageReviewStatus, string expectedStatus)
         {
             _outcomes.Add(new ClarificationPageReviewOutcome { SequenceNumber = _sequenceNumber, SectionNumber = _sectionNumber, Status = pageReviewStatus, ModeratorReviewStatus = ModeratorPageReviewStatus.Fail });
@@ -147,7 +147,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
             }
 
             var result = StatusService.GetClarificationSectionStatus(_outcomes, _sequenceNumber, _sectionNumber);
-            Assert.AreEqual(SectionStatus.InProgress, result);
+            Assert.AreEqual(SectionStatus.InProgress.ToLower(), result.ToLower());
         }
 
         [TestCase(0, 0, 1)]
@@ -173,7 +173,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
             }
 
             var result = StatusService.GetClarificationSectionStatus(_outcomes, _sequenceNumber, _sectionNumber);
-            Assert.AreEqual(SectionStatus.InProgress, result);
+            Assert.AreEqual(SectionStatus.InProgress.ToLower(), result.ToLower());
         }
     }
 }

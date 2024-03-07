@@ -1,11 +1,11 @@
-﻿using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Internal;
+﻿using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Validators;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
 {
@@ -238,7 +238,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Validators
 
             MemoryStream fileContent = new MemoryStream();
 
-            if(hasPdfHeader)
+            if (hasPdfHeader)
             {
                 fileContent.Write(pdfHeader);
             }

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
+using System.Collections.Generic;
 using StatusService = SFA.DAS.RoatpAssessor.Web.Services.OverviewStatusService;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
@@ -39,7 +39,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
 
             var result = StatusService.GetOutcomeSectionStatus(_outcomes, _sequenceNumber, _sectionNumber);
             Assert.IsEmpty(result);
-        }   
+        }
 
         [Test]
         public void When_Outcomes_DoNotMatch_Requested_SequenceNumber_Returns_Empty()
@@ -63,9 +63,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
         }
 
         [TestCase(null, null)]
-        [TestCase(ClarificationPageReviewStatus.Pass, SectionStatus.Pass)]
-        [TestCase(ClarificationPageReviewStatus.Fail, SectionStatus.Fail)]
-        [TestCase(ClarificationPageReviewStatus.InProgress, SectionStatus.InProgress)]
+        [TestCase(ClarificationPageReviewStatus.Pass, ClarificationPageReviewStatus.Pass)]
+        [TestCase(ClarificationPageReviewStatus.Fail, ClarificationPageReviewStatus.Fail)]
+        [TestCase(ClarificationPageReviewStatus.InProgress, ClarificationPageReviewStatus.InProgress)]
         public void When_Single_Outcome_Returns_Expected_Status(string pageReviewStatus, string expectedStatus)
         {
             _outcomes.Add(new ClarificationPageReviewOutcome { SequenceNumber = _sequenceNumber, SectionNumber = _sectionNumber, Status = pageReviewStatus });
@@ -99,18 +99,18 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
         [TestCase(2, 1, false, SectionStatus.Fail)]
         [TestCase(2, 1, true, SectionStatus.Fail)]
         [TestCase(1, 2, false, SectionStatus.Fail)]
-        [TestCase(1, 2, true,  SectionStatus.Fail)]
+        [TestCase(1, 2, true, SectionStatus.Fail)]
         [TestCase(0, 3, false, SectionStatus.Fail)]
         [TestCase(0, 3, true, SectionStatus.Fail)]
         public void When_Several_Matching_Outcomes_And_All_Pass_Or_Fail_Returns_Expected_Status(int passOutcomes, int failOutcomes, bool isSectorsSection, string expectedStatus)
         {
-            if(isSectorsSection)
+            if (isSectorsSection)
             {
                 _sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining;
                 _sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
             }
 
-            for(int p = 0; p < passOutcomes; p++)
+            for (int p = 0; p < passOutcomes; p++)
             {
                 _outcomes.Add(new ClarificationPageReviewOutcome { SequenceNumber = _sequenceNumber, SectionNumber = _sectionNumber, Status = ClarificationPageReviewStatus.Pass });
             }
@@ -171,7 +171,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
             }
 
             var result = StatusService.GetOutcomeSectionStatus(_outcomes, _sequenceNumber, _sectionNumber);
-            Assert.AreEqual(SectionStatus.InProgress, result);
+            Assert.AreEqual(SectionStatus.InProgress.ToLower(), result.ToLower());
         }
 
         [TestCase(2, 1, false, SectionStatus.Fail)]

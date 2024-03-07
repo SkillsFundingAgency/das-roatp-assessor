@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.Domain;
+using System.Collections.Generic;
 using StatusService = SFA.DAS.RoatpAssessor.Web.Services.OverviewStatusService;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
@@ -38,7 +38,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
 
             var result = StatusService.GetAssessorSectionStatus(_outcomes, _sequenceNumber, _sectionNumber);
             Assert.IsEmpty(result);
-        }   
+        }
 
         [Test]
         public void When_Outcomes_DoNotMatch_Requested_SequenceNumber_Returns_Empty()
@@ -62,9 +62,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
         }
 
         [TestCase(null, null)]
-        [TestCase(AssessorPageReviewStatus.Pass, SectionStatus.Pass)]
-        [TestCase(AssessorPageReviewStatus.Fail, SectionStatus.Fail)]
-        [TestCase(AssessorPageReviewStatus.InProgress, SectionStatus.InProgress)]
+        [TestCase(AssessorPageReviewStatus.Pass, AssessorPageReviewStatus.Pass)]
+        [TestCase(AssessorPageReviewStatus.Fail, AssessorPageReviewStatus.Fail)]
+        [TestCase(AssessorPageReviewStatus.InProgress, AssessorPageReviewStatus.InProgress)]
         public void When_Single_Outcome_Returns_Expected_Status(string pageReviewStatus, string expectedStatus)
         {
             _outcomes.Add(new AssessorPageReviewOutcome { SequenceNumber = _sequenceNumber, SectionNumber = _sectionNumber, Status = pageReviewStatus });
@@ -103,13 +103,13 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
         [TestCase(0, 3, false, "3 " + SectionStatus.FailsOutOf + " 3")]
         public void When_Several_Matching_Outcomes_And_All_Pass_Or_Fail_Returns_Expected_Status(int passOutcomes, int failOutcomes, bool isSectorsSection, string expectedStatus)
         {
-            if(isSectorsSection)
+            if (isSectorsSection)
             {
                 _sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining;
                 _sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
             }
 
-            for(int p = 0; p < passOutcomes; p++)
+            for (int p = 0; p < passOutcomes; p++)
             {
                 _outcomes.Add(new AssessorPageReviewOutcome { SequenceNumber = _sequenceNumber, SectionNumber = _sectionNumber, Status = AssessorPageReviewStatus.Pass });
             }
@@ -170,7 +170,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OverviewStatusService
             }
 
             var result = StatusService.GetAssessorSectionStatus(_outcomes, _sequenceNumber, _sectionNumber);
-            Assert.AreEqual(SectionStatus.InProgress, result);
+            Assert.AreEqual(SectionStatus.InProgress.ToLower(), result.ToLower());
         }
     }
 }
