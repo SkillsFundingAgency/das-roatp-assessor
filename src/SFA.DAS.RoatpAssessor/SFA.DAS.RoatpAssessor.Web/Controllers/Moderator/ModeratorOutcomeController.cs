@@ -32,7 +32,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
         [HttpGet("ModeratorOutcome/{applicationId}")]
         public async Task<IActionResult> ViewOutcome(Guid applicationId)
         {
-            _logger.LogInformation("Provider Moderation TEST TEST TEST");
             var userId = HttpContext.User.UserId();
 
             var viewModel = await _outcomeOrchestrator.GetInModerationOutcomeViewModel(new GetModeratorOutcomeRequest(applicationId, userId));
