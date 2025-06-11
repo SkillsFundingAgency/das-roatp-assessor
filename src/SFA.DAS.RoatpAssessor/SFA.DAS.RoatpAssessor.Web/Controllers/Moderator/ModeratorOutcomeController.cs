@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Validators;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
 {
@@ -32,6 +32,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
         [HttpGet("ModeratorOutcome/{applicationId}")]
         public async Task<IActionResult> ViewOutcome(Guid applicationId)
         {
+            _logger.LogInformation("Provider Moderation TEST TEST TEST");
             var userId = HttpContext.User.UserId();
 
             var viewModel = await _outcomeOrchestrator.GetInModerationOutcomeViewModel(new GetModeratorOutcomeRequest(applicationId, userId));
@@ -86,7 +87,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
         }
 
         [HttpPost("ModeratorOutcomeConfirmation/{applicationId}")]
-        public async Task<IActionResult> SubmitModeratorOutcomeConfirmation(Guid applicationId,  string reviewComment, SubmitModeratorOutcomeConfirmationCommand command)
+        public async Task<IActionResult> SubmitModeratorOutcomeConfirmation(Guid applicationId, string reviewComment, SubmitModeratorOutcomeConfirmationCommand command)
         {
 
             var validationResponse = await _validator.Validate(command);
@@ -108,7 +109,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
             if (command.ConfirmStatus == "No")
             {
                 var viewModel = await _outcomeOrchestrator.GetInModerationOutcomeViewModel(new GetModeratorOutcomeRequest(applicationId, userId));
-                viewModel.Status = command.Status;   
+                viewModel.Status = command.Status;
                 switch (command.Status)
                 {
                     case ModerationConfirmationStatus.Pass:
@@ -154,7 +155,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
             var viewModelModerationOutcomeSaved = await _outcomeOrchestrator.GetInModerationOutcomeReviewViewModel(
                 new ReviewModeratorOutcomeRequest(applicationId, userId, command.Status, reviewComment));
             return View("~/Views/ModeratorOutcome/ModerationCompleted.cshtml", viewModelModerationOutcomeSaved);
-            
+
         }
 
         private async Task<IActionResult> GoToErrorView(Guid applicationId, string reviewComment, string status, string userId)
