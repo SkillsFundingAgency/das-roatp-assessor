@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Primitives;
 using Polly;
 using Polly.Extensions.Http;
@@ -24,7 +25,6 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.DfESignIn.Auth.Enums;
 using SFA.DAS.RoatpAssessor.Web.Domain;
-using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.ModelBinders;
@@ -50,7 +50,7 @@ namespace SFA.DAS.RoatpAssessor.Web
         {
             _env = env;
             _logger = logger;
-            
+
             var config = new ConfigurationBuilder()
                 .AddConfiguration(configuration)
                 .SetBasePath(Directory.GetCurrentDirectory());
@@ -118,6 +118,12 @@ namespace SFA.DAS.RoatpAssessor.Web
             AddAntiforgery(services);
 
             services.AddHealthChecks();
+
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
+                loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
+            });
 
             services.AddApplicationInsightsTelemetry();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -206,7 +212,7 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
             services.AddTransient<IModeratorOverviewOrchestrator, ModeratorOverviewOrchestrator>();
-            services.AddTransient<IClarificationOverviewOrchestrator, ClarificationOverviewOrchestrator>();            
+            services.AddTransient<IClarificationOverviewOrchestrator, ClarificationOverviewOrchestrator>();
             services.AddTransient<IOutcomeOverviewOrchestrator, OutcomeOverviewOrchestrator>();
 
             services.AddTransient<ISupplementaryInformationService, SupplementaryInformationService>();
@@ -243,9 +249,9 @@ namespace SFA.DAS.RoatpAssessor.Web
             }
 
             app.UseHttpsRedirection();
-           
+
             app.UseCookiePolicy();
-           
+
             app.UseSession();
             app.UseRequestLocalization();
             app.UseStatusCodePagesWithReExecute("/ErrorPage/{0}");
