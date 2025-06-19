@@ -119,12 +119,6 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddHealthChecks();
 
-            services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
-                loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
-            });
-
             services.AddApplicationInsightsTelemetry();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 

@@ -30,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOverview
         {
             _moderatorOverviewOrchestrator = new Mock<IModeratorOverviewOrchestrator>();
 
-            _controller = new ModeratorOverviewController(_moderatorOverviewOrchestrator.Object, Mock.Of<ILogger<ModeratorOverviewController>>())
+            _controller = new ModeratorOverviewController(_moderatorOverviewOrchestrator.Object)
             {
                 ControllerContext = MockedControllerContext.Setup()
             };
