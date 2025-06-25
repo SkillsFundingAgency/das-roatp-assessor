@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
@@ -9,9 +13,6 @@ using SFA.DAS.RoatpAssessor.Web.Controllers.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOverview
 {
@@ -43,13 +44,18 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOverview
             var userId = _controller.User.UserId();
             var userDisplayName = _controller.User.UserDisplayName();
 
-            var assessor2Id = $"{ userId }-2";
-            var assessor2DisplayName = $"{ userDisplayName }-2";
+            var assessor2Id = $"{userId}-2";
+            var assessor2DisplayName = $"{userDisplayName}-2";
 
-            var application = new Apply {   
-                                            ApplicationId = _applicationId,
-                                            Assessor1ReviewStatus = AssessorReviewStatus.Approved, Assessor1UserId = userId, Assessor1Name = userDisplayName,
-                                            Assessor2ReviewStatus = AssessorReviewStatus.Approved, Assessor2UserId = assessor2Id, Assessor2Name = assessor2DisplayName
+            var application = new Apply
+            {
+                ApplicationId = _applicationId,
+                Assessor1ReviewStatus = AssessorReviewStatus.Approved,
+                Assessor1UserId = userId,
+                Assessor1Name = userDisplayName,
+                Assessor2ReviewStatus = AssessorReviewStatus.Approved,
+                Assessor2UserId = assessor2Id,
+                Assessor2Name = assessor2DisplayName
             };
 
             var contact = new Contact { Email = userId, GivenNames = _controller.User.GivenName(), FamilyName = _controller.User.Surname() };
