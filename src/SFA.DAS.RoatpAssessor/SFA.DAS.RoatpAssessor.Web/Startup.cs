@@ -76,7 +76,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             }
 
             _configuration = config.Build();
-            ApplicationConfiguration = _configuration.GetSection(nameof(WebConfiguration)).Get<WebConfiguration>();
+            ApplicationConfiguration = _configuration.Get<WebConfiguration>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -103,11 +103,7 @@ namespace SFA.DAS.RoatpAssessor.Web
                     //options.Filters.Add<CheckSessionFilter>();
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                     options.ModelBinderProviders.Insert(0, new StringTrimmingModelBinderProvider());
-                })
-                // NOTE: Can we move this to 2.2 to match the version of .NET Core we're coding against?
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options =>
-                {
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    options.EnableEndpointRouting = false;
                 });
 
             services.AddSession(opt => { opt.IdleTimeout = TimeSpan.FromHours(1); });

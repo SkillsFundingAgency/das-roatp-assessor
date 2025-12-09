@@ -1,6 +1,8 @@
-﻿using Microsoft.Azure.Services.AppAuthentication;
+﻿using System;
+using System.Threading;
+using Azure.Core;
+using Azure.Identity;
 using SFA.DAS.RoatpAssessor.Web.Settings;
-using System;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService
 {
@@ -18,10 +20,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService
             if (baseUri != null && baseUri.IsLoopback)
                 return string.Empty;
 
-            var azureServiceTokenProvider = new AzureServiceTokenProvider();
-            var generateTokenTask = azureServiceTokenProvider.GetAccessTokenAsync(_configuration.RoatpApplicationApiAuthentication.Identifier);
+            TokenCredential credential = new DefaultAzureCredential();
 
-            return generateTokenTask.GetAwaiter().GetResult();
+            var tokenRequest = new TokenRequestContext(
+                new[] { $"{_configuration.RoatpApplicationApiAuthentication.Identifier}/.default" }
+            );
+
+            AccessToken token = credential.GetToken(tokenRequest, CancellationToken.None);
+
+            return token.Token;
         }
     }
 }

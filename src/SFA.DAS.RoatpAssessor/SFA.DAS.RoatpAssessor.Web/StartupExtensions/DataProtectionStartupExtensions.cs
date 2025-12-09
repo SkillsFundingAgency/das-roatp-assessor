@@ -19,7 +19,7 @@ namespace SFA.DAS.RoatpAssessor.Web.StartupExtensions
 
                 services.AddDataProtection()
                     .SetApplicationName("das-admin-service-web")
-                    .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
+                    /*.PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys")*/;
             }
             return services;
         }
