@@ -1,5 +1,4 @@
-﻿using SFA.DAS.AdminService.Common.Settings;
-
+﻿
 namespace SFA.DAS.RoatpAssessor.Web.Settings
 {
     public interface IWebConfiguration

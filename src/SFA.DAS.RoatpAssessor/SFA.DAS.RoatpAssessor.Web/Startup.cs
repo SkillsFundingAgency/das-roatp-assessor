@@ -14,13 +14,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Primitives;
 using Polly;
 using Polly.Extensions.Http;
-using SFA.DAS.AdminService.Common;
-using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.DfESignIn.Auth.Enums;
@@ -41,12 +40,12 @@ namespace SFA.DAS.RoatpAssessor.Web
         private const string Culture = "en-GB";
 
         private readonly IConfiguration _configuration;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private readonly ILogger<Startup> _logger;
 
         public IWebConfiguration ApplicationConfiguration { get; set; }
 
-        public Startup(IConfiguration configuration, IHostingEnvironment env, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             _env = env;
             _logger = logger;
@@ -226,7 +225,7 @@ namespace SFA.DAS.RoatpAssessor.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
