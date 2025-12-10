@@ -27,7 +27,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
-            var outcomes = await _clarificationApiClient.GetAllClarificationPageReviewOutcomes(request.ApplicationId, request.UserId);
+            var apiCommand = new GetAllClarificationPageReviewOutcomesRequest { UserId = request.UserId };
+            var outcomes = await _clarificationApiClient.GetAllClarificationPageReviewOutcomes(request.ApplicationId, apiCommand);
 
             if (application is null || contact is null || outcomes is null)
             {

@@ -10,6 +10,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 
 
@@ -29,6 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrch
         private Contact _contact;
         private AssessorPage _assessorPage;
         private AssessorPageReviewOutcome _pageReviewOutcome;
+        private GetAssessorPageReviewOutcomeRequest _apiCommand;
 
         private readonly int _sequenceNumber = 4;
         private readonly int _sectionNumber = 2;
@@ -92,17 +94,22 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrch
                 Status = AssessorPageReviewStatus.Pass
             };
 
+            _apiCommand = new GetAssessorPageReviewOutcomeRequest
+            {
+                SequenceNumber = _sequenceNumber,
+                SectionNumber = _sectionNumber,
+                PageId = _pageId,
+                UserId = _userId
+            };
+
             _applyApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
 
             _applyApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
 
             _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, _sequenceNumber, _sectionNumber, _pageId))
                 .ReturnsAsync(_assessorPage);
-
-            _assessorApiClient.Setup(x => x.GetAssessorPageReviewOutcomesForSection(_applicationId, _sequenceNumber, _sectionNumber, _userId))
-                .ReturnsAsync(new List<AssessorPageReviewOutcome> { _pageReviewOutcome });
-
-            _assessorApiClient.Setup(x => x.GetAssessorPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId, _userId))
+            
+            _assessorApiClient.Setup(x => x.GetAssessorPageReviewOutcome(_applicationId, _apiCommand))
                 .ReturnsAsync(_pageReviewOutcome);
         }
 

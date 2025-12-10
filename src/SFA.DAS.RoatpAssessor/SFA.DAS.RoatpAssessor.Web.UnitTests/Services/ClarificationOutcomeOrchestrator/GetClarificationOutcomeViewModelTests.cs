@@ -26,6 +26,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrche
         private Contact _contact;
         private List<ClarificationPageReviewOutcome> _outcomes;
         private GetClarificationOutcomeRequest _request;
+        private GetAllClarificationPageReviewOutcomesRequest _apiCommand;
 
         private ClarificationOutcomeViewModel _expectedOutcomeViewModel;
 
@@ -66,9 +67,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrche
             _outcomes = new List<ClarificationPageReviewOutcome>();
             _contact = new Contact { Email = "email@address.com" };
             _request = new GetClarificationOutcomeRequest(_applicationId,_userId);
+            _apiCommand = new GetAllClarificationPageReviewOutcomesRequest { UserId = _userId };
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
-            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _apiCommand)).ReturnsAsync(_outcomes);
 
             _expectedOutcomeViewModel = new ClarificationOutcomeViewModel(_application, _outcomes);
         }
@@ -95,7 +97,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrche
         {
             _outcomes = new List<ClarificationPageReviewOutcome>();
             _outcomes.Add(new ClarificationPageReviewOutcome { ApplicationId = _applicationId, Status = "not pass or fail" });
-            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _apiCommand)).ReturnsAsync(_outcomes);
             var result = _orchestrator.GetClarificationOutcomeViewModel(_request);
             Assert.IsNull(result.Result);
         }
@@ -104,7 +106,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrche
         public void Return_view_model_with_pass_and_fail_counts_as_zero_if_no_outcomes_added()
         {
             _outcomes = new List<ClarificationPageReviewOutcome>();
-            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _apiCommand)).ReturnsAsync(_outcomes);
             var result = _orchestrator.GetClarificationOutcomeViewModel(_request);
             var actualViewModel = result?.Result;
 
@@ -119,7 +121,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrche
             _outcomes.Add(new ClarificationPageReviewOutcome { Status = "Fail" });
             _outcomes.Add(new ClarificationPageReviewOutcome { Status = "Fail" });
 
-            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _apiCommand)).ReturnsAsync(_outcomes);
             var result = _orchestrator.GetClarificationOutcomeViewModel(_request);
             var actualViewModel = result?.Result;
 

@@ -70,7 +70,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             // submit if validation passed and user specified to do so
             if (ModelState.IsValid && submitForModeration)
             {
-                var submittedSuccessfully = await _assessorApiClient.UpdateAssessorReviewStatus(command.ApplicationId, userId, userName, AssessorReviewStatus.Approved);
+
+                var apiCommand = new UpdateAssessorReviewStatusCommand
+                {
+                    UserId = userId,
+                    UserName = userName,
+                    Status = AssessorReviewStatus.Approved
+                };
+
+                var submittedSuccessfully = await _assessorApiClient.UpdateAssessorReviewStatus(command.ApplicationId, apiCommand);
 
                 if (!submittedSuccessfully)
                 {

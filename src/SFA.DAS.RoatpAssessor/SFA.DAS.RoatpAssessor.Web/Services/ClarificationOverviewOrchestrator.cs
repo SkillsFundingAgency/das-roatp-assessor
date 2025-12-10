@@ -31,7 +31,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var viewmodel = new ClarifierApplicationViewModel(application, contact, sequences, request.UserId);
 
-            var savedOutcomes = await _clarificationApiClient.GetAllClarificationPageReviewOutcomes(request.ApplicationId, request.UserId);
+            var apiCommand = new GetAllClarificationPageReviewOutcomesRequest { UserId = request.UserId };
+            var savedOutcomes = await _clarificationApiClient.GetAllClarificationPageReviewOutcomes(request.ApplicationId, apiCommand);
             if (savedOutcomes is null || !savedOutcomes.Any())
             {
                 viewmodel.IsReadyForClarificationConfirmation = false;

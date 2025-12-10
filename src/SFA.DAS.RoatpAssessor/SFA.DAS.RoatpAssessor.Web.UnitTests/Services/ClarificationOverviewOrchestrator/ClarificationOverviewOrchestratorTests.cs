@@ -30,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
         private Contact _contact;
         private List<ClarificationSequence> _sequences;
         private List<ClarificationPageReviewOutcome> _outcomes;
-
+        private GetAllClarificationPageReviewOutcomesRequest _apiCommand;
 
         [SetUp]
         public void SetUp()
@@ -64,11 +64,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
             _contact = new Contact { Email = "email@address.com" };
             _sequences = new List<ClarificationSequence>();
             _outcomes = new List<ClarificationPageReviewOutcome>();
+            _apiCommand = new GetAllClarificationPageReviewOutcomesRequest { UserId = _userId };
 
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _clarificationApiClient.Setup(x => x.GetClarificationSequences(_applicationId)).ReturnsAsync(_sequences);
-            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _apiCommand)).ReturnsAsync(_outcomes);
         }
 
         [Test]

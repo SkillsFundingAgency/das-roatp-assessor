@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Transformers;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -93,7 +94,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            var selectedSectors = await _clarificationApiClient.GetClarificationSectors(request.ApplicationId, request.UserId);
+            var apiCommand = new GetClarificationSectorsRequest { UserId = request.UserId };
+            var selectedSectors = await _clarificationApiClient.GetClarificationSectors(request.ApplicationId, apiCommand);
 
             var viewModel = new ApplicationSectorsViewModel
             {
@@ -186,8 +188,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, OutcomeSectorDetailsViewModel viewModel)
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the moderator page back from the service
-            var pageReviewOutcome = await _clarificationApiClient.GetClarificationPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
-                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, viewModel.PageId, request.UserId);
+            var apiCommand = new GetClarificationPageReviewOutcomeRequest
+            {
+                SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                PageId = viewModel.PageId,
+                UserId = request.UserId
+            };
+            var pageReviewOutcome = await _clarificationApiClient.GetClarificationPageReviewOutcome(request.ApplicationId, apiCommand);
 
             if (pageReviewOutcome != null)
             {
@@ -242,7 +250,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         private async Task SetPageReviewOutcome(GetReviewAnswersRequest request, OutcomeReviewAnswersViewModel viewModel)
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the page back from the service
-            var pageReviewOutcome = await _clarificationApiClient.GetClarificationPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, request.UserId);
+            var apiCommand = new GetClarificationPageReviewOutcomeRequest
+            {
+                SequenceNumber = request.SequenceNumber,
+                SectionNumber = request.SectionNumber,
+                PageId = viewModel.PageId,
+                UserId = request.UserId
+            };
+            var pageReviewOutcome = await _clarificationApiClient.GetClarificationPageReviewOutcome(request.ApplicationId, apiCommand);
 
             if (pageReviewOutcome != null)
             {

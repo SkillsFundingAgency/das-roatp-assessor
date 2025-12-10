@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.RoatpAssessor.Web.Extensions;
@@ -48,16 +51,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
                 var userId = HttpContext.User.UserId();
                 var userName = HttpContext.User.UserDisplayName();
 
-                submittedPageOutcomeSuccessfully = await _clarificationApiClient.SubmitClarificationPageReviewOutcome(command.ApplicationId,
-                                    command.SequenceNumber,
-                                    command.SectionNumber,
-                                    command.PageId,
-                                    userId,
-                                    userName,
-                                    command.ClarificationResponse,
-                                    command.Status,
-                                    command.ReviewComment,
-                                    command.FilesToUpload);
+                var apiCommand = BuildApiCommand(
+                    command.SequenceNumber, 
+                    command.SectionNumber, 
+                    command.PageId, 
+                    userId,
+                    userName,
+                    command.ClarificationResponse,
+                    command.Status,
+                    command.ReviewComment,
+                    command.FilesToUpload);
+
+                submittedPageOutcomeSuccessfully = await _clarificationApiClient.SubmitClarificationPageReviewOutcome(command.ApplicationId, apiCommand);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
@@ -108,16 +113,17 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
                 var userId = HttpContext.User.UserId();
                 var userName = HttpContext.User.UserDisplayName();
 
-                submittedPageOutcomeSuccessfully = await _clarificationApiClient.SubmitClarificationPageReviewOutcome(command.ApplicationId,
-                                    SequenceIds.DeliveringApprenticeshipTraining,
-                                    SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                                    command.PageId,
-                                    userId,
-                                    userName,
-                                    command.ClarificationResponse,
-                                    command.Status,
-                                    command.ReviewComment,
-                                    null);
+                var apiCommand = BuildApiCommand(SequenceIds.DeliveringApprenticeshipTraining,
+                    SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                    command.PageId,
+                    userId,
+                    userName,
+                    command.ClarificationResponse,
+                    command.Status,
+                    command.ReviewComment,
+                    null);
+
+                submittedPageOutcomeSuccessfully = await _clarificationApiClient.SubmitClarificationPageReviewOutcome(command.ApplicationId, apiCommand);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
@@ -144,6 +150,41 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
                 sequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
                 sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees
             });
+        }
+
+        private MultipartFormDataContent BuildApiCommand(int sequenceNumber, int sectionNumber, string pageId,
+            string userId,
+            string userName, string clarificationResponse, string status, string comment,
+            IFormFileCollection clarificationFiles)
+        {
+            var content = new MultipartFormDataContent();
+
+            content.Add(new StringContent(sequenceNumber.ToString()), "SequenceNumber");
+            content.Add(new StringContent(sectionNumber.ToString()), "SectionNumber");
+            content.Add(new StringContent(pageId), "PageId");
+            content.Add(new StringContent(userId), "UserId");
+            content.Add(new StringContent(userName), "UserName");
+            content.Add(new StringContent(status), "Status");
+            if (!string.IsNullOrEmpty(comment))
+            {
+                content.Add(new StringContent(comment), "Comment");
+            }
+            if (!string.IsNullOrEmpty(clarificationResponse))
+            {
+                content.Add(new StringContent(clarificationResponse), "ClarificationResponse");
+            }
+
+            if (clarificationFiles != null && clarificationFiles.Any())
+            {
+                foreach (var file in clarificationFiles)
+                {
+                    var fileContent = new StreamContent(file.OpenReadStream())
+                        { Headers = { ContentLength = file.Length, ContentType = new MediaTypeHeaderValue(file.ContentType) } };
+                    content.Add(fileContent, file.FileName, file.FileName);
+                }
+            }
+
+            return content;
         }
     }
 }

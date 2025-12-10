@@ -29,6 +29,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
         private Contact _contact;
         private List<AssessorSequence> _sequences;
         private List<AssessorPageReviewOutcome> _outcomes;
+        private GetAllAssessorPageReviewOutcomesRequest _apiCommand;
 
 
         [SetUp]
@@ -42,11 +43,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
             _contact = new Contact { Email = "email@address.com" };
             _sequences = new List<AssessorSequence>();
             _outcomes = new List<AssessorPageReviewOutcome>();
+            _apiCommand = new GetAllAssessorPageReviewOutcomesRequest { UserId = _userId };
 
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _assessorApiClient.Setup(x => x.GetAssessorSequences(_applicationId)).ReturnsAsync(_sequences);
-            _assessorApiClient.Setup(x => x.GetAllAssessorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _assessorApiClient.Setup(x => x.GetAllAssessorPageReviewOutcomes(_applicationId, _apiCommand)).ReturnsAsync(_outcomes);
         }
 
         [Test]

@@ -3,29 +3,40 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using RestEase;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
+using SFA.DAS.RoatpAssessor.Web.Models;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
     public interface IRoatpClarificationApiClient
     {
-        Task<List<ClarificationSequence>> GetClarificationSequences(Guid applicationId);
+        [Get("/Clarification/Applications/{applicationId}/Overview")]
+        Task<List<ClarificationSequence>> GetClarificationSequences([Path] Guid applicationId);
 
-        Task<ClarificationPage> GetClarificationPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
+        [Get("/Clarification/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}")]
+        Task<ClarificationPage> GetClarificationPage([Path] Guid applicationId, [Path] int sequenceNumber, [Path] int sectionNumber, [Path] string pageId);
 
-        Task<List<ClarificationSector>> GetClarificationSectors(Guid applicationId, string userId);
+        [Post("/Clarification/Applications/{applicationId}/Sectors")]
+        Task<List<ClarificationSector>> GetClarificationSectors([Path] Guid applicationId, [Body] GetClarificationSectorsRequest command); 
 
-        Task<SectorDetails> GetClarificationSectorDetails(Guid applicationId, string pageId);
+        [Get("/Clarification/Applications/{applicationId}/SectorDetails/{pageId}")]
+        Task<SectorDetails> GetClarificationSectorDetails([Path] Guid applicationId, [Path] string pageId);
 
-        Task<bool> SubmitClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId, string userName, string clarificationResponse, string status, string comment, IFormFileCollection clarificationFiles);
+        [Post("/Clarification/Applications/{applicationId}/SubmitPageReviewOutcome")]
+        Task<bool> SubmitClarificationPageReviewOutcome(Guid applicationId, [Body] MultipartFormDataContent content);
 
-        Task<List<ClarificationPageReviewOutcome>> GetAllClarificationPageReviewOutcomes(Guid applicationId, string userId);
-        Task<ClarificationPageReviewOutcome> GetClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId);
-        Task<List<ClarificationPageReviewOutcome>> GetClarificationPageReviewOutcomesForSection(Guid applicationId, int sequenceNumber, int sectionNumber, string userId);
+        [Post("/Clarification/Applications/{applicationId}/GetAllPageReviewOutcomes")]
+        Task<List<ClarificationPageReviewOutcome>> GetAllClarificationPageReviewOutcomes([Path] Guid applicationId, [Body] GetAllClarificationPageReviewOutcomesRequest command);
 
+        [Post("/Clarification/Applications/{applicationId}/SubmitPageReviewOutcome")] 
+        Task<ClarificationPageReviewOutcome> GetClarificationPageReviewOutcome([Path] Guid applicationId, [Body] GetClarificationPageReviewOutcomeRequest command);
 
-        Task<HttpResponseMessage> DownloadFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string fileName);
-        Task<HttpResponseMessage> DeleteFile(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string fileName);
+        [Get("/Clarification/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/Download/{fileName}")]
+        Task<HttpResponseMessage> DownloadFile([Path] Guid applicationId, [Path] int sequenceNumber, [Path] int sectionNumber, [Path] string pageId, [Path] string fileName);
+
+        [Get("/Clarification/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/Delete/{fileName}")]
+        Task<HttpResponseMessage> DeleteFile([Path] Guid applicationId, [Path] int sequenceNumber, [Path] int sectionNumber, [Path] string pageId, [Path] string fileName);
     }
 }

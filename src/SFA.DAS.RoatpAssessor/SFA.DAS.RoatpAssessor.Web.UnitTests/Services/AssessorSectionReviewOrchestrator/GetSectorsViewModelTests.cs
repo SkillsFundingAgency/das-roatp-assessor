@@ -12,6 +12,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -55,6 +56,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrch
             int sectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees;
             string pageId = RoatpWorkflowPageIds.YourSectorsAndEmployeesStartingPageId;
             var userId = _user.UserId();
+            var apiCommand = new GetAssessorSectorsRequest { UserId = userId };
             _chosenSectors.Add(new AssessorSector { PageId = "1", Title = "page 1 title", Status = "Pass" });
             _chosenSectors.Add(new AssessorSector { PageId = "2", Title = "page 2 title" });
             _ukprn = "1234";
@@ -86,7 +88,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrch
             _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);
 
-            _assessorApiClient.Setup(x => x.GetAssessorSectors(_applicationId, userId))
+            _assessorApiClient.Setup(x => x.GetAssessorSectors(_applicationId, apiCommand))
                 .ReturnsAsync(_chosenSectors);
 
 

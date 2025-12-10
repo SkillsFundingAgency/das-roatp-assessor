@@ -20,12 +20,13 @@ using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Primitives;
 using Polly;
 using Polly.Extensions.Http;
+using RestEase.HttpClientFactory;
+using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.DfESignIn.Auth.Enums;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
-using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.ModelBinders;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Settings;
@@ -156,17 +157,10 @@ namespace SFA.DAS.RoatpAssessor.Web
 
         private void ConfigureHttpClients(IServiceCollection services)
         {
-            var acceptHeaderName = "Accept";
-            var acceptHeaderValue = "application/json";
-            var handlerLifeTime = TimeSpan.FromMinutes(5);
-
-            services.AddHttpClient<IRoatpApplicationApiClient, RoatpApplicationApiClient>(config =>
-            {
-                config.BaseAddress = new Uri(ApplicationConfiguration.RoatpApplicationApiAuthentication.ApiBaseAddress);
-                config.DefaultRequestHeaders.Add(acceptHeaderName, acceptHeaderValue);
-            })
-            .SetHandlerLifetime(handlerLifeTime)
-            .AddPolicyHandler(GetRetryPolicy());
+            services.AddRestEaseClient<IRoatpApplicationApiClient>(ApplicationConfiguration.RoatpApplicationApiAuthentication.ApiBaseAddress)
+                .AddHttpMessageHandler(() =>
+                    new InnerApiAuthenticationHeaderHandler(new AzureClientCredentialHelper(_configuration),
+                        ApplicationConfiguration.RoatpApplicationApiAuthentication.Identifier));
         }
 
         private void ConfigureDependencyInjection(IServiceCollection services)
@@ -182,22 +176,7 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddTransient<ISearchTermValidator, SearchTermValidator>();
 
-            services.AddTransient<IRoatpApplicationTokenService, RoatpApplicationTokenService>();
             services.AddTransient<IClarificationOutcomeOrchestrator, ClarificationOutcomeOrchestrator>();
-            services.AddTransient<IRoatpAssessorApiClient>(x => new RoatpAssessorApiClient(
-                ApplicationConfiguration.RoatpApplicationApiAuthentication.ApiBaseAddress,
-                x.GetService<ILogger<RoatpAssessorApiClient>>(),
-                x.GetService<IRoatpApplicationTokenService>()));
-
-            services.AddTransient<IRoatpModerationApiClient>(x => new RoatpModerationApiClient(
-                ApplicationConfiguration.RoatpApplicationApiAuthentication.ApiBaseAddress,
-                x.GetService<ILogger<RoatpModerationApiClient>>(),
-                x.GetService<IRoatpApplicationTokenService>()));
-
-            services.AddTransient<IRoatpClarificationApiClient>(x => new RoatpClarificationApiClient(
-                ApplicationConfiguration.RoatpApplicationApiAuthentication.ApiBaseAddress,
-                x.GetService<ILogger<RoatpClarificationApiClient>>(),
-                x.GetService<IRoatpApplicationTokenService>()));
 
             services.AddTransient<IAssessorOverviewOrchestrator, AssessorOverviewOrchestrator>();
             services.AddTransient<IModeratorOverviewOrchestrator, ModeratorOverviewOrchestrator>();

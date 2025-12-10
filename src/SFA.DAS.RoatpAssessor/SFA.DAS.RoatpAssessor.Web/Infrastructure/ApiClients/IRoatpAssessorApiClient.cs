@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
+using RestEase;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
@@ -10,22 +12,34 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
     public interface IRoatpAssessorApiClient
     {
-        Task<bool> AssignAssessor(Guid applicationId, AssignAssessorCommand request);
+        [Post("Assessor/Applications/{applicationId}/Assign")]
+        Task<bool> AssignAssessor([Path] Guid applicationId, [Body] AssignAssessorCommand request);
 
-        Task<List<AssessorSequence>> GetAssessorSequences(Guid applicationId);
+        [Get("/Assessor/Applications/{applicationId}/Overview")]
+        Task<List<AssessorSequence>> GetAssessorSequences([Path] Guid applicationId);
 
-        Task<AssessorPage> GetAssessorPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
+        [Get("/Assessor/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}")]
+        Task<AssessorPage> GetAssessorPage([Path] Guid applicationId, [Path] int sequenceNumber, [Path] int sectionNumber, [Path] string pageId); //TESTS MIGHT BE BROKEN BY PUTTING LOGIC BEFORE CALL RATHER THAN WITHIN
 
-        Task<List<AssessorSector>> GetAssessorSectors(Guid applicationId, string userId);
+        [Get("/Assessor/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page")]
+        Task<AssessorPage> GetAssessorPage([Path] Guid applicationId, [Path] int sequenceNumber, [Path] int sectionNumber);
 
-        Task<SectorDetails> GetAssessorSectorDetails(Guid applicationId, string pageId);
+        [Post("/Assessor/Applications/{applicationId}/Sectors")]
+        Task<List<AssessorSector>> GetAssessorSectors([Path] Guid applicationId, [Body] GetAssessorSectorsRequest command);
 
-        Task<bool> SubmitAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId, string userName, string status, string comment);
+        [Get("/Assessor/Applications/{applicationId}/SectorDetails/{pageId}")]
+        Task<SectorDetails> GetAssessorSectorDetails([Path] Guid applicationId, [Path] string pageId);
 
-        Task<AssessorPageReviewOutcome> GetAssessorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId);
-        Task<List<AssessorPageReviewOutcome>> GetAssessorPageReviewOutcomesForSection(Guid applicationId, int sequenceNumber, int sectionNumber, string userId);
-        Task<List<AssessorPageReviewOutcome>> GetAllAssessorPageReviewOutcomes(Guid applicationId, string userId);
+        [Post("/Assessor/Applications/{applicationId}/SubmitPageReviewOutcome")] 
+        Task<bool> SubmitAssessorPageReviewOutcome([Path] Guid applicationId, [Body] SubmitAssessorPageReviewOutcomeCommand command);
 
-        Task<bool> UpdateAssessorReviewStatus(Guid applicationId, string userId, string userName, string status);
+        [Post("/Assessor/Applications/{applicationId}/GetPageReviewOutcome")] 
+        Task<AssessorPageReviewOutcome> GetAssessorPageReviewOutcome([Path] Guid applicationId, [Body] GetAssessorPageReviewOutcomeRequest command);
+
+        [Post("/Assessor/Applications/{applicationId}/GetAllPageReviewOutcomes")]
+        Task<List<AssessorPageReviewOutcome>> GetAllAssessorPageReviewOutcomes([Path] Guid applicationId, [Body] GetAllAssessorPageReviewOutcomesRequest command);
+
+        [Post("/Assessor/Applications/{applicationId}/UpdateAssessorReviewStatus")] 
+        Task<bool> UpdateAssessorReviewStatus([Path] Guid applicationId, [Body] UpdateAssessorReviewStatusCommand command);
     }
 }

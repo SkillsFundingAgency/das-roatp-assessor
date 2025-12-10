@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -26,7 +27,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 const int safegaurdingPolicySequenceNumber = RoatpWorkflowSequenceIds.ProtectingYourApprentices;
                 const int safegaurdingPolicySectionNumber = 4;
 
-                var page = await _assessorApiClient.GetAssessorPage(applicationId, safegaurdingPolicySequenceNumber, safegaurdingPolicySectionNumber, pageId);
+                AssessorPage page;
+                if (string.IsNullOrEmpty(pageId))
+                {
+                    page = await _assessorApiClient.GetAssessorPage(applicationId, safegaurdingPolicySequenceNumber,
+                        safegaurdingPolicySectionNumber);
+                }
+                else
+                {
+
+                    page = await _assessorApiClient.GetAssessorPage(applicationId, safegaurdingPolicySequenceNumber,
+                        safegaurdingPolicySectionNumber, pageId);
+                }
+                
                 var answer = page?.Answers.First().Value;
 
                 // Only retrieve if it was included in the safeguarding policy

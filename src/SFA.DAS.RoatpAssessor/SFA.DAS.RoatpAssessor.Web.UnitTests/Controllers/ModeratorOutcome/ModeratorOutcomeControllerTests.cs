@@ -219,8 +219,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
                 );
 
 
-            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<string>(),
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<SubmitOutcomeCommand>()))
                 .ReturnsAsync(false);
 
             var result = await _controller.SubmitModeratorOutcomeConfirmation(_applicationId, string.Empty, command) as ViewResult;
@@ -237,8 +236,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
                 .ReturnsAsync(new ValidationResponse()
                 );
 
-            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<string>(),
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<SubmitOutcomeCommand>()))
                 .ReturnsAsync(true);
 
             var outcomeReviewViewModel = new ModeratorOutcomeReviewViewModel();

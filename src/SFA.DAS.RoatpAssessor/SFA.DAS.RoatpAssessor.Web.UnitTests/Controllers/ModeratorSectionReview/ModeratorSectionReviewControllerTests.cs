@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -13,9 +17,6 @@ using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
 {
@@ -154,14 +155,18 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
             var validationResponse = new ValidationResponse();
             _moderatorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
-            _moderationApiClient.Setup(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId,
-                                    command.SequenceNumber,
-                                    command.SectionNumber,
-                                    command.PageId,
-                                    _controller.User.UserId(),
-                                    _controller.User.UserDisplayName(),
-                                    command.Status,
-                                    command.ReviewComment)).ReturnsAsync(true);
+            var apiCommand = new SubmitModeratorPageReviewOutcomeCommand
+            {
+                SequenceNumber = command.SequenceNumber,
+                SectionNumber = command.SectionNumber,
+                PageId = command.PageId,
+                UserId = _controller.User.UserId(),
+                UserName = _controller.User.UserDisplayName(),
+                Status = command.Status,
+                Comment = command.ReviewComment
+            };
+
+            _moderationApiClient.Setup(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId, apiCommand)).ReturnsAsync(true);
 
             // act
             var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;
@@ -170,14 +175,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
             Assert.AreEqual("ModeratorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
 
-            _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId,
-                        command.SequenceNumber,
-                        command.SectionNumber,
-                        command.PageId,
-                        _controller.User.UserId(),
-                        _controller.User.UserDisplayName(),
-                        command.Status,
-                        command.ReviewComment), Times.Once);
+            _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId, apiCommand), Times.Once);
         }
 
         [Test]
@@ -214,14 +212,18 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
             Assert.That(actualViewModel, Is.Not.Null);
             Assert.That(actualViewModel, Is.SameAs(viewModel));
 
-            _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId,
-                        command.SequenceNumber,
-                        command.SectionNumber,
-                        command.PageId,
-                        _controller.User.UserId(),
-                        _controller.User.UserDisplayName(),
-                        command.Status,
-                        command.ReviewComment), Times.Never);
+            var apiCommand = new SubmitModeratorPageReviewOutcomeCommand
+            {
+                SequenceNumber = command.SequenceNumber,
+                SectionNumber = command.SectionNumber,
+                PageId = command.PageId,
+                UserId = _controller.User.UserId(),
+                UserName = _controller.User.UserDisplayName(),
+                Status = command.Status,
+                Comment = command.ReviewComment
+            };
+
+            _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId, apiCommand), Times.Never);
         }
     }
 }

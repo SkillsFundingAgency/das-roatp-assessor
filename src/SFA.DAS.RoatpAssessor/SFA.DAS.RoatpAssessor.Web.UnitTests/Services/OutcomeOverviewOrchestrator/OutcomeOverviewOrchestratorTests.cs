@@ -30,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeOverviewOrchestrat
         private Contact _contact;
         private List<ModeratorSequence> _sequences;
         private List<ModeratorPageReviewOutcome> _outcomes;
-
+        private GetAllModeratorPageReviewOutcomesRequest _apiCommand;
 
         [SetUp]
         public void SetUp()
@@ -54,11 +54,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeOverviewOrchestrat
             _contact = new Contact { Email = "email@address.com" };
             _sequences = new List<ModeratorSequence>();
             _outcomes = new List<ModeratorPageReviewOutcome>();
+            _apiCommand = new GetAllModeratorPageReviewOutcomesRequest { UserId = _userId };
 
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _moderationApiClient.Setup(x => x.GetModeratorSequences(_applicationId)).ReturnsAsync(_sequences);
-            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _apiCommand)).ReturnsAsync(_outcomes);
         }
 
         [Test]

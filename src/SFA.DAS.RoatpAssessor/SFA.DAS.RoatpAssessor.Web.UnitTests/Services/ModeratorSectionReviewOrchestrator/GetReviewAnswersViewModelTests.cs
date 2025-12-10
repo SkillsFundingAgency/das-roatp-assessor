@@ -11,6 +11,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Extensions;
+using SFA.DAS.RoatpAssessor.Web.Models;
 
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorSectionReviewOrchestrator
@@ -29,6 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorSectionReviewOrc
         private Contact _contact;
         private ModeratorPage _moderatorPage;
         private ModeratorPageReviewOutcome _pageReviewOutcome;
+        private GetModeratorPageReviewOutcomeRequest _apiCommand;
 
         private readonly int _sequenceNumber = 4;
         private readonly int _sectionNumber = 2;
@@ -92,17 +94,22 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorSectionReviewOrc
                 Status = ModeratorPageReviewStatus.Pass
             };
 
+            _apiCommand = new GetModeratorPageReviewOutcomeRequest
+            {
+                SequenceNumber = _sequenceNumber,
+                SectionNumber = _sectionNumber,
+                PageId = _pageId,
+                UserId = _userId
+            };
+
             _applyApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
 
             _applyApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
 
             _moderationApiClient.Setup(x => x.GetModeratorPage(_applicationId, _sequenceNumber, _sectionNumber, _pageId))
                 .ReturnsAsync(_moderatorPage);
-
-            _moderationApiClient.Setup(x => x.GetModeratorPageReviewOutcomesForSection(_applicationId, _sequenceNumber, _sectionNumber, _userId))
-                .ReturnsAsync(new List<ModeratorPageReviewOutcome> { _pageReviewOutcome });
-
-            _moderationApiClient.Setup(x => x.GetModeratorPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId, _userId))
+            
+            _moderationApiClient.Setup(x => x.GetModeratorPageReviewOutcome(_applicationId, _apiCommand))
                 .ReturnsAsync(_pageReviewOutcome);
         }
 

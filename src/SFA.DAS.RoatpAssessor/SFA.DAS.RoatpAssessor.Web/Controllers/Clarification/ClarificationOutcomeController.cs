@@ -139,7 +139,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
                     break;
             }
 
-            var submitSuccessful = await _moderationApiClient.SubmitModerationOutcome(applicationId, userId, userName, submittedStatus, reviewComment);
+            var apiCommand = new SubmitOutcomeCommand
+            {
+                UserId = userId,
+                UserName = userName,
+                Status = submittedStatus,
+                Comment = reviewComment
+            };
+
+            var submitSuccessful = await _moderationApiClient.SubmitModerationOutcome(applicationId, apiCommand);
 
             if (!submitSuccessful)
             {

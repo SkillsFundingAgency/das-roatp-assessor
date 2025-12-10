@@ -204,8 +204,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOutcome
                 );
 
 
-            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<string>(),
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<SubmitOutcomeCommand>()))
                 .ReturnsAsync(false);
 
             var result = await _controller.SubmitClarificationOutcomeConfirmation(_applicationId, string.Empty, command) as ViewResult;
@@ -222,8 +221,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOutcome
                 .ReturnsAsync(new ValidationResponse()
                 );
 
-            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<string>(),
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<SubmitOutcomeCommand>()))
                 .ReturnsAsync(true);
 
             var outcomeReviewViewModel = new ClarificationOutcomeReviewViewModel();

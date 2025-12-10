@@ -12,6 +12,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 
 
@@ -33,6 +34,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeSectionReviewOrche
         private BlindAssessmentOutcome _blindAssessmentOutcome;
         private ClarificationPage _clarificationPage;
         private ClarificationPageReviewOutcome _pageReviewOutcome;
+        private GetClarificationPageReviewOutcomeRequest _apiCommand;
 
         private readonly int _sequenceNumber = 4;
         private readonly int _sectionNumber = 2;
@@ -122,6 +124,14 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeSectionReviewOrche
                 ClarificationFile = null
             };
 
+            _apiCommand = new GetClarificationPageReviewOutcomeRequest
+            {
+                SequenceNumber = _sequenceNumber,
+                SectionNumber = _sectionNumber,
+                PageId = _pageId,
+                UserId = _userId
+            };
+
             _applyApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
 
             _applyApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
@@ -132,10 +142,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeSectionReviewOrche
             _clarificationApiClient.Setup(x => x.GetClarificationPage(_applicationId, _sequenceNumber, _sectionNumber, _pageId))
                 .ReturnsAsync(_clarificationPage);
 
-            _clarificationApiClient.Setup(x => x.GetClarificationPageReviewOutcomesForSection(_applicationId, _sequenceNumber, _sectionNumber, _userId))
-                .ReturnsAsync(new List<ClarificationPageReviewOutcome> { _pageReviewOutcome });
-
-            _clarificationApiClient.Setup(x => x.GetClarificationPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId, _userId))
+            _clarificationApiClient.Setup(x => x.GetClarificationPageReviewOutcome(_applicationId, _apiCommand))
                 .ReturnsAsync(_pageReviewOutcome);
         }
 

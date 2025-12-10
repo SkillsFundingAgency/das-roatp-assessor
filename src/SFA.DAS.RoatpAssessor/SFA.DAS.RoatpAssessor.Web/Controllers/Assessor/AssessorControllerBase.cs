@@ -48,14 +48,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                 var userId = HttpContext.User.UserId();
                 var userName = HttpContext.User.UserDisplayName();
 
-                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
-                                    command.SequenceNumber,
-                                    command.SectionNumber,
-                                    command.PageId,
-                                    userId,
-                                    userName,
-                                    command.Status,
-                                    command.ReviewComment);
+                var apiCommand = new SubmitAssessorPageReviewOutcomeCommand
+                {
+                    SequenceNumber = command.SequenceNumber,
+                    SectionNumber = command.SectionNumber,
+                    PageId = command.PageId,
+                    UserId = userId,
+                    UserName = userName,
+                    Status = command.Status,
+                    Comment = command.ReviewComment
+                };
+
+                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId, apiCommand);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
@@ -104,14 +108,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                 var userId = HttpContext.User.UserId();
                 var userName = HttpContext.User.UserDisplayName();
 
-                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
-                                    SequenceIds.DeliveringApprenticeshipTraining,
-                          SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                                    command.PageId,
-                                    userId,
-                                    userName,
-                                    command.Status,
-                                    command.ReviewComment);
+                var apiCommand = new SubmitAssessorPageReviewOutcomeCommand
+                {
+                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                    PageId = command.PageId,
+                    UserId = userId,
+                    UserName = userName,
+                    Status = command.Status,
+                    Comment = command.ReviewComment
+                };
+
+                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId, apiCommand);
 
                 if (!submittedPageOutcomeSuccessfully)
                 {

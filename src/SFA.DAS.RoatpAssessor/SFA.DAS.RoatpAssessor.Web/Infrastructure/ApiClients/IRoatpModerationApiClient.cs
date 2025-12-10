@@ -1,28 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RestEase;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.Models;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
 {
     public interface IRoatpModerationApiClient
     {
-        Task<List<ModeratorSequence>> GetModeratorSequences(Guid applicationId);
+        [Get("/Moderator/Applications/{applicationId}/Overview")]
+        Task<List<ModeratorSequence>> GetModeratorSequences([Path] Guid applicationId);
 
-        Task<ModeratorPage> GetModeratorPage(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
+        [Get("/Moderator/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}")]
+        Task<ModeratorPage> GetModeratorPage([Path] Guid applicationId, [Path] int sequenceNumber, [Path] int sectionNumber, [Path] string pageId);  //TESTS MIGHT BE BROKEN BY PUTTING LOGIC BEFORE CALL RATHER THAN WITHIN
 
-        Task<List<ModeratorSector>> GetModeratorSectors(Guid applicationId, string userId);
+        [Get("/Moderator/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page")]
+        Task<ModeratorPage> GetModeratorPage([Path] Guid applicationId, [Path] int sequenceNumber, [Path] int sectionNumber);
 
-        Task<SectorDetails> GetModeratorSectorDetails(Guid applicationId, string pageId);
+        [Post("/Moderator/Applications/{applicationId}/Sectors")]
+        Task<List<ModeratorSector>> GetModeratorSectors([Path] Guid applicationId, [Body] GetModeratorSectorsRequest request); 
 
-        Task<BlindAssessmentOutcome> GetBlindAssessmentOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
+        [Get("/Moderator/Applications/{applicationId}/SectorDetails/{pageId}")]
+        Task<SectorDetails> GetModeratorSectorDetails([Path] Guid applicationId, [Path] string pageId);
 
-        Task<bool> SubmitModeratorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId, string userName, string status, string comment);
+        [Get("/Moderator/Applications/{applicationId}/Sequences/{sequenceNumber}/Sections/{sectionNumber}/Page/{pageId}/BlindAssessmentOutcome")]
+        Task<BlindAssessmentOutcome> GetBlindAssessmentOutcome([Path] Guid applicationId, [Path] int sequenceNumber, [Path] int sectionNumber, [Path] string pageId);
 
-        Task<List<ModeratorPageReviewOutcome>> GetAllModeratorPageReviewOutcomes(Guid applicationId, string userId);
-        Task<ModeratorPageReviewOutcome> GetModeratorPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId);
-        Task<List<ModeratorPageReviewOutcome>> GetModeratorPageReviewOutcomesForSection(Guid applicationId, int sequenceNumber, int sectionNumber, string userId);
-        Task<bool> SubmitModerationOutcome(Guid applicationId, string userId, string username, string status, string comment);
+        [Post("/Moderator/Applications/{applicationId}/SubmitPageReviewOutcome")]
+        Task<bool> SubmitModeratorPageReviewOutcome([Path] Guid applicationId, [Body]SubmitModeratorPageReviewOutcomeCommand command);
+
+        [Post("/Moderator/Applications/{applicationId}/GetAllPageReviewOutcomes")]
+        Task<List<ModeratorPageReviewOutcome>> GetAllModeratorPageReviewOutcomes([Path] Guid applicationId, [Body] GetAllModeratorPageReviewOutcomesRequest command);
+
+        [Post("/Moderator/Applications/{applicationId}/GetPageReviewOutcome")] 
+        Task<ModeratorPageReviewOutcome> GetModeratorPageReviewOutcome([Path] Guid applicationId, [Body] GetModeratorPageReviewOutcomeRequest command);
+
+        [Post("/Moderator/Applications/{applicationId}/SubmitOutcome")]
+        Task<bool> SubmitModerationOutcome([Path] Guid applicationId, [Body] SubmitOutcomeCommand command);
     }
 }
