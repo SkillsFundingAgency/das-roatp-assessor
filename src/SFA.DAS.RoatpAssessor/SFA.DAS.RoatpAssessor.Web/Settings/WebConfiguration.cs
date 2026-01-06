@@ -1,29 +1,20 @@
-﻿using Newtonsoft.Json;
-using SFA.DAS.AdminService.Common.Settings;
+﻿using SFA.DAS.AdminService.Common.Settings;
 
-namespace SFA.DAS.RoatpAssessor.Web.Settings
+namespace SFA.DAS.RoatpAssessor.Web.Settings;
+
+public class WebConfiguration : IWebConfiguration
 {
-    public class WebConfiguration : IWebConfiguration
-    {
-        [JsonRequired]
-        public string SessionRedisConnectionString { get; set; }
+    public string SessionRedisConnectionString { get; set; }
 
-        [JsonRequired]
-        public string SessionCachingDatabase { get; set; }
+    public string SessionCachingDatabase { get; set; }
 
-        [JsonRequired]
-        public string DataProtectionKeysDatabase { get; set; }
+    public string DataProtectionKeysDatabase { get; set; }
 
-        [JsonRequired]
-        public AuthSettings StaffAuthentication { get; set; }
+    public ManagedIdentityApiAuthentication RoatpApplicationApiAuthentication { get; set; }
 
-        [JsonRequired]
-        public ManagedIdentityApiAuthentication RoatpApplicationApiAuthentication { get; set; }
+    public string EsfaAdminServicesBaseUrl { get; set; }
 
-        [JsonRequired]
-        public string EsfaAdminServicesBaseUrl { get; set; }
+    public bool UseDfeSignIn { get; set; }
 
-        public bool UseDfeSignIn { get; set; }
-        public string DfESignInServiceHelpUrl { get; set; }
-    }
+    public string DfESignInServiceHelpUrl { get; set; }
 }

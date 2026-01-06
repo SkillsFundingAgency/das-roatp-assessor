@@ -2,19 +2,13 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace SFA.DAS.RoatpAssessor.Web
-{
-    [ExcludeFromCodeCoverage]
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
+namespace SFA.DAS.RoatpAssessor.Web;
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseUrls("https://localhost:44350");
+[ExcludeFromCodeCoverage]
+public static class Program
+{
+    public static void Main(string[] args)
+    {
+        WebHost.CreateDefaultBuilder(args).UseStartup<Startup>().Build().Run();
     }
 }

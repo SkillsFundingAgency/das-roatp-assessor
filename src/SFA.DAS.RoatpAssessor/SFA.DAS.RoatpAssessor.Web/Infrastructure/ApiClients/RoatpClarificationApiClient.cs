@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AdminService.Common.Infrastructure;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
@@ -95,9 +95,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, $"Error when submitting ClarificationPageReviewOutcome for Application: {applicationId} | Page: {pageId}");
+                _logger.LogError(ex, "Error when submitting ClarificationPageReviewOutcome for Application: {ApplicationId} | Page: {PageId}", applicationId, pageId);
                 return false;
-            }  
+            }
         }
 
         public async Task<ClarificationPageReviewOutcome> GetClarificationPageReviewOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId, string userId)
