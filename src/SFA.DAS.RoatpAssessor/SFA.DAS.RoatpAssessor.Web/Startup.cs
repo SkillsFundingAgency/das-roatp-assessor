@@ -16,8 +16,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Polly;
 using Polly.Extensions.Http;
-using SFA.DAS.AdminService.Common;
-using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.DfESignIn.Auth.Enums;
@@ -178,8 +176,6 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.AddTransient<IClarificationOutcomeValidator, ClarificationOutcomeValidator>();
 
             services.AddTransient<IOutcomeSectionReviewOrchestrator, OutcomeSectionReviewOrchestrator>();
-
-            DependencyInjection.ConfigureDependencyInjection(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

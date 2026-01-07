@@ -1,4 +1,4 @@
-﻿using SFA.DAS.AdminService.Common.Settings;
+﻿using SFA.DAS.RoatpAssessor.Web.Infrastructure;
 
 namespace SFA.DAS.RoatpAssessor.Web.Settings;
 
