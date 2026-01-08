@@ -20,9 +20,9 @@ public abstract class ApiClientBase<AC>
     protected const string _contentType = "application/json";
 
     protected readonly HttpClient _httpClient;
-    protected readonly ILogger<AC> _logger;
+    protected readonly ILogger<ApiClientBase<AC>> _logger;
 
-    protected ApiClientBase(HttpClient httpClient, ILogger<AC> logger)
+    protected ApiClientBase(HttpClient httpClient, ILogger<ApiClientBase<AC>> logger)
     {
         _httpClient = httpClient;
         _logger = logger;
