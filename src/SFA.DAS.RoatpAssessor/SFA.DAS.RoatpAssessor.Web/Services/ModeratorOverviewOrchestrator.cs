@@ -34,7 +34,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var viewmodel = new ModeratorApplicationViewModel(application, contact, sequences, request.UserId);
 
-            var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, request.UserId);
+            GetAllModeratorPageReviewOutcomesRequest apiRequest = new GetAllModeratorPageReviewOutcomesRequest
+                { UserId = request.UserId };
+            var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, apiRequest);
             if (savedOutcomes is null || !savedOutcomes.Any())
             {
                 viewmodel.IsReadyForModeratorConfirmation = false;

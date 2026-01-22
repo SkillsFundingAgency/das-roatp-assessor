@@ -11,6 +11,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Transformers;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -35,8 +36,19 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
-            var moderatorPage = await _moderationApiClient.GetModeratorPage(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.PageId);
-
+            ModeratorPage moderatorPage;
+            if(!string.IsNullOrEmpty(request.PageId))
+            {
+                    moderatorPage = await _moderationApiClient.GetModeratorPage(request.ApplicationId, request.SequenceNumber,
+                        request.SectionNumber, request.PageId);
+            }
+            else
+            {
+                moderatorPage = await _moderationApiClient.GetModeratorPage(request.ApplicationId,
+                    request.SequenceNumber,
+                    request.SectionNumber);
+            }
+            
             if (application is null || contact is null || moderatorPage is null)
             {
                 return null;
@@ -90,7 +102,11 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            var selectedSectors = await _moderationApiClient.GetModeratorSectors(request.ApplicationId, request.UserId);
+            GetModeratorSectorsRequest apiRequest = new GetModeratorSectorsRequest
+            {
+                UserId = request.UserId
+            };
+            var selectedSectors = await _moderationApiClient.GetModeratorSectors(request.ApplicationId, apiRequest);
 
             var viewModel = new ApplicationSectorsViewModel
             {
@@ -184,8 +200,15 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, ModeratorSectorDetailsViewModel viewModel)
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the moderator page back from the service
-            var pageReviewOutcome = await _moderationApiClient.GetModeratorPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
-                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, viewModel.PageId, request.UserId);
+            GetModeratorPageReviewOutcomeRequest apiRequest = new GetModeratorPageReviewOutcomeRequest
+            {
+                SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                PageId = viewModel.PageId,
+                UserId = request.UserId
+            };
+
+            var pageReviewOutcome = await _moderationApiClient.GetModeratorPageReviewOutcome(request.ApplicationId, apiRequest);
 
             if (pageReviewOutcome != null)
             {
@@ -211,7 +234,14 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         private async Task SetPageReviewOutcome(GetReviewAnswersRequest request, ModeratorReviewAnswersViewModel viewModel)
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the moderator page back from the service
-            var pageReviewOutcome = await _moderationApiClient.GetModeratorPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, request.UserId);
+            GetModeratorPageReviewOutcomeRequest apiRequest = new GetModeratorPageReviewOutcomeRequest
+            {
+                SequenceNumber = request.SequenceNumber,
+                SectionNumber = request.SectionNumber,
+                PageId = viewModel.PageId,
+                UserId = request.UserId
+            };
+            var pageReviewOutcome = await _moderationApiClient.GetModeratorPageReviewOutcome(request.ApplicationId, apiRequest);
 
             if (pageReviewOutcome != null)
             {

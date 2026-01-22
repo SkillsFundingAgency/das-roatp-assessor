@@ -14,6 +14,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -88,7 +89,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrch
             _assessorApiClient.Setup(x => x.GetAssessorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);
 
-            _assessorApiClient.Setup(x => x.GetAssessorSectors(_applicationId, userId))
+            _assessorApiClient.Setup(x => x.GetAssessorSectors(_applicationId, It.IsAny<GetAssessorSectorsRequest>()))
                 .ReturnsAsync(_chosenSectors);
 
 

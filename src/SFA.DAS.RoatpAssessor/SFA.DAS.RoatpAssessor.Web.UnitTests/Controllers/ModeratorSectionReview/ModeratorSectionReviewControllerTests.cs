@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Refit;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
@@ -14,9 +20,6 @@ using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
 {
@@ -155,14 +158,12 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
             var validationResponse = new ValidationResponse();
             _moderatorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
-            _moderationApiClient.Setup(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId,
-                                    command.SequenceNumber,
-                                    command.SectionNumber,
-                                    command.PageId,
-                                    _controller.User.UserId(),
-                                    _controller.User.UserDisplayName(),
-                                    command.Status,
-                                    command.ReviewComment)).ReturnsAsync(true);
+            _moderationApiClient.Setup(x =>
+                x.SubmitModeratorPageReviewOutcome(command.ApplicationId,
+                    It.IsAny<SubmitModeratorPageReviewOutcomeCommand>())).ReturnsAsync(new ApiResponse<object>(
+                new HttpResponseMessage(HttpStatusCode.OK),
+                null,
+                new RefitSettings()));
 
             // act
             var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;
@@ -172,13 +173,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
             Assert.AreEqual("ViewApplication", result.ActionName);
 
             _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId,
-                        command.SequenceNumber,
-                        command.SectionNumber,
-                        command.PageId,
-                        _controller.User.UserId(),
-                        _controller.User.UserDisplayName(),
-                        command.Status,
-                        command.ReviewComment), Times.Once);
+                        It.IsAny<SubmitModeratorPageReviewOutcomeCommand>()), Times.Once);
         }
 
         [Test]
@@ -216,13 +211,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorSectionReview
             Assert.That(actualViewModel, Is.SameAs(viewModel));
 
             _moderationApiClient.Verify(x => x.SubmitModeratorPageReviewOutcome(command.ApplicationId,
-                        command.SequenceNumber,
-                        command.SectionNumber,
-                        command.PageId,
-                        _controller.User.UserId(),
-                        _controller.User.UserDisplayName(),
-                        command.Status,
-                        command.ReviewComment), Times.Never);
+                        It.IsAny<SubmitModeratorPageReviewOutcomeCommand>()), Times.Never);
         }
     }
 }

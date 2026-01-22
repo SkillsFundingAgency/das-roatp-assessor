@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Refit;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
@@ -205,9 +208,11 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOutcome
                 );
 
 
-            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<string>(),
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(false);
+            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<SubmitOutcomeCommand>()))
+                .ReturnsAsync(new ApiResponse<object>(
+                    new HttpResponseMessage(HttpStatusCode.NoContent),
+                    null,
+                    new RefitSettings()));
 
             var result = await _controller.SubmitClarificationOutcomeConfirmation(_applicationId, string.Empty, command) as ViewResult;
             Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
@@ -223,9 +228,11 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOutcome
                 .ReturnsAsync(new ValidationResponse()
                 );
 
-            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<string>(),
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(true);
+            _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<SubmitOutcomeCommand>()))
+                .ReturnsAsync(new ApiResponse<object>(
+                    new HttpResponseMessage(HttpStatusCode.OK),
+                    null,
+                    new RefitSettings()));
 
             var outcomeReviewViewModel = new ClarificationOutcomeReviewViewModel();
             _mockOrchestrator.Setup(x => x.GetClarificationOutcomeReviewViewModel(It.IsAny<ReviewClarificationOutcomeRequest>()))

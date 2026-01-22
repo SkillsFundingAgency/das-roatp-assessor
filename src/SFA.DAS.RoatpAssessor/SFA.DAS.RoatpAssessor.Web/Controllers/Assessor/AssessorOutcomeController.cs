@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -70,7 +71,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
             // submit if validation passed and user specified to do so
             if (ModelState.IsValid && submitForModeration)
             {
-                var submittedSuccessfully = await _assessorApiClient.UpdateAssessorReviewStatus(command.ApplicationId, userId, userName, AssessorReviewStatus.Approved);
+                UpdateAssessorReviewStatusCommand updateAssessorReviewStatusCommand =
+                    new UpdateAssessorReviewStatusCommand
+                    {
+                        UserId = userId,
+                        UserName = userName,
+                        Status = AssessorReviewStatus.Approved
+                    };
+
+                var apiResponse =
+                    await _assessorApiClient.UpdateAssessorReviewStatus(command.ApplicationId,
+                        updateAssessorReviewStatusCommand);
+                var submittedSuccessfully = apiResponse.StatusCode == HttpStatusCode.OK;
 
                 if (!submittedSuccessfully)
                 {

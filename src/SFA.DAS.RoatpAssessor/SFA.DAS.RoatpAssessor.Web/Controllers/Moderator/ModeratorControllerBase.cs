@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -49,14 +50,20 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
                 var userId = HttpContext.User.UserId();
                 var userName = HttpContext.User.UserDisplayName();
 
-                submittedPageOutcomeSuccessfully = await _moderationApiClient.SubmitModeratorPageReviewOutcome(command.ApplicationId,
-                                    command.SequenceNumber,
-                                    command.SectionNumber,
-                                    command.PageId,
-                                    userId,
-                                    userName,
-                                    command.Status,
-                                    command.ReviewComment);
+                SubmitModeratorPageReviewOutcomeCommand apiCommand = new SubmitModeratorPageReviewOutcomeCommand
+                {
+                    SequenceNumber = command.SequenceNumber,
+                    SectionNumber = command.SectionNumber,
+                    PageId = command.PageId,
+                    UserId = userId,
+                    UserName = userName,
+                    Status = command.Status,
+                    Comment = command.ReviewComment
+                };
+
+                var apiResponse = await _moderationApiClient.SubmitModeratorPageReviewOutcome(command.ApplicationId, apiCommand);
+
+                submittedPageOutcomeSuccessfully = apiResponse.StatusCode == HttpStatusCode.OK;
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
@@ -105,14 +112,20 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Moderator
                 var userId = HttpContext.User.UserId();
                 var userName = HttpContext.User.UserDisplayName();
 
-                submittedPageOutcomeSuccessfully = await _moderationApiClient.SubmitModeratorPageReviewOutcome(command.ApplicationId,
-                                    SequenceIds.DeliveringApprenticeshipTraining,
-                                    SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                                    command.PageId,
-                                    userId,
-                                    userName,
-                                    command.Status,
-                                    command.ReviewComment);
+                SubmitModeratorPageReviewOutcomeCommand apiCommand = new SubmitModeratorPageReviewOutcomeCommand
+                {
+                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                    PageId = command.PageId,
+                    UserId = userId,
+                    UserName = userName,
+                    Status = command.Status,
+                    Comment = command.ReviewComment
+                };
+
+                var apiResponse  = await _moderationApiClient.SubmitModeratorPageReviewOutcome(command.ApplicationId, apiCommand);
+
+                submittedPageOutcomeSuccessfully = apiResponse.StatusCode == HttpStatusCode.OK;
 
                 if (!submittedPageOutcomeSuccessfully)
                 {

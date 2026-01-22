@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -139,7 +140,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Clarification
                     break;
             }
 
-            var submitSuccessful = await _moderationApiClient.SubmitModerationOutcome(applicationId, userId, userName, submittedStatus, reviewComment);
+            SubmitOutcomeCommand apiCommand = new SubmitOutcomeCommand
+            {
+                UserId = userId,
+                UserName = userName,
+                Status = submittedStatus,
+                Comment = reviewComment
+            };
+
+            var apiResponse = await _moderationApiClient.SubmitModerationOutcome(applicationId, apiCommand);
+            var submitSuccessful = apiResponse.StatusCode == HttpStatusCode.OK;
 
             if (!submitSuccessful)
             {

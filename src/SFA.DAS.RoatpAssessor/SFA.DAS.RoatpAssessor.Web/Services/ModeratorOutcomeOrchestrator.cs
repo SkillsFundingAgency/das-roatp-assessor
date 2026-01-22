@@ -22,7 +22,10 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId); // TODO: Is this needed?
-            var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, request.UserId);
+
+            GetAllModeratorPageReviewOutcomesRequest apiRequest = new GetAllModeratorPageReviewOutcomesRequest
+                { UserId = request.UserId };
+            var savedOutcomes = await _moderationApiClient.GetAllModeratorPageReviewOutcomes(request.ApplicationId, apiRequest);
 
             if (application is null || contact is null || savedOutcomes is null)
             {

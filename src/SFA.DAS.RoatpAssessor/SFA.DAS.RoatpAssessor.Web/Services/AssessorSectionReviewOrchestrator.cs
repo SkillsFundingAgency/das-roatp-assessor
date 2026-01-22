@@ -11,6 +11,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Enums;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Transformers;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -35,7 +36,18 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
             var contact = await _applicationApiClient.GetContactForApplication(request.ApplicationId);
-            var assessorPage = await _assessorApiClient.GetAssessorPage(request.ApplicationId, request.SequenceNumber, request.SectionNumber, request.PageId);
+
+            AssessorPage assessorPage;
+            if (!string.IsNullOrEmpty(request.PageId))
+            {
+                assessorPage = await _assessorApiClient.GetAssessorPage(request.ApplicationId,
+                    request.SequenceNumber, request.SectionNumber, request.PageId);
+            }
+            else
+            {
+                assessorPage = await _assessorApiClient.GetAssessorPage(request.ApplicationId,
+                    request.SequenceNumber, request.SectionNumber);
+            }
 
             if (application is null || contact is null || assessorPage is null)
             {
@@ -76,7 +88,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         public async Task<ApplicationSectorsViewModel> GetSectorsViewModel(GetSectorsRequest request)
         {
             var application = await _applicationApiClient.GetApplication(request.ApplicationId);
-
             var assessorPage = await _assessorApiClient.GetAssessorPage(
                 request.ApplicationId,
                 SequenceIds.DeliveringApprenticeshipTraining,
@@ -88,7 +99,9 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                 return null;
             }
 
-            var selectedSectors = await _assessorApiClient.GetAssessorSectors(request.ApplicationId, request.UserId);
+            GetAssessorSectorsRequest getAssessorSectorsRequest = new GetAssessorSectorsRequest
+                { UserId = request.UserId };
+            var selectedSectors = await _assessorApiClient.GetAssessorSectors(request.ApplicationId, getAssessorSectorsRequest);
 
             var viewModel = new ApplicationSectorsViewModel
             {
@@ -180,8 +193,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         private async Task SetSectorReviewOutcome(GetSectorDetailsRequest request, AssessorSectorDetailsViewModel viewModel)
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
-            var pageReviewOutcome = await _assessorApiClient.GetAssessorPageReviewOutcome(request.ApplicationId, SequenceIds.DeliveringApprenticeshipTraining,
-                SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees, viewModel.PageId, request.UserId);
+            GetAssessorPageReviewOutcomeRequest getAssessorPageReviewOutcomeRequest =
+                new GetAssessorPageReviewOutcomeRequest
+                {
+                    SequenceNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                    SectionNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                    PageId = viewModel.PageId,
+                    UserId = request.UserId
+                };
+
+            var pageReviewOutcome = await _assessorApiClient.GetAssessorPageReviewOutcome(request.ApplicationId, getAssessorPageReviewOutcomeRequest);
 
             if (pageReviewOutcome != null)
             {
@@ -207,7 +228,16 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
         private async Task SetPageReviewOutcome(GetReviewAnswersRequest request, AssessorReviewAnswersViewModel viewModel)
         {
             // TODO: To think about... could we move this into Apply Service? It's really part of getting the assessor page back from the service
-            var pageReviewOutcome = await _assessorApiClient.GetAssessorPageReviewOutcome(request.ApplicationId, request.SequenceNumber, request.SectionNumber, viewModel.PageId, request.UserId);
+            GetAssessorPageReviewOutcomeRequest getAssessorPageReviewOutcomeRequest =
+                new GetAssessorPageReviewOutcomeRequest
+                {
+                    SequenceNumber = request.SequenceNumber,
+                    SectionNumber = request.SectionNumber,
+                    PageId = viewModel.PageId,
+                    UserId = request.UserId
+                };
+
+            var pageReviewOutcome = await _assessorApiClient.GetAssessorPageReviewOutcome(request.ApplicationId, getAssessorPageReviewOutcomeRequest);
 
             if (pageReviewOutcome != null)
             {

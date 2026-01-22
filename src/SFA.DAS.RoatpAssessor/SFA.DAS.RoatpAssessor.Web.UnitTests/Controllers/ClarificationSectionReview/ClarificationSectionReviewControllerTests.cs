@@ -22,6 +22,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Refit;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionReview
 {
@@ -153,15 +154,10 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
             _clarificationPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
             _clarificationApiClient.Setup(x => x.SubmitClarificationPageReviewOutcome(command.ApplicationId,
-                                    command.SequenceNumber,
-                                    command.SectionNumber,
-                                    command.PageId,
-                                    _controller.User.UserId(),
-                                    _controller.User.UserDisplayName(),
-                                    command.ClarificationResponse,
-                                    command.Status,
-                                    command.ReviewComment,
-                                    It.IsAny<IFormFileCollection>())).ReturnsAsync(true);
+                It.IsAny<MultipartFormDataContent>())).ReturnsAsync(new ApiResponse<object>(
+                new HttpResponseMessage(HttpStatusCode.OK),
+                null,
+                new RefitSettings()));
 
             // act
             var result = await _controller.ReviewPageAnswers(command) as RedirectToActionResult;
@@ -171,15 +167,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
             Assert.AreEqual("ViewApplication", result.ActionName);
 
             _clarificationApiClient.Verify(x => x.SubmitClarificationPageReviewOutcome(command.ApplicationId,
-                        command.SequenceNumber,
-                        command.SectionNumber,
-                        command.PageId,
-                        _controller.User.UserId(),
-                        _controller.User.UserDisplayName(),
-                        command.ClarificationResponse,
-                        command.Status,
-                        command.ReviewComment,
-                        It.IsAny<IFormFileCollection>()), Times.Once);
+                        It.IsAny<MultipartFormDataContent>()), Times.Once);
         }
 
         [Test]
@@ -214,15 +202,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
             Assert.That(actualViewModel, Is.SameAs(viewModel));
 
             _clarificationApiClient.Verify(x => x.SubmitClarificationPageReviewOutcome(command.ApplicationId,
-                        command.SequenceNumber,
-                        command.SectionNumber,
-                        command.PageId,
-                        _controller.User.UserId(),
-                        _controller.User.UserDisplayName(),
-                        command.ClarificationResponse,
-                        command.Status,
-                        command.ReviewComment,
-                        It.IsAny<IFormFileCollection>()), Times.Never);
+                        It.IsAny<MultipartFormDataContent>()), Times.Never);
         }
 
 
@@ -254,15 +234,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
             Assert.AreEqual("ReviewPageAnswers", result.ActionName);
 
             _clarificationApiClient.Verify(x => x.SubmitClarificationPageReviewOutcome(command.ApplicationId,
-                        command.SequenceNumber,
-                        command.SectionNumber,
-                        command.PageId,
-                        _controller.User.UserId(),
-                        _controller.User.UserDisplayName(),
-                        command.ClarificationResponse,
-                        command.Status,
-                        command.ReviewComment,
-                        It.IsAny<IFormFileCollection>()), Times.Never);
+                        It.IsAny<MultipartFormDataContent>()), Times.Never);
         }
 
         [Test]

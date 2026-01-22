@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
@@ -37,7 +38,8 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
         public async Task<bool> AssignApplicationToAssessor(Guid applicationId, int assessorNumber, string assessorUserId, string assessorName)
         {
-            return await _assessorApiClient.AssignAssessor(applicationId, new AssignAssessorCommand(assessorNumber, assessorUserId, assessorName));
+            var apiResponse = await _assessorApiClient.AssignAssessor(applicationId, new AssignAssessorCommand(assessorNumber, assessorUserId, assessorName));
+            return apiResponse.StatusCode == HttpStatusCode.OK;
         }
 
         public async Task<InProgressApplicationsViewModel> GetInProgressApplicationsViewModel(string userId, string searchTerm, string sortColumn, string sortOrder)

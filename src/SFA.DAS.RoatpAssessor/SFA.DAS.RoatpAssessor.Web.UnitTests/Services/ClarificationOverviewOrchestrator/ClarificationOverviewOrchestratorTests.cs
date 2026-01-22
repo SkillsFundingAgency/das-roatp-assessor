@@ -69,7 +69,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOverviewOrch
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _clarificationApiClient.Setup(x => x.GetClarificationSequences(_applicationId)).ReturnsAsync(_sequences);
-            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, It.IsAny<GetAllClarificationPageReviewOutcomesRequest>())).ReturnsAsync(_outcomes);
         }
 
         [Test]

@@ -60,7 +60,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _moderationApiClient.Setup(x => x.GetModeratorSequences(_applicationId)).ReturnsAsync(_sequences);
-            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, It.IsAny<GetAllModeratorPageReviewOutcomesRequest>())).ReturnsAsync(_outcomes);
         }
 
 

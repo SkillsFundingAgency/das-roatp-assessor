@@ -33,7 +33,13 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
 
             var viewmodel = new AssessorApplicationViewModel(application, contact, sequences, request.UserId);
 
-            var savedOutcomes = await _assessorApiClient.GetAllAssessorPageReviewOutcomes(request.ApplicationId, request.UserId);
+            GetAllAssessorPageReviewOutcomesRequest getAllAssessorPageReviewOutcomesRequest =
+                new GetAllAssessorPageReviewOutcomesRequest
+                {
+                    UserId = request.UserId
+                };
+
+            var savedOutcomes = await _assessorApiClient.GetAllAssessorPageReviewOutcomes(request.ApplicationId, getAllAssessorPageReviewOutcomesRequest);
             if (savedOutcomes is null || !savedOutcomes.Any())
             {
                 viewmodel.IsReadyForModeration = false;

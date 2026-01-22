@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,14 +49,22 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                 var userId = HttpContext.User.UserId();
                 var userName = HttpContext.User.UserDisplayName();
 
-                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
-                                    command.SequenceNumber,
-                                    command.SectionNumber,
-                                    command.PageId,
-                                    userId,
-                                    userName,
-                                    command.Status,
-                                    command.ReviewComment);
+                SubmitAssessorPageReviewOutcomeCommand submitAssessorPageReviewOutcomeCommand =
+                    new SubmitAssessorPageReviewOutcomeCommand
+                    {
+                        SectionNumber = command.SequenceNumber,
+                        SequenceNumber = command.SectionNumber,
+                        PageId = command.PageId,
+                        UserId = userId,
+                        UserName = userName,
+                        Status = command.Status,
+                        Comment = command.ReviewComment
+                    };
+
+                var apiResponse = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
+                    submitAssessorPageReviewOutcomeCommand);
+
+                submittedPageOutcomeSuccessfully = apiResponse.StatusCode == HttpStatusCode.OK;
 
                 if (!submittedPageOutcomeSuccessfully)
                 {
@@ -104,14 +113,22 @@ namespace SFA.DAS.RoatpAssessor.Web.Controllers.Assessor
                 var userId = HttpContext.User.UserId();
                 var userName = HttpContext.User.UserDisplayName();
 
-                submittedPageOutcomeSuccessfully = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
-                                    SequenceIds.DeliveringApprenticeshipTraining,
-                          SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
-                                    command.PageId,
-                                    userId,
-                                    userName,
-                                    command.Status,
-                                    command.ReviewComment);
+                SubmitAssessorPageReviewOutcomeCommand submitAssessorPageReviewOutcomeCommand =
+                    new SubmitAssessorPageReviewOutcomeCommand
+                    {
+                        SectionNumber = SequenceIds.DeliveringApprenticeshipTraining,
+                        SequenceNumber = SectionIds.DeliveringApprenticeshipTraining.YourSectorsAndEmployees,
+                        PageId = command.PageId,
+                        UserId = userId,
+                        UserName = userName,
+                        Status = command.Status,
+                        Comment = command.ReviewComment
+                    };
+
+                var apiResponse = await _assessorApiClient.SubmitAssessorPageReviewOutcome(command.ApplicationId,
+                    submitAssessorPageReviewOutcomeCommand);
+
+                submittedPageOutcomeSuccessfully = apiResponse.StatusCode == HttpStatusCode.OK;
 
                 if (!submittedPageOutcomeSuccessfully)
                 {

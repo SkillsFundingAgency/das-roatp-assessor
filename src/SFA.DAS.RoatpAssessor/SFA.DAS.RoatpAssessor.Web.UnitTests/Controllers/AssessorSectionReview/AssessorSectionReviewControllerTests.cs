@@ -16,7 +16,10 @@ using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Refit;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
 {
@@ -155,14 +158,13 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
             var validationResponse = new ValidationResponse();
             _assessorPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
-            _assessorApiClient.Setup(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
-                                    command.SequenceNumber,
-                                    command.SectionNumber,
-                                    command.PageId,
-                                    _controller.User.UserId(),
-                                    _controller.User.UserDisplayName(),
-                                    command.Status,
-                                    command.ReviewComment)).ReturnsAsync(true);
+            _assessorApiClient
+                .Setup(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
+                    It.IsAny<SubmitAssessorPageReviewOutcomeCommand>())).ReturnsAsync(new ApiResponse<object>(
+                    new HttpResponseMessage(HttpStatusCode.OK),
+                    null,
+                    new RefitSettings()
+                ));
 
             // act
             var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;
@@ -171,14 +173,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
             Assert.AreEqual("AssessorOverview", result.ControllerName);
             Assert.AreEqual("ViewApplication", result.ActionName);
 
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
-                        command.SequenceNumber,
-                        command.SectionNumber,
-                        command.PageId,
-                        _controller.User.UserId(),
-                        _controller.User.UserDisplayName(),
-                        command.Status,
-                        command.ReviewComment), Times.Once);
+            _assessorApiClient.Verify(
+                x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
+                    It.IsAny<SubmitAssessorPageReviewOutcomeCommand>()), Times.Once);
         }
 
         [Test]
@@ -215,14 +212,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
             Assert.That(actualViewModel, Is.Not.Null);
             Assert.That(actualViewModel, Is.SameAs(viewModel));
 
-            _assessorApiClient.Verify(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
-                        command.SequenceNumber,
-                        command.SectionNumber,
-                        command.PageId,
-                        _controller.User.UserId(),
-                        _controller.User.UserDisplayName(),
-                        command.Status,
-                        command.ReviewComment), Times.Never);
+            _assessorApiClient.Verify(
+                x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
+                    It.IsAny<SubmitAssessorPageReviewOutcomeCommand>()), Times.Never);
         }
     }
 }

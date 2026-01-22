@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using Refit;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
@@ -35,6 +38,13 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
             var userId = _user.UserId();
             var userName = _user.UserDisplayName();
             var assessorNumber = 2;
+
+            _assessorApiClient.Setup(x => x.AssignAssessor(_applicationId, It.IsAny<AssignAssessorCommand>()))
+                .ReturnsAsync(new ApiResponse<object>(
+                    new HttpResponseMessage(HttpStatusCode.OK),
+                    null,
+                    new RefitSettings()
+                ));
 
             await _orchestrator.AssignApplicationToAssessor(_applicationId, assessorNumber, userId, userName);
 

@@ -47,7 +47,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorOverviewOrchestra
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _assessorApiClient.Setup(x => x.GetAssessorSequences(_applicationId)).ReturnsAsync(_sequences);
-            _assessorApiClient.Setup(x => x.GetAllAssessorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _assessorApiClient.Setup(x => x.GetAllAssessorPageReviewOutcomes(_applicationId, It.IsAny<GetAllAssessorPageReviewOutcomesRequest>())).ReturnsAsync(_outcomes);
         }
 
         [Test]

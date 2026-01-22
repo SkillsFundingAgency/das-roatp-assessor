@@ -11,6 +11,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 
 
@@ -108,11 +109,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationSectionRevie
 
             _clarificationApiClient.Setup(x => x.GetClarificationPage(_applicationId, _sequenceNumber, _sectionNumber, _pageId))
                 .ReturnsAsync(_clarificationPage);
-
-            _clarificationApiClient.Setup(x => x.GetClarificationPageReviewOutcomesForSection(_applicationId, _sequenceNumber, _sectionNumber, _userId))
-                .ReturnsAsync(new List<ClarificationPageReviewOutcome> { _pageReviewOutcome });
-
-            _clarificationApiClient.Setup(x => x.GetClarificationPageReviewOutcome(_applicationId, _sequenceNumber, _sectionNumber, _pageId, _userId))
+            
+            _clarificationApiClient.Setup(x => x.GetClarificationPageReviewOutcome(_applicationId, It.IsAny<GetClarificationPageReviewOutcomeRequest>()))
                 .ReturnsAsync(_pageReviewOutcome);
         }
 

@@ -9,10 +9,11 @@ using NUnit.Framework;
 using SFA.DAS.AdminService.Common.Extensions;
 using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -87,7 +88,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorSectionReviewOrc
             _moderationApiClient.Setup(x => x.GetModeratorPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);
 
-            _moderationApiClient.Setup(x => x.GetModeratorSectors(_applicationId, userId))
+            _moderationApiClient.Setup(x => x.GetModeratorSectors(_applicationId, It.IsAny<GetModeratorSectorsRequest>()))
                 .ReturnsAsync(_chosenSectors);
 
 

@@ -69,7 +69,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
             _request = new GetModeratorOutcomeRequest(_applicationId,_userId);
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
-            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, It.IsAny<GetAllModeratorPageReviewOutcomesRequest>())).ReturnsAsync(_outcomes);
 
             _expectedOutcomeViewModel = new ModeratorOutcomeViewModel(_application, _outcomes);
         }
@@ -98,7 +98,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
         {
             _outcomes = new List<ModeratorPageReviewOutcome>();
             _outcomes.Add(new ModeratorPageReviewOutcome {ApplicationId = _applicationId, Status = "not pass or fail"});
-            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, It.IsAny<GetAllModeratorPageReviewOutcomesRequest>())).ReturnsAsync(_outcomes);
             var result = _orchestrator.GetInModerationOutcomeViewModel(_request);
             Assert.IsNull(result.Result);
         }
@@ -107,7 +107,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
         public void Return_view_model_with_pass_and_fail_counts_as_zero_if_no_outcomes_added()
         {
             _outcomes = new List<ModeratorPageReviewOutcome>(); 
-            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, It.IsAny<GetAllModeratorPageReviewOutcomesRequest>())).ReturnsAsync(_outcomes);
             var result = _orchestrator.GetInModerationOutcomeViewModel(_request);
             var actualViewModel = result?.Result;
 
@@ -122,7 +122,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
             _outcomes.Add(new ModeratorPageReviewOutcome { Status = "Pass" });
             _outcomes.Add(new ModeratorPageReviewOutcome { Status = "Fail" });
 
-            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
+            _moderationApiClient.Setup(x => x.GetAllModeratorPageReviewOutcomes(_applicationId, It.IsAny<GetAllModeratorPageReviewOutcomesRequest>())).ReturnsAsync(_outcomes);
             var result = _orchestrator.GetInModerationOutcomeViewModel(_request);
             var actualViewModel = result?.Result;
 

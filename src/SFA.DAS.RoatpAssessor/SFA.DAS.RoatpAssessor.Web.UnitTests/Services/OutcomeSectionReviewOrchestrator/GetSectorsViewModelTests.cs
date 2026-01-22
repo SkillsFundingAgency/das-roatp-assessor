@@ -13,6 +13,7 @@ using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -89,7 +90,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeSectionReviewOrche
             _clarificationApiClient.Setup(x => x.GetClarificationPage(_applicationId, sequenceNumber, sectionNumber, pageId))
                 .ReturnsAsync(assessorPage);
 
-            _clarificationApiClient.Setup(x => x.GetClarificationSectors(_applicationId, userId))
+            _clarificationApiClient.Setup(x => x.GetClarificationSectors(_applicationId, It.IsAny<GetClarificationSectorsRequest>()))
                 .ReturnsAsync(_chosenSectors);
 
 
