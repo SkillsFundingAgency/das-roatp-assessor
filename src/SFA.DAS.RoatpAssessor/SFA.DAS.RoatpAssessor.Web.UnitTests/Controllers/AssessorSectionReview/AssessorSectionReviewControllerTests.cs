@@ -160,11 +160,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorSectionReview
 
             _assessorApiClient
                 .Setup(x => x.SubmitAssessorPageReviewOutcome(command.ApplicationId,
-                    It.IsAny<SubmitAssessorPageReviewOutcomeCommand>())).ReturnsAsync(new ApiResponse<object>(
-                    new HttpResponseMessage(HttpStatusCode.OK),
-                    null,
-                    new RefitSettings()
-                ));
+                    It.IsAny<SubmitAssessorPageReviewOutcomeCommand>())).ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
 
             // act
             var result = await _controller.ReviewPageAnswers(_applicationId, sequenceNumber, sectionNumber, pageId, command) as RedirectToActionResult;

@@ -47,11 +47,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
 
             _assessorApiClient
                 .Setup(x => x.UpdateAssessorReviewStatus(_applicationId, It.IsAny<UpdateAssessorReviewStatusCommand>()))
-                .ReturnsAsync(new ApiResponse<object>(
-                    new HttpResponseMessage(HttpStatusCode.OK),
-                    null,
-                    new RefitSettings()
-                ));
+                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
 
             _applicationViewModel = GetApplicationViewModel();
             _assessorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetAssessorOverviewRequest>())).ReturnsAsync(_applicationViewModel);

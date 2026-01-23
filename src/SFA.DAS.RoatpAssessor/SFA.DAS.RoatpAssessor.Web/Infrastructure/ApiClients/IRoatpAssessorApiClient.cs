@@ -14,7 +14,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
     public interface IRoatpAssessorApiClient
     {
         [Post("/Assessor/Applications/{applicationId}/Assign")]
-        Task<ApiResponse<object>> AssignAssessor(Guid applicationId, [Body] AssignAssessorCommand request);
+        Task<HttpResponseMessage> AssignAssessor(Guid applicationId, [Body] AssignAssessorCommand request);
 
         [Get("/Assessor/Applications/{applicationId}/Overview")]
         Task<List<AssessorSequence>> GetAssessorSequences(Guid applicationId);
@@ -32,7 +32,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<SectorDetails> GetAssessorSectorDetails(Guid applicationId, string pageId);
 
         [Post("/Assessor/Applications/{applicationId}/SubmitPageReviewOutcome")]
-        Task<ApiResponse<object>> SubmitAssessorPageReviewOutcome(Guid applicationId, [Body] SubmitAssessorPageReviewOutcomeCommand command);
+        Task<HttpResponseMessage> SubmitAssessorPageReviewOutcome(Guid applicationId, [Body] SubmitAssessorPageReviewOutcomeCommand command);
 
         [Post("/Assessor/Applications/{applicationId}/GetPageReviewOutcome")]
         Task<AssessorPageReviewOutcome> GetAssessorPageReviewOutcome(Guid applicationId, [Body] GetAssessorPageReviewOutcomeRequest request);

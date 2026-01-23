@@ -154,10 +154,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
             _clarificationPageValidator.Setup(x => x.Validate(command)).ReturnsAsync(validationResponse);
 
             _clarificationApiClient.Setup(x => x.SubmitClarificationPageReviewOutcome(command.ApplicationId,
-                It.IsAny<MultipartFormDataContent>())).ReturnsAsync(new ApiResponse<object>(
-                new HttpResponseMessage(HttpStatusCode.OK),
-                null,
-                new RefitSettings()));
+                It.IsAny<MultipartFormDataContent>())).ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
 
             // act
             var result = await _controller.ReviewPageAnswers(command) as RedirectToActionResult;

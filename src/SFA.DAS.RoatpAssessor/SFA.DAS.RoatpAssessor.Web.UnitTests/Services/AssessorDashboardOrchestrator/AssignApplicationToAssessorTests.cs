@@ -40,11 +40,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
             var assessorNumber = 2;
 
             _assessorApiClient.Setup(x => x.AssignAssessor(_applicationId, It.IsAny<AssignAssessorCommand>()))
-                .ReturnsAsync(new ApiResponse<object>(
-                    new HttpResponseMessage(HttpStatusCode.OK),
-                    null,
-                    new RefitSettings()
-                ));
+                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
 
             await _orchestrator.AssignApplicationToAssessor(_applicationId, assessorNumber, userId, userName);
 

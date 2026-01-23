@@ -224,10 +224,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
 
 
             _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<SubmitOutcomeCommand>()))
-                .ReturnsAsync(new ApiResponse<object>(
-                    new HttpResponseMessage(HttpStatusCode.NoContent),
-                    null,
-                    new RefitSettings()));
+                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
             var result = await _controller.SubmitModeratorOutcomeConfirmation(_applicationId, string.Empty, command) as ViewResult;
             Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
@@ -244,10 +241,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
                 );
 
             _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<SubmitOutcomeCommand>()))
-                .ReturnsAsync(new ApiResponse<object>(
-                    new HttpResponseMessage(HttpStatusCode.OK),
-                    null,
-                    new RefitSettings()));
+                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
 
             var outcomeReviewViewModel = new ModeratorOutcomeReviewViewModel();
             _mockOrchestrator.Setup(x => x.GetInModerationOutcomeReviewViewModel(It.IsAny<ReviewModeratorOutcomeRequest>()))

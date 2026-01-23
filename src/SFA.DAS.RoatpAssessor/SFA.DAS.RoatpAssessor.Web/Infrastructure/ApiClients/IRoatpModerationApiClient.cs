@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Refit;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
@@ -29,7 +30,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<BlindAssessmentOutcome> GetBlindAssessmentOutcome(Guid applicationId, int sequenceNumber, int sectionNumber, string pageId);
 
         [Post("/Moderator/Applications/{applicationId}/SubmitPageReviewOutcome")]
-        Task<ApiResponse<object>> SubmitModeratorPageReviewOutcome(Guid applicationId, [Body] SubmitModeratorPageReviewOutcomeCommand command);
+        Task<HttpResponseMessage> SubmitModeratorPageReviewOutcome(Guid applicationId, [Body] SubmitModeratorPageReviewOutcomeCommand command);
 
         [Post("/Moderator/Applications/{applicationId}/GetAllPageReviewOutcomes")]
         Task<List<ModeratorPageReviewOutcome>> GetAllModeratorPageReviewOutcomes(Guid applicationId, GetAllModeratorPageReviewOutcomesRequest request);
@@ -38,6 +39,6 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<ModeratorPageReviewOutcome> GetModeratorPageReviewOutcome(Guid applicationId, GetModeratorPageReviewOutcomeRequest request);
 
         [Post("/Moderator/Applications/{applicationId}/SubmitOutcome")]
-        Task<ApiResponse<object>> SubmitModerationOutcome(Guid applicationId, SubmitOutcomeCommand command);
+        Task<HttpResponseMessage> SubmitModerationOutcome(Guid applicationId, SubmitOutcomeCommand command);
     }
 }

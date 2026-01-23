@@ -209,10 +209,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOutcome
 
 
             _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<SubmitOutcomeCommand>()))
-                .ReturnsAsync(new ApiResponse<object>(
-                    new HttpResponseMessage(HttpStatusCode.NoContent),
-                    null,
-                    new RefitSettings()));
+                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.NoContent));
 
             var result = await _controller.SubmitClarificationOutcomeConfirmation(_applicationId, string.Empty, command) as ViewResult;
             Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
@@ -229,10 +226,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOutcome
                 );
 
             _mockModerationApiClient.Setup(x => x.SubmitModerationOutcome(_applicationId, It.IsAny<SubmitOutcomeCommand>()))
-                .ReturnsAsync(new ApiResponse<object>(
-                    new HttpResponseMessage(HttpStatusCode.OK),
-                    null,
-                    new RefitSettings()));
+                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
 
             var outcomeReviewViewModel = new ClarificationOutcomeReviewViewModel();
             _mockOrchestrator.Setup(x => x.GetClarificationOutcomeReviewViewModel(It.IsAny<ReviewClarificationOutcomeRequest>()))

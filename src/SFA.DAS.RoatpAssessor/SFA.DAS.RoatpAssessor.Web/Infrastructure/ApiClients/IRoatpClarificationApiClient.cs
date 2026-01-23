@@ -28,7 +28,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients
         Task<SectorDetails> GetClarificationSectorDetails(Guid applicationId, string pageId);
 
         [Post("/Clarification/Applications/{applicationId}/SubmitPageReviewOutcome")]
-        Task<ApiResponse<object>> SubmitClarificationPageReviewOutcome(Guid applicationId, [Body] MultipartFormDataContent requestContent);
+        Task<HttpResponseMessage> SubmitClarificationPageReviewOutcome(Guid applicationId, [Body] MultipartFormDataContent requestContent);
 
         [Post("/Clarification/Applications/{applicationId}/GetAllPageReviewOutcomes")]
         Task<List<ClarificationPageReviewOutcome>> GetAllClarificationPageReviewOutcomes(Guid applicationId, [Body] GetAllClarificationPageReviewOutcomesRequest request);
