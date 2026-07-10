@@ -1,7 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.Transformers;
-using System.Collections.Generic;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Transformers
 {
@@ -9,13 +9,13 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Transformers
     public class ManagementHierarchyTransformerTests
     {
         private readonly List<string> _InputHeadingTitles = new List<string> { "Name", "Job role", "Years in role", "Months in role", "Part of another organisation", "Organisation details" };
-        private readonly List<string> _TransformedHeadingTitles = new List<string> { "First name", "Last name","Job role", "Time in role", "Is this person part of any other organisations?", "Enter the names of all these organisations", "Date of birth", "Email", "Contact number" };
-        private readonly string _NotApplicable = "Not applicable";     
+        private readonly List<string> _TransformedHeadingTitles = new List<string> { "First name", "Last name", "Job role", "Time in role", "Is this person part of any other organisations?", "Enter the names of all these organisations", "Date of birth", "Email", "Contact number" };
+        private readonly string _NotApplicable = "Not applicable";
 
-        [TestCase("firstName", "last name", "role", "1", "1", "1 year 1 month", "No", null,"1","1980","Jan 1980", "test@test.com", "12345")]
-        [TestCase("firstName", "last name", "role", "1", "1", "1 year 1 month", "Yes", "organisation", "2", "1980", "Feb 1980","test@test.com", "12345")]
-        [TestCase("firstName", "last name", "role", "1", "2", "1 year 2 months", "No", null, "12", "1980", "Dec 1980","test@test.com", "12345")]
-        [TestCase("firstName", "last name", "role", "1", "2", "1 year 2 months", "Yes", "organisation", "1", "1980", "Jan 1980","test@test.com", "12345")]
+        [TestCase("firstName", "last name", "role", "1", "1", "1 year 1 month", "No", null, "1", "1980", "Jan 1980", "test@test.com", "12345")]
+        [TestCase("firstName", "last name", "role", "1", "1", "1 year 1 month", "Yes", "organisation", "2", "1980", "Feb 1980", "test@test.com", "12345")]
+        [TestCase("firstName", "last name", "role", "1", "2", "1 year 2 months", "No", null, "12", "1980", "Dec 1980", "test@test.com", "12345")]
+        [TestCase("firstName", "last name", "role", "1", "2", "1 year 2 months", "Yes", "organisation", "1", "1980", "Jan 1980", "test@test.com", "12345")]
         [TestCase("firstName", "last name", "role", "2", "1", "2 years 1 month", "No", null, "1", "1980", "Jan 1980", "test@test.com", "12345")]
         [TestCase("firstName", "last name", "role", "2", "1", "2 years 1 month", "Yes", "organisation", "1", "1980", "Jan 1980", "test@test.com", "12345")]
         [TestCase("firstName", "last name", "role", "2", "2", "2 years 2 months", "No", null, "1", "1980", "Jan 1980", "test@test.com", "12345")]
@@ -51,8 +51,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Transformers
             Assert.IsNotNull(actualResult);
             Assert.IsNotNull(actualResult.HeadingTitles);
             Assert.IsNotNull(actualResult.DataRows);
-            CollectionAssert.AreEquivalent(expectedResult.HeadingTitles, actualResult.HeadingTitles); 
-            CollectionAssert.AreEquivalent(expectedResult.DataRows[0].Columns, actualResult.DataRows[0].Columns);
+            Assert.That(expectedResult.HeadingTitles, Is.EqualTo(actualResult.HeadingTitles));
+            Assert.That(expectedResult.DataRows[0].Columns, Is.EqualTo(actualResult.DataRows[0].Columns));
         }
     }
 }

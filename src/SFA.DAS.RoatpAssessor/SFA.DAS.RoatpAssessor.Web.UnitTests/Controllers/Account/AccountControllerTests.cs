@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
 using SFA.DAS.RoatpAssessor.Web.Settings;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Account;
@@ -24,9 +24,9 @@ public class AccountControllerTests
         _configurationMock.Setup(x => x.DfESignInServiceHelpUrl).Returns("test");
         _controller = new AccountController(Mock.Of<ILogger<AccountController>>(), _configurationMock.Object)
         {
-            ControllerContext = MockedControllerContext.Setup(),
             Url = Mock.Of<IUrlHelper>()
         };
+        _controller.AddDefaultContextWithUser();
     }
 
     [Test]
@@ -35,8 +35,8 @@ public class AccountControllerTests
         var result = _controller.SignIn() as ChallengeResult;
 
         Assert.That(result, Is.Not.Null);
-        CollectionAssert.IsNotEmpty(result.AuthenticationSchemes);
-        CollectionAssert.Contains(result.AuthenticationSchemes, OpenIdConnectDefaults.AuthenticationScheme);
+        Assert.That(result.AuthenticationSchemes, Is.Not.Empty);
+        Assert.That(result.AuthenticationSchemes, Contains.Item(OpenIdConnectDefaults.AuthenticationScheme));
     }
 
     [Test]
@@ -54,9 +54,9 @@ public class AccountControllerTests
         var result = _controller.SignOut() as SignOutResult;
 
         Assert.That(result, Is.Not.Null);
-        CollectionAssert.IsNotEmpty(result.AuthenticationSchemes);
-        CollectionAssert.Contains(result.AuthenticationSchemes, OpenIdConnectDefaults.AuthenticationScheme);
-        CollectionAssert.Contains(result.AuthenticationSchemes, CookieAuthenticationDefaults.AuthenticationScheme);
+        Assert.That(result.AuthenticationSchemes, Is.Not.Empty);
+        Assert.That(result.AuthenticationSchemes, Contains.Item(OpenIdConnectDefaults.AuthenticationScheme));
+        Assert.That(result.AuthenticationSchemes, Contains.Item(CookieAuthenticationDefaults.AuthenticationScheme));
     }
 
     [Test]

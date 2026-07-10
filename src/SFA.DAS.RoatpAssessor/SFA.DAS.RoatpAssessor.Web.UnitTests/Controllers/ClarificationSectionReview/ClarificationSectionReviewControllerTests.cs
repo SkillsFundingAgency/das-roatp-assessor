@@ -1,27 +1,27 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
-using SFA.DAS.RoatpAssessor.Web.Controllers.Clarification;
-using SFA.DAS.RoatpAssessor.Web.Domain;
-using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
-using SFA.DAS.RoatpAssessor.Web.Models;
-using SFA.DAS.RoatpAssessor.Web.Services;
-using SFA.DAS.RoatpAssessor.Web.Validators;
-using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
+using SFA.DAS.RoatpAssessor.Web.Controllers.Clarification;
+using SFA.DAS.RoatpAssessor.Web.Domain;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
+using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
+using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
+using SFA.DAS.RoatpAssessor.Web.Validators;
+using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionReview
 {
@@ -50,10 +50,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationSectionRe
 
             var logger = Mock.Of<ILogger<ClarificationSectionReviewController>>();
 
-            _controller = new ClarificationSectionReviewController(_clarificationApiClient.Object, _clarificationPageValidator.Object, _sectionReviewOrchestrator.Object, logger)
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new ClarificationSectionReviewController(_clarificationApiClient.Object, _clarificationPageValidator.Object, _sectionReviewOrchestrator.Object, logger);
+            _controller.AddDefaultContextWithUser();
         }
 
         [Test]

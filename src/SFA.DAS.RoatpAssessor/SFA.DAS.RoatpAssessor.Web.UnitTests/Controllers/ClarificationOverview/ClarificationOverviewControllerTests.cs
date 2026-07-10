@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.RoatpAssessor.Web.Services;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.Models;
-using SFA.DAS.RoatpAssessor.Web.Controllers.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
+using SFA.DAS.RoatpAssessor.Web.Controllers.Clarification;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
+using SFA.DAS.RoatpAssessor.Web.Models;
+using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
+using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOverview
 {
@@ -29,10 +29,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOverview
         {
             _overviewOrchestrator = new Mock<IClarificationOverviewOrchestrator>();
 
-            _controller = new ClarificationOverviewController(_overviewOrchestrator.Object)
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new ClarificationOverviewController(_overviewOrchestrator.Object);
+            _controller.AddDefaultContextWithUser();
 
             _applicationViewModel = GetApplicationViewModel();
             _overviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetClarificationOverviewRequest>())).ReturnsAsync(_applicationViewModel);
@@ -43,8 +41,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOverview
             var userId = _controller.User.UserId();
             var userDisplayName = _controller.User.UserDisplayName();
 
-            var assessor2Id = $"{ userId }-2";
-            var assessor2DisplayName = $"{ userDisplayName }-2";
+            var assessor2Id = $"{userId}-2";
+            var assessor2DisplayName = $"{userDisplayName}-2";
 
             var application = new Apply
             {
@@ -60,7 +58,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOverview
                     ModeratorReviewDetails = new ModeratorReviewDetails
                     {
                         ClarificationRequestedOn = DateTime.Now,
-                        ModeratorUserId =  userId,
+                        ModeratorUserId = userId,
                         ModeratorName = userDisplayName,
                         ModeratorComments = null
                     }

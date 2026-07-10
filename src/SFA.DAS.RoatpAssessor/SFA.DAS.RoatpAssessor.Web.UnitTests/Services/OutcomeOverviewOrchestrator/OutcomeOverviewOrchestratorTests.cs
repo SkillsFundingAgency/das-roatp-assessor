@@ -5,13 +5,13 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeOverviewOrchestrator
@@ -20,7 +20,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeOverviewOrchestrat
     public class OutcomeOverviewOrchestratorTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
-        private readonly ClaimsPrincipal _user = MockedUser.Setup();
+        private readonly ClaimsPrincipal _user = ControllerExtensions.GetMockedUser();
 
         private Mock<IRoatpApplicationApiClient> _applicationApiClient;
         private Mock<IRoatpModerationApiClient> _moderationApiClient;
@@ -48,8 +48,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeOverviewOrchestrat
                 Assessor1UserId = _userId,
                 Assessor1Name = _userDisplayName,
                 Assessor2ReviewStatus = AssessorReviewStatus.Approved,
-                Assessor2UserId = $"{ _userId }-2",
-                Assessor2Name = $"{ _userDisplayName }-2"
+                Assessor2UserId = $"{_userId}-2",
+                Assessor2Name = $"{_userDisplayName}-2"
             };
 
             _contact = new Contact { Email = "email@address.com" };

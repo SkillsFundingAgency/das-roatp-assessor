@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.Controllers.Outcome;
 using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeSectionReview
 {
@@ -34,10 +34,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeSectionReview
         {
             _sectionReviewOrchestrator = new Mock<IOutcomeSectionReviewOrchestrator>();
 
-            _controller = new OutcomeSectionReviewController(_sectionReviewOrchestrator.Object)
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new OutcomeSectionReviewController(_sectionReviewOrchestrator.Object);
+            _controller.AddDefaultContextWithUser();
         }
 
         [Test]

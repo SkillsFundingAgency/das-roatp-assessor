@@ -5,15 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using SFA.DAS.RoatpAssessor.Web.Controllers.Clarification;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -37,10 +37,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ClarificationOutcome
             _mockOrchestrator = new Mock<IClarificationOutcomeOrchestrator>();
             _mockValidator = new Mock<IClarificationOutcomeValidator>();
             _mockModerationApiClient = new Mock<IRoatpModerationApiClient>();
-            _controller = new ClarificationOutcomeController(_mockOrchestrator.Object, _mockValidator.Object, _mockModerationApiClient.Object, Mock.Of<ILogger<ClarificationOutcomeController>>())
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new ClarificationOutcomeController(_mockOrchestrator.Object, _mockValidator.Object, _mockModerationApiClient.Object, Mock.Of<ILogger<ClarificationOutcomeController>>());
+            _controller.AddDefaultContextWithUser();
 
             _outcomeViewModel = GetOutcomeViewModel();
             _mockOrchestrator.Setup(x => x.GetClarificationOutcomeViewModel(It.IsAny<GetClarificationOutcomeRequest>()))

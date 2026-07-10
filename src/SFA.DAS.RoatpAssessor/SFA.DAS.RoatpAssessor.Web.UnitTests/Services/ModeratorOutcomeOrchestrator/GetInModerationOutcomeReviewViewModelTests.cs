@@ -4,12 +4,12 @@ using System.Security.Claims;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestrator
@@ -18,7 +18,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
     public class GetInModerationOutcomeReviewViewModelTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
-        private readonly ClaimsPrincipal _user = MockedUser.Setup();
+        private readonly ClaimsPrincipal _user = ControllerExtensions.GetMockedUser();
 
         private Mock<IRoatpApplicationApiClient> _applicationApiClient;
         private Mock<IRoatpModerationApiClient> _moderationApiClient;
@@ -56,8 +56,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
                 Assessor1UserId = _userId,
                 Assessor1Name = _userDisplayName,
                 Assessor2ReviewStatus = AssessorReviewStatus.Approved,
-                Assessor2UserId = $"{ _userId }-2",
-                Assessor2Name = $"{ _userDisplayName }-2",
+                Assessor2UserId = $"{_userId}-2",
+                Assessor2Name = $"{_userDisplayName}-2",
                 ApplyData = new ApplyData
                 {
                     ApplyDetails = new ApplyDetails
@@ -71,7 +71,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
             };
 
             _outcomes = new List<ModeratorPageReviewOutcome>();
-            _contact = new Contact { Email = Email};
+            _contact = new Contact { Email = Email };
             _request = new ReviewModeratorOutcomeRequest(_applicationId, _userId, Status, ReviewComment);
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
@@ -93,7 +93,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
         public void Return_null_view_model_if_no_application()
         {
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync((Apply)null);
-            var result =  _orchestrator.GetInModerationOutcomeReviewViewModel(_request);
+            var result = _orchestrator.GetInModerationOutcomeReviewViewModel(_request);
             Assert.IsNull(result.Result);
         }
 

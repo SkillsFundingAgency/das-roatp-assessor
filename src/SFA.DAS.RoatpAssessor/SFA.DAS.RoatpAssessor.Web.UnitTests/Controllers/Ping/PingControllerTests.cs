@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Ping
 {
@@ -14,10 +14,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Ping
         [SetUp]
         public void SetUp()
         {
-            _controller = new PingController()
-            {
-                ControllerContext = MockedControllerContext.Setup()                
-            };
+            _controller = new PingController();
+            _controller.AddDefaultContextWithUser();
         }
 
         [Test]

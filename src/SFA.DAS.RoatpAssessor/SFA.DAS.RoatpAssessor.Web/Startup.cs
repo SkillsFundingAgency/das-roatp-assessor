@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Polly;
 using Polly.Extensions.Http;
+using Polly.Retry;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.DfESignIn.Auth.Enums;
@@ -79,7 +77,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(Culture);
-                options.SupportedCultures = new List<CultureInfo> { new CultureInfo(Culture) };
+                options.SupportedCultures = [new(Culture)];
                 options.RequestCultureProviders.Clear();
             });
 
@@ -98,14 +96,13 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddHealthChecks();
 
-            services.AddApplicationInsightsTelemetry();
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddOpenTelemetryRegistration(_configuration["APPINSIGHTS_CONNECTION_STRING"]);
 
             ConfigureHttpClients(services);
             ConfigureDependencyInjection(services);
         }
 
-        private void AddAntiforgery(IServiceCollection services)
+        private static void AddAntiforgery(IServiceCollection services)
         {
             services.AddAntiforgery(options => options.Cookie = new CookieBuilder() { Name = ".RoatpAssessor.Staff.AntiForgery", HttpOnly = false });
         }
@@ -218,7 +215,7 @@ namespace SFA.DAS.RoatpAssessor.Web
             });
         }
 
-        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy()
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
