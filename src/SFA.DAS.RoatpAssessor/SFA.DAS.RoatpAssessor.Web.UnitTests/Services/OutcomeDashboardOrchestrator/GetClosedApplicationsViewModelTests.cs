@@ -68,7 +68,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeDashboardOrchestra
             AssertApplicationsMatch(applications.Last(), response.Applications.Last());
         }
 
-        private void AssertApplicationsMatch(ClosedApplicationSummary expected, ClosedApplicationViewModel actual)
+        private static void AssertApplicationsMatch(ClosedApplicationSummary expected, ClosedApplicationViewModel actual)
         {
             Assert.AreEqual(expected.ApplicationId, actual.ApplicationId);
             Assert.AreEqual(expected.OrganisationName, actual.OrganisationName);

@@ -24,8 +24,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
         private Mock<IRoatpModerationApiClient> _moderationApiClient;
         private Web.Services.ModeratorOutcomeOrchestrator _orchestrator;
 
-        private string Status => "Status";
-        private string ReviewComment => "Review comments";
+        private const string Status = "Status";
+        private const string ReviewComment = "Review comments";
 
 
         private string _userId => _user.UserId();
@@ -35,11 +35,11 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOutcomeOrchestra
         private List<ModeratorPageReviewOutcome> _outcomes;
 
 
-        private string ApplicationRouteName => "Main";
-        private string Ukprn => "23456789";
-        private string OrganisationName => "Emporium Glorium";
-        private DateTime ApplicationSubmittedOn => new DateTime(2020, 09, 30);
-        private string Email => "email@address.com";
+        private const string ApplicationRouteName = "Main";
+        private const string Ukprn = "23456789";
+        private const string OrganisationName = "Emporium Glorium";
+        private readonly DateTime ApplicationSubmittedOn = new DateTime(2020, 09, 30);
+        private const string Email = "email@address.com";
         private ModeratorOutcomeReviewViewModel _expectedViewModel;
         private ReviewModeratorOutcomeRequest _request;
         [SetUp]

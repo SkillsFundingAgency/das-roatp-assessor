@@ -70,7 +70,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorDashboardOrchestr
             AssertApplicationsMatch(applications.Last(), response.Applications.Last());
         }
 
-        private void AssertApplicationsMatch(AssessorApplicationSummary expected, ApplicationViewModel actual)
+        private static void AssertApplicationsMatch(AssessorApplicationSummary expected, ApplicationViewModel actual)
         {
             Assert.AreEqual(expected.ApplicationId, actual.ApplicationId);
             Assert.AreEqual(expected.OrganisationName, actual.OrganisationName);

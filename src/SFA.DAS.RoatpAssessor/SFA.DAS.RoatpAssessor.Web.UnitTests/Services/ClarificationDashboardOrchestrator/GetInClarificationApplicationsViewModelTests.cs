@@ -68,7 +68,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationDashboardOrc
             AssertApplicationsMatch(applications.Last(), response.Applications.Last());
         }
 
-        private void AssertApplicationsMatch(ClarificationApplicationSummary expected, ClarificationApplicationViewModel actual)
+        private static void AssertApplicationsMatch(ClarificationApplicationSummary expected, ClarificationApplicationViewModel actual)
         {
             Assert.AreEqual(expected.ApplicationId, actual.ApplicationId);
             Assert.AreEqual(expected.OrganisationName, actual.OrganisationName);

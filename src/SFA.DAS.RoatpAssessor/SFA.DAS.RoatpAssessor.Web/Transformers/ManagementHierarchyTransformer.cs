@@ -31,7 +31,7 @@ public static class ManagementHierarchyTransformer
             DataRows = new List<TabularDataRow>()
         };
 
-        if (tabularData?.DataRows != null && tabularData.DataRows.Any())
+        if (tabularData?.DataRows != null && tabularData.DataRows.Count != 0)
         {
             managementHierarchy.DataRows = new List<TabularDataRow>(tabularData.DataRows.Select(dr => { return dr.TransformDataRow(); }));
         }
@@ -47,7 +47,7 @@ public static class ManagementHierarchyTransformer
             Columns = new List<string>()
         };
 
-        if (tabularDataRow.Columns != null && tabularDataRow.Columns.Any())
+        if (tabularDataRow.Columns != null && tabularDataRow.Columns.Count != 0)
         {
             dataRow.Columns = tabularDataRow.Columns.TransformColumns();
         }
@@ -136,7 +136,7 @@ public static class ManagementHierarchyTransformer
             sb.Append($"{years} years");
         }
 
-        sb.Append(" ");
+        sb.Append(' ');
 
         if (months == 1)
         {
