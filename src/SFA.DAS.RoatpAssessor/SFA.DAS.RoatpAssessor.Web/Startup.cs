@@ -14,6 +14,8 @@ using Microsoft.Extensions.Primitives;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Retry;
+using SFA.DAS.Api.Common.Infrastructure;
+using SFA.DAS.Api.Common.Interfaces;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.DfESignIn.Auth.Enums;
@@ -109,6 +111,7 @@ namespace SFA.DAS.RoatpAssessor.Web
 
         private void ConfigureHttpClients(IServiceCollection services)
         {
+            services.AddSingleton<IAzureClientCredentialHelper, AzureClientCredentialHelper>();
             var acceptHeaderName = "Accept";
             var acceptHeaderValue = "application/json";
             var handlerLifeTime = TimeSpan.FromMinutes(5);
