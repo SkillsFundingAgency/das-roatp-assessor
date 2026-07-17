@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeSectionReviewOrchestrator
@@ -22,7 +22,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeSectionReviewOrche
     public class GetReviewAnswersViewModelTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
-        private readonly ClaimsPrincipal _user = MockedUser.Setup();
+        private readonly ClaimsPrincipal _user = ControllerExtensions.GetMockedUser();
 
         private Mock<IRoatpApplicationApiClient> _applyApiClient;
         private Mock<IRoatpModerationApiClient> _moderationApiClient;
@@ -166,8 +166,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeSectionReviewOrche
             Assert.That(result.BlindAssessmentOutcome.Assessor2UserId, Is.EqualTo(_blindAssessmentOutcome.Assessor2UserId));
             Assert.That(result.BlindAssessmentOutcome.Assessor2ReviewStatus, Is.EqualTo(_blindAssessmentOutcome.Assessor2ReviewStatus));
             Assert.That(result.BlindAssessmentOutcome.Assessor2ReviewComment, Is.EqualTo(_blindAssessmentOutcome.Assessor2ReviewComment));
-            CollectionAssert.IsNotEmpty(result.Questions);
-            CollectionAssert.IsNotEmpty(result.Answers);
+            Assert.That(result.Questions, Is.Not.Empty);
+            Assert.That(result.Answers, Is.Not.Empty);
         }
     }
 }

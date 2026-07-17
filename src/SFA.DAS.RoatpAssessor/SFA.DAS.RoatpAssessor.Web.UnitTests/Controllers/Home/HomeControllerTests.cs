@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Settings;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
@@ -21,10 +21,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
             _dashboardUrl = "https://dashboard";
             _configuration = new Mock<IWebConfiguration>();
             _configuration.Setup(c => c.EsfaAdminServicesBaseUrl).Returns(_dashboardUrl);
-            _controller = new HomeController(_configuration.Object)
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new HomeController(_configuration.Object);
+            _controller.AddDefaultContextWithUser();
         }
 
         [Test]
@@ -36,7 +34,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
             var actualViewModel = result?.Model as ErrorViewModel;
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(actualViewModel, Is.Not.Null);           
+            Assert.That(actualViewModel, Is.Not.Null);
             Assert.That(actualViewModel.RequestId, Is.EqualTo(expectedViewModel.RequestId));
             Assert.That(actualViewModel.ShowRequestId, Is.EqualTo(!string.IsNullOrEmpty(expectedViewModel.RequestId)));
         }
@@ -55,7 +53,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Home
         {
             var result = _controller.Dashboard() as RedirectResult;
             Assert.That(result, Is.Not.Null);
-            StringAssert.StartsWith(_dashboardUrl, result.Url);
+            Assert.That(result.Url, Does.StartWith(_dashboardUrl));
         }
     }
 }

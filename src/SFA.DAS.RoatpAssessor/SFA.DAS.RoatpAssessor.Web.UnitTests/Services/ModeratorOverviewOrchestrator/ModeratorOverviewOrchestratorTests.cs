@@ -1,19 +1,18 @@
-﻿using Moq;
-using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
-using SFA.DAS.RoatpAssessor.Web.Domain;
-using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
-using SFA.DAS.RoatpAssessor.Web.Models;
-using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
+using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
+using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.Models;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
+using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestrator
 {
@@ -21,7 +20,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
     public class ModeratorOverviewOrchestratorTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
-        private readonly ClaimsPrincipal _user = MockedUser.Setup();
+        private readonly ClaimsPrincipal _user = ControllerExtensions.GetMockedUser();
 
         private Mock<IRoatpApplicationApiClient> _applicationApiClient;
         private Mock<IRoatpModerationApiClient> _moderationApiClient;
@@ -49,8 +48,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ModeratorOverviewOrchestr
                 Assessor1UserId = _userId,
                 Assessor1Name = _userDisplayName,
                 Assessor2ReviewStatus = AssessorReviewStatus.Approved,
-                Assessor2UserId = $"{ _userId }-2",
-                Assessor2Name = $"{ _userDisplayName }-2"
+                Assessor2UserId = $"{_userId}-2",
+                Assessor2Name = $"{_userDisplayName}-2"
             };
 
             _contact = new Contact { Email = "email@address.com" };

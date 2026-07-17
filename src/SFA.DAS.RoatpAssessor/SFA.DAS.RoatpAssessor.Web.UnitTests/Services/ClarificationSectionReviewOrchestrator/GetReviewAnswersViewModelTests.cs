@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationSectionReviewOrchestrator
@@ -20,7 +20,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationSectionRevie
     public class GetReviewAnswersViewModelTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
-        private readonly ClaimsPrincipal _user = MockedUser.Setup();
+        private readonly ClaimsPrincipal _user = ControllerExtensions.GetMockedUser();
 
         private Mock<IRoatpApplicationApiClient> _applyApiClient;
         private Mock<IRoatpClarificationApiClient> _clarificationApiClient;
@@ -134,8 +134,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationSectionRevie
             Assert.That(result.ModerationOutcome.ModeratorUserName, Is.EqualTo(_pageReviewOutcome.ModeratorUserName));
             Assert.That(result.ModerationOutcome.ModeratorReviewStatus, Is.EqualTo(_pageReviewOutcome.ModeratorReviewStatus));
             Assert.That(result.ModerationOutcome.ModeratorReviewComment, Is.EqualTo(_pageReviewOutcome.ModeratorReviewComment));
-            CollectionAssert.IsNotEmpty(result.Questions);
-            CollectionAssert.IsNotEmpty(result.Answers);
+            Assert.That(result.Questions, Is.Not.Empty);
+            Assert.That(result.Answers, Is.Not.Empty);
         }
     }
 }

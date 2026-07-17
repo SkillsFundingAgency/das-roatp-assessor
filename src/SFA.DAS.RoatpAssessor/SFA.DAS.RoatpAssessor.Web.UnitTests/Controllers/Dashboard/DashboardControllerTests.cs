@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.Controllers;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -32,10 +32,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
             _clarificationOrchestrator = new Mock<IClarificationDashboardOrchestrator>();
             _outcomeOrchestrator = new Mock<IOutcomeDashboardOrchestrator>();
 
-            _controller = new DashboardController(_searchTermValidator.Object, _assessorOrchestrator.Object, _moderatorOrchestrator.Object, _clarificationOrchestrator.Object, _outcomeOrchestrator.Object)
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new DashboardController(_searchTermValidator.Object, _assessorOrchestrator.Object, _moderatorOrchestrator.Object, _clarificationOrchestrator.Object, _outcomeOrchestrator.Object);
+            _controller.AddDefaultContextWithUser();
         }
 
         [Test]
@@ -43,7 +41,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.Dashboard
         {
             var userId = _controller.User.UserId();
             var expectedViewModel = new NewApplicationsViewModel(1, 2, 3, 4, 5);
-            _assessorOrchestrator.Setup(x => x.GetNewApplicationsViewModel(userId, null, null,null)).ReturnsAsync(expectedViewModel);
+            _assessorOrchestrator.Setup(x => x.GetNewApplicationsViewModel(userId, null, null, null)).ReturnsAsync(expectedViewModel);
 
             var result = await _controller.NewApplications(null, null, null);
 

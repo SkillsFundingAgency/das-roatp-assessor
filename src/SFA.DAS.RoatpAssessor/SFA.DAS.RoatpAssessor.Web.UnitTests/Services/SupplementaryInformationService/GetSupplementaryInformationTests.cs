@@ -1,12 +1,12 @@
-﻿using Moq;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Consts;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationService
 {
@@ -38,7 +38,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
 
             var result = await _service.GetSupplementaryInformation(_applicationId, pageId);
 
-            CollectionAssert.IsEmpty(result);
+            Assert.That(result, Is.Empty);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
 
             var result = await _service.GetSupplementaryInformation(_applicationId, safeguardingPreventDutyPolicyPageId);
 
-            CollectionAssert.IsNotEmpty(result);
+            Assert.That(result, Is.Not.Empty);
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.SupplementaryInformationS
 
             var result = await _service.GetSupplementaryInformation(_applicationId, safeguardingPreventDutyPolicyPageId);
 
-            CollectionAssert.IsEmpty(result);
+            Assert.That(result, Is.Empty);
         }
     }
 }

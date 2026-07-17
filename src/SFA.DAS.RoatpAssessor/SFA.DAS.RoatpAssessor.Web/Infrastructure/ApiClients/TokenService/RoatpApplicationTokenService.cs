@@ -1,25 +1,17 @@
-﻿using Microsoft.Azure.Services.AppAuthentication;
+﻿using System;
+using SFA.DAS.Api.Common.Interfaces;
 using SFA.DAS.RoatpAssessor.Web.Settings;
-using System;
 
 namespace SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService
 {
-    public class RoatpApplicationTokenService : IRoatpApplicationTokenService
+    public class RoatpApplicationTokenService(IAzureClientCredentialHelper _azureClientCredentialHelper, IWebConfiguration _configuration) : IRoatpApplicationTokenService
     {
-        private readonly IWebConfiguration _configuration;
-
-        public RoatpApplicationTokenService(IWebConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
         public string GetToken(Uri baseUri)
         {
             if (baseUri != null && baseUri.IsLoopback)
                 return string.Empty;
 
-            var azureServiceTokenProvider = new AzureServiceTokenProvider();
-            var generateTokenTask = azureServiceTokenProvider.GetAccessTokenAsync(_configuration.RoatpApplicationApiAuthentication.Identifier);
+            var generateTokenTask = _azureClientCredentialHelper.GetAccessTokenAsync(_configuration.RoatpApplicationApiAuthentication.Identifier);
 
             return generateTokenTask.GetAwaiter().GetResult();
         }

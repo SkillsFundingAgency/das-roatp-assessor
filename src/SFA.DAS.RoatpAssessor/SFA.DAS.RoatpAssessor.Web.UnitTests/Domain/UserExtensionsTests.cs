@@ -1,7 +1,7 @@
-﻿using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+using NUnit.Framework;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Domain
 {
@@ -16,7 +16,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Domain
         [SetUp]
         public void Setup()
         {
-            _user = MockedUser.Setup();
+            _user = ControllerExtensions.GetMockedUser();
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Domain
 
             var actualResult = _user.UserDisplayName();
 
-            Assert.That(actualResult, Is.EqualTo(expectedresult));          
+            Assert.That(actualResult, Is.EqualTo(expectedresult));
         }
 
         [Test]

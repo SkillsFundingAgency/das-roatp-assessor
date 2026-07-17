@@ -4,13 +4,12 @@ using System.Security.Claims;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
-using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrchestrator
@@ -19,7 +18,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrche
     public class GetClarificationOutcomeViewModelTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
-        private readonly ClaimsPrincipal _user = MockedUser.Setup();
+        private readonly ClaimsPrincipal _user = ControllerExtensions.GetMockedUser();
 
         private string _userId => _user.UserId();
         private string _userDisplayName => _user.UserDisplayName();
@@ -50,8 +49,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrche
                 Assessor1UserId = _userId,
                 Assessor1Name = _userDisplayName,
                 Assessor2ReviewStatus = AssessorReviewStatus.Approved,
-                Assessor2UserId = $"{ _userId }-2",
-                Assessor2Name = $"{ _userDisplayName }-2",
+                Assessor2UserId = $"{_userId}-2",
+                Assessor2Name = $"{_userDisplayName}-2",
 
                 ApplyData = new ApplyData
                 {
@@ -67,7 +66,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrche
 
             _outcomes = new List<ClarificationPageReviewOutcome>();
             _contact = new Contact { Email = "email@address.com" };
-            _request = new GetClarificationOutcomeRequest(_applicationId,_userId);
+            _request = new GetClarificationOutcomeRequest(_applicationId, _userId);
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync(_application);
             _applicationApiClient.Setup(x => x.GetContactForApplication(_applicationId)).ReturnsAsync(_contact);
             _clarificationApiClient.Setup(x => x.GetAllClarificationPageReviewOutcomes(_applicationId, _userId)).ReturnsAsync(_outcomes);
@@ -80,7 +79,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.ClarificationOutcomeOrche
         public void Return_null_view_model_if_no_application()
         {
             _applicationApiClient.Setup(x => x.GetApplication(_applicationId)).ReturnsAsync((Apply)null);
-            var result =  _orchestrator.GetClarificationOutcomeViewModel(_request);
+            var result = _orchestrator.GetClarificationOutcomeViewModel(_request);
             Assert.IsNull(result.Result);
         }
 

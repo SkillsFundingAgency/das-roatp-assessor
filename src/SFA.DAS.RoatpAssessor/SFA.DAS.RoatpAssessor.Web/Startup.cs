@@ -1,30 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.IO;
 using System.Net;
 using System.Net.Http;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Primitives;
 using Polly;
 using Polly.Extensions.Http;
-using SFA.DAS.AdminService.Common;
-using SFA.DAS.AdminService.Common.Extensions;
+using Polly.Retry;
+using SFA.DAS.Api.Common.Infrastructure;
+using SFA.DAS.Api.Common.Interfaces;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.DfESignIn.Auth.Enums;
-using SFA.DAS.RoatpAssessor.Web.Domain;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients.TokenService;
 using SFA.DAS.RoatpAssessor.Web.ModelBinders;
@@ -41,42 +35,28 @@ namespace SFA.DAS.RoatpAssessor.Web
         private const string Culture = "en-GB";
 
         private readonly IConfiguration _configuration;
-        private readonly IHostingEnvironment _env;
-        private readonly ILogger<Startup> _logger;
+        private readonly IWebHostEnvironment _env;
 
         public IWebConfiguration ApplicationConfiguration { get; set; }
 
-        public Startup(IConfiguration configuration, IHostingEnvironment env, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             _env = env;
-            _logger = logger;
 
             var config = new ConfigurationBuilder()
-                .AddConfiguration(configuration)
-                .SetBasePath(Directory.GetCurrentDirectory());
-#if DEBUG
-            if (!configuration["EnvironmentName"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
-            {
-                config.AddJsonFile("appsettings.json", true)
-                    .AddJsonFile("appsettings.Development.json", true);
-            }
-#endif
-            config.AddEnvironmentVariables();
+                .AddConfiguration(configuration);
 
-            if (!configuration["EnvironmentName"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
-            {
-                config.AddAzureTableStorage(options =>
-                    {
-                        options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
-                        options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                        options.EnvironmentName = configuration["EnvironmentName"];
-                        options.PreFixConfigurationKeys = false;
-                    }
-                );
-            }
+            config.AddAzureTableStorage(options =>
+                {
+                    options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
+                    options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
+                    options.EnvironmentName = configuration["EnvironmentName"];
+                    options.PreFixConfigurationKeys = false;
+                }
+            );
 
             _configuration = config.Build();
-            ApplicationConfiguration = _configuration.GetSection(nameof(WebConfiguration)).Get<WebConfiguration>();
+            ApplicationConfiguration = _configuration.Get<WebConfiguration>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -89,26 +69,25 @@ namespace SFA.DAS.RoatpAssessor.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            AddAuthentication(services);
+            services.AddAndConfigureDfESignInAuthentication(_configuration,
+                "SFA.DAS.AdminService.Web.Auth",
+                typeof(CustomServiceRole),
+                ClientName.RoatpServiceAdmin,
+                "/SignOut",
+                "");
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(Culture);
-                options.SupportedCultures = new List<CultureInfo> { new CultureInfo(Culture) };
+                options.SupportedCultures = [new(Culture)];
                 options.RequestCultureProviders.Clear();
             });
 
             services.AddMvc(options =>
-                {
-                    //options.Filters.Add<CheckSessionFilter>();
-                    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                    options.ModelBinderProviders.Insert(0, new StringTrimmingModelBinderProvider());
-                })
-                // NOTE: Can we move this to 2.2 to match the version of .NET Core we're coding against?
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options =>
-                {
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                });
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                options.ModelBinderProviders.Insert(0, new StringTrimmingModelBinderProvider());
+            });
 
             services.AddSession(opt => { opt.IdleTimeout = TimeSpan.FromHours(1); });
 
@@ -119,48 +98,20 @@ namespace SFA.DAS.RoatpAssessor.Web
 
             services.AddHealthChecks();
 
-            services.AddApplicationInsightsTelemetry();
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddOpenTelemetryRegistration(_configuration["APPINSIGHTS_CONNECTION_STRING"]);
 
             ConfigureHttpClients(services);
             ConfigureDependencyInjection(services);
         }
 
-        private void AddAuthentication(IServiceCollection services)
-        {
-            if (ApplicationConfiguration.UseDfeSignIn)
-            {
-                services.AddAndConfigureDfESignInAuthentication(_configuration,
-                    "SFA.DAS.AdminService.Web.Auth",
-                    typeof(CustomServiceRole),
-                    ClientName.RoatpServiceAdmin,
-                    "/SignOut",
-                    "");
-            }
-            else
-            {
-                services.AddAuthentication(sharedOptions =>
-                {
-                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultSignOutScheme = WsFederationDefaults.AuthenticationScheme;
-                }).AddWsFederation(options =>
-                {
-                    options.Wtrealm = ApplicationConfiguration.StaffAuthentication.WtRealm;
-                    options.MetadataAddress = ApplicationConfiguration.StaffAuthentication.MetadataAddress;
-                    options.TokenValidationParameters.RoleClaimType = Roles.RoleClaimType;
-                }).AddCookie();
-            }
-        }
-
-        private void AddAntiforgery(IServiceCollection services)
+        private static void AddAntiforgery(IServiceCollection services)
         {
             services.AddAntiforgery(options => options.Cookie = new CookieBuilder() { Name = ".RoatpAssessor.Staff.AntiForgery", HttpOnly = false });
         }
 
         private void ConfigureHttpClients(IServiceCollection services)
         {
+            services.AddSingleton<IAzureClientCredentialHelper, AzureClientCredentialHelper>();
             var acceptHeaderName = "Accept";
             var acceptHeaderValue = "application/json";
             var handlerLifeTime = TimeSpan.FromMinutes(5);
@@ -225,12 +176,10 @@ namespace SFA.DAS.RoatpAssessor.Web
             services.AddTransient<IClarificationOutcomeValidator, ClarificationOutcomeValidator>();
 
             services.AddTransient<IOutcomeSectionReviewOrchestrator, OutcomeSectionReviewOrchestrator>();
-
-            DependencyInjection.ConfigureDependencyInjection(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -243,9 +192,8 @@ namespace SFA.DAS.RoatpAssessor.Web
             }
 
             app.UseHttpsRedirection();
-
             app.UseCookiePolicy();
-
+            app.UseRouting();
             app.UseSession();
             app.UseRequestLocalization();
             app.UseStatusCodePagesWithReExecute("/ErrorPage/{0}");
@@ -254,22 +202,23 @@ namespace SFA.DAS.RoatpAssessor.Web
             {
                 if (!context.Response.Headers.ContainsKey("X-Permitted-Cross-Domain-Policies"))
                 {
-                    context.Response.Headers.Add("X-Permitted-Cross-Domain-Policies", new StringValues("none"));
+                    context.Response.Headers.Append("X-Permitted-Cross-Domain-Policies", new StringValues("none"));
                 }
                 await next();
             });
             app.UseStaticFiles();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseHealthChecks("/health");
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
             });
         }
 
-        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy()
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()

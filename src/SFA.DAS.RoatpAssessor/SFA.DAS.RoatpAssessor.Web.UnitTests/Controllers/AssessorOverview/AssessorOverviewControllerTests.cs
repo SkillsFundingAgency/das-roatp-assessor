@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
-using SFA.DAS.RoatpAssessor.Web.Controllers.Assessor;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.RoatpAssessor.Web.Services;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
-using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
+using SFA.DAS.RoatpAssessor.Web.Controllers.Assessor;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Models;
+using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
+using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOverview
 {
@@ -29,10 +29,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOverview
         {
             _assessorOverviewOrchestrator = new Mock<IAssessorOverviewOrchestrator>();
 
-            _controller = new AssessorOverviewController(_assessorOverviewOrchestrator.Object)
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new AssessorOverviewController(_assessorOverviewOrchestrator.Object);
+            _controller.AddDefaultContextWithUser();
 
             _applicationViewModel = GetApplicationViewModel();
             _assessorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetAssessorOverviewRequest>())).ReturnsAsync(_applicationViewModel);

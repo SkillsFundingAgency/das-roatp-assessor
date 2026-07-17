@@ -5,11 +5,11 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Outcome;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeDashboardOrchestrator
@@ -17,7 +17,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeDashboardOrchestra
     [TestFixture]
     public class GetClosedApplicationsViewModelTests
     {
-        private readonly ClaimsPrincipal _user = MockedUser.Setup();
+        private readonly ClaimsPrincipal _user = ControllerExtensions.GetMockedUser();
 
         private Mock<IRoatpApplicationApiClient> _applicationApiClient;
         private Web.Services.OutcomeDashboardOrchestrator _orchestrator;
@@ -68,7 +68,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.OutcomeDashboardOrchestra
             AssertApplicationsMatch(applications.Last(), response.Applications.Last());
         }
 
-        private void AssertApplicationsMatch(ClosedApplicationSummary expected, ClosedApplicationViewModel actual)
+        private static void AssertApplicationsMatch(ClosedApplicationSummary expected, ClosedApplicationViewModel actual)
         {
             Assert.AreEqual(expected.ApplicationId, actual.ApplicationId);
             Assert.AreEqual(expected.OrganisationName, actual.OrganisationName);

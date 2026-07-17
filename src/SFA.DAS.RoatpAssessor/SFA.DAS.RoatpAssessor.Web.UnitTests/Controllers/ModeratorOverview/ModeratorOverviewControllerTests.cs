@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.Controllers.Moderator;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOverview
@@ -30,10 +29,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOverview
         {
             _moderatorOverviewOrchestrator = new Mock<IModeratorOverviewOrchestrator>();
 
-            _controller = new ModeratorOverviewController(_moderatorOverviewOrchestrator.Object)
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new ModeratorOverviewController(_moderatorOverviewOrchestrator.Object);
+            _controller.AddDefaultContextWithUser();
 
             _applicationViewModel = GetApplicationViewModel();
             _moderatorOverviewOrchestrator.Setup(x => x.GetOverviewViewModel(It.IsAny<GetModeratorOverviewRequest>())).ReturnsAsync(_applicationViewModel);

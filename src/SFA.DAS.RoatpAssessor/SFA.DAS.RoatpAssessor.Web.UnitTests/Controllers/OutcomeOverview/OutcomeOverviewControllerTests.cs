@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Clarification;
 using SFA.DAS.RoatpAssessor.Web.Controllers.Outcome;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeOverview
@@ -28,10 +28,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeOverview
         {
             _orchestrator = new Mock<IOutcomeOverviewOrchestrator>();
 
-            _controller = new OutcomeOverviewController(_orchestrator.Object)
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new OutcomeOverviewController(_orchestrator.Object);
+            _controller.AddDefaultContextWithUser();
         }
 
         private OutcomeApplicationViewModel GetApplicationViewModel(string applicationStatus, string moderationStatus)
@@ -39,25 +37,30 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.OutcomeOverview
             var userId = _controller.User.UserId();
             var userDisplayName = _controller.User.UserDisplayName();
 
-            var assessor2Id = $"{ userId }-2";
-            var assessor2DisplayName = $"{ userDisplayName }-2";
+            var assessor2Id = $"{userId}-2";
+            var assessor2DisplayName = $"{userDisplayName}-2";
 
-            var application = new Apply {   
-                                            ApplicationId = _applicationId,
-                                            ApplicationStatus = applicationStatus,
-                                            Assessor1ReviewStatus = AssessorReviewStatus.Approved, Assessor1UserId = userId, Assessor1Name = userDisplayName,
-                                            Assessor2ReviewStatus = AssessorReviewStatus.Approved, Assessor2UserId = assessor2Id, Assessor2Name = assessor2DisplayName,
-                                            ModerationStatus = moderationStatus,
-                                            ApplyData =  new ApplyData
-                                            {
-                                                ModeratorReviewDetails = new ModeratorReviewDetails
-                                                {
-                                                    ModeratorUserId = userId,
-                                                    ModeratorName = userDisplayName,
-                                                    ModeratorComments = null,
-                                                    OutcomeDateTime = DateTime.UtcNow
-                                                }
-                                            }
+            var application = new Apply
+            {
+                ApplicationId = _applicationId,
+                ApplicationStatus = applicationStatus,
+                Assessor1ReviewStatus = AssessorReviewStatus.Approved,
+                Assessor1UserId = userId,
+                Assessor1Name = userDisplayName,
+                Assessor2ReviewStatus = AssessorReviewStatus.Approved,
+                Assessor2UserId = assessor2Id,
+                Assessor2Name = assessor2DisplayName,
+                ModerationStatus = moderationStatus,
+                ApplyData = new ApplyData
+                {
+                    ModeratorReviewDetails = new ModeratorReviewDetails
+                    {
+                        ModeratorUserId = userId,
+                        ModeratorName = userDisplayName,
+                        ModeratorComments = null,
+                        OutcomeDateTime = DateTime.UtcNow
+                    }
+                }
             };
 
             var contact = new Contact { Email = userId, GivenNames = _controller.User.GivenName(), FamilyName = _controller.User.Surname() };

@@ -1,20 +1,21 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
-namespace SFA.DAS.RoatpAssessor.Web
+namespace SFA.DAS.RoatpAssessor.Web;
+
+[ExcludeFromCodeCoverage]
+public static class Program
 {
-    [ExcludeFromCodeCoverage]
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseUrls("https://localhost:44350");
+        Host
+            .CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            })
+            .Build()
+            .Run();
     }
 }

@@ -1,20 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.Controllers.Assessor;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SFA.DAS.RoatpAssessor.Web.Extensions;
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
 {
@@ -37,10 +36,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.AssessorOutcome
             _assessorOutcomeValidator = new AssessorOutcomeValidator();
             _assessorOverviewOrchestrator = new Mock<IAssessorOverviewOrchestrator>();
 
-            _controller = new AssessorOutcomeController(_assessorApiClient.Object, _assessorOverviewOrchestrator.Object, _assessorOutcomeValidator)
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new AssessorOutcomeController(_assessorApiClient.Object, _assessorOverviewOrchestrator.Object, _assessorOutcomeValidator);
+            _controller.AddDefaultContextWithUser();
 
             _assessorApiClient.Setup(x => x.UpdateAssessorReviewStatus(_applicationId, _controller.User.UserId(), _controller.User.UserDisplayName(), It.IsAny<string>())).ReturnsAsync(true);
 

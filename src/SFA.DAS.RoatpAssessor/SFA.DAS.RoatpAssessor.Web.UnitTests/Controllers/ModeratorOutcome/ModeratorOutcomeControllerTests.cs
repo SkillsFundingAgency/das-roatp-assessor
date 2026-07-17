@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Moderator;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Validation;
 using SFA.DAS.RoatpAssessor.Web.Controllers.Moderator;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Models;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Validators;
 using SFA.DAS.RoatpAssessor.Web.ViewModels;
 
@@ -39,10 +37,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
             _mockOrchestrator = new Mock<IModeratorOutcomeOrchestrator>();
             _mockValidator = new Mock<IModeratorOutcomeValidator>();
             _mockModerationApiClient = new Mock<IRoatpModerationApiClient>();
-            _controller = new ModeratorOutcomeController(_mockOrchestrator.Object, _mockValidator.Object, _mockModerationApiClient.Object, Mock.Of<ILogger<ModeratorOutcomeController>>())
-            {
-                ControllerContext = MockedControllerContext.Setup()
-            };
+            _controller = new ModeratorOutcomeController(_mockOrchestrator.Object, _mockValidator.Object, _mockModerationApiClient.Object, Mock.Of<ILogger<ModeratorOutcomeController>>());
+            _controller.AddDefaultContextWithUser();
 
             _outcomeViewModel = GetOutcomeViewModel();
             _mockOrchestrator.Setup(x => x.GetInModerationOutcomeViewModel(It.IsAny<GetModeratorOutcomeRequest>()))
@@ -112,17 +108,20 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
         public async Task ReviewOutcome_redirect_back_to_outome_when_error()
         {
             var command = new SubmitModeratorOutcomeCommand();
-            _mockValidator.Setup(x=>x.Validate(command))
-                .ReturnsAsync(new ValidationResponse { Errors= new List<ValidationErrorDetail>
+            _mockValidator.Setup(x => x.Validate(command))
+                .ReturnsAsync(new ValidationResponse
+                {
+                    Errors = new List<ValidationErrorDetail>
                     {
                         new ValidationErrorDetail {Field="Status", ErrorMessage = "error"}
 
-                    }}
+                    }
+                }
                 );
 
             var result = await _controller.SubmitModeratorOutcome(_applicationId, command) as ViewResult;
             Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
-            _mockOrchestrator.Verify(x=>x.GetInModerationOutcomeViewModel(It.IsAny<GetModeratorOutcomeRequest>()),Times.Once);
+            _mockOrchestrator.Verify(x => x.GetInModerationOutcomeViewModel(It.IsAny<GetModeratorOutcomeRequest>()), Times.Once);
         }
 
         [Test]
@@ -131,9 +130,9 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
             var command = new SubmitModeratorOutcomeCommand();
             _mockValidator.Setup(x => x.Validate(command))
                 .ReturnsAsync(new ValidationResponse
-                    {
-                        Errors = new List<ValidationErrorDetail>()
-                    }
+                {
+                    Errors = new List<ValidationErrorDetail>()
+                }
                 );
 
             var outcomeReviewViewModel = new ModeratorOutcomeReviewViewModel();
@@ -149,19 +148,19 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Controllers.ModeratorOutcome
         [Test]
         public async Task Outcome_confirmation_redirect_back_to_outcome_when_error()
         {
-            var command = new SubmitModeratorOutcomeConfirmationCommand("","");
+            var command = new SubmitModeratorOutcomeConfirmationCommand("", "");
             _mockValidator.Setup(x => x.Validate(command))
                 .ReturnsAsync(new ValidationResponse
-                    {
-                        Errors = new List<ValidationErrorDetail>
+                {
+                    Errors = new List<ValidationErrorDetail>
                         {
                             new ValidationErrorDetail {Field="Status", ErrorMessage = "error"}
 
                         }
-                    }
+                }
                 );
 
-            var result = await _controller.SubmitModeratorOutcomeConfirmation(_applicationId,string.Empty,command) as ViewResult;
+            var result = await _controller.SubmitModeratorOutcomeConfirmation(_applicationId, string.Empty, command) as ViewResult;
             Assert.That(result.Model, Is.SameAs(_outcomeViewModel));
             _mockOrchestrator.Verify(x => x.GetInModerationOutcomeViewModel(It.IsAny<GetModeratorOutcomeRequest>()), Times.Once);
         }

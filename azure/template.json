@@ -51,7 +51,7 @@
         },
         "configNames": {
             "type": "string",
-            "defaultValue": "SFA.DAS.RoatpAssessor:WebConfiguration,SFA.DAS.Provider.DfeSignIn"
+            "defaultValue": "SFA.DAS.RoatpAssessor,SFA.DAS.Provider.DfeSignIn"
         },
         "version": {
             "type": "string",
@@ -173,8 +173,8 @@
                                     "value": "[parameters('resourceEnvironmentName')]"
                                 },
                                 {
-				    "name": "APPINSIGHTS_CONNECTION_STRING",
-			            "value": "[reference(concat('app-insights-', parameters('utcValue'))).outputs.ConnectionString.value]"
+                                    "name": "APPINSIGHTS_CONNECTION_STRING",
+                                    "value": "[reference(concat('app-insights-', parameters('utcValue'))).outputs.ConnectionString.value]"
                                 },
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",

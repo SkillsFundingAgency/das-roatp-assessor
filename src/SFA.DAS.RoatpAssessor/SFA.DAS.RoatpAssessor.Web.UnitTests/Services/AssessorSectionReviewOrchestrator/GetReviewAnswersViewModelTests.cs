@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.AdminService.Common.Extensions;
-using SFA.DAS.AdminService.Common.Testing.MockedObjects;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Apply;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Assessor;
 using SFA.DAS.RoatpAssessor.Web.ApplyTypes.Common;
+using SFA.DAS.RoatpAssessor.Web.Extensions;
 using SFA.DAS.RoatpAssessor.Web.Infrastructure.ApiClients;
 using SFA.DAS.RoatpAssessor.Web.Services;
+using SFA.DAS.RoatpAssessor.Web.UnitTests.Extensions;
 
 
 namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrchestrator
@@ -20,7 +20,7 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrch
     public class GetReviewAnswersViewModelTests
     {
         private readonly Guid _applicationId = Guid.NewGuid();
-        private readonly ClaimsPrincipal _user = MockedUser.Setup();
+        private readonly ClaimsPrincipal _user = ControllerExtensions.GetMockedUser();
 
         private Mock<IRoatpApplicationApiClient> _applyApiClient;
         private Mock<IRoatpAssessorApiClient> _assessorApiClient;
@@ -119,8 +119,8 @@ namespace SFA.DAS.RoatpAssessor.Web.UnitTests.Services.AssessorSectionReviewOrch
             Assert.That(result.SectionNumber, Is.EqualTo(_assessorPage.SectionNumber));
             Assert.That(result.PageId, Is.EqualTo(_assessorPage.PageId));
             Assert.That(result.Status, Is.EqualTo(_pageReviewOutcome.Status));
-            CollectionAssert.IsNotEmpty(result.Questions);
-            CollectionAssert.IsNotEmpty(result.Answers);
+            Assert.That(result.Questions, Is.Not.Empty);
+            Assert.That(result.Answers, Is.Not.Empty);
         }
     }
 }

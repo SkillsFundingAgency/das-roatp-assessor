@@ -172,7 +172,7 @@ namespace SFA.DAS.RoatpAssessor.Web.Services
                         catch
                         {
                             // safe to ignore.
-                            _logger.LogWarning($"Expected TabularData but was something else. Question Id: {questionId}");
+                            _logger.LogWarning("Expected TabularData but was something else. Question Id: {QuestionId}", questionId);
                         }
                     }
                 }
