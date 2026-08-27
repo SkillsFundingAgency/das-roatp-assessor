@@ -12,7 +12,7 @@ variables:
 - name: BuildPlatform
   value: any cpu
 - group: RELEASE Management Resources
-- group: RELEASE
+- group: RELEASE das-roatp-assessor
 - name: Deploy
   value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'PullRequest'))]
 
